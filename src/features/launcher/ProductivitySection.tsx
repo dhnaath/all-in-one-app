@@ -8,17 +8,11 @@ import {
   FileText,
   Target,
   Wallet,
-  Heart,
-  Sparkles,
-  Calculator,
   CalendarDays,
   Ticket,
   Timer,
   Grid2X2,
   Bookmark,
-  Compass,
-  CloudSun,
-  Navigation,
   NotebookText,
   MessagesSquare,
   Lightbulb,
@@ -34,26 +28,40 @@ import {
   Key,
   Archive,
   GraduationCap,
-  FileCheck,
   Globe,
   Book,
   Dumbbell,
   Droplet,
-  Utensils,
-  ShoppingCart,
-  Plane,
-  Film,
-  Gamepad2,
-  Podcast,
-  Music,
   PenTool,
-  Camera,
-  Type,
   Code,
   Package,
-  Headphones,
-  Palette,
-  MoreHorizontal,
+  Building,
+  ShieldCheck,
+  Workflow,
+  LineChart,
+  RefreshCw,
+  Binary,
+  ShieldAlert,
+  Scale,
+  HeartHandshake,
+  Share2,
+  LayoutGrid,
+  TrendingUp,
+  FolderOpen,
+  ScrollText,
+  Shield,
+  HeartPulse,
+  CheckCircle2,
+  Gauge,
+  Calculator,
+  Navigation,
+  FileCheck,
+  Lock,
+  Zap,
+  Clock,
+  Compass,
+  Truck,
+  Mail,
   type LucideIcon,
 } from "lucide-react";
 import { navKonsultan, type NavItem } from "@/config/nav";
@@ -77,17 +85,18 @@ interface ProductivitySectionProps {
   }>;
 }
 
-interface ProductivityCategory {
+export type MainCategoryTab =
+  | "all"
+  | "personal-productivity"
+  | "knowledge-information"
+  | "work-operations"
+  | "business-operations"
+  | "ownership-security";
+
+export interface ProductivityCategory {
   id: string;
   title: string;
-  group:
-    | "productivity"
-    | "business"
-    | "knowledge"
-    | "personal"
-    | "entertainment"
-    | "creative"
-    | "other";
+  group: Exclude<MainCategoryTab, "all">;
   icon: LucideIcon;
   getItems: () => LauncherItem[];
 }
@@ -99,383 +108,278 @@ export function ProductivitySection({
   getGradient,
   FolderTile,
 }: ProductivitySectionProps) {
-  const [mainTab, setMainTab] = useState<
-    | "all"
-    | "productivity"
-    | "business"
-    | "knowledge"
-    | "personal"
-    | "entertainment"
-    | "creative"
-    | "other"
-  >("all");
+  const [mainTab, setMainTab] = useState<MainCategoryTab>("all");
   const [activeSpecific, setActiveSpecific] = useState<string>("all");
 
-  // Extract raw items from nav groups
-  const prodItems = useMemo(
-    () => navKonsultan.find((g) => g.title === "Productivity")?.items.filter((i) => i.to !== "/") || [],
-    []
-  );
+  // Flattened nav items lookup map
+  const allNavMap = useMemo(() => {
+    const map = new Map<string, NavItem>();
+    navKonsultan.forEach((g) => {
+      g.items.forEach((item) => {
+        if (!map.has(item.to)) {
+          map.set(item.to, item);
+        }
+      });
+    });
+    return map;
+  }, []);
 
-  const businessItems = useMemo(
-    () => navKonsultan.find((g) => g.title === "Business")?.items.filter((i) => i.to !== "/") || [],
-    []
-  );
+  const resolveApp = (to: string, label: string, icon: LucideIcon): LauncherItem => {
+    const found = allNavMap.get(to);
+    return {
+      type: "app",
+      item: found || { to, label, icon },
+    };
+  };
 
-  const knowledgeItems = useMemo(
-    () => navKonsultan.find((g) => g.title === "Knowledge")?.items.filter((i) => i.to !== "/") || [],
-    []
-  );
-
-  const personalItems = useMemo(
-    () => navKonsultan.find((g) => g.title === "Personal")?.items.filter((i) => i.to !== "/") || [],
-    []
-  );
-
-  const entertainmentItems = useMemo(
-    () => navKonsultan.find((g) => g.title === "Entertainment")?.items.filter((i) => i.to !== "/") || [],
-    []
-  );
-
-  const creativeItems = useMemo(
-    () =>
-      (navKonsultan.find((g) => g.title === "Creative") || navKonsultan.find((g) => g.title === "Creativity"))?.items.filter(
-        (i) => i.to !== "/"
-      ) || [],
-    []
-  );
-
-  const otherItems = useMemo(
-    () => {
-      const foundOther = navKonsultan.find((g) => g.title === "Other")?.items.filter((i) => i.to !== "/");
-      if (foundOther && foundOther.length > 0) return foundOther;
-      const ed = navKonsultan.find((g) => g.title === "Education")?.items.filter((i) => i.to !== "/") || [];
-      const wb = navKonsultan.find((g) => g.title === "Wellbeing")?.items.filter((i) => i.to !== "/") || [];
-      const ps = navKonsultan.find((g) => g.title === "Personal Storage")?.items.filter((i) => i.to !== "/") || [];
-      const ls = navKonsultan.find((g) => g.title === "Lifestyle")?.items.filter((i) => i.to !== "/") || [];
-      const ln = navKonsultan.find((g) => g.title === "Lain-lain")?.items.filter((i) => i.to !== "/") || [];
-      return [...ed, ...wb, ...ps, ...ls, ...ln];
-    },
-    []
-  );
-
-  // Detailed categories without '&' symbol
+  // Categories list matching user's requested structure:
+  // Personal Productivity, Knowledge and Information, Work Operations, Business Operations, Ownership and Security
   const PRODUCTIVITY_CATEGORIES: ProductivityCategory[] = useMemo(() => {
     return [
-      // Productivity Group (Project Management, Task Management, Time Management, Planning)
+      // 1. Personal Productivity
       {
-        id: "cat-project-management",
-        title: "Project Management",
-        group: "productivity",
-        icon: FolderKanban,
-        getItems: () => {
-          const item = prodItems.find((i) => i.to === "/proyek");
-          return item ? [{ type: "app", item }] : [];
-        },
+        id: "cat-planning-scheduling",
+        title: "Planning and Scheduling",
+        group: "personal-productivity",
+        icon: CalendarDays,
+        getItems: () => [
+          resolveApp("/kalender", "Kalender & Timeline", CalendarDays),
+          resolveApp("/events", "Events & Agenda", Ticket),
+          resolveApp("/lainnya?app=daily-planner", "Daily Planner", Clock),
+          resolveApp("/pomodoro", "Focus Pomodoro", Timer),
+          resolveApp("/countdown", "Countdown Timer", Timer),
+          resolveApp("/eisenhower", "Eisenhower Matrix", Grid2X2),
+        ],
       },
       {
-        id: "cat-task-management",
-        title: "Task Management",
-        group: "productivity",
+        id: "cat-tasks-projects",
+        title: "Tasks and Projects",
+        group: "personal-productivity",
         icon: CheckSquare,
-        getItems: () => {
-          const item = prodItems.find((i) => i.to === "/task-manager");
-          return item ? [{ type: "app", item }] : [];
-        },
+        getItems: () => [
+          resolveApp("/task-manager", "Task Manager", CheckSquare),
+          resolveApp("/proyek-personal", "Personal Projects", FolderKanban),
+          resolveApp("/proyek", "Proyek & Tugas", CheckCircle2),
+          resolveApp("/lainnya?app=roadmap", "Milestone & Roadmap", Compass),
+        ],
       },
       {
-        id: "cat-time-management",
-        title: "Time Management",
-        group: "productivity",
-        icon: Timer,
-        getItems: () => {
-          const paths = ["/kalender", "/events", "/pomodoro"];
-          return paths
-            .map((path) => prodItems.find((i) => i.to === path))
-            .filter((item): item is NavItem => Boolean(item))
-            .map((item) => ({ type: "app", item }));
-        },
-      },
-      {
-        id: "cat-planning",
-        title: "Planning",
-        group: "productivity",
-        icon: Compass,
-        getItems: () => {
-          const item = prodItems.find((i) => i.to === "/eisenhower");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-
-      // Business Group
-      {
-        id: "cat-products-inventory",
-        title: "Products & Inventory",
-        group: "business",
-        icon: Package,
-        getItems: () => {
-          const paths = ["/katalog-produk", "/inventory"];
-          return paths
-            .map((path) => businessItems.find((i) => i.to === path))
-            .filter((item): item is NavItem => Boolean(item))
-            .map((item) => ({ type: "app", item }));
-        },
-      },
-      {
-        id: "cat-clients-communication",
-        title: "Clients & Communication",
-        group: "business",
-        icon: MessagesSquare,
-        getItems: () => {
-          const paths = ["/portal/pesan", "/contacts"];
-          return paths
-            .map((path) => businessItems.find((i) => i.to === path))
-            .filter((item): item is NavItem => Boolean(item))
-            .map((item) => ({ type: "app", item }));
-        },
-      },
-      {
-        id: "cat-reporting",
-        title: "Reporting",
-        group: "business",
-        icon: NotebookText,
-        getItems: () => {
-          const item = businessItems.find((i) => i.to === "/reports");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-
-      // Knowledge Group
-      {
-        id: "cat-capture-notes",
-        title: "Capture & Notes",
-        group: "knowledge",
-        icon: FileText,
-        getItems: () => {
-          const paths = ["/notes", "/catatan", "/ideas"];
-          return paths
-            .map((path) => knowledgeItems.find((i) => i.to === path))
-            .filter((item): item is NavItem => Boolean(item))
-            .map((item) => ({ type: "app", item }));
-        },
-      },
-      {
-        id: "cat-reference",
-        title: "Reference",
-        group: "knowledge",
-        icon: Bookmark,
-        getItems: () => {
-          const paths = ["/bookmarks", "/incoterms"];
-          return paths
-            .map((path) => knowledgeItems.find((i) => i.to === path))
-            .filter((item): item is NavItem => Boolean(item))
-            .map((item) => ({ type: "app", item }));
-        },
-      },
-      {
-        id: "cat-reading",
-        title: "Reading",
-        group: "knowledge",
-        icon: Book,
-        getItems: () => {
-          const item = knowledgeItems.find((i) => i.to === "/reading");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-
-      // Personal Group
-      {
-        id: "cat-personal-management",
-        title: "Personal Management",
-        group: "personal",
+        id: "cat-goals-habits",
+        title: "Goals and Habits",
+        group: "personal-productivity",
         icon: Target,
-        getItems: () => {
-          const paths = ["/goals", "/habits"];
-          return paths
-            .map((path) => personalItems.find((i) => i.to === path))
-            .filter((item): item is NavItem => Boolean(item))
-            .map((item) => ({ type: "app", item }));
-        },
+        getItems: () => [
+          resolveApp("/goals", "Goals & Target", Target),
+          resolveApp("/habits", "Habits & Rutinitas", Activity),
+          resolveApp("/lainnya?app=retro", "Review & Retrospective", RefreshCw),
+          resolveApp("/journal", "Journal Harian", BookOpen),
+          resolveApp("/health", "Health & Vitalitas", HeartPulse),
+          resolveApp("/workouts", "Workouts", Dumbbell),
+          resolveApp("/water", "Water Tracker", Droplet),
+        ],
+      },
+
+      // 2. Knowledge and Information
+      {
+        id: "cat-notes-ideas",
+        title: "Notes and Ideas",
+        group: "knowledge-information",
+        icon: NotebookText,
+        getItems: () => [
+          resolveApp("/catatan", "Catatan Cepat", NotebookText),
+          resolveApp("/notes", "Notes & Docs", FileText),
+          resolveApp("/lainnya?app=canvas", "Whiteboard & Canvas", LayoutGrid),
+          resolveApp("/ideas", "Ideas & Gagasan", Lightbulb),
+          resolveApp("/writing", "Writing & Drafts", PenTool),
+        ],
       },
       {
-        id: "cat-personal-projects",
-        title: "Personal Projects",
-        group: "personal",
-        icon: Briefcase,
-        getItems: () => {
-          const item = personalItems.find((i) => i.to === "/proyek-personal");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "cat-journal",
-        title: "Journal",
-        group: "personal",
+        id: "cat-research-reference",
+        title: "Research and Reference",
+        group: "knowledge-information",
         icon: BookOpen,
-        getItems: () => {
-          const item = personalItems.find((i) => i.to === "/journal");
-          return item ? [{ type: "app", item }] : [];
-        },
+        getItems: () => [
+          resolveApp("/lainnya?app=wiki", "Knowledge Base (Wiki)", BookOpen),
+          resolveApp("/reading", "Reading List", Book),
+          resolveApp("/bookmarks", "Bookmarks & Tautan", Bookmark),
+          resolveApp("/incoterms", "Panduan Incoterms", Navigation),
+          resolveApp("/courses", "Courses & Pelatihan", GraduationCap),
+          resolveApp("/flashcards", "Flashcards Belajar", Layers),
+          resolveApp("/languages", "Languages", Globe),
+        ],
+      },
+
+      // 3. Work Operations
+      {
+        id: "cat-work-planning",
+        title: "Work Planning",
+        group: "work-operations",
+        icon: FolderKanban,
+        getItems: () => [
+          resolveApp("/lainnya?app=workload", "Workload & Capacity", Gauge),
+          resolveApp("/proyek", "Proyek & Operasional", FolderKanban),
+          resolveApp("/task-manager", "Task Manager", CheckSquare),
+          resolveApp("/tugas", "Manajemen Tugas", CheckCircle2),
+          resolveApp("/kalender", "Jadwal & Timeline", CalendarDays),
+          resolveApp("/events", "Agenda Kerja", Ticket),
+          resolveApp("/eisenhower", "Prioritas Kerja", Grid2X2),
+        ],
       },
       {
-        id: "cat-finance",
-        title: "Finance",
-        group: "personal",
+        id: "cat-workflow-management",
+        title: "Workflow Management",
+        group: "work-operations",
+        icon: Workflow,
+        getItems: () => [
+          resolveApp("/lainnya?app=sop", "SOP & Prosedur Baku", ShieldCheck),
+          resolveApp("/pomodoro", "Focus Pomodoro", Timer),
+          resolveApp("/countdown", "Tenggat Waktu", Timer),
+          resolveApp("/portal.progres", "Progres & Tahapan", Workflow),
+          resolveApp("/reports", "Laporan Kerja", NotebookText),
+          resolveApp("/terminal", "Terminal Eksekusi", Binary),
+          resolveApp("/shortcut", "Pintasan Kerja", Zap),
+        ],
+      },
+      {
+        id: "cat-professional-resources",
+        title: "Professional Resources",
+        group: "work-operations",
+        icon: Briefcase,
+        getItems: () => [
+          resolveApp("/lainnya?app=templates", "Template Dokumen Kerja", FileText),
+          resolveApp("/code", "Code & Dev Tools", Code),
+          resolveApp("/design", "Design & Sketsa", PenTool),
+          resolveApp("/reading", "Referensi Kerja", Book),
+          resolveApp("/incoterms", "Panduan Incoterms", Navigation),
+          resolveApp("/courses", "Courses & Pelatihan", GraduationCap),
+          resolveApp("/exams", "Uji Kompetensi", FileText),
+        ],
+      },
+
+      // 4. Business Operations
+      {
+        id: "cat-clients-vendors",
+        title: "Clients and Vendors",
+        group: "business-operations",
+        icon: Users,
+        getItems: () => [
+          resolveApp("/contacts", "Kontak & CRM", Users),
+          resolveApp("/lainnya?app=vendors", "Vendor & Pemasok", Truck),
+          resolveApp("/portal.pesan", "Pesan Klien", MessagesSquare),
+          resolveApp("/klien", "Klien & Partner", HeartHandshake),
+          resolveApp("/portal", "Portal Kolaborasi", Share2),
+          resolveApp("/portal.jadwal", "Jadwal Pertemuan Mitra", CalendarDays),
+        ],
+      },
+      {
+        id: "cat-products-services",
+        title: "Products and Services",
+        group: "business-operations",
+        icon: Package,
+        getItems: () => [
+          resolveApp("/katalog-produk", "Katalog Produk", Package),
+          resolveApp("/lainnya?app=services-ratecard", "Daftar Tarif & Jasa", ScrollText),
+          resolveApp("/inventory", "Inventory & Stok", Archive),
+          resolveApp("/portal.dokumen", "Spesifikasi Produk", FileText),
+          resolveApp("/ideas", "Inovasi & Ide Produk", Lightbulb),
+        ],
+      },
+      {
+        id: "cat-administration-governance",
+        title: "Administration and Governance",
+        group: "business-operations",
+        icon: Building,
+        getItems: () => [
+          resolveApp("/lainnya?app=mailroom", "Agenda Surat & Ekspedisi", Mail),
+          resolveApp("/lainnya?app=minutes", "Risalah Rapat (Minutes)", ScrollText),
+          resolveApp("/reports", "Laporan Operasional", NotebookText),
+          resolveApp("/kalkulator", "Kalkulator Bisnis", Calculator),
+          resolveApp("/portal.dokumen", "Dokumen Legal Perusahaan", FileCheck),
+          resolveApp("/profil", "Profil Bisnis & Identitas", Building),
+        ],
+      },
+
+      // 5. Ownership and Security
+      {
+        id: "cat-digital-assets",
+        title: "Digital Assets",
+        group: "ownership-security",
         icon: Wallet,
-        getItems: () => {
-          const item = personalItems.find((i) => i.to === "/wallet");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-
-      // Entertainment Group (Watch, Play, Listen)
-      {
-        id: "cat-watch",
-        title: "Watch",
-        group: "entertainment",
-        icon: Film,
-        getItems: () => {
-          const item = entertainmentItems.find((i) => i.to === "/movies");
-          return item ? [{ type: "app", item }] : [];
-        },
+        getItems: () => [
+          resolveApp("/digital-assets", "Aset Digital & Lisensi", Globe),
+          resolveApp("/wallet", "Dompet Digital", Wallet),
+          resolveApp("/trunk", "Trunk Penyimpanan", Luggage),
+          resolveApp("/pouch", "Pouch Dokumen Digital", ShoppingBag),
+          resolveApp("/pocket", "Pocket Berkas", Pocket),
+        ],
       },
       {
-        id: "cat-play",
-        title: "Play",
-        group: "entertainment",
-        icon: Gamepad2,
-        getItems: () => {
-          const item = entertainmentItems.find((i) => i.to === "/games");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "cat-listen",
-        title: "Listen",
-        group: "entertainment",
-        icon: Headphones,
-        getItems: () => {
-          const podcasts = entertainmentItems.find((i) => i.to === "/podcasts");
-          const music = entertainmentItems.find((i) => i.to === "/music");
-          const items: LauncherItem[] = [];
-          if (podcasts) items.push({ type: "app", item: podcasts });
-          if (music) items.push({ type: "app", item: music });
-          return items;
-        },
-      },
-
-      // Creative Group (Visual, Creation)
-      {
-        id: "cat-visual",
-        title: "Visual",
-        group: "creative",
-        icon: Palette,
-        getItems: () => {
-          const design = creativeItems.find((i) => i.to === "/design");
-          const photo = creativeItems.find((i) => i.to === "/photography");
-          const items: LauncherItem[] = [];
-          if (design) items.push({ type: "app", item: design });
-          if (photo) items.push({ type: "app", item: photo });
-          return items;
-        },
-      },
-      {
-        id: "cat-creation",
-        title: "Creation",
-        group: "creative",
-        icon: Sparkles,
-        getItems: () => {
-          const writing = creativeItems.find((i) => i.to === "/writing");
-          const code = creativeItems.find((i) => i.to === "/code");
-          const items: LauncherItem[] = [];
-          if (writing) items.push({ type: "app", item: writing });
-          if (code) items.push({ type: "app", item: code });
-          return items;
-        },
+        id: "cat-access-storage",
+        title: "Access and Storage",
+        group: "ownership-security",
+        icon: ShieldCheck,
+        getItems: () => [
+          resolveApp("/lainnya?app=access-matrix", "Access & Key Directory", Shield),
+          resolveApp("/passwords", "Passwords & Kredensial", Key),
+          resolveApp("/vault", "Vault Enkripsi", Vault),
+          resolveApp("/bookmarks", "Brankas Tautan Aman", Bookmark),
+          resolveApp("/notes", "Catatan Rahasia", Lock),
+        ],
       },
     ];
-  }, [
-    prodItems,
-    businessItems,
-    knowledgeItems,
-    personalItems,
-    entertainmentItems,
-    creativeItems,
-  ]);
+  }, [allNavMap]);
 
-  // Default items when activeSpecific === "all"
+  // Aggregate items per tab
   const defaultItemsForTab = useMemo(() => {
-    const prodDefault: LauncherItem[] = prodItems.map((item) => ({ type: "app", item }));
-    const businessDefault: LauncherItem[] = businessItems.map((item) => ({ type: "app", item }));
-    const knowledgeDefault: LauncherItem[] = knowledgeItems.map((item) => ({ type: "app", item }));
-    const personalDefault: LauncherItem[] = personalItems.map((item) => ({ type: "app", item }));
-    const entertainmentDefault: LauncherItem[] = entertainmentItems.map((item) => ({ type: "app", item }));
-    const creativeDefault: LauncherItem[] = creativeItems.map((item) => ({ type: "app", item }));
-    const otherDefault: LauncherItem[] = otherItems.map((item) => ({ type: "app", item }));
+    const collectItems = (group?: Exclude<MainCategoryTab, "all">) => {
+      const cats = group
+        ? PRODUCTIVITY_CATEGORIES.filter((c) => c.group === group)
+        : PRODUCTIVITY_CATEGORIES;
+      const seen = new Set<string>();
+      const list: LauncherItem[] = [];
+
+      cats.forEach((cat) => {
+        cat.getItems().forEach((entry) => {
+          if (entry.type === "app" && !seen.has(entry.item.to)) {
+            seen.add(entry.item.to);
+            list.push(entry);
+          }
+        });
+      });
+      return list;
+    };
 
     return {
-      productivity: prodDefault,
-      business: businessDefault,
-      knowledge: knowledgeDefault,
-      personal: personalDefault,
-      entertainment: entertainmentDefault,
-      creative: creativeDefault,
-      other: otherDefault,
-      all: [
-        ...prodDefault,
-        ...businessDefault,
-        ...knowledgeDefault,
-        ...personalDefault,
-        ...entertainmentDefault,
-        ...creativeDefault,
-        ...otherDefault,
-      ],
+      all: collectItems(),
+      "personal-productivity": collectItems("personal-productivity"),
+      "knowledge-information": collectItems("knowledge-information"),
+      "work-operations": collectItems("work-operations"),
+      "business-operations": collectItems("business-operations"),
+      "ownership-security": collectItems("ownership-security"),
     };
-  }, [
-    prodItems,
-    businessItems,
-    knowledgeItems,
-    personalItems,
-    entertainmentItems,
-    creativeItems,
-    otherItems,
-  ]);
+  }, [PRODUCTIVITY_CATEGORIES]);
 
   // Displayed items in right grid
   const displayedItems: LauncherItem[] = useMemo(() => {
     if (activeSpecific !== "all") {
       const cat = PRODUCTIVITY_CATEGORIES.find((c) => c.id === activeSpecific);
-      if (cat) {
-        return cat.getItems();
-      }
+      return cat ? cat.getItems() : [];
     }
-
-    if (mainTab === "productivity") return defaultItemsForTab.productivity;
-    if (mainTab === "business") return defaultItemsForTab.business;
-    if (mainTab === "knowledge") return defaultItemsForTab.knowledge;
-    if (mainTab === "personal") return defaultItemsForTab.personal;
-    if (mainTab === "entertainment") return defaultItemsForTab.entertainment;
-    if (mainTab === "creative") return defaultItemsForTab.creative;
-    if (mainTab === "other") return defaultItemsForTab.other;
-
-    return defaultItemsForTab.all;
+    return defaultItemsForTab[mainTab];
   }, [activeSpecific, mainTab, PRODUCTIVITY_CATEGORIES, defaultItemsForTab]);
 
-  // Title for active category
   const activeCategoryTitle = useMemo(() => {
-    if (activeSpecific === "all") return "";
-    return PRODUCTIVITY_CATEGORIES.find((c) => c.id === activeSpecific)?.title || "";
+    if (activeSpecific === "all") return null;
+    return PRODUCTIVITY_CATEGORIES.find((c) => c.id === activeSpecific)?.title || null;
   }, [activeSpecific, PRODUCTIVITY_CATEGORIES]);
 
   // Counts for main top pills
   const totalCountAll = defaultItemsForTab.all.length;
-  const totalCountProd = defaultItemsForTab.productivity.length;
-  const totalCountBusiness = defaultItemsForTab.business.length;
-  const totalCountKnowledge = defaultItemsForTab.knowledge.length;
-  const totalCountPersonal = defaultItemsForTab.personal.length;
-  const totalCountEntertainment = defaultItemsForTab.entertainment.length;
-  const totalCountCreative = defaultItemsForTab.creative.length;
-  const totalCountOther = defaultItemsForTab.other.length;
+  const totalCountPersonal = defaultItemsForTab["personal-productivity"].length;
+  const totalCountKnowledge = defaultItemsForTab["knowledge-information"].length;
+  const totalCountWork = defaultItemsForTab["work-operations"].length;
+  const totalCountBusiness = defaultItemsForTab["business-operations"].length;
+  const totalCountOwnership = defaultItemsForTab["ownership-security"].length;
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -516,98 +420,23 @@ export function ProductivitySection({
           </span>
         </button>
 
-        {/* Productivity */}
+        {/* Personal Productivity */}
         <button
           onClick={() => {
-            setMainTab("productivity");
+            setMainTab("personal-productivity");
             setActiveSpecific("all");
           }}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "productivity"
-              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
-          }`}
-        >
-          <FolderKanban className="size-4 shrink-0" />
-          <span>Productivity</span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "productivity"
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-background/80 text-muted-foreground"
-            }`}
-          >
-            {totalCountProd}
-          </span>
-        </button>
-
-        {/* Business */}
-        <button
-          onClick={() => {
-            setMainTab("business");
-            setActiveSpecific("all");
-          }}
-          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "business"
-              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
-          }`}
-        >
-          <Briefcase className="size-4 shrink-0" />
-          <span>Business</span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "business"
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-background/80 text-muted-foreground"
-            }`}
-          >
-            {totalCountBusiness}
-          </span>
-        </button>
-
-        {/* Knowledge */}
-        <button
-          onClick={() => {
-            setMainTab("knowledge");
-            setActiveSpecific("all");
-          }}
-          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "knowledge"
-              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
-          }`}
-        >
-          <BookOpen className="size-4 shrink-0" />
-          <span>Knowledge</span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "knowledge"
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-background/80 text-muted-foreground"
-            }`}
-          >
-            {totalCountKnowledge}
-          </span>
-        </button>
-
-        {/* Personal */}
-        <button
-          onClick={() => {
-            setMainTab("personal");
-            setActiveSpecific("all");
-          }}
-          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "personal"
+            mainTab === "personal-productivity"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <User className="size-4 shrink-0" />
-          <span>Personal</span>
+          <span>Personal Productivity</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "personal"
+              mainTab === "personal-productivity"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
@@ -616,94 +445,119 @@ export function ProductivitySection({
           </span>
         </button>
 
-        {/* Entertainment */}
+        {/* Knowledge and Information */}
         <button
           onClick={() => {
-            setMainTab("entertainment");
+            setMainTab("knowledge-information");
             setActiveSpecific("all");
           }}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "entertainment"
+            mainTab === "knowledge-information"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <Film className="size-4 shrink-0" />
-          <span>Entertainment</span>
+          <BookOpen className="size-4 shrink-0" />
+          <span>Knowledge and Information</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "entertainment"
+              mainTab === "knowledge-information"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountEntertainment}
+            {totalCountKnowledge}
           </span>
         </button>
 
-        {/* Creative */}
+        {/* Work Operations */}
         <button
           onClick={() => {
-            setMainTab("creative");
+            setMainTab("work-operations");
             setActiveSpecific("all");
           }}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "creative"
+            mainTab === "work-operations"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <Sparkles className="size-4 shrink-0" />
-          <span>Creative</span>
+          <Briefcase className="size-4 shrink-0" />
+          <span>Work Operations</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "creative"
+              mainTab === "work-operations"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountCreative}
+            {totalCountWork}
           </span>
         </button>
 
-        {/* Other */}
+        {/* Business Operations */}
         <button
           onClick={() => {
-            setMainTab("other");
+            setMainTab("business-operations");
             setActiveSpecific("all");
           }}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "other"
+            mainTab === "business-operations"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <MoreHorizontal className="size-4 shrink-0" />
-          <span>Other</span>
+          <Building className="size-4 shrink-0" />
+          <span>Business Operations</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "other"
+              mainTab === "business-operations"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountOther}
+            {totalCountBusiness}
+          </span>
+        </button>
+
+        {/* Ownership and Security */}
+        <button
+          onClick={() => {
+            setMainTab("ownership-security");
+            setActiveSpecific("all");
+          }}
+          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+            mainTab === "ownership-security"
+              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
+              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
+          }`}
+        >
+          <ShieldCheck className="size-4 shrink-0" />
+          <span>Ownership and Security</span>
+          <span
+            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+              mainTab === "ownership-security"
+                ? "bg-primary-foreground/20 text-primary-foreground"
+                : "bg-background/80 text-muted-foreground"
+            }`}
+          >
+            {totalCountOwnership}
           </span>
         </button>
       </div>
 
       {/* 12-Column Container */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 max-w-[1640px] mx-auto w-full mb-[10pt] items-start">
-        {/* LEFT: 3 Columns Space - Ukuran Layout Kategori Dikecilkan 5% agar ada margin lega di kiri & kanan */}
+        {/* LEFT: 3 Columns Space */}
         <div className="xl:col-span-3 w-full flex flex-col items-center xl:items-start">
           <div
-            className="w-[95%] max-w-[95%] mx-auto flex flex-col gap-1.5 max-h-[720px] overflow-y-auto px-1.5 py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            className="w-full flex flex-col gap-1.5 max-h-[720px] overflow-y-auto px-1 py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {/* Option Semua untuk Tab yang Aktif */}
             <button
               onClick={() => setActiveSpecific("all")}
-              className={`w-full text-left px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
+              className={`w-full text-left px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
                 activeSpecific === "all"
                   ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
                   : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
@@ -722,19 +576,15 @@ export function ProductivitySection({
               >
                 {mainTab === "all"
                   ? totalCountAll
-                  : mainTab === "productivity"
-                  ? totalCountProd
-                  : mainTab === "business"
-                  ? totalCountBusiness
-                  : mainTab === "knowledge"
-                  ? totalCountKnowledge
-                  : mainTab === "personal"
+                  : mainTab === "personal-productivity"
                   ? totalCountPersonal
-                  : mainTab === "entertainment"
-                  ? totalCountEntertainment
-                  : mainTab === "creative"
-                  ? totalCountCreative
-                  : totalCountOther}
+                  : mainTab === "knowledge-information"
+                  ? totalCountKnowledge
+                  : mainTab === "work-operations"
+                  ? totalCountWork
+                  : mainTab === "business-operations"
+                  ? totalCountBusiness
+                  : totalCountOwnership}
               </span>
             </button>
 
@@ -750,7 +600,7 @@ export function ProductivitySection({
                 <button
                   key={cat.id}
                   onClick={() => setActiveSpecific(cat.id)}
-                  className={`w-full text-left px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
+                  className={`w-full text-left px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
                     isActive
                       ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
                       : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
@@ -783,19 +633,15 @@ export function ProductivitySection({
               <span className="font-semibold text-foreground/90">
                 {mainTab === "all"
                   ? "Semua"
-                  : mainTab === "productivity"
-                  ? "Productivity"
-                  : mainTab === "business"
-                  ? "Business"
-                  : mainTab === "knowledge"
-                  ? "Knowledge"
-                  : mainTab === "personal"
-                  ? "Personal"
-                  : mainTab === "entertainment"
-                  ? "Entertainment"
-                  : mainTab === "creative"
-                  ? "Creative"
-                  : "Other"}
+                  : mainTab === "personal-productivity"
+                  ? "Personal Productivity"
+                  : mainTab === "knowledge-information"
+                  ? "Knowledge and Information"
+                  : mainTab === "work-operations"
+                  ? "Work Operations"
+                  : mainTab === "business-operations"
+                  ? "Business Operations"
+                  : "Ownership and Security"}
               </span>
               {activeCategoryTitle && (
                 <>

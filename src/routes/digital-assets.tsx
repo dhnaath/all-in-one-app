@@ -1,18 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/app/app-shell";
+import { StandaloneAppView } from "@/features/standalone/StandaloneAppView";
 
 export const Route = createFileRoute("/digital-assets")({
+  head: () => ({
+    meta: [
+      { title: "Aset Digital & Lisensi — Client OS" },
+      { name: "description", content: "Inventaris domain, server, SaaS, dan lisensi digital." },
+    ],
+  }),
   component: DigitalAssetsPage,
 });
 
 function DigitalAssetsPage() {
   return (
-    <AppShell title="Digital Assets" subtitle="Aset kripto, token, dan portofolio digital">
+    <AppShell title="Aset Digital & Lisensi" subtitle="Inventaris domain, server, SaaS, dan lisensi digital">
       <div className="w-full">
-        <p className="text-muted-foreground">
-          Manajemen portofolio digital assets akan ditampilkan di sini.
-        </p>
+        <StandaloneAppView appId="digital-assets" />
       </div>
     </AppShell>
   );
 }
+

@@ -12,6 +12,11 @@ import { PersonalEssentialsSection } from "@/features/launcher/PersonalEssential
 import { PeopleFamilySocietySection } from "@/features/launcher/PeopleFamilySocietySection";
 import { useLanguage } from "@/features/finance/hooks/useLanguage";
 import { translations } from "@/features/finance/translations";
+import {
+  getLastLauncherPage,
+  setLastLauncherPage,
+  recordActiveApp,
+} from "@/utils/launcherCategoryMapper";
 
 export const Route = createFileRoute("/")({
   component: Launcher,
@@ -91,7 +96,7 @@ const SUPER_CATEGORIES = [
     ],
   },
   {
-    title: "Produktivitas",
+    title: "Productivity, Operations, and Ownership",
     subCategories: [
       "Productivity",
       "Business",
@@ -281,13 +286,77 @@ function Launcher() {
     }).filter((page) => page.subCategories.some((sub) => sub.rawItems.length > 0));
   }, []);
 
-  // Handle scroll to update current page
+  // Restore category page based on last opened or closed menu app
   useEffect(() => {
+    if (!pages.length) return;
+    const targetPage = getLastLauncherPage(pages.length);
+    setCurrentPage(targetPage);
+
+    const applyScroll = (instant = false) => {
+      if (scrollRef.current) {
+        const el = scrollRef.current;
+        const width = el.clientWidth;
+        if (width > 0 && targetPage >= 0) {
+          const prevBehavior = el.style.scrollBehavior;
+          if (instant) {
+            el.style.scrollBehavior = "auto";
+          }
+          el.scrollLeft = targetPage * width;
+          if (instant) {
+            requestAnimationFrame(() => {
+              if (el) {
+                el.style.scrollBehavior = prevBehavior || "smooth";
+              }
+            });
+          }
+        }
+      }
+    };
+
+    // Immediate instant position on initial mount
+    applyScroll(true);
+
+    const timer1 = setTimeout(() => applyScroll(true), 30);
+    const timer2 = setTimeout(() => applyScroll(true), 120);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [pages.length]);
+
+  // Listen to cross-component launcher page updates
+  useEffect(() => {
+    const handleUpdate = (e: Event) => {
+      const custom = e as CustomEvent<{ pageIndex?: number }>;
+      if (custom.detail && typeof custom.detail.pageIndex === "number") {
+        const p = custom.detail.pageIndex;
+        if (p >= 0 && p < pages.length) {
+          setCurrentPage(p);
+          scrollToPage(p);
+        }
+      }
+    };
+    window.addEventListener("aio_launcher_page_updated", handleUpdate);
+    return () => window.removeEventListener("aio_launcher_page_updated", handleUpdate);
+  }, [pages.length]);
+
+  // Handle scroll to update current page and persist it
+  useEffect(() => {
+    let timeoutId: any = null;
     const handleScroll = () => {
       if (scrollRef.current) {
         const { scrollLeft, clientWidth } = scrollRef.current;
-        const page = Math.round(scrollLeft / clientWidth);
-        setCurrentPage(page);
+        if (clientWidth > 0) {
+          const page = Math.round(scrollLeft / clientWidth);
+          if (page >= 0 && page < pages.length) {
+            setCurrentPage(page);
+            if (timeoutId) clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+              setLastLauncherPage(page, pages.length);
+            }, 100);
+          }
+        }
       }
     };
     const el = scrollRef.current;
@@ -296,15 +365,18 @@ function Launcher() {
     }
     return () => {
       if (el) el.removeEventListener("scroll", handleScroll);
+      if (timeoutId) clearTimeout(timeoutId);
     };
-  }, []);
+  }, [pages.length]);
 
   const scrollToPage = (pageIndex: number) => {
-    if (scrollRef.current) {
+    if (scrollRef.current && pageIndex >= 0 && pageIndex < pages.length) {
       scrollRef.current.scrollTo({
         left: pageIndex * scrollRef.current.clientWidth,
         behavior: "smooth",
       });
+      setCurrentPage(pageIndex);
+      setLastLauncherPage(pageIndex, pages.length);
     }
   };
 
@@ -380,7 +452,11 @@ function Launcher() {
                 );
               }
 
-              if (page.title === "Produktivitas") {
+              if (
+                page.title === "Productivity, Operations, and Ownership" ||
+                page.title === "Productivity" ||
+                page.title === "Produktivitas"
+              ) {
                 return (
                   <div
                     key={pageIdx}
@@ -724,6 +800,9 @@ function Launcher() {
                             key={item.to}
                             to={itemPath}
                             search={itemSearch as any}
+                            onClick={() => {
+                              recordActiveApp(item.to, pageIdx);
+                            }}
                             className="flex flex-col items-center gap-3 group w-full outline-none relative"
                           >
                             <div 
@@ -896,7 +975,10 @@ function Launcher() {
                       key={item.to}
                       to={itemPath}
                       search={itemSearch as any}
-                      onClick={() => setActiveFolder(null)}
+                      onClick={() => {
+                        setActiveFolder(null);
+                        recordActiveApp(item.to, currentPage);
+                      }}
                       className="flex flex-col items-center gap-2.5 group w-full outline-none relative"
                     >
                       <div

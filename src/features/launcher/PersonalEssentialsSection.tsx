@@ -26,9 +26,40 @@ import {
   Plane,
   CalendarDays,
   Users,
+  Sparkles,
+  NotebookText,
+  Lightbulb,
+  PenTool,
+  FileText,
+  Package,
+  Archive,
+  CreditCard,
+  Receipt,
+  HeartPulse,
+  Music,
+  Podcast,
+  Shield,
+  ShieldCheck,
+  RefreshCw,
+  Truck,
+  CheckSquare,
+  FolderKanban,
+  Compass,
+  Smile,
+  Award,
+  TrendingDown,
+  Stethoscope,
+  Moon,
+  AlertTriangle,
+  Wrench,
+  Car,
+  Fuel,
+  Trash2,
+  Zap,
+  Gauge,
   type LucideIcon,
 } from "lucide-react";
-import { type NavItem } from "@/config/nav";
+import { navKonsultan, type NavItem } from "@/config/nav";
 
 type LauncherItem =
   | { type: "app"; item: NavItem }
@@ -49,10 +80,20 @@ interface PersonalEssentialsSectionProps {
   }>;
 }
 
+export type MainPersonalTab =
+  | "all"
+  | "personal-management"
+  | "shopping-consumption"
+  | "health-wellness"
+  | "food-pantry"
+  | "home-management"
+  | "vehicle-mobility"
+  | "household-lifecycle";
+
 interface SpecificCategory {
   id: string;
   title: string;
-  group: "personal" | "essentials" | "household";
+  group: Exclude<MainPersonalTab, "all">;
   icon: LucideIcon;
   getItems: () => LauncherItem[];
 }
@@ -64,116 +105,281 @@ export function PersonalEssentialsSection({
   getGradient,
   FolderTile,
 }: PersonalEssentialsSectionProps) {
-  const [mainTab, setMainTab] = useState<"all" | "personal" | "essentials" | "household">("all");
+  const [mainTab, setMainTab] = useState<MainPersonalTab>("all");
   const [activeSpecific, setActiveSpecific] = useState<string>("all");
 
-  // Specific Categories Definitions
+  // Quick lookup helper for NavItem from navKonsultan
+  const allNavMap = useMemo(() => {
+    const map = new Map<string, NavItem>();
+    navKonsultan.forEach((group) => {
+      group.items.forEach((item) => {
+        if (!map.has(item.to)) {
+          map.set(item.to, item);
+        }
+      });
+    });
+    return map;
+  }, []);
+
+  const resolveApp = (to: string, label: string, icon: LucideIcon): LauncherItem => {
+    const found = allNavMap.get(to);
+    return {
+      type: "app",
+      item: found || { to, label, icon },
+    };
+  };
+
+  // User requested category hierarchy:
+  // 1. Personal Management
+  //    - Personal Planning
+  //    - Journal and Reflection
+  //    - Personal Documents
+  // 2. Shopping and Consumption
+  //    - Shopping
+  //    - Products and Purchases
+  // 3. Health and Wellness
+  //    - Health Records
+  //    - Fitness and Nutrition
+  //    - Personal Care
+  // 4. Food and Pantry
+  //    - Food Management
+  //    - Food Lifecycle
+  // 5. Home Management
+  //    - Home Operations
+  //    - Home Maintenance
+  // 6. Vehicle and Mobility
+  //    - Vehicle Records
+  //    - Vehicle Maintenance
+  // 7. Household Lifecycle
+  //    - Expiry and Renewal
   const specificCategories: SpecificCategory[] = useMemo(() => {
     return [
-      // PERSONAL
+      // 1. Personal Management
       {
-        id: "pers-goals",
-        title: "Goals & Habits",
-        group: "personal",
+        id: "cat-personal-planning",
+        title: "Personal Planning",
+        group: "personal-management",
         icon: Target,
         getItems: () => [
-          { type: "app", item: { to: "/goals", label: "Goals", icon: Target } },
-          { type: "app", item: { to: "/habits", label: "Habits", icon: Activity } },
+          resolveApp("/goals", "Goals & Target", Target),
+          resolveApp("/habits", "Habits & Rutinitas", Activity),
+          resolveApp("/lainnya?app=vision-board", "Vision Board & Impian", Compass),
+          resolveApp("/lainnya?app=bucket-list", "Bucket List & Cita-Cita", CheckSquare),
+          resolveApp("/kalender", "Kalender Personal", CalendarDays),
+          resolveApp("/countdown", "Countdown & Milestones", Timer),
+          resolveApp("/proyek-personal", "Personal Projects", FolderKanban),
         ],
       },
       {
-        id: "pers-reflection",
-        title: "Refleksi & Proyek",
-        group: "personal",
+        id: "cat-journal-reflection",
+        title: "Journal and Reflection",
+        group: "personal-management",
         icon: BookOpen,
         getItems: () => [
-          { type: "app", item: { to: "/journal", label: "Journal", icon: BookOpen } },
-          { type: "app", item: { to: "/proyek-personal", label: "Personal Projects", icon: Briefcase } },
-          { type: "app", item: { to: "/wallet", label: "Wallet", icon: Wallet } },
+          resolveApp("/journal", "Daily Journal", BookOpen),
+          resolveApp("/lainnya?app=gratitude", "Buku Syukur (Gratitude)", Heart),
+          resolveApp("/lainnya?app=mood-tracker", "Mood & Energi Harian", Smile),
+          resolveApp("/catatan", "Catatan & Ide", NotebookText),
+          resolveApp("/ideas", "Gagasan & Brainstorm", Lightbulb),
+          resolveApp("/writing", "Writing & Refleksi", PenTool),
+        ],
+      },
+      {
+        id: "cat-personal-documents",
+        title: "Personal Documents",
+        group: "personal-management",
+        icon: Pocket,
+        getItems: () => [
+          resolveApp("/lainnya?app=id-wallet", "KTP & Identitas Resmi", Shield),
+          resolveApp("/lainnya?app=certificates", "Ijazah & Sertifikat", Award),
+          resolveApp("/pocket", "Pocket Berkas", Pocket),
+          resolveApp("/pouch", "Pouch Dokumen", ShoppingBag),
+          resolveApp("/vault", "Vault Enkripsi", Vault),
+          resolveApp("/passwords", "Passwords & Akses", Key),
+          resolveApp("/portal.dokumen", "Arsip Dokumen", FileText),
         ],
       },
 
-      // ESSENTIALS
+      // 2. Shopping and Consumption
       {
-        id: "ess-wellness",
-        title: "Kesehatan & Kebugaran",
-        group: "essentials",
+        id: "cat-shopping",
+        title: "Shopping",
+        group: "shopping-consumption",
+        icon: ShoppingCart,
+        getItems: () => [
+          resolveApp("/shopping", "Shopping List", ShoppingCart),
+          resolveApp("/lainnya?app=price-tracker", "Pembanding Harga", TrendingDown),
+          resolveApp("/lainnya?app=wishlist-planner", "Rencana Belanja (Wishlist)", ShoppingBag),
+          resolveApp("/kalkulator", "Kalkulator Belanja", Calculator),
+          resolveApp("/katalog-produk", "Wishlist Belanja", Package),
+          resolveApp("/inventory", "Cek Stok Domestik", Archive),
+        ],
+      },
+      {
+        id: "cat-products-purchases",
+        title: "Products and Purchases",
+        group: "shopping-consumption",
+        icon: Package,
+        getItems: () => [
+          resolveApp("/lainnya?app=warranty", "Garansi & Bukti Nota", ShieldCheck),
+          resolveApp("/lainnya?app=subscription", "Langganan & Berlangganan", RefreshCw),
+          resolveApp("/katalog-produk", "Katalog Pembelian", Package),
+          resolveApp("/inventory", "Inventory & Barang", Archive),
+          resolveApp("/pouch", "Nota & Bukti Pembelian", ShoppingBag),
+          resolveApp("/pocket", "Garansi & Panduan Produk", Pocket),
+        ],
+      },
+
+      // 3. Health and Wellness
+      {
+        id: "cat-health-records",
+        title: "Health Records",
+        group: "health-wellness",
         icon: Heart,
         getItems: () => [
-          { type: "app", item: { to: "/health", label: "Health", icon: Heart } },
-          { type: "app", item: { to: "/workouts", label: "Workouts", icon: Dumbbell } },
-          { type: "app", item: { to: "/water", label: "Water Tracker", icon: Droplet } },
+          resolveApp("/health", "Catatan Kesehatan", Heart),
+          resolveApp("/lainnya?app=medical-history", "Riwayat Rekam Medis", Stethoscope),
+          resolveApp("/lainnya?app=vitals", "Tekanan & Gula Darah", Activity),
+          resolveApp("/habits", "Pola Hidup & Vitalitas", Activity),
+          resolveApp("/weather", "Cuaca & Lingkungan", CloudSun),
         ],
       },
       {
-        id: "ess-security",
-        title: "Saku & Keamanan",
-        group: "essentials",
-        icon: Key,
+        id: "cat-fitness-nutrition",
+        title: "Fitness and Nutrition",
+        group: "health-wellness",
+        icon: Dumbbell,
         getItems: () => [
-          { type: "app", item: { to: "/passwords", label: "Passwords", icon: Key } },
-          { type: "app", item: { to: "/vault", label: "Vault", icon: Vault } },
-          { type: "app", item: { to: "/pocket", label: "Pocket", icon: Pocket } },
-          { type: "app", item: { to: "/pouch", label: "Pouch", icon: ShoppingBag } },
-          { type: "app", item: { to: "/trunk", label: "Trunk", icon: Luggage } },
+          resolveApp("/workouts", "Workouts & Latihan", Dumbbell),
+          resolveApp("/lainnya?app=meal-planner", "Perencana Menu Mingguan", Utensils),
+          resolveApp("/lainnya?app=body-metrics", "Pengukuran Tubuh & Berat", Gauge),
+          resolveApp("/water", "Water Tracker & Hidrasi", Droplet),
+          resolveApp("/recipes", "Nutrisi & Makanan Sehat", Utensils),
         ],
       },
       {
-        id: "ess-utilities",
-        title: "Utilitas Harian",
-        group: "essentials",
-        icon: Calculator,
+        id: "cat-personal-care",
+        title: "Personal Care",
+        group: "health-wellness",
+        icon: Sparkles,
         getItems: () => [
-          { type: "app", item: { to: "/weather", label: "Weather", icon: CloudSun } },
-          { type: "app", item: { to: "/kalkulator", label: "Kalkulator Umum", icon: Calculator } },
-          { type: "app", item: { to: "/countdown", label: "Countdown", icon: Timer } },
+          resolveApp("/lainnya?app=sleep-tracker", "Kualitas Tidur & Istirahat", Moon),
+          resolveApp("/lainnya?app=skincare-routine", "Skincare & Grooming", Sparkles),
+          resolveApp("/habits", "Rutinitas Perawatan", Sparkles),
+          resolveApp("/trips", "Relaksasi & Liburan", Plane),
+          resolveApp("/music", "Audio Relaksasi", Music),
+          resolveApp("/podcasts", "Wellness Podcasts", Podcast),
         ],
       },
 
-      // HOUSEHOLD
+      // 4. Food and Pantry
       {
-        id: "hh-living",
-        title: "Dapur & Belanja",
-        group: "household",
+        id: "cat-food-management",
+        title: "Food Management",
+        group: "food-pantry",
         icon: Utensils,
         getItems: () => [
-          { type: "app", item: { to: "/shopping", label: "Shopping List", icon: ShoppingCart } },
-          { type: "app", item: { to: "/recipes", label: "Recipes", icon: Utensils } },
+          resolveApp("/recipes", "Buku Resep & Menu", Utensils),
+          resolveApp("/lainnya?app=kitchen-inventory", "Inventaris Bahan Dapur", Archive),
+          resolveApp("/lainnya?app=cook-log", "Jurnal Memasak", BookOpen),
+          resolveApp("/shopping", "Bahan Makanan (Groceries)", ShoppingCart),
+          resolveApp("/inventory", "Stok Dapur & Pantry", Archive),
         ],
       },
       {
-        id: "hh-logistics",
-        title: "Perjalanan & Finansial Rumah",
-        group: "household",
-        icon: Plane,
+        id: "cat-food-lifecycle",
+        title: "Food Lifecycle",
+        group: "food-pantry",
+        icon: Timer,
         getItems: () => [
-          { type: "app", item: { to: "/trips", label: "Trips", icon: Plane } },
-          { type: "app", item: { to: "/budget", label: "Anggaran Rumah", icon: Wallet } },
+          resolveApp("/lainnya?app=expiry-alert", "Peringatan Kadaluarsa", AlertTriangle),
+          resolveApp("/lainnya?app=leftover-ideas", "Manajemen Makanan Sisa", RefreshCw),
+          resolveApp("/countdown", "Masa Simpan & Kadaluarsa", Timer),
+          resolveApp("/water", "Konsumsi Air Harian", Droplet),
+          resolveApp("/habits", "Pola Konsumsi Seimbang", Activity),
+        ],
+      },
+
+      // 5. Home Management
+      {
+        id: "cat-home-operations",
+        title: "Home Operations",
+        group: "home-management",
+        icon: Home,
+        getItems: () => [
+          resolveApp("/home", "Manajemen Hunian", Home),
+          resolveApp("/lainnya?app=home-chores", "Jadwal Piket & Kebersihan", CheckSquare),
+          resolveApp("/lainnya?app=utility-tracker", "Catatan Meteran Listrik & Air", Zap),
+          resolveApp("/kalender", "Jadwal Domestik", CalendarDays),
+          resolveApp("/contacts", "Kontak Keluarga & Darurat", Users),
+          resolveApp("/task-manager", "Tugas & Urusan Rumah", CheckSquare),
         ],
       },
       {
-        id: "hh-family",
-        title: "Agenda & Keluarga",
-        group: "household",
-        icon: Users,
+        id: "cat-home-maintenance",
+        title: "Home Maintenance",
+        group: "home-management",
+        icon: CheckSquare,
         getItems: () => [
-          { type: "app", item: { to: "/kalender", label: "Jadwal Domestik", icon: CalendarDays } },
-          { type: "app", item: { to: "/contacts", label: "Kontak Keluarga", icon: Users } },
-          { type: "app", item: { to: "/events", label: "Pertemuan Kerabat", icon: CalendarDays } },
+          resolveApp("/lainnya?app=appliance-care", "Servis Elektronik & Alat", Wrench),
+          resolveApp("/lainnya?app=home-inventory", "Inventaris Perabot & Ruangan", Home),
+          resolveApp("/proyek", "Pemeliharaan & Renovasi", CheckSquare),
+          resolveApp("/trunk", "Gudang & Perkakas", Luggage),
+          resolveApp("/vault", "Berkas Hunian Terenkripsi", Vault),
+          resolveApp("/events", "Agenda Servis Rumah", CalendarDays),
+        ],
+      },
+
+      // 6. Vehicle and Mobility
+      {
+        id: "cat-vehicle-records",
+        title: "Vehicle Records",
+        group: "vehicle-mobility",
+        icon: FileText,
+        getItems: () => [
+          resolveApp("/lainnya?app=vehicle-identity", "BPKB, STNK & Data Kendaraan", Car),
+          resolveApp("/lainnya?app=mileage-fuel", "Catatan BBM & Odometer", Fuel),
+          resolveApp("/trips", "Riwayat Perjalanan (Trips)", Plane),
+          resolveApp("/pocket", "Dokumen & STNK Kendaraan", Pocket),
+          resolveApp("/vault", "Arsip Manual & Legal Kendaraan", Vault),
+        ],
+      },
+      {
+        id: "cat-vehicle-maintenance",
+        title: "Vehicle Maintenance",
+        group: "vehicle-mobility",
+        icon: ShieldCheck,
+        getItems: () => [
+          resolveApp("/lainnya?app=vehicle-service", "Riwayat Servis & Bengkel", Wrench),
+          resolveApp("/lainnya?app=parts-lifecycle", "Siklus Ban, Aki & Komponen", RefreshCw),
+          resolveApp("/kalender", "Jadwal Servis Berkala", CalendarDays),
+          resolveApp("/countdown", "Tenggat Servis & Uji Emisi", Timer),
+          resolveApp("/proyek", "Log Pemeliharaan Kendaraan", CheckSquare),
+        ],
+      },
+
+      // 7. Household Lifecycle
+      {
+        id: "cat-expiry-renewal",
+        title: "Expiry and Renewal",
+        group: "household-lifecycle",
+        icon: RefreshCw,
+        getItems: () => [
+          resolveApp("/lainnya?app=household-renewals", "Jatuh Tempo Pajak, Asuransi & Iuran", CalendarDays),
+          resolveApp("/lainnya?app=item-disposal", "Barang Dihibahkan & Daur Ulang", Trash2),
+          resolveApp("/countdown", "Pengingat Kadaluarsa & Tenggat", Timer),
+          resolveApp("/kalender", "Jadwal Perpanjangan Domestik", CalendarDays),
+          resolveApp("/portal.dokumen", "Arsip Pembaruan Dokumen", FileText),
+          resolveApp("/passwords", "Pembaruan Akses & Sandi", Key),
+          resolveApp("/events", "Jadwal Pembaruan Dokumen", CalendarDays),
         ],
       },
     ];
-  }, []);
+  }, [allNavMap]);
 
-  // Filter specific categories according to mainTab
-  const visibleCategories = useMemo(() => {
-    if (mainTab === "all") return specificCategories;
-    return specificCategories.filter((c) => c.group === mainTab);
-  }, [mainTab, specificCategories]);
-
-  // Compute default items for each main tab
+  // Aggregate items per tab
   const defaultItemsForTab = useMemo(() => {
-    const collectItems = (groupName?: "personal" | "essentials" | "household") => {
+    const collectItems = (groupName?: Exclude<MainPersonalTab, "all">) => {
       const cats = groupName
         ? specificCategories.filter((c) => c.group === groupName)
         : specificCategories;
@@ -201,9 +407,13 @@ export function PersonalEssentialsSection({
 
     return {
       all: collectItems(),
-      personal: collectItems("personal"),
-      essentials: collectItems("essentials"),
-      household: collectItems("household"),
+      "personal-management": collectItems("personal-management"),
+      "shopping-consumption": collectItems("shopping-consumption"),
+      "health-wellness": collectItems("health-wellness"),
+      "food-pantry": collectItems("food-pantry"),
+      "home-management": collectItems("home-management"),
+      "vehicle-mobility": collectItems("vehicle-mobility"),
+      "household-lifecycle": collectItems("household-lifecycle"),
     };
   }, [specificCategories]);
 
@@ -224,9 +434,13 @@ export function PersonalEssentialsSection({
 
   // Counts
   const totalCountAll = defaultItemsForTab.all.length;
-  const totalCountPersonal = defaultItemsForTab.personal.length;
-  const totalCountEssentials = defaultItemsForTab.essentials.length;
-  const totalCountHousehold = defaultItemsForTab.household.length;
+  const totalCountPersonal = defaultItemsForTab["personal-management"].length;
+  const totalCountShopping = defaultItemsForTab["shopping-consumption"].length;
+  const totalCountHealth = defaultItemsForTab["health-wellness"].length;
+  const totalCountFood = defaultItemsForTab["food-pantry"].length;
+  const totalCountHome = defaultItemsForTab["home-management"].length;
+  const totalCountVehicle = defaultItemsForTab["vehicle-mobility"].length;
+  const totalCountLifecycle = defaultItemsForTab["household-lifecycle"].length;
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -267,23 +481,23 @@ export function PersonalEssentialsSection({
           </span>
         </button>
 
-        {/* Personal */}
+        {/* Personal Management */}
         <button
           onClick={() => {
-            setMainTab("personal");
+            setMainTab("personal-management");
             setActiveSpecific("all");
           }}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "personal"
+            mainTab === "personal-management"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <User className="size-4 shrink-0" />
-          <span>Personal</span>
+          <span>Personal Management</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "personal"
+              mainTab === "personal-management"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
@@ -292,53 +506,153 @@ export function PersonalEssentialsSection({
           </span>
         </button>
 
-        {/* Essentials */}
+        {/* Shopping and Consumption */}
         <button
           onClick={() => {
-            setMainTab("essentials");
+            setMainTab("shopping-consumption");
             setActiveSpecific("all");
           }}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "essentials"
+            mainTab === "shopping-consumption"
+              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
+              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
+          }`}
+        >
+          <ShoppingCart className="size-4 shrink-0" />
+          <span>Shopping and Consumption</span>
+          <span
+            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+              mainTab === "shopping-consumption"
+                ? "bg-primary-foreground/20 text-primary-foreground"
+                : "bg-background/80 text-muted-foreground"
+            }`}
+          >
+            {totalCountShopping}
+          </span>
+        </button>
+
+        {/* Health and Wellness */}
+        <button
+          onClick={() => {
+            setMainTab("health-wellness");
+            setActiveSpecific("all");
+          }}
+          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+            mainTab === "health-wellness"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <Heart className="size-4 shrink-0" />
-          <span>Essentials</span>
+          <span>Health and Wellness</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "essentials"
+              mainTab === "health-wellness"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountEssentials}
+            {totalCountHealth}
           </span>
         </button>
 
-        {/* Household */}
+        {/* Food and Pantry */}
         <button
           onClick={() => {
-            setMainTab("household");
+            setMainTab("food-pantry");
             setActiveSpecific("all");
           }}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "household"
+            mainTab === "food-pantry"
+              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
+              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
+          }`}
+        >
+          <Utensils className="size-4 shrink-0" />
+          <span>Food and Pantry</span>
+          <span
+            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+              mainTab === "food-pantry"
+                ? "bg-primary-foreground/20 text-primary-foreground"
+                : "bg-background/80 text-muted-foreground"
+            }`}
+          >
+            {totalCountFood}
+          </span>
+        </button>
+
+        {/* Home Management */}
+        <button
+          onClick={() => {
+            setMainTab("home-management");
+            setActiveSpecific("all");
+          }}
+          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+            mainTab === "home-management"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <Home className="size-4 shrink-0" />
-          <span>Household</span>
+          <span>Home Management</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "household"
+              mainTab === "home-management"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountHousehold}
+            {totalCountHome}
+          </span>
+        </button>
+
+        {/* Vehicle and Mobility */}
+        <button
+          onClick={() => {
+            setMainTab("vehicle-mobility");
+            setActiveSpecific("all");
+          }}
+          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+            mainTab === "vehicle-mobility"
+              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
+              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
+          }`}
+        >
+          <Truck className="size-4 shrink-0" />
+          <span>Vehicle and Mobility</span>
+          <span
+            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+              mainTab === "vehicle-mobility"
+                ? "bg-primary-foreground/20 text-primary-foreground"
+                : "bg-background/80 text-muted-foreground"
+            }`}
+          >
+            {totalCountVehicle}
+          </span>
+        </button>
+
+        {/* Household Lifecycle */}
+        <button
+          onClick={() => {
+            setMainTab("household-lifecycle");
+            setActiveSpecific("all");
+          }}
+          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+            mainTab === "household-lifecycle"
+              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
+              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
+          }`}
+        >
+          <RefreshCw className="size-4 shrink-0" />
+          <span>Household Lifecycle</span>
+          <span
+            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+              mainTab === "household-lifecycle"
+                ? "bg-primary-foreground/20 text-primary-foreground"
+                : "bg-background/80 text-muted-foreground"
+            }`}
+          >
+            {totalCountLifecycle}
           </span>
         </button>
       </div>
@@ -348,13 +662,13 @@ export function PersonalEssentialsSection({
         {/* LEFT: 3 Columns Space */}
         <div className="xl:col-span-3 w-full flex flex-col items-center xl:items-start">
           <div
-            className="w-[95%] max-w-[95%] mx-auto flex flex-col gap-1.5 max-h-[720px] overflow-y-auto px-1.5 py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            className="w-full flex flex-col gap-1.5 max-h-[720px] overflow-y-auto px-1 py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {/* Option Semua untuk Tab yang Aktif */}
             <button
               onClick={() => setActiveSpecific("all")}
-              className={`w-full text-left px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
+              className={`w-full text-left px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
                 activeSpecific === "all"
                   ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
                   : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
@@ -373,46 +687,59 @@ export function PersonalEssentialsSection({
               >
                 {mainTab === "all"
                   ? totalCountAll
-                  : mainTab === "personal"
+                  : mainTab === "personal-management"
                   ? totalCountPersonal
-                  : mainTab === "essentials"
-                  ? totalCountEssentials
-                  : totalCountHousehold}
+                  : mainTab === "shopping-consumption"
+                  ? totalCountShopping
+                  : mainTab === "health-wellness"
+                  ? totalCountHealth
+                  : mainTab === "food-pantry"
+                  ? totalCountFood
+                  : mainTab === "home-management"
+                  ? totalCountHome
+                  : mainTab === "vehicle-mobility"
+                  ? totalCountVehicle
+                  : totalCountLifecycle}
               </span>
             </button>
 
-            {/* List Spesifik Kategori */}
-            {visibleCategories.map((cat) => {
-              const Icon = cat.icon;
-              const count = cat.getItems().length;
-              const isActive = activeSpecific === cat.id;
+            {/* Specific Categories filtered by mainTab */}
+            {specificCategories
+              .filter((cat) => {
+                if (mainTab === "all") return true;
+                return cat.group === mainTab;
+              })
+              .map((cat) => {
+                const Icon = cat.icon;
+                const count = cat.getItems().length;
+                const isActive = activeSpecific === cat.id;
 
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveSpecific(cat.id)}
-                  className={`w-full text-left px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
-                      : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
-                  }`}
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <Icon className="size-3.5 shrink-0" />
-                    <span className="truncate">{cat.title}</span>
-                  </div>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveSpecific(cat.id)}
+                    className={`w-full text-left px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
                       isActive
-                        ? "bg-primary-foreground/20 text-primary-foreground"
-                        : "bg-background/80 text-muted-foreground"
+                        ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
+                        : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
                     }`}
                   >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Icon className="size-3.5 shrink-0" />
+                      <span className="truncate">{cat.title}</span>
+                    </div>
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
+                        isActive
+                          ? "bg-primary-foreground/20 text-primary-foreground"
+                          : "bg-background/80 text-muted-foreground"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
           </div>
         </div>
 
@@ -424,11 +751,19 @@ export function PersonalEssentialsSection({
               <span className="font-semibold text-foreground/90">
                 {mainTab === "all"
                   ? "Semua"
-                  : mainTab === "personal"
-                  ? "Personal"
-                  : mainTab === "essentials"
-                  ? "Essentials"
-                  : "Household"}
+                  : mainTab === "personal-management"
+                  ? "Personal Management"
+                  : mainTab === "shopping-consumption"
+                  ? "Shopping and Consumption"
+                  : mainTab === "health-wellness"
+                  ? "Health and Wellness"
+                  : mainTab === "food-pantry"
+                  ? "Food and Pantry"
+                  : mainTab === "home-management"
+                  ? "Home Management"
+                  : mainTab === "vehicle-mobility"
+                  ? "Vehicle and Mobility"
+                  : "Household Lifecycle"}
               </span>
               {activeCategoryTitle && (
                 <>

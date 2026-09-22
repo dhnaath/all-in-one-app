@@ -17,9 +17,13 @@ import {
   CheckSquare,
   Plus,
   CornerUpRight,
+  ChevronsUp,
+  History,
+  GalleryHorizontal,
 } from "lucide-react";
 import { useFavorites } from "@/hooks/useFavorites";
 import { navKonsultan } from "@/config/nav";
+import { MacExpandStack } from "./mac-expand-stack";
 
 // Jarak (px) dari kursor ke ikon yang mempengaruhi ukurannya.
 // Makin kecil = efek zoom makin "lokal" (cuma ikon terdekat yang membesar).
@@ -33,17 +37,20 @@ interface DockItemConfig {
   id: string;
   label: string;
   icon: any;
+  strokeWidth?: number;
   onClick?: () => void;
 }
 
 function DockIcon({ 
   item, 
   mouseX, 
-  isActive 
+  isActive,
+  onMountElement,
 }: { 
   item: DockItemConfig, 
   mouseX: any,
-  isActive: boolean
+  isActive: boolean,
+  onMountElement?: (el: HTMLElement | null) => void,
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -74,7 +81,7 @@ function DockIcon({
             : "bg-card/90 text-muted-foreground shadow-xs hover:bg-accent hover:text-foreground border-border"
         } backdrop-blur-md border`}
       >
-        <item.icon className="w-1/2 h-1/2" />
+        <item.icon className="w-1/2 h-1/2" strokeWidth={item.strokeWidth || 2} />
       </motion.div>
       {isActive && (
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary" />
@@ -85,6 +92,7 @@ function DockIcon({
   if (item.onClick) {
     return (
       <button
+        ref={onMountElement}
         type="button"
         onClick={item.onClick}
         className="relative group outline-none bg-transparent border-0 p-0 m-0 leading-none flex flex-col items-center justify-end shrink-0 cursor-pointer"
@@ -111,22 +119,93 @@ export function AppDock({
   onQuickCapture,
   onShortcut,
   onTerminal,
+  onExpand,
+  onRecent,
+  onTaskbar,
   isQuickCaptureOpen,
   isShortcutOpen,
   isTerminalOpen,
+  isExpandOpen: propIsExpandOpen,
+  isRecentOpen,
+  isTaskbarOpen,
 }: {
   onQuickCapture?: () => void;
   onShortcut?: () => void;
   onTerminal?: () => void;
+  onExpand?: () => void;
+  onRecent?: () => void;
+  onTaskbar?: () => void;
   isQuickCaptureOpen?: boolean;
   isShortcutOpen?: boolean;
   isTerminalOpen?: boolean;
+  isExpandOpen?: boolean;
+  isRecentOpen?: boolean;
+  isTaskbarOpen?: boolean;
 }) {
   const mouseX = useMotionValue(Infinity);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { favorites } = useFavorites();
 
   const [activeMode, setActiveMode] = useState<string>("personal");
+
+  const [internalExpandOpen, setInternalExpandOpen] = useState(false);
+  const isExpandOpen = propIsExpandOpen !== undefined ? propIsExpandOpen : internalExpandOpen;
+
+  const [expandAnchorX, setExpandAnchorX] = useState<number | undefined>(undefined);
+  const expandBtnRef = useRef<HTMLElement | null>(null);
+
+  const updateExpandPosition = () => {
+    if (expandBtnRef.current) {
+      const rect = expandBtnRef.current.getBoundingClientRect();
+      setExpandAnchorX(rect.left + rect.width / 2);
+    }
+  };
+
+  const handleToggleExpand = () => {
+    updateExpandPosition();
+    if (onExpand) {
+      onExpand();
+    } else {
+      setInternalExpandOpen((prev) => !prev);
+    }
+  };
+
+  const handleCloseExpand = () => {
+    if (onExpand && propIsExpandOpen) {
+      onExpand();
+    } else {
+      setInternalExpandOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isExpandOpen) {
+      updateExpandPosition();
+    }
+  }, [isExpandOpen]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (isExpandOpen) {
+        updateExpandPosition();
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isExpandOpen]);
+
+  useEffect(() => {
+    const handleOpen = () => {
+      updateExpandPosition();
+      if (onExpand) {
+        onExpand();
+      } else {
+        setInternalExpandOpen(true);
+      }
+    };
+    window.addEventListener("aio_open_expand", handleOpen);
+    return () => window.removeEventListener("aio_open_expand", handleOpen);
+  }, [onExpand]);
 
   useEffect(() => {
     const updateMode = () => {
@@ -188,6 +267,30 @@ export function AppDock({
       { id: "/", label: "Launcher", icon: LayoutDashboard },
       { id: "/home", label: "Beranda", icon: Home },
       {
+        id: "recent",
+        label: "Recent",
+        icon: History,
+        onClick: () => {
+          if (onRecent) {
+            onRecent();
+          } else {
+            window.dispatchEvent(new CustomEvent("aio_open_recent"));
+          }
+        },
+      },
+      {
+        id: "taskbar",
+        label: "Taskbar",
+        icon: GalleryHorizontal,
+        onClick: () => {
+          if (onTaskbar) {
+            onTaskbar();
+          } else {
+            window.dispatchEvent(new CustomEvent("aio_open_taskbar"));
+          }
+        },
+      },
+      {
         id: "/shortcut",
         label: "Shortcut",
         icon: CornerUpRight,
@@ -223,6 +326,13 @@ export function AppDock({
           }
         },
       },
+      {
+        id: "expand",
+        label: "Expand",
+        icon: ChevronsUp,
+        strokeWidth: 2.5,
+        onClick: handleToggleExpand,
+      },
     ];
 
     const currentModeItems = modeAdaptivePresets[activeMode] || modeAdaptivePresets.personal;
@@ -240,38 +350,53 @@ export function AppDock({
       }
     }
 
-    return combined.slice(0, 9); // Optimal executive dock width with shortcut & quick capture
-  }, [favorites, activeMode, onQuickCapture, onShortcut, onTerminal]);
+    return combined.slice(0, 13); // Generous dock width accommodating recent & taskbar
+  }, [favorites, activeMode, onQuickCapture, onShortcut, onTerminal, onRecent, onTaskbar, handleToggleExpand]);
 
   if (dockItems.length === 0) return null;
 
   return (
-    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden sm:flex">
-      <motion.div
-        onMouseMove={(e) => mouseX.set(e.pageX)}
-        onMouseLeave={() => mouseX.set(Infinity)}
-        className="flex items-end gap-3 px-4 pb-3 h-16 rounded-3xl bg-card/75 dark:bg-card/60 backdrop-blur-xl border border-border/80 shadow-2xl"
-      >
-        {dockItems.map((item) => {
-          let isActive = pathname === item.id || (item.id.startsWith("/") && item.id !== "/" && pathname.startsWith(item.id));
-          if (item.id === "quick-capture") {
-            isActive = Boolean(isQuickCaptureOpen);
-          } else if (item.id === "/shortcut") {
-            isActive = Boolean(isShortcutOpen) || pathname === "/shortcut";
-          } else if (item.id === "/terminal") {
-            isActive = Boolean(isTerminalOpen) || pathname === "/terminal";
-          }
+    <>
+      <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden sm:flex">
+        <motion.div
+          onMouseMove={(e) => mouseX.set(e.pageX)}
+          onMouseLeave={() => mouseX.set(Infinity)}
+          className="flex items-end gap-3 px-4 pb-3 h-16 rounded-3xl bg-card/75 dark:bg-card/60 backdrop-blur-xl border border-border/80 shadow-2xl"
+        >
+          {dockItems.map((item) => {
+            let isActive = pathname === item.id || (item.id.startsWith("/") && item.id !== "/" && pathname.startsWith(item.id));
+            if (item.id === "recent") {
+              isActive = Boolean(isRecentOpen);
+            } else if (item.id === "taskbar") {
+              isActive = Boolean(isTaskbarOpen);
+            } else if (item.id === "quick-capture") {
+              isActive = Boolean(isQuickCaptureOpen);
+            } else if (item.id === "/shortcut") {
+              isActive = Boolean(isShortcutOpen) || pathname === "/shortcut";
+            } else if (item.id === "/terminal") {
+              isActive = Boolean(isTerminalOpen) || pathname === "/terminal";
+            } else if (item.id === "expand") {
+              isActive = Boolean(isExpandOpen);
+            }
 
-          return (
-            <DockIcon 
-              key={item.id} 
-              item={item} 
-              mouseX={mouseX} 
-              isActive={isActive} 
-            />
-          );
-        })}
-      </motion.div>
-    </div>
+            return (
+              <DockIcon 
+                key={item.id} 
+                item={item} 
+                mouseX={mouseX} 
+                isActive={isActive} 
+                onMountElement={item.id === "expand" ? (el) => { expandBtnRef.current = el; } : undefined}
+              />
+            );
+          })}
+        </motion.div>
+      </div>
+
+      <MacExpandStack
+        isOpen={isExpandOpen}
+        onClose={handleCloseExpand}
+        anchorX={expandAnchorX}
+      />
+    </>
   );
 }

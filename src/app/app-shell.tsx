@@ -98,6 +98,9 @@ import { CommandPalette } from "@/app/CommandPalette";
 import { QuickCaptureModal } from "@/app/QuickCaptureModal";
 import { ShortcutModal } from "@/app/ShortcutModal";
 import { TerminalModal } from "@/app/TerminalModal";
+import { RecentModal } from "@/app/RecentModal";
+import { TaskbarModal } from "@/app/TaskbarModal";
+import { useRecentApps } from "@/hooks/useRecentApps";
 import { ProfileMenu, SettingsModal } from "./wira-settings";
 import { useMenuSettings } from "@/hooks/useMenuSettings";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -461,11 +464,31 @@ export function AppShell({
     };
   }, [pathname]);
 
+  const { addRecentApp } = useRecentApps();
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
   const [isShortcutOpen, setIsShortcutOpen] = useState(false);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+  const [isExpandOpen, setIsExpandOpen] = useState(false);
+  const [isRecentOpen, setIsRecentOpen] = useState(false);
+  const [isTaskbarOpen, setIsTaskbarOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Auto-record visited navigation into Recent
+  useEffect(() => {
+    if (!pathname) return;
+    const allNavFlat = navKonsultan.flatMap((g) => g.items);
+    const match = allNavFlat.find(
+      (i) => i.to === pathname || i.to.split("?")[0] === pathname
+    );
+    if (match) {
+      addRecentApp({ to: match.to, label: match.label });
+    } else if (pathname === "/") {
+      addRecentApp({ to: "/", label: "Launcher Modul", category: "Navigasi" });
+    } else if (pathname === "/home") {
+      addRecentApp({ to: "/home", label: "Beranda Eksekutif", category: "Navigasi" });
+    }
+  }, [pathname, addRecentApp]);
 
   // Global Keyboard Shortcuts (Cmd+K / Ctrl+K, +, Esc) & custom dock events
   useEffect(() => {
@@ -482,10 +505,16 @@ export function AppShell({
         setIsQuickCaptureOpen(true);
         setIsShortcutOpen(false);
         setIsTerminalOpen(false);
+        setIsExpandOpen(false);
+        setIsRecentOpen(false);
+        setIsTaskbarOpen(false);
       } else if (e.key === "Escape") {
         setIsQuickCaptureOpen(false);
         setIsShortcutOpen(false);
         setIsTerminalOpen(false);
+        setIsExpandOpen(false);
+        setIsRecentOpen(false);
+        setIsTaskbarOpen(false);
       }
     };
 
@@ -493,29 +522,71 @@ export function AppShell({
       setIsQuickCaptureOpen(true);
       setIsShortcutOpen(false);
       setIsTerminalOpen(false);
+      setIsExpandOpen(false);
+      setIsRecentOpen(false);
+      setIsTaskbarOpen(false);
     };
 
     const handleOpenShortcut = () => {
       setIsShortcutOpen(true);
       setIsQuickCaptureOpen(false);
       setIsTerminalOpen(false);
+      setIsExpandOpen(false);
+      setIsRecentOpen(false);
+      setIsTaskbarOpen(false);
     };
 
     const handleOpenTerminal = () => {
       setIsTerminalOpen(true);
       setIsQuickCaptureOpen(false);
       setIsShortcutOpen(false);
+      setIsExpandOpen(false);
+      setIsRecentOpen(false);
+      setIsTaskbarOpen(false);
+    };
+
+    const handleOpenExpand = () => {
+      setIsExpandOpen(true);
+      setIsQuickCaptureOpen(false);
+      setIsShortcutOpen(false);
+      setIsTerminalOpen(false);
+      setIsRecentOpen(false);
+      setIsTaskbarOpen(false);
+    };
+
+    const handleOpenRecent = () => {
+      setIsRecentOpen((prev) => !prev);
+      setIsTaskbarOpen(false);
+      setIsQuickCaptureOpen(false);
+      setIsShortcutOpen(false);
+      setIsTerminalOpen(false);
+      setIsExpandOpen(false);
+    };
+
+    const handleOpenTaskbar = () => {
+      setIsTaskbarOpen((prev) => !prev);
+      setIsRecentOpen(false);
+      setIsQuickCaptureOpen(false);
+      setIsShortcutOpen(false);
+      setIsTerminalOpen(false);
+      setIsExpandOpen(false);
     };
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("aio_open_quick_capture", handleOpenQuickCapture);
     window.addEventListener("aio_open_shortcut", handleOpenShortcut);
     window.addEventListener("aio_open_terminal", handleOpenTerminal);
+    window.addEventListener("aio_open_expand", handleOpenExpand);
+    window.addEventListener("aio_open_recent", handleOpenRecent);
+    window.addEventListener("aio_open_taskbar", handleOpenTaskbar);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("aio_open_quick_capture", handleOpenQuickCapture);
       window.removeEventListener("aio_open_shortcut", handleOpenShortcut);
       window.removeEventListener("aio_open_terminal", handleOpenTerminal);
+      window.removeEventListener("aio_open_expand", handleOpenExpand);
+      window.removeEventListener("aio_open_recent", handleOpenRecent);
+      window.removeEventListener("aio_open_taskbar", handleOpenTaskbar);
     };
   }, []);
 
@@ -717,7 +788,7 @@ export function AppShell({
         {openDrawer && (
           <div className="absolute inset-0 z-40 bg-black/40 transition-opacity duration-500" onClick={() => setOpenDrawer(null)} />
         )}
-        <header className="absolute top-0 inset-x-0 z-20 bg-background/85 backdrop-blur-md border-b border-border shadow-xs">
+        <header className="absolute top-0 inset-x-0 z-20 bg-background border-b border-border shadow-xs">
           <div className="flex items-center justify-between gap-2 px-3 py-2.5 sm:px-6 sm:py-3">
             {/* Bagian Kiri Header: Breadcrumb & Nav Toggle */}
             <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 flex-1 basis-0 justify-start">
@@ -728,6 +799,15 @@ export function AppShell({
                 title="Buka Navigasi"
               >
                 <PanelLeft size={20} />
+              </button>
+
+              <button
+                type="button"
+                className="p-2 relative text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0 flex items-center justify-center transition-colors"
+                title="Notifikasi"
+                aria-label="Notifications"
+              >
+                <Bell className="size-5 shrink-0" />
               </button>
 
               <div className="min-w-0 flex-1 overflow-hidden">
@@ -779,14 +859,6 @@ export function AppShell({
                 aria-label="Search"
               >
                 <Search className="size-5 shrink-0" />
-              </button>
-              <button
-                type="button"
-                className="p-2 relative text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0 flex items-center justify-center transition-colors"
-                title="Notifikasi"
-                aria-label="Notifications"
-              >
-                <Bell className="size-5 shrink-0" />
               </button>
 
               {/* 6-Mode Dropdown Switcher */}
@@ -916,23 +988,59 @@ export function AppShell({
             setIsQuickCaptureOpen((prev) => !prev);
             setIsShortcutOpen(false);
             setIsTerminalOpen(false);
+            setIsExpandOpen(false);
+            setIsRecentOpen(false);
+            setIsTaskbarOpen(false);
           }}
           onShortcut={() => {
             setIsShortcutOpen((prev) => !prev);
             setIsQuickCaptureOpen(false);
             setIsTerminalOpen(false);
+            setIsExpandOpen(false);
+            setIsRecentOpen(false);
+            setIsTaskbarOpen(false);
           }}
           onTerminal={() => {
             setIsTerminalOpen((prev) => !prev);
             setIsQuickCaptureOpen(false);
             setIsShortcutOpen(false);
+            setIsExpandOpen(false);
+            setIsRecentOpen(false);
+            setIsTaskbarOpen(false);
+          }}
+          onExpand={() => {
+            setIsExpandOpen((prev) => !prev);
+            setIsQuickCaptureOpen(false);
+            setIsShortcutOpen(false);
+            setIsTerminalOpen(false);
+            setIsRecentOpen(false);
+            setIsTaskbarOpen(false);
+          }}
+          onRecent={() => {
+            setIsRecentOpen((prev) => !prev);
+            setIsTaskbarOpen(false);
+            setIsQuickCaptureOpen(false);
+            setIsShortcutOpen(false);
+            setIsTerminalOpen(false);
+            setIsExpandOpen(false);
+          }}
+          onTaskbar={() => {
+            setIsTaskbarOpen((prev) => !prev);
+            setIsRecentOpen(false);
+            setIsQuickCaptureOpen(false);
+            setIsShortcutOpen(false);
+            setIsTerminalOpen(false);
+            setIsExpandOpen(false);
           }}
           isQuickCaptureOpen={isQuickCaptureOpen}
           isShortcutOpen={isShortcutOpen}
           isTerminalOpen={isTerminalOpen}
+          isExpandOpen={isExpandOpen}
+          isRecentOpen={isRecentOpen}
+          isTaskbarOpen={isTaskbarOpen}
         />
 
-        {/* Global Modals: Command Palette, Quick Capture, Shortcut & Terminal */}
+        {/* Global Modals: Command Palette, Quick Capture, Shortcut, Terminal, Recent & Taskbar */}
         <CommandPalette
           isOpen={isCommandPaletteOpen}
           onClose={() => setIsCommandPaletteOpen(false)}
@@ -953,6 +1061,14 @@ export function AppShell({
         <TerminalModal
           isOpen={isTerminalOpen}
           onClose={() => setIsTerminalOpen(false)}
+        />
+        <RecentModal
+          isOpen={isRecentOpen}
+          onClose={() => setIsRecentOpen(false)}
+        />
+        <TaskbarModal
+          isOpen={isTaskbarOpen}
+          onClose={() => setIsTaskbarOpen(false)}
         />
 
         {/* Notification Toast */}

@@ -18,6 +18,8 @@ import {
   Users,
   Compass,
   ArrowRight,
+  History,
+  GalleryHorizontal,
 } from "lucide-react";
 
 interface ShortcutModalProps {
@@ -61,6 +63,30 @@ export function ShortcutModal({ isOpen, onClose, onOpenQuickCapture }: ShortcutM
         icon: LayoutDashboard,
         to: "/",
         badge: "Alt + L",
+      },
+      {
+        id: "recent",
+        title: "Recent Apps & History",
+        subtitle: "Buka riwayat navigasi dan aplikasi terakhir",
+        category: "action",
+        icon: History,
+        action: () => {
+          onClose();
+          window.dispatchEvent(new CustomEvent("aio_open_recent"));
+        },
+        badge: "Recent",
+      },
+      {
+        id: "taskbar",
+        title: "Taskbar & Multitasking",
+        subtitle: "Pengalih jendela aktif & tugas berjalan",
+        category: "action",
+        icon: GalleryHorizontal,
+        action: () => {
+          onClose();
+          window.dispatchEvent(new CustomEvent("aio_open_taskbar"));
+        },
+        badge: "Taskbar",
       },
       {
         id: "quick-capture",

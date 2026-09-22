@@ -1,6 +1,8 @@
 import * as React from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/app/app-shell";
+import { StandaloneAppView } from "@/features/standalone/StandaloneAppView";
+import { STANDALONE_APPS } from "@/features/standalone/standaloneAppsData";
 import {
   useCustomNav,
   CustomMenuItem,
@@ -23,17 +25,18 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/lainnya")({
-  validateSearch: (search: Record<string, unknown>): { id?: string } => {
+  validateSearch: (search: Record<string, unknown>): { id?: string; app?: string } => {
     return {
       id: typeof search.id === "string" ? search.id : undefined,
+      app: typeof search.app === "string" ? search.app : undefined,
     };
   },
   head: () => ({
     meta: [
-      { title: "Menu Kustom & Folder Kerja — Client OS" },
+      { title: "Menu Kustom & Aplikasi Standalone — Client OS" },
       {
         name: "description",
-        content: "Ruang kerja dan folder menu kustom yang disesuaikan pengguna.",
+        content: "Ruang kerja dan modul aplikasi standalone terpadu.",
       },
     ],
   }),
@@ -41,8 +44,25 @@ export const Route = createFileRoute("/lainnya")({
 });
 
 function CustomWorkspacePage() {
-  const { id } = Route.useSearch();
+  const { id, app } = Route.useSearch();
   const navigate = useNavigate();
+
+  const effectiveAppId = app || (id && STANDALONE_APPS[id] ? id : undefined);
+
+  if (effectiveAppId && STANDALONE_APPS[effectiveAppId]) {
+    const standaloneConfig = STANDALONE_APPS[effectiveAppId];
+    return (
+      <AppShell
+        title={standaloneConfig.title}
+        subtitle={standaloneConfig.subtitle}
+      >
+        <div className="w-full">
+          <StandaloneAppView appId={effectiveAppId} />
+        </div>
+      </AppShell>
+    );
+  }
+
   const {
     categories,
     findItemById,
@@ -50,6 +70,7 @@ function CustomWorkspacePage() {
     deleteMenuItem,
     addMenuItem,
   } = useCustomNav();
+
 
   const activeData = id ? findItemById(id) : null;
   const currentItem = activeData?.item;
