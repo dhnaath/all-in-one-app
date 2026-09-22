@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All in One</title>
+    <meta
+      name="description"
+      content="Frontend workspace untuk konsultan: klien, proyek, tugas, keuangan, dan alat produktivitas."
+    />
+    <meta property="og:title" content="All in One" />
+    <meta
+      property="og:description"
+      content="Frontend workspace untuk konsultan: klien, proyek, tugas, keuangan, dan alat produktivitas."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  </head>
+  <body>
+    <!-- SVG Filter for liquid glass dock -->
+    <svg width="0" height="0" style="position: absolute; pointer-events: none;">
+      <defs>
+        <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence 
+            type="fractalNoise" 
+            baseFrequency="0.006 0.006"
+            numOctaves="2" 
+            seed="92" 
+            result="noise" 
+          />
+          <feGaussianBlur 
+            in="noise" 
+            stdDeviation="2" 
+            result="blurred" 
+          />
+          <feDisplacementMap 
+            in="SourceGraphic" 
+            in2="blurred" 
+            scale="200"
+            xChannelSelector="R" 
+            yChannelSelector="G" 
+          />
+        </filter>
+      </defs>
+    </svg>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

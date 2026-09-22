@@ -1,0 +1,211 @@
+@import url("https://rsms.me/inter/inter.css");
+@import "tailwindcss";
+
+@theme {
+  --font-sans:
+    "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+
+  /* Notion-like Colors */
+  --color-notion-bg: #ffffff;
+  --color-notion-bg-hover: #f1f1ef;
+  --color-notion-text: #37352f;
+  --color-notion-text-dim: #787774;
+  --color-notion-border: #e9e9e7;
+  --color-notion-accent-bg: #eaf2fb;
+  --color-notion-accent-text: #2383e2;
+
+  /* Dark Mode Colors */
+  --color-notion-dark-bg: #191919;
+  --color-notion-dark-bg-hover: #2f2f2f;
+  --color-notion-dark-text: #ffffff;
+  --color-notion-dark-text-dim: #9b9a97;
+  --color-notion-dark-border: #373737;
+
+  /* Spacing */
+  --spacing-notion-xs: 4px;
+  --spacing-notion-sm: 8px;
+  --spacing-notion-md: 12px;
+  --spacing-notion-lg: 16px;
+  --spacing-notion-xl: 24px;
+
+  /* Border Radius */
+  --radius-notion-sm: 3px;
+  --radius-notion-md: 6px;
+  --radius-notion-lg: 8px;
+}
+
+@layer base {
+  :root {
+    --bg-color: var(--color-notion-bg);
+    --text-color: var(--color-notion-text);
+    --text-color-dim: var(--color-notion-text-dim);
+    --border-color: var(--color-notion-border);
+    --bg-hover: var(--color-notion-bg-hover);
+  }
+
+  /*
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-color: var(--color-notion-dark-bg);
+      --text-color: var(--color-notion-dark-text);
+      --text-color-dim: var(--color-notion-dark-text-dim);
+      --border-color: var(--color-notion-dark-border);
+      --bg-hover: var(--color-notion-dark-bg-hover);
+    }
+  }
+  */
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--text-color);
+  }
+
+  h1 {
+    font-size: 2.5rem; /* 40px */
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5em;
+  }
+
+  h2 {
+    font-size: 1.875rem; /* 30px */
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-top: 1.4em;
+    margin-bottom: 0.4em;
+  }
+
+  h3 {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1em;
+    margin-bottom: 0.4em;
+  }
+
+  p {
+    font-size: 1rem; /* 16px */
+    line-height: 1.5;
+    margin-bottom: 0.8em;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom FullCalendar Styles for TickTick Look */
+.custom-calendar-wrapper {
+  --fc-border-color: #f1f5f9;
+  --fc-daygrid-event-dot-width: 8px;
+  --fc-event-bg-color: #3b82f6;
+  --fc-event-border-color: #2563eb;
+  --fc-now-indicator-color: #ef4444;
+  --fc-today-bg-color: #f8fafc;
+  --fc-page-bg-color: transparent;
+}
+
+.custom-calendar-wrapper .fc-timegrid-slot {
+  height: 3.5rem !important;
+}
+
+.custom-calendar-wrapper .fc-timegrid-slot-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+  border: none !important;
+  vertical-align: top;
+  padding-top: 0.25rem;
+}
+
+.custom-calendar-wrapper .fc-theme-standard td,
+.custom-calendar-wrapper .fc-theme-standard th {
+  border-color: var(--fc-border-color);
+}
+
+.custom-calendar-wrapper .fc-v-event {
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 2px;
+  transition: all 0.15s ease;
+}
+
+.custom-calendar-wrapper .fc-v-event:hover {
+  filter: brightness(1.05);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.custom-calendar-wrapper .fc-now-indicator-line {
+  border-width: 2px 0 0;
+}
+
+.custom-calendar-wrapper .fc-now-indicator-arrow {
+  border-width: 5px 5px 0 5px;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  margin-top: -2px;
+}
+
+.custom-calendar-wrapper .fc-header-toolbar {
+  margin-bottom: 1rem !important;
+}
+
+.custom-calendar-wrapper .fc-toolbar-title {
+  font-size: 1.125rem !important;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.custom-calendar-wrapper .fc-button {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  text-transform: capitalize;
+  font-weight: 500;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.custom-calendar-wrapper .fc-button:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.custom-calendar-wrapper .fc-button-primary:not(:disabled).fc-button-active,
+.custom-calendar-wrapper .fc-button-primary:not(:disabled):active {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.custom-calendar-wrapper .fc-col-header-cell {
+  padding: 0.5rem 0;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
