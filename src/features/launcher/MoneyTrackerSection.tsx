@@ -19,8 +19,16 @@ import {
   Wallet,
   Calculator,
   AlertTriangle,
+  AlertOctagon,
+  ShieldAlert,
+  Dice5,
   FileText,
   Shield,
+  Scale,
+  Handshake,
+  Archive,
+  Users,
+  Tag,
   type LucideIcon,
 } from "lucide-react";
 import { navKonsultan, type NavItem } from "@/config/nav";
@@ -47,7 +55,7 @@ interface MoneyTrackerSectionProps {
 interface MoneyCategory {
   id: string;
   title: string;
-  group: "asset" | "liability" | "earning" | "expense" | "sharia";
+  group: "asset_earning" | "liability_expense" | "sharia";
   icon: LucideIcon;
   getItems: () => LauncherItem[];
 }
@@ -60,26 +68,49 @@ export function MoneyTrackerSection({
   FolderTile,
 }: MoneyTrackerSectionProps) {
   const [mainTab, setMainTab] = useState<
-    "all" | "asset" | "liability" | "earning" | "expense" | "sharia"
+    "all" | "asset_earning" | "liability_expense" | "sharia"
   >("all");
   const [activeSpecific, setActiveSpecific] = useState<string>("all");
 
   // Raw items from nav groups
   const assetItems = useMemo(() => {
-    return navKonsultan.find((g) => g.title === "Asset")?.items.filter((i) => i.to !== "/") || [];
+    const group = navKonsultan.find((g) => g.title === "Asset & Earning" || g.title === "Asset");
+    return (
+      group?.items.filter(
+        (i) => i.to !== "/" && !i.to.startsWith("/earning") && i.to !== "/financial-health"
+      ) || []
+    );
   }, []);
 
   const liabilityItems = useMemo(() => {
-    return navKonsultan.find((g) => g.title === "Liability")?.items.filter((i) => i.to !== "/") || [];
+    const group = navKonsultan.find((g) => g.title === "Liability & Expense" || g.title === "Liability");
+    return (
+      group?.items.filter(
+        (i) => i.to !== "/" && !i.to.startsWith("/expense") && i.to !== "/budget" && !i.to.startsWith("/pajak")
+      ) || []
+    );
   }, []);
 
   const earningItems = useMemo(() => {
+    const ae = navKonsultan.find((g) => g.title === "Asset & Earning");
+    if (ae) {
+      return ae.items.filter((i) => i.to.startsWith("/earning") || i.to === "/financial-health");
+    }
     return navKonsultan.find((g) => g.title === "Earning")?.items.filter((i) => i.to !== "/") || [];
   }, []);
 
   const expenseItems = useMemo(() => {
+    const le = navKonsultan.find((g) => g.title === "Liability & Expense");
+    if (le) {
+      return le.items.filter((i) => i.to.startsWith("/expense") || i.to === "/budget" || i.to.startsWith("/pajak"));
+    }
     return navKonsultan.find((g) => g.title === "Expense")?.items.filter((i) => i.to !== "/") || [];
   }, []);
+
+  const pajakItems = useMemo(
+    () => expenseItems.filter((i) => i.to.startsWith("/pajak")),
+    [expenseItems]
+  );
 
   const shariaItems = useMemo(() => {
     return (
@@ -90,134 +121,59 @@ export function MoneyTrackerSection({
   // Asset instruments for Type of Assets folder
   const kuadranAsset = useMemo(() => assetItems.find((i) => i.to === "/asset"), [assetItems]);
   const assetInstruments = useMemo(
-    () => assetItems.filter((i) => i.to !== "/asset" && i.to !== "/investasi"),
+    () => assetItems.filter((i) => i.to !== "/asset" && !i.to.startsWith("/investasi")),
     [assetItems]
   );
-  const investasiItem = useMemo(() => assetItems.find((i) => i.to === "/investasi"), [assetItems]);
+  const investasiItems = useMemo(
+    () => assetItems.filter((i) => i.to.startsWith("/investasi")),
+    [assetItems]
+  );
+
+  // Sharia grouped items for category filtering
+  const laranganItems = useMemo(
+    () =>
+      shariaItems.filter(
+        (i) => i.to.startsWith("/syariah/terlarang") && i.to !== "/syariah/terlarang"
+      ),
+    [shariaItems]
+  );
+  const akadItems = useMemo(
+    () =>
+      shariaItems.filter(
+        (i) => i.to.startsWith("/syariah/akad") && i.to !== "/syariah/akad"
+      ),
+    [shariaItems]
+  );
+  const zakatItems = useMemo(
+    () =>
+      shariaItems.filter(
+        (i) => i.to.startsWith("/zakat") && i.to !== "/zakat"
+      ),
+    [shariaItems]
+  );
 
   // Categories list (strictly without '&' symbols)
   const MONEY_CATEGORIES: MoneyCategory[] = useMemo(() => {
     return [
-      // Asset Group
-      {
-        id: "asset-kuadran",
-        title: "Kuadran Aset",
-        group: "asset",
-        icon: Briefcase,
-        getItems: () => (kuadranAsset ? [{ type: "app", item: kuadranAsset }] : []),
-      },
+      // Asset & Earning Group
       {
         id: "asset-type-folder",
         title: "Type of Assets",
-        group: "asset",
+        group: "asset_earning",
         icon: Package,
         getItems: () => assetInstruments.map((item) => ({ type: "app", item })),
       },
       {
-        id: "asset-liquid",
-        title: "Liquid Reserves",
-        group: "asset",
-        icon: Coins,
-        getItems: () => {
-          const item = assetItems.find((i) => i.to === "/liquid-reserves");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "asset-commodities",
-        title: "Physical Commodities",
-        group: "asset",
-        icon: Package,
-        getItems: () => {
-          const item = assetItems.find((i) => i.to === "/physical-commodities");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "asset-real-estate",
-        title: "Real Estate",
-        group: "asset",
-        icon: Home,
-        getItems: () => {
-          const item = assetItems.find((i) => i.to === "/real-estate");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "asset-securities",
-        title: "Paper Securities",
-        group: "asset",
-        icon: ScrollText,
-        getItems: () => {
-          const item = assetItems.find((i) => i.to === "/paper-securities");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "asset-digital",
-        title: "Digital Assets",
-        group: "asset",
-        icon: Binary,
-        getItems: () => {
-          const item = assetItems.find((i) => i.to === "/digital-assets");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "asset-ip",
-        title: "Intellectual Property",
-        group: "asset",
-        icon: Lightbulb,
-        getItems: () => {
-          const item = assetItems.find((i) => i.to === "/intellectual-property");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "asset-investasi",
-        title: "Kalkulator Investasi",
-        group: "asset",
+        id: "asset-tools-investasi",
+        title: "Tools Investasi",
+        group: "asset_earning",
         icon: TrendingUp,
-        getItems: () => (investasiItem ? [{ type: "app", item: investasiItem }] : []),
+        getItems: () => investasiItems.map((item) => ({ type: "app", item })),
       },
-
-      // Liability Group
-      {
-        id: "lia-kuadran",
-        title: "Kuadran Liabilitas",
-        group: "liability",
-        icon: CreditCard,
-        getItems: () => {
-          const item = liabilityItems.find((i) => i.to === "/liability");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "lia-kredit",
-        title: "Kredit dan Utang",
-        group: "liability",
-        icon: CreditCard,
-        getItems: () => {
-          const item = liabilityItems.find((i) => i.to === "/kredit");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "lia-subscriptions",
-        title: "Subscriptions",
-        group: "liability",
-        icon: CreditCard,
-        getItems: () => {
-          const item = liabilityItems.find((i) => i.to === "/subscriptions");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-
-      // Earning Group
       {
         id: "earn-kuadran",
         title: "Kuadran Pendapatan",
-        group: "earning",
+        group: "asset_earning",
         icon: DollarSign,
         getItems: () => {
           const item = earningItems.find((i) => i.to === "/earning");
@@ -227,7 +183,7 @@ export function MoneyTrackerSection({
       {
         id: "earn-health",
         title: "Kesehatan Finansial",
-        group: "earning",
+        group: "asset_earning",
         icon: HeartPulse,
         getItems: () => {
           const item = earningItems.find((i) => i.to === "/financial-health");
@@ -235,11 +191,41 @@ export function MoneyTrackerSection({
         },
       },
 
-      // Expense Group
+      // Liability & Expense Group
+      {
+        id: "lia-kuadran",
+        title: "Kuadran Liabilitas",
+        group: "liability_expense",
+        icon: CreditCard,
+        getItems: () => {
+          const item = liabilityItems.find((i) => i.to === "/liability");
+          return item ? [{ type: "app", item }] : [];
+        },
+      },
+      {
+        id: "lia-kredit",
+        title: "Kredit dan Utang",
+        group: "liability_expense",
+        icon: CreditCard,
+        getItems: () => {
+          const item = liabilityItems.find((i) => i.to === "/kredit");
+          return item ? [{ type: "app", item }] : [];
+        },
+      },
+      {
+        id: "lia-subscriptions",
+        title: "Subscriptions",
+        group: "liability_expense",
+        icon: CreditCard,
+        getItems: () => {
+          const item = liabilityItems.find((i) => i.to === "/subscriptions");
+          return item ? [{ type: "app", item }] : [];
+        },
+      },
       {
         id: "exp-kuadran",
         title: "Kuadran Pengeluaran",
-        group: "expense",
+        group: "liability_expense",
         icon: ShoppingCart,
         getItems: () => {
           const item = expenseItems.find((i) => i.to === "/expense");
@@ -249,7 +235,7 @@ export function MoneyTrackerSection({
       {
         id: "exp-budget",
         title: "Budget Anggaran",
-        group: "expense",
+        group: "liability_expense",
         icon: Wallet,
         getItems: () => {
           const item = expenseItems.find((i) => i.to === "/budget");
@@ -259,108 +245,85 @@ export function MoneyTrackerSection({
       {
         id: "exp-pajak",
         title: "Kalkulator Pajak",
-        group: "expense",
+        group: "liability_expense",
         icon: Calculator,
-        getItems: () => {
-          const item = expenseItems.find((i) => i.to === "/pajak");
-          return item ? [{ type: "app", item }] : [];
-        },
+        getItems: () => pajakItems.map((item) => ({ type: "app", item })),
       },
 
-      // Sharia Finance Group
+      // Sharia Finance Group (Merged into Larangan Muamalah & Akad Syariah)
       {
-        id: "sha-terlarang",
-        title: "Transaksi Terlarang",
+        id: "sha-larangan",
+        title: "Larangan Muamalah",
         group: "sharia",
-        icon: AlertTriangle,
-        getItems: () => {
-          const item = shariaItems.find((i) => i.to === "/syariah/terlarang");
-          return item ? [{ type: "app", item }] : [];
-        },
+        icon: ShieldAlert,
+        getItems: () => laranganItems.map((item) => ({ type: "app", item })),
       },
       {
         id: "sha-akad",
         title: "Akad Syariah",
         group: "sharia",
         icon: FileText,
-        getItems: () => {
-          const item = shariaItems.find((i) => i.to === "/syariah/akad");
-          return item ? [{ type: "app", item }] : [];
-        },
-      },
-      {
-        id: "sha-asuransi",
-        title: "Asuransi Syariah",
-        group: "sharia",
-        icon: Shield,
-        getItems: () => {
-          const item = shariaItems.find((i) => i.to === "/syariah/asuransi");
-          return item ? [{ type: "app", item }] : [];
-        },
+        getItems: () => akadItems.map((item) => ({ type: "app", item })),
       },
       {
         id: "sha-zakat",
-        title: "Kalkulator Zakat",
+        title: "Zakat",
         group: "sharia",
         icon: Calculator,
-        getItems: () => {
-          const item = shariaItems.find((i) => i.to === "/zakat");
-          return item ? [{ type: "app", item }] : [];
-        },
+        getItems: () => zakatItems.map((item) => ({ type: "app", item })),
       },
     ];
   }, [
-    assetItems,
-    liabilityItems,
     earningItems,
+    liabilityItems,
     expenseItems,
-    shariaItems,
-    kuadranAsset,
+    pajakItems,
     assetInstruments,
-    investasiItem,
+    investasiItems,
+    laranganItems,
+    akadItems,
+    zakatItems,
   ]);
 
   // Default items when activeSpecific === "all"
   const defaultItemsForTab = useMemo(() => {
-    // Asset tab default: Kuadran Aset, folder Type of Assets, and Kalkulator Investasi
-    const assetDefault: LauncherItem[] = [];
-    if (kuadranAsset) assetDefault.push({ type: "app", item: kuadranAsset });
-    if (assetInstruments.length > 0) {
-      assetDefault.push({
-        type: "folder",
-        id: "folder-type-of-assets",
-        title: "Type of Assets",
-        items: assetInstruments,
-      });
-    }
-    if (investasiItem) assetDefault.push({ type: "app", item: investasiItem });
+    // Asset & Earning default: Kuadran Aset, individual asset instruments, Investasi, and Earning
+    const assetEarningDefault: LauncherItem[] = [];
+    if (kuadranAsset) assetEarningDefault.push({ type: "app", item: kuadranAsset });
+    assetInstruments.forEach((item) => {
+      assetEarningDefault.push({ type: "app", item });
+    });
+    investasiItems.forEach((item) => {
+      assetEarningDefault.push({ type: "app", item });
+    });
+    earningItems.forEach((item) => {
+      assetEarningDefault.push({ type: "app", item });
+    });
 
-    // Liability default
-    const liaDefault: LauncherItem[] = liabilityItems.map((item) => ({ type: "app", item }));
-
-    // Earning default
-    const earnDefault: LauncherItem[] = earningItems.map((item) => ({ type: "app", item }));
-
-    // Expense default
-    const expDefault: LauncherItem[] = expenseItems.map((item) => ({ type: "app", item }));
+    // Liability & Expense default
+    const liaExpDefault: LauncherItem[] = [];
+    liabilityItems.forEach((item) => {
+      liaExpDefault.push({ type: "app", item });
+    });
+    expenseItems.forEach((item) => {
+      liaExpDefault.push({ type: "app", item });
+    });
 
     // Sharia default
     const shaDefault: LauncherItem[] = shariaItems.map((item) => ({ type: "app", item }));
 
     return {
-      asset: assetDefault,
-      liability: liaDefault,
-      earning: earnDefault,
-      expense: expDefault,
+      asset_earning: assetEarningDefault,
+      liability_expense: liaExpDefault,
       sharia: shaDefault,
-      all: [...assetDefault, ...liaDefault, ...earnDefault, ...expDefault, ...shaDefault],
+      all: [...assetEarningDefault, ...liaExpDefault, ...shaDefault],
     };
   }, [
     kuadranAsset,
     assetInstruments,
-    investasiItem,
-    liabilityItems,
+    investasiItems,
     earningItems,
+    liabilityItems,
     expenseItems,
     shariaItems,
   ]);
@@ -374,10 +337,8 @@ export function MoneyTrackerSection({
       }
     }
 
-    if (mainTab === "asset") return defaultItemsForTab.asset;
-    if (mainTab === "liability") return defaultItemsForTab.liability;
-    if (mainTab === "earning") return defaultItemsForTab.earning;
-    if (mainTab === "expense") return defaultItemsForTab.expense;
+    if (mainTab === "asset_earning") return defaultItemsForTab.asset_earning;
+    if (mainTab === "liability_expense") return defaultItemsForTab.liability_expense;
     if (mainTab === "sharia") return defaultItemsForTab.sharia;
 
     return defaultItemsForTab.all;
@@ -391,10 +352,8 @@ export function MoneyTrackerSection({
 
   // Counts for main top pills
   const totalCountAll = defaultItemsForTab.all.length;
-  const totalCountAsset = defaultItemsForTab.asset.length;
-  const totalCountLia = defaultItemsForTab.liability.length;
-  const totalCountEarn = defaultItemsForTab.earning.length;
-  const totalCountExp = defaultItemsForTab.expense.length;
+  const totalCountAssetEarning = defaultItemsForTab.asset_earning.length;
+  const totalCountLiaExp = defaultItemsForTab.liability_expense.length;
   const totalCountSha = defaultItemsForTab.sharia.length;
 
   return (
@@ -436,103 +395,53 @@ export function MoneyTrackerSection({
           </span>
         </button>
 
-        {/* Asset */}
+        {/* Asset & Earning */}
         <button
           onClick={() => {
-            setMainTab("asset");
+            setMainTab("asset_earning");
             setActiveSpecific("all");
           }}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "asset"
+            mainTab === "asset_earning"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <Briefcase className="size-4 shrink-0" />
-          <span>Asset</span>
+          <span>Asset & Earning</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "asset"
+              mainTab === "asset_earning"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountAsset}
+            {totalCountAssetEarning}
           </span>
         </button>
 
-        {/* Liability */}
+        {/* Liability & Expense */}
         <button
           onClick={() => {
-            setMainTab("liability");
+            setMainTab("liability_expense");
             setActiveSpecific("all");
           }}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "liability"
+            mainTab === "liability_expense"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <CreditCard className="size-4 shrink-0" />
-          <span>Liability</span>
+          <span>Liability & Expense</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "liability"
+              mainTab === "liability_expense"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountLia}
-          </span>
-        </button>
-
-        {/* Earning */}
-        <button
-          onClick={() => {
-            setMainTab("earning");
-            setActiveSpecific("all");
-          }}
-          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "earning"
-              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
-          }`}
-        >
-          <DollarSign className="size-4 shrink-0" />
-          <span>Earning</span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "earning"
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-background/80 text-muted-foreground"
-            }`}
-          >
-            {totalCountEarn}
-          </span>
-        </button>
-
-        {/* Expense */}
-        <button
-          onClick={() => {
-            setMainTab("expense");
-            setActiveSpecific("all");
-          }}
-          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "expense"
-              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
-          }`}
-        >
-          <ShoppingCart className="size-4 shrink-0" />
-          <span>Expense</span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "expense"
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-background/80 text-muted-foreground"
-            }`}
-          >
-            {totalCountExp}
+            {totalCountLiaExp}
           </span>
         </button>
 
@@ -592,14 +501,10 @@ export function MoneyTrackerSection({
               >
                 {mainTab === "all"
                   ? totalCountAll
-                  : mainTab === "asset"
-                  ? totalCountAsset
-                  : mainTab === "liability"
-                  ? totalCountLia
-                  : mainTab === "earning"
-                  ? totalCountEarn
-                  : mainTab === "expense"
-                  ? totalCountExp
+                  : mainTab === "asset_earning"
+                  ? totalCountAssetEarning
+                  : mainTab === "liability_expense"
+                  ? totalCountLiaExp
                   : totalCountSha}
               </span>
             </button>
@@ -649,14 +554,10 @@ export function MoneyTrackerSection({
               <span className="font-semibold text-foreground/90">
                 {mainTab === "all"
                   ? "Semua"
-                  : mainTab === "asset"
-                  ? "Asset"
-                  : mainTab === "liability"
-                  ? "Liability"
-                  : mainTab === "earning"
-                  ? "Earning"
-                  : mainTab === "expense"
-                  ? "Expense"
+                  : mainTab === "asset_earning"
+                  ? "Asset & Earning"
+                  : mainTab === "liability_expense"
+                  ? "Liability & Expense"
                   : "Sharia Finance"}
               </span>
               {activeCategoryTitle && (

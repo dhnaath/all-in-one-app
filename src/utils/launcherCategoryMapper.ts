@@ -3,12 +3,11 @@
  * Maps applications to their corresponding category page in the Launcher.
  *
  * Category Pages:
- * 0: Wealth Management (KurasiSection)
+ * 0: Financial Planning & Wealth Management (FinancialWealthSection)
  * 1: 100 Tools (Tools100Section / Frameworks)
- * 2: Financial Planning (MoneyTrackerSection / Asset & Cashflow)
- * 3: Productivity, Operations, and Ownership (ProductivitySection)
- * 4: Personal, Essentials, and Household (PersonalEssentialsSection)
- * 5: People, Family, and Society (PeopleFamilySocietySection)
+ * 2: Productivity, Operations, and Ownership (ProductivitySection)
+ * 3: Personal, Essentials, and Household (PersonalEssentialsSection)
+ * 4: People, Family, and Society (PeopleFamilySocietySection)
  */
 
 export const LAUNCHER_STORAGE_KEY = "aio_launcher_last_page";
@@ -22,89 +21,88 @@ export interface LauncherCategoryDef {
 }
 
 export const LAUNCHER_CATEGORIES: LauncherCategoryDef[] = [
-  { index: 0, title: "Wealth Management", id: "wealth-management" },
+  { index: 0, title: "Financial Planning & Wealth Management", id: "financial-wealth" },
   { index: 1, title: "100 Tools", id: "100-tools" },
-  { index: 2, title: "Financial Planning", id: "financial-planning" },
-  { index: 3, title: "Productivity, Operations, and Ownership", id: "productivity" },
-  { index: 4, title: "Personal, Essentials, and Household", id: "personal-essentials" },
-  { index: 5, title: "People, Family, and Society", id: "people-family-society" },
+  { index: 2, title: "Productivity, Operations, and Ownership", id: "productivity" },
+  { index: 3, title: "Personal, Essentials, and Household", id: "personal-essentials" },
+  { index: 4, title: "People, Family, and Society", id: "people-family-society" },
 ];
 
 /**
  * List of known standalone app keys from `/lainnya?app=<key>` mapped to category pages
  */
 const LAINNYA_APP_CATEGORY_MAP: Record<string, number> = {
-  // Page 3: Productivity, Operations, and Ownership
-  "daily-planner": 3,
-  "roadmap": 3,
-  "retro": 3,
-  "canvas": 3,
-  "wiki": 3,
-  "workload": 3,
-  "sop": 3,
-  "templates": 3,
-  "vendors": 3,
-  "services-ratecard": 3,
-  "mailroom": 3,
-  "minutes": 3,
-  "access-matrix": 3,
+  // Page 2: Productivity, Operations, and Ownership
+  "daily-planner": 2,
+  "roadmap": 2,
+  "retro": 2,
+  "canvas": 2,
+  "wiki": 2,
+  "workload": 2,
+  "sop": 2,
+  "templates": 2,
+  "vendors": 2,
+  "services-ratecard": 2,
+  "mailroom": 2,
+  "minutes": 2,
+  "access-matrix": 2,
 
-  // Page 4: Personal, Essentials, and Household
-  "vision-board": 4,
-  "bucket-list": 4,
-  "gratitude": 4,
-  "mood-tracker": 4,
-  "id-wallet": 4,
-  "certificates": 4,
-  "price-tracker": 4,
-  "wishlist-planner": 4,
-  "warranty": 4,
-  "subscription": 4,
-  "medical-history": 4,
-  "vitals": 4,
-  "meal-planner": 4,
-  "body-metrics": 4,
-  "sleep-tracker": 4,
-  "skincare-routine": 4,
-  "kitchen-inventory": 4,
-  "cook-log": 4,
-  "expiry-alert": 4,
-  "leftover-ideas": 4,
-  "home-chores": 4,
-  "utility-tracker": 4,
-  "appliance-care": 4,
-  "home-inventory": 4,
-  "vehicle-identity": 4,
-  "mileage-fuel": 4,
-  "vehicle-service": 4,
-  "parts-lifecycle": 4,
-  "household-renewals": 4,
-  "item-disposal": 4,
+  // Page 3: Personal, Essentials, and Household
+  "vision-board": 3,
+  "bucket-list": 3,
+  "gratitude": 3,
+  "mood-tracker": 3,
+  "id-wallet": 3,
+  "certificates": 3,
+  "price-tracker": 3,
+  "wishlist-planner": 3,
+  "warranty": 3,
+  "subscription": 3,
+  "medical-history": 3,
+  "vitals": 3,
+  "meal-planner": 3,
+  "body-metrics": 3,
+  "sleep-tracker": 3,
+  "skincare-routine": 3,
+  "kitchen-inventory": 3,
+  "cook-log": 3,
+  "expiry-alert": 3,
+  "leftover-ideas": 3,
+  "home-chores": 3,
+  "utility-tracker": 3,
+  "appliance-care": 3,
+  "home-inventory": 3,
+  "vehicle-identity": 3,
+  "mileage-fuel": 3,
+  "vehicle-service": 3,
+  "parts-lifecycle": 3,
+  "household-renewals": 3,
+  "item-disposal": 3,
 
-  // Page 5: People, Family, and Society
-  "circle-groups": 5,
-  "catchup-cadence": 5,
-  "gift-tracker": 5,
-  "interaction-timeline": 5,
-  "borrowed-items": 5,
-  "family-tree": 5,
-  "family-rules": 5,
-  "family-archive": 5,
-  "medical-family": 5,
-  "reunion-planner": 5,
-  "family-anniversary": 5,
-  "rt-rw-directory": 5,
-  "community-announcements": 5,
-  "membership-card": 5,
-  "meeting-resolutions": 5,
-  "volunteer-log": 5,
-  "donation-tracker": 5,
-  "public-services-guide": 5,
-  "civic-calendar": 5,
-  "disaster-prep": 5,
-  "emergency-broadcast": 5,
-  "civil-registry": 5,
-  "tax-civic": 5,
+  // Page 4: People, Family, and Society
+  "circle-groups": 4,
+  "catchup-cadence": 4,
+  "gift-tracker": 4,
+  "interaction-timeline": 4,
+  "borrowed-items": 4,
+  "family-tree": 4,
+  "family-rules": 4,
+  "family-archive": 4,
+  "medical-family": 4,
+  "reunion-planner": 4,
+  "family-anniversary": 4,
+  "rt-rw-directory": 4,
+  "community-announcements": 4,
+  "membership-card": 4,
+  "meeting-resolutions": 4,
+  "volunteer-log": 4,
+  "donation-tracker": 4,
+  "public-services-guide": 4,
+  "civic-calendar": 4,
+  "disaster-prep": 4,
+  "emergency-broadcast": 4,
+  "civil-registry": 4,
+  "tax-civic": 4,
 };
 
 /**
@@ -153,10 +151,10 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     tab.startsWith("cat_likuidasi") ||
     tab.startsWith("cat_transfer")
   ) {
-    return 0; // Wealth Management
+    return 0; // Financial Planning & Wealth Management
   }
 
-  // 3. Page 0: Wealth Management
+  // 3. Page 0: Financial Planning & Wealth Management
   if (
     path === "/kurasi-wealth" ||
     path === "/surety" ||
@@ -171,24 +169,7 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     path === "/komoditas" ||
     path === "/self-shaping" ||
     path === "/mutual-mapping" ||
-    path === "/org-optimizing"
-  ) {
-    return 0;
-  }
-
-  // 4. Page 1: 100 Tools / Frameworks
-  if (
-    path === "/100-framework" ||
-    path.startsWith("/100-framework") ||
-    path === "/tools-100" ||
-    path === "/framework" ||
-    path === "/mini-mba"
-  ) {
-    return 1;
-  }
-
-  // 5. Page 2: Financial Planning
-  if (
+    path === "/org-optimizing" ||
     path === "/asset" ||
     path.startsWith("/asset") ||
     path === "/aset" ||
@@ -207,52 +188,29 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     path === "/arus-kas" ||
     path === "/syariah" ||
     path === "/zakat" ||
+    path === "/investasi" ||
+    path.startsWith("/investasi") ||
     path === "/wakaf" ||
     path === "/waris" ||
     path === "/muamalah" ||
     path === "/net-worth" ||
     path === "/kalkulator-finansial"
   ) {
-    return 2;
+    return 0;
   }
 
-  // 6. Page 5: People, Family, and Society
+  // 4. Page 1: 100 Tools / Frameworks
   if (
-    path === "/contacts" ||
-    path.startsWith("/contacts") ||
-    path === "/klien" ||
-    path === "/portal.pesan" ||
-    path === "/trips" ||
-    path === "/profil" ||
-    path === "/paguyuban" ||
-    path === "/warga"
+    path === "/100-framework" ||
+    path.startsWith("/100-framework") ||
+    path === "/tools-100" ||
+    path === "/framework" ||
+    path === "/mini-mba"
   ) {
-    return 5;
+    return 1;
   }
 
-  // 7. Page 4: Personal, Essentials, and Household
-  if (
-    path === "/health" ||
-    path.startsWith("/health") ||
-    path === "/workouts" ||
-    path === "/kebugaran" ||
-    path === "/shopping" ||
-    path === "/weather" ||
-    path === "/cuaca" ||
-    path === "/kalkulator" ||
-    path === "/habits" ||
-    path === "/goals" ||
-    path === "/reliance" ||
-    path === "/growth" ||
-    path === "/proyek-personal" ||
-    path === "/skincare" ||
-    path === "/inventory" ||
-    path === "/pouch"
-  ) {
-    return 4;
-  }
-
-  // 8. Page 3: Productivity, Operations, and Ownership
+  // 5. Page 2: Productivity, Operations, and Ownership
   if (
     path === "/proyek" ||
     path.startsWith("/proyek") ||
@@ -280,7 +238,43 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     path === "/portal" ||
     path === "/portal.dokumen"
   ) {
+    return 2;
+  }
+
+  // 6. Page 3: Personal, Essentials, and Household
+  if (
+    path === "/health" ||
+    path.startsWith("/health") ||
+    path === "/workouts" ||
+    path === "/kebugaran" ||
+    path === "/shopping" ||
+    path === "/weather" ||
+    path === "/cuaca" ||
+    path === "/kalkulator" ||
+    path === "/habits" ||
+    path === "/goals" ||
+    path === "/reliance" ||
+    path === "/growth" ||
+    path === "/proyek-personal" ||
+    path === "/skincare" ||
+    path === "/inventory" ||
+    path === "/pouch"
+  ) {
     return 3;
+  }
+
+  // 7. Page 4: People, Family, and Society
+  if (
+    path === "/contacts" ||
+    path.startsWith("/contacts") ||
+    path === "/klien" ||
+    path === "/portal.pesan" ||
+    path === "/trips" ||
+    path === "/profil" ||
+    path === "/paguyuban" ||
+    path === "/warga"
+  ) {
+    return 4;
   }
 
   // Default fallback to 0

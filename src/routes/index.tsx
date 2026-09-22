@@ -6,7 +6,7 @@ import { Search, Star, X, ShieldCheck, Coins, Building, Sprout, BookOpen, Users 
 import { useFavorites } from "@/hooks/useFavorites";
 import { Tools100Section } from "@/features/launcher/Tools100Section";
 import { KurasiSection } from "@/features/launcher/KurasiSection";
-import { MoneyTrackerSection } from "@/features/launcher/MoneyTrackerSection";
+import { FinancialWealthSection } from "@/features/launcher/FinancialWealthSection";
 import { ProductivitySection } from "@/features/launcher/ProductivitySection";
 import { PersonalEssentialsSection } from "@/features/launcher/PersonalEssentialsSection";
 import { PeopleFamilySocietySection } from "@/features/launcher/PeopleFamilySocietySection";
@@ -51,8 +51,11 @@ function getGradient(name: string) {
 
 const SUPER_CATEGORIES = [
   {
-    title: "Wealth Management",
+    title: "Financial Planning & Wealth Management",
     subCategories: [
+      "Asset & Earning",
+      "Liability & Expense",
+      "Syariah & Muamalah",
       "Value Treated",
       "Wealth Spectrum",
       "Commodity Index",
@@ -83,16 +86,6 @@ const SUPER_CATEGORIES = [
       "Sales, Pricing & Revenue Operations",
       "Deep Tech, Innovation & Future Studies",
       "Public Relations, Crisis & Stakeholder Management",
-    ],
-  },
-  {
-    title: "Financial Planning",
-    subCategories: [
-      "Asset",
-      "Liability",
-      "Earning",
-      "Expense",
-      "Syariah & Muamalah",
     ],
   },
   {
@@ -398,13 +391,18 @@ function Launcher() {
         >
           {pages.length > 0 ? (
             pages.map((page, pageIdx) => {
-              if (page.title === "Wealth Management") {
+              if (
+                page.title === "Financial Planning & Wealth Management" ||
+                page.title === "Financial & Wealth Management" ||
+                page.title === "Wealth Management" ||
+                page.title === "Financial Planning"
+              ) {
                 return (
                   <div
                     key={pageIdx}
                     className="w-full shrink-0 snap-center flex-none px-2 sm:px-3 md:px-5 lg:px-6 pt-[0px] pb-[0px] flex flex-col items-center"
                   >
-                    <KurasiSection
+                    <FinancialWealthSection
                       page={page}
                       favorites={favorites}
                       toggleFavorite={toggleFavorite}
@@ -423,24 +421,6 @@ function Launcher() {
                     className="w-full shrink-0 snap-center flex-none px-2 sm:px-3 md:px-5 lg:px-6 pt-[0px] pb-[0px] flex flex-col items-center"
                   >
                     <Tools100Section
-                      page={page}
-                      favorites={favorites}
-                      toggleFavorite={toggleFavorite}
-                      setActiveFolder={setActiveFolder}
-                      getGradient={getGradient}
-                      FolderTile={FolderTile}
-                    />
-                  </div>
-                );
-              }
-
-              if (page.title === "Financial Planning") {
-                return (
-                  <div
-                    key={pageIdx}
-                    className="w-full shrink-0 snap-center flex-none px-2 sm:px-3 md:px-5 lg:px-6 pt-[0px] pb-[0px] flex flex-col items-center"
-                  >
-                    <MoneyTrackerSection
                       page={page}
                       favorites={favorites}
                       toggleFavorite={toggleFavorite}
@@ -534,20 +514,15 @@ function Launcher() {
               //    while Tahap 1: Surety, Tahap 2: Flow, and Tahap 3-5 remain individual apps.
               const currentItems: LauncherItem[] = [];
               filteredSubs.forEach((sub) => {
-                if (sub.title === "Asset") {
+                if (sub.title === "Asset" || sub.title === "Asset & Earning") {
                   const kuadran = sub.rawItems.find((i) => i.to === "/asset");
                   const instruments = sub.rawItems.filter((i) => i.to !== "/asset");
                   if (kuadran) {
                     currentItems.push({ type: "app", item: kuadran });
                   }
-                  if (instruments.length > 0) {
-                    currentItems.push({
-                      type: "folder",
-                      id: "folder-type-of-assets",
-                      title: "Type of Assets",
-                      items: instruments,
-                    });
-                  }
+                  instruments.forEach((inst) => {
+                    currentItems.push({ type: "app", item: inst });
+                  });
                 } else if (sub.title === "Wealth Spectrum") {
                   const suretyPillarUrls = [
                     "/surety?tab=cat_kepatuhan",
