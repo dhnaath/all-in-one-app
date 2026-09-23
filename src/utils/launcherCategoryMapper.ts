@@ -1,8 +1,8 @@
 /**
  * Launcher Category Mapper
- * Maps applications to their corresponding category page in the Launcher.
+ * Memetakan rute / path aplikasi ke halaman kategori UI Launcher yang tepat.
  *
- * Category Pages:
+ * Halaman Kategori:
  * 0: Financial Planning & Wealth Management (FinancialWealthSection)
  * 1: 100 Tools (Tools100Section / Frameworks)
  * 2: Productivity, Operations, and Ownership (ProductivitySection)
@@ -106,7 +106,7 @@ const LAINNYA_APP_CATEGORY_MAP: Record<string, number> = {
 };
 
 /**
- * Determine the launcher category page index (0-5) for a given route/URL.
+ * Determine the launcher category page index (0-4) for a given route/URL.
  */
 export function mapAppToCategoryPage(urlOrPath: string): number {
   if (!urlOrPath || urlOrPath === "/") return 0;
@@ -166,7 +166,11 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     path === "/outlook" ||
     path === "/konsultasi" ||
     path === "/kurasi" ||
+    path.startsWith("/kurasi") ||
     path === "/komoditas" ||
+    path === "/100-komoditas" ||
+    path === "/valuasi" ||
+    path === "/commodity-dashboard" ||
     path === "/self-shaping" ||
     path === "/mutual-mapping" ||
     path === "/org-optimizing" ||
@@ -187,7 +191,9 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     path === "/cashflow" ||
     path === "/arus-kas" ||
     path === "/syariah" ||
+    path.startsWith("/syariah") ||
     path === "/zakat" ||
+    path.startsWith("/zakat") ||
     path === "/investasi" ||
     path.startsWith("/investasi") ||
     path === "/wakaf" ||
@@ -205,7 +211,28 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     path.startsWith("/100-framework") ||
     path === "/tools-100" ||
     path === "/framework" ||
-    path === "/mini-mba"
+    path.startsWith("/framework/") ||
+    path === "/mini-mba" ||
+    path === "/swot" ||
+    path === "/tows" ||
+    path === "/pestel" ||
+    path === "/porter" ||
+    path === "/vrio" ||
+    path === "/value-chain" ||
+    path === "/bcg" ||
+    path === "/ge-mckinsey" ||
+    path === "/ansoff" ||
+    path === "/blue-ocean" ||
+    path === "/value-disciplines" ||
+    path === "/bmc" ||
+    path === "/lean-canvas" ||
+    path === "/value-proposition-canvas" ||
+    path === "/empathy-map" ||
+    path === "/stp" ||
+    path === "/marketing-mix" ||
+    path === "/customer-journey-map" ||
+    path === "/kano-model" ||
+    path === "/product-life-cycle"
   ) {
     return 1;
   }
@@ -215,12 +242,17 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     path === "/proyek" ||
     path.startsWith("/proyek") ||
     path === "/task-manager" ||
+    path === "/proyek-personal" ||
     path === "/kalender" ||
     path === "/events" ||
     path === "/notes" ||
     path === "/catatan" ||
     path === "/reading" ||
     path === "/bookmarks" ||
+    path === "/ideas" ||
+    path === "/goals" ||
+    path === "/habits" ||
+    path === "/journal" ||
     path === "/pomodoro" ||
     path === "/countdown" ||
     path === "/eisenhower" ||
@@ -236,7 +268,11 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     path === "/pocket" ||
     path === "/access-matrix" ||
     path === "/portal" ||
-    path === "/portal.dokumen"
+    path.startsWith("/portal") ||
+    path === "/katalog-produk" ||
+    path === "/inventory" ||
+    path === "/incoterms" ||
+    path === "/reports"
   ) {
     return 2;
   }
@@ -247,18 +283,18 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     path.startsWith("/health") ||
     path === "/workouts" ||
     path === "/kebugaran" ||
+    path === "/water" ||
     path === "/shopping" ||
+    path === "/recipes" ||
+    path === "/trips" ||
     path === "/weather" ||
     path === "/cuaca" ||
     path === "/kalkulator" ||
-    path === "/habits" ||
-    path === "/goals" ||
     path === "/reliance" ||
     path === "/growth" ||
-    path === "/proyek-personal" ||
     path === "/skincare" ||
-    path === "/inventory" ||
-    path === "/pouch"
+    path === "/pouch" ||
+    path === "/trunk"
   ) {
     return 3;
   }
@@ -268,11 +304,21 @@ export function mapAppToCategoryPage(urlOrPath: string): number {
     path === "/contacts" ||
     path.startsWith("/contacts") ||
     path === "/klien" ||
-    path === "/portal.pesan" ||
-    path === "/trips" ||
     path === "/profil" ||
     path === "/paguyuban" ||
-    path === "/warga"
+    path === "/warga" ||
+    path === "/design" ||
+    path === "/photography" ||
+    path === "/writing" ||
+    path === "/code" ||
+    path === "/movies" ||
+    path === "/games" ||
+    path === "/podcasts" ||
+    path === "/music" ||
+    path === "/courses" ||
+    path === "/flashcards" ||
+    path === "/exams" ||
+    path === "/languages"
   ) {
     return 4;
   }
@@ -328,9 +374,9 @@ export function recordClosedApp(urlOrPath: string, explicitPageIndex?: number): 
 }
 
 /**
- * Get the remembered launcher category page (0 - 5).
+ * Get the remembered launcher category page (0 - 4).
  */
-export function getLastLauncherPage(maxPages = 6): number {
+export function getLastLauncherPage(maxPages = 5): number {
   try {
     const saved = localStorage.getItem(LAUNCHER_STORAGE_KEY);
     if (saved !== null) {
@@ -362,7 +408,7 @@ export function getLastLauncherPage(maxPages = 6): number {
 /**
  * Update the launcher page manually (e.g., when the user swipes or scrolls to another page in Launcher).
  */
-export function setLastLauncherPage(pageIndex: number, maxPages = 6): void {
+export function setLastLauncherPage(pageIndex: number, maxPages = 5): void {
   try {
     if (pageIndex >= 0 && pageIndex < maxPages) {
       localStorage.setItem(LAUNCHER_STORAGE_KEY, String(pageIndex));

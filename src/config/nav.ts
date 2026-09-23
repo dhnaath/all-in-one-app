@@ -10,8 +10,6 @@ import {
   Compass,
   Gauge,
   MessagesSquare,
-  CalendarClock,
-  FolderOpen,
   Activity,
   LineChart,
   AlertTriangle,
@@ -121,6 +119,7 @@ import {
   History,
   GitFork,
   PartyPopper,
+  Terminal,
   type LucideIcon,
 } from "lucide-react";
 
@@ -128,16 +127,24 @@ export type NavItem = {
   to: string;
   label: string;
   icon: LucideIcon;
+  badge?: string;
 };
 
 export type NavGroup = {
   title: string;
+  isStandalone?: boolean;
+  parentCategory?: string;
   items: NavItem[];
 };
 
 export const navKonsultan: NavGroup[] = [
+  // ============================================================================
+  // 1. FINANCIAL PLANNING & WEALTH MANAGEMENT (STANDALONE & WEALTH MATRIX)
+  // ============================================================================
   {
     title: "Tahapan",
+    isStandalone: true,
+    parentCategory: "Finance",
     items: [
       { to: "/100-framework", label: "100 Framework", icon: Grid2X2 },
       { to: "/valuasi", label: "Valuasi MAPPI", icon: Building },
@@ -145,6 +152,8 @@ export const navKonsultan: NavGroup[] = [
   },
   {
     title: "Commodity Index",
+    isStandalone: true,
+    parentCategory: "Finance",
     items: [
       { to: "/100-komoditas", label: "100 Komoditas", icon: Package },
       { to: "/syariah", label: "Pasar Muamalah", icon: HeartHandshake },
@@ -153,6 +162,8 @@ export const navKonsultan: NavGroup[] = [
   },
   {
     title: "Self-Shaping",
+    isStandalone: false,
+    parentCategory: "Phase Side",
     items: [
       { to: "/reliance", label: "Reliance", icon: ShieldCheck },
       { to: "/sufficient", label: "Sufficient", icon: CheckCircle2 },
@@ -162,6 +173,8 @@ export const navKonsultan: NavGroup[] = [
   },
   {
     title: "Mutual-Mapping",
+    isStandalone: false,
+    parentCategory: "Phase Side",
     items: [
       { to: "/interact", label: "Interact", icon: MessagesSquare },
       { to: "/interest", label: "Interest", icon: Heart },
@@ -171,6 +184,8 @@ export const navKonsultan: NavGroup[] = [
   },
   {
     title: "Organization-Optimizing",
+    isStandalone: false,
+    parentCategory: "Phase Side",
     items: [
       { to: "/insider", label: "Insider", icon: Eye },
       { to: "/insight", label: "Insight", icon: Lightbulb },
@@ -179,49 +194,9 @@ export const navKonsultan: NavGroup[] = [
     ],
   },
   {
-    title: "Productivity",
-    items: [
-      { to: "/proyek", label: "Proyek & Tugas", icon: FolderKanban },
-      { to: "/task-manager", label: "Task Manager", icon: CheckSquare },
-      { to: "/kalender", label: "Kalender & Timeline", icon: CalendarDays },
-      { to: "/events", label: "Events", icon: Ticket },
-      { to: "/pomodoro", label: "Pomodoro Timer", icon: Timer },
-      { to: "/eisenhower", label: "Eisenhower Matrix", icon: Grid2X2 },
-    ],
-  },
-  {
-    title: "Business",
-    items: [
-      { to: "/katalog-produk", label: "Katalog Produk", icon: Package },
-      { to: "/inventory", label: "Inventory", icon: Archive },
-      { to: "/portal/pesan", label: "Pesan Klien", icon: MessagesSquare },
-      { to: "/contacts", label: "Kontak", icon: Users },
-      { to: "/reports", label: "Laporan Khusus", icon: NotebookText },
-    ],
-  },
-  {
-    title: "Knowledge",
-    items: [
-      { to: "/notes", label: "Notes & Docs", icon: FileText },
-      { to: "/catatan", label: "Catatan", icon: NotebookText },
-      { to: "/ideas", label: "Ideas", icon: Lightbulb },
-      { to: "/bookmarks", label: "Bookmarks", icon: Bookmark },
-      { to: "/incoterms", label: "Panduan Incoterms", icon: Navigation },
-      { to: "/reading", label: "Reading List", icon: Book },
-    ],
-  },
-  {
-    title: "Personal",
-    items: [
-      { to: "/goals", label: "Goals", icon: Target },
-      { to: "/habits", label: "Habits", icon: Activity },
-      { to: "/proyek-personal", label: "Personal Projects", icon: Briefcase },
-      { to: "/journal", label: "Journal", icon: BookOpen },
-      { to: "/wallet", label: "Wallet", icon: Wallet },
-    ],
-  },
-  {
     title: "Asset & Earning",
+    isStandalone: true,
+    parentCategory: "Finance",
     items: [
       { to: "/asset", label: "Kuadran Aset", icon: Briefcase },
       { to: "/earning", label: "Kuadran Pendapatan", icon: DollarSign },
@@ -238,6 +213,8 @@ export const navKonsultan: NavGroup[] = [
   },
   {
     title: "Liability & Expense",
+    isStandalone: true,
+    parentCategory: "Finance",
     items: [
       { to: "/liability", label: "Kuadran Liabilitas", icon: CreditCard },
       { to: "/expense", label: "Kuadran Pengeluaran", icon: ShoppingCart },
@@ -252,6 +229,8 @@ export const navKonsultan: NavGroup[] = [
   },
   {
     title: "Wealth Spectrum",
+    isStandalone: true,
+    parentCategory: "Finance",
     items: [
       { to: "/surety", label: "Tahap 1: Surety", icon: ShieldCheck },
       { to: "/surety?tab=cat_kepatuhan", label: "Kepatuhan Hukum", icon: Scale },
@@ -287,6 +266,8 @@ export const navKonsultan: NavGroup[] = [
   },
   {
     title: "Value Treated",
+    isStandalone: false,
+    parentCategory: "Finance",
     items: [
       { to: "/kurasi/ekonomi", label: "Ekonomi", icon: Coins },
       { to: "/kurasi/statistik", label: "Statistik", icon: LineChart },
@@ -301,192 +282,9 @@ export const navKonsultan: NavGroup[] = [
     ],
   },
   {
-    title: "Strategic Management",
-    items: [
-      { to: "/swot", label: "SWOT Analysis", icon: Target },
-      { to: "/tows", label: "TOWS Matrix", icon: Grid2X2 },
-      { to: "/pestel", label: "PESTEL Analysis", icon: Globe },
-      { to: "/porter", label: "Porter's Five Forces", icon: ShieldAlert },
-      { to: "/vrio", label: "VRIO Framework", icon: Gem },
-      { to: "/value-chain", label: "Value Chain Analysis", icon: Workflow },
-      { to: "/bcg", label: "BCG Matrix", icon: PieChart },
-      { to: "/ge-mckinsey", label: "GE-McKinsey Matrix", icon: LayoutGrid },
-      { to: "/ansoff", label: "Ansoff Matrix", icon: TrendingUp },
-      { to: "/blue-ocean", label: "Blue Ocean Strategy (ERRC)", icon: Waves },
-      { to: "/value-disciplines", label: "Value Disciplines Model", icon: Award },
-    ],
-  },
-  {
-    title: "Business Model & Value Proposition",
-    items: [
-      { to: "/bmc", label: "Business Model Canvas (BMC)", icon: LayoutGrid },
-      { to: "/lean-canvas", label: "Lean Canvas", icon: Grid2X2 },
-      { to: "/value-proposition-canvas", label: "Value Proposition Canvas", icon: Target },
-      { to: "/empathy-map", label: "Empathy Map", icon: Heart },
-    ],
-  },
-  {
-    title: "Marketing & Customer Management",
-    items: [
-      { to: "/stp", label: "STP Framework", icon: Compass },
-      { to: "/marketing-mix", label: "4P/7P Marketing Mix", icon: Store },
-      { to: "/customer-journey-map", label: "Customer Journey Map (CJM)", icon: Navigation },
-      { to: "/kano-model", label: "Kano Model", icon: LineChart },
-      { to: "/product-life-cycle", label: "Product Life Cycle (PLC)", icon: TrendingUp },
-    ],
-  },
-  {
-    title: "Operations & Performance Management",
-    items: [
-      { to: "/framework/six-sigma-dmaic", label: "Six Sigma (DMAIC)", icon: Gauge },
-      { to: "/framework/sipoc-diagram", label: "SIPOC Diagram", icon: Workflow },
-      { to: "/framework/raci-matrix", label: "RACI Matrix", icon: Users },
-      { to: "/framework/gantt-chart", label: "Gantt Chart", icon: CalendarDays },
-      { to: "/framework/balanced-scorecard-bsc", label: "Balanced Scorecard (BSC)", icon: Target },
-      { to: "/framework/okr-framework", label: "OKR Framework", icon: Award },
-      { to: "/framework/eisenhower-matrix", label: "Eisenhower Matrix", icon: Grid2X2 },
-    ],
-  },
-  {
-    title: "Financial Management & Business Feasibility",
-    items: [
-      { to: "/framework/analisis-rasio-keuangan", label: "Analisis Rasio Keuangan", icon: Calculator },
-      { to: "/framework/capital-budgeting-roi-npv-irr", label: "Capital Budgeting (ROI, NPV, IRR)", icon: Landmark },
-      { to: "/framework/break-even-analysis-bep", label: "Break-Even Analysis (BEP)", icon: LineChart },
-      { to: "/framework/cost-benefit-analysis-cba", label: "Cost-Benefit Analysis (CBA)", icon: Scale },
-      { to: "/framework/business-case-analysis", label: "Business Case Analysis", icon: FileText },
-    ],
-  },
-  {
-    title: "Innovation, Entrepreneurship & Design",
-    items: [
-      { to: "/framework/lean-startup-loop", label: "Lean Startup Loop", icon: RefreshCw },
-      { to: "/framework/design-thinking", label: "Design Thinking", icon: Lightbulb },
-    ],
-  },
-  {
-    title: "Quality Management & Continuous Improvement",
-    items: [
-      { to: "/framework/fishbone-diagram-ishikawa", label: "Fishbone Diagram (Ishikawa)", icon: Workflow },
-      { to: "/framework/pdca-cycle", label: "PDCA Cycle", icon: RefreshCw },
-      { to: "/framework/house-of-quality-hoq-qfd", label: "House of Quality (HOQ / QFD)", icon: Building },
-    ],
-  },
-  {
-    title: "Change Management & Organizational Development",
-    items: [
-      { to: "/framework/mckinsey-7s-framework", label: "McKinsey 7S Framework", icon: Network },
-      { to: "/framework/kotters-8-step-change", label: "Kotter's 8-Step Change", icon: TrendingUp },
-      { to: "/framework/force-field-analysis", label: "Force Field Analysis", icon: ArrowRightLeft },
-    ],
-  },
-  {
-    title: "Public Policy & Program Management",
-    items: [
-      { to: "/framework/logical-framework-analysis", label: "Logical Framework Analysis", icon: Layers },
-      { to: "/framework/stakeholder-power-interest", label: "Stakeholder Power-Interest", icon: Users },
-      { to: "/framework/analisis-kebijakan-public-dunn", label: "Analisis Kebijakan Public (Dunn)", icon: Scale },
-      { to: "/framework/smart-criteria", label: "SMART Criteria", icon: CheckCircle2 },
-    ],
-  },
-  {
-    title: "Decision Making & Analytical Thinking",
-    items: [
-      { to: "/framework/decision-tree-analysis", label: "Decision Tree Analysis", icon: Workflow },
-      { to: "/framework/decision-matrix-pugh", label: "Decision Matrix (Pugh)", icon: Grid2X2 },
-      { to: "/framework/pareto-analysis-8020", label: "Pareto Analysis (80/20)", icon: LineChart },
-      { to: "/framework/analytical-hierarchy-process-ahp", label: "Analytical Hierarchy Process (AHP)", icon: Layers },
-      { to: "/framework/six-thinking-hats", label: "Six Thinking Hats", icon: Brain },
-    ],
-  },
-  {
-    title: "Economics & Quantitative Analysis",
-    items: [
-      { to: "/framework/supply-demand-analysis", label: "Supply-Demand Analysis", icon: TrendingUp },
-      { to: "/framework/input-output-analysis", label: "Input-Output Analysis", icon: ArrowRightLeft },
-      { to: "/framework/radar-spider-chart", label: "Radar / Spider Chart", icon: Compass },
-    ],
-  },
-  {
-    title: "Product Management & Agile/Scrum",
-    items: [
-      { to: "/framework/product-vision-board", label: "Product Vision Board", icon: LayoutDashboard },
-      { to: "/framework/kano-feature-prioritization", label: "Kano Feature Prioritization", icon: Star },
-      { to: "/framework/scrum-kanban-board", label: "Scrum / Kanban Board", icon: FolderKanban },
-      { to: "/framework/rice-scoring-model", label: "RICE Scoring Model", icon: Calculator },
-      { to: "/framework/moscow-prioritization", label: "MoSCoW Prioritization", icon: CheckSquare },
-      { to: "/framework/user-story-mapping", label: "User Story Mapping", icon: Layers },
-      { to: "/framework/opportunity-solution-tree", label: "Opportunity Solution Tree", icon: Workflow },
-      { to: "/framework/dual-track-agile-framework", label: "Dual-Track Agile Framework", icon: RefreshCw },
-    ],
-  },
-  {
-    title: "Sustainability, ESG & Risk Management",
-    items: [
-      { to: "/framework/esg-materiality-matrix", label: "ESG Materiality Matrix", icon: Globe },
-      { to: "/framework/risk-assessment-matrix", label: "Risk Assessment Matrix", icon: ShieldAlert },
-      { to: "/framework/triple-bottom-line-tbl", label: "Triple Bottom Line (TBL)", icon: Sprout },
-      { to: "/framework/circular-economy-butterfly", label: "Circular Economy (Butterfly)", icon: RefreshCw },
-      { to: "/framework/fmea-framework", label: "FMEA Framework", icon: AlertTriangle },
-      { to: "/framework/iso-31000-risk-management", label: "ISO 31000 Risk Management", icon: ShieldCheck },
-      { to: "/framework/carbon-footprint-scope-1-3", label: "Carbon Footprint (Scope 1-3)", icon: Globe },
-      { to: "/framework/business-continuity-plan-bcp", label: "Business Continuity Plan (BCP)", icon: Shield },
-    ],
-  },
-  {
-    title: "Leadership, Talent & Culture Management",
-    items: [
-      { to: "/framework/9-box-talent-grid", label: "9-Box Talent Grid", icon: Grid2X2 },
-      { to: "/framework/situational-leadership", label: "Situational Leadership", icon: Compass },
-      { to: "/framework/johari-window", label: "Johari Window", icon: Eye },
-      { to: "/framework/culture-map", label: "Culture Map", icon: Heart },
-      { to: "/framework/lencionis-5-dysfunctions", label: "Lencioni’s 5 Dysfunctions", icon: AlertTriangle },
-      { to: "/framework/evp-canvas", label: "EVP Canvas", icon: Award },
-      { to: "/framework/360-degree-feedback", label: "360-Degree Feedback", icon: RefreshCw },
-      { to: "/framework/kirkpatrick-4-level-model", label: "Kirkpatrick 4-Level Model", icon: GraduationCap },
-    ],
-  },
-  {
-    title: "Sales, Pricing & Revenue Operations",
-    items: [
-      { to: "/framework/meddpicc-framework", label: "MEDDPICC Framework", icon: Target },
-      { to: "/framework/pricing-matrix-elasticity", label: "Pricing Matrix & Elasticity", icon: DollarSign },
-      { to: "/framework/unit-economics-clvcac", label: "Unit Economics (CLV/CAC)", icon: Calculator },
-      { to: "/framework/spin-selling-framework", label: "SPIN Selling Framework", icon: MessagesSquare },
-      { to: "/framework/bant-framework", label: "BANT Framework", icon: CheckCircle2 },
-      { to: "/framework/revenue-engine-flywheel", label: "Revenue Engine (Flywheel)", icon: Zap },
-      { to: "/framework/value-based-pricing-canvas", label: "Value-Based Pricing Canvas", icon: Gem },
-      { to: "/framework/churn-analysis-matrix", label: "Churn Analysis Matrix", icon: TrendingUp },
-    ],
-  },
-  {
-    title: "Deep Tech, Innovation & Future Studies",
-    items: [
-      { to: "/framework/technology-readiness-trl", label: "Technology Readiness (TRL)", icon: Binary },
-      { to: "/framework/horizon-scanning-futures", label: "Horizon Scanning (Futures)", icon: Compass },
-      { to: "/framework/gartner-hype-cycle", label: "Gartner Hype Cycle", icon: LineChart },
-      { to: "/framework/doblins-10-types-innovation", label: "Doblin’s 10 Types Innovation", icon: Sparkles },
-      { to: "/framework/scamper-ideation-canvas", label: "SCAMPER Ideation Canvas", icon: Lightbulb },
-      { to: "/framework/mvp-canvas", label: "MVP Canvas", icon: Briefcase },
-      { to: "/framework/open-innovation-model", label: "Open Innovation Model", icon: Globe },
-      { to: "/framework/value-proposition-testing", label: "Value Proposition Testing", icon: Target },
-    ],
-  },
-  {
-    title: "Public Relations, Crisis & Stakeholder Management",
-    items: [
-      { to: "/framework/scr-framework-minto", label: "SCR Framework (Minto)", icon: FileText },
-      { to: "/framework/crisis-communication-scct", label: "Crisis Communication (SCCT)", icon: ShieldAlert },
-      { to: "/framework/brand-archetypes", label: "Brand Archetypes", icon: Award },
-      { to: "/framework/peso-model", label: "PESO Model", icon: Megaphone },
-      { to: "/framework/carrolls-csr-pyramid", label: "Carroll’s CSR Pyramid", icon: Building },
-      { to: "/framework/issue-life-cycle", label: "Issue Life Cycle", icon: RefreshCw },
-      { to: "/framework/stakeholder-engagement", label: "Stakeholder Engagement", icon: HeartHandshake },
-      { to: "/framework/press-release-canvas", label: "Press Release Canvas", icon: PenTool },
-    ],
-  },
-  {
     title: "Syariah & Muamalah",
+    isStandalone: true,
+    parentCategory: "Finance",
     items: [
       { to: "/syariah/terlarang?app=riba", label: "Riba", icon: AlertOctagon },
       { to: "/syariah/terlarang?app=gharar", label: "Gharar", icon: ShieldAlert },
@@ -505,27 +303,244 @@ export const navKonsultan: NavGroup[] = [
       { to: "/zakat?app=fitrah", label: "Zakat Fitrah", icon: Users },
     ],
   },
+
+  // ============================================================================
+  // 2. 100 STRATEGIC MANAGEMENT FRAMEWORKS (STANDALONE & MINI-MBA)
+  // ============================================================================
   {
-    title: "Entertainment",
+    title: "Strategic Management",
+    isStandalone: true,
+    parentCategory: "100 Tools",
     items: [
-      { to: "/movies", label: "Movies", icon: Film },
-      { to: "/games", label: "Games", icon: Gamepad2 },
-      { to: "/podcasts", label: "Podcasts", icon: Podcast },
-      { to: "/music", label: "Music", icon: Music },
+      { to: "/swot", label: "SWOT Analysis", icon: Target },
+      { to: "/tows", label: "TOWS Matrix", icon: Grid2X2 },
+      { to: "/pestel", label: "PESTEL Analysis", icon: Globe },
+      { to: "/porter", label: "Porter's Five Forces", icon: ShieldAlert },
+      { to: "/vrio", label: "VRIO Framework", icon: Gem },
+      { to: "/value-chain", label: "Value Chain Analysis", icon: Workflow },
+      { to: "/bcg", label: "BCG Matrix", icon: PieChart },
+      { to: "/ge-mckinsey", label: "GE-McKinsey Matrix", icon: LayoutGrid },
+      { to: "/ansoff", label: "Ansoff Matrix", icon: TrendingUp },
+      { to: "/blue-ocean", label: "Blue Ocean Strategy (ERRC)", icon: Waves },
+      { to: "/value-disciplines", label: "Value Disciplines Model", icon: Award },
     ],
   },
   {
-    title: "Creative",
+    title: "Business Model & Value Proposition",
+    isStandalone: true,
+    parentCategory: "100 Tools",
     items: [
-      { to: "/design", label: "Design", icon: PenTool },
-      { to: "/photography", label: "Photography", icon: Camera },
-      { to: "/writing", label: "Writing", icon: Type },
-      { to: "/code", label: "Code", icon: Code },
+      { to: "/bmc", label: "Business Model Canvas (BMC)", icon: LayoutGrid },
+      { to: "/lean-canvas", label: "Lean Canvas", icon: Grid2X2 },
+      { to: "/value-proposition-canvas", label: "Value Proposition Canvas", icon: Target },
+      { to: "/empathy-map", label: "Empathy Map", icon: Heart },
     ],
   },
+  {
+    title: "Marketing & Customer Management",
+    isStandalone: true,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/stp", label: "STP Framework", icon: Compass },
+      { to: "/marketing-mix", label: "4P/7P Marketing Mix", icon: Store },
+      { to: "/customer-journey-map", label: "Customer Journey Map (CJM)", icon: Navigation },
+      { to: "/kano-model", label: "Kano Model", icon: LineChart },
+      { to: "/product-life-cycle", label: "Product Life Cycle (PLC)", icon: TrendingUp },
+    ],
+  },
+  {
+    title: "Operations & Performance Management",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/six-sigma-dmaic", label: "Six Sigma (DMAIC)", icon: Gauge },
+      { to: "/framework/sipoc-diagram", label: "SIPOC Diagram", icon: Workflow },
+      { to: "/framework/raci-matrix", label: "RACI Matrix", icon: Users },
+      { to: "/framework/gantt-chart", label: "Gantt Chart", icon: CalendarDays },
+      { to: "/framework/balanced-scorecard-bsc", label: "Balanced Scorecard (BSC)", icon: Target },
+      { to: "/framework/okr-framework", label: "OKR Framework", icon: Award },
+      { to: "/framework/eisenhower-matrix", label: "Eisenhower Matrix", icon: Grid2X2 },
+    ],
+  },
+  {
+    title: "Financial Management & Business Feasibility",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/analisis-rasio-keuangan", label: "Analisis Rasio Keuangan", icon: Calculator },
+      { to: "/framework/capital-budgeting-roi-npv-irr", label: "Capital Budgeting (ROI, NPV, IRR)", icon: Landmark },
+      { to: "/framework/break-even-analysis-bep", label: "Break-Even Analysis (BEP)", icon: LineChart },
+      { to: "/framework/cost-benefit-analysis-cba", label: "Cost-Benefit Analysis (CBA)", icon: Scale },
+      { to: "/framework/business-case-analysis", label: "Business Case Analysis", icon: FileText },
+    ],
+  },
+  {
+    title: "Innovation, Entrepreneurship & Design",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/lean-startup-loop", label: "Lean Startup Loop", icon: RefreshCw },
+      { to: "/framework/design-thinking", label: "Design Thinking", icon: Lightbulb },
+    ],
+  },
+  {
+    title: "Quality Management & Continuous Improvement",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/fishbone-diagram-ishikawa", label: "Fishbone Diagram (Ishikawa)", icon: Workflow },
+      { to: "/framework/pdca-cycle", label: "PDCA Cycle", icon: RefreshCw },
+      { to: "/framework/house-of-quality-hoq-qfd", label: "House of Quality (HOQ / QFD)", icon: Building },
+    ],
+  },
+  {
+    title: "Change Management & Organizational Development",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/mckinsey-7s-framework", label: "McKinsey 7S Framework", icon: Network },
+      { to: "/framework/kotters-8-step-change", label: "Kotter's 8-Step Change", icon: TrendingUp },
+      { to: "/framework/force-field-analysis", label: "Force Field Analysis", icon: ArrowRightLeft },
+    ],
+  },
+  {
+    title: "Public Policy & Program Management",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/logical-framework-analysis", label: "Logical Framework Analysis", icon: Layers },
+      { to: "/framework/stakeholder-power-interest", label: "Stakeholder Power-Interest", icon: Users },
+      { to: "/framework/analisis-kebijakan-public-dunn", label: "Analisis Kebijakan Public (Dunn)", icon: Scale },
+      { to: "/framework/smart-criteria", label: "SMART Criteria", icon: CheckCircle2 },
+    ],
+  },
+  {
+    title: "Decision Making & Analytical Thinking",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/decision-tree-analysis", label: "Decision Tree Analysis", icon: Workflow },
+      { to: "/framework/decision-matrix-pugh", label: "Decision Matrix (Pugh)", icon: Grid2X2 },
+      { to: "/framework/pareto-analysis-8020", label: "Pareto Analysis (80/20)", icon: LineChart },
+      { to: "/framework/analytical-hierarchy-process-ahp", label: "Analytical Hierarchy Process (AHP)", icon: Layers },
+      { to: "/framework/six-thinking-hats", label: "Six Thinking Hats", icon: Brain },
+    ],
+  },
+  {
+    title: "Economics & Quantitative Analysis",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/supply-demand-analysis", label: "Supply-Demand Analysis", icon: TrendingUp },
+      { to: "/framework/input-output-analysis", label: "Input-Output Analysis", icon: ArrowRightLeft },
+      { to: "/framework/radar-spider-chart", label: "Radar / Spider Chart", icon: Compass },
+    ],
+  },
+  {
+    title: "Product Management & Agile/Scrum",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/product-vision-board", label: "Product Vision Board", icon: LayoutDashboard },
+      { to: "/framework/kano-feature-prioritization", label: "Kano Feature Prioritization", icon: Star },
+      { to: "/framework/scrum-kanban-board", label: "Scrum / Kanban Board", icon: FolderKanban },
+      { to: "/framework/rice-scoring-model", label: "RICE Scoring Model", icon: Calculator },
+      { to: "/framework/moscow-prioritization", label: "MoSCoW Prioritization", icon: CheckSquare },
+      { to: "/framework/user-story-mapping", label: "User Story Mapping", icon: Layers },
+      { to: "/framework/opportunity-solution-tree", label: "Opportunity Solution Tree", icon: Workflow },
+      { to: "/framework/dual-track-agile-framework", label: "Dual-Track Agile Framework", icon: RefreshCw },
+    ],
+  },
+  {
+    title: "Sustainability, ESG & Risk Management",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/esg-materiality-matrix", label: "ESG Materiality Matrix", icon: Globe },
+      { to: "/framework/risk-assessment-matrix", label: "Risk Assessment Matrix", icon: ShieldAlert },
+      { to: "/framework/triple-bottom-line-tbl", label: "Triple Bottom Line (TBL)", icon: Sprout },
+      { to: "/framework/circular-economy-butterfly", label: "Circular Economy (Butterfly)", icon: RefreshCw },
+      { to: "/framework/fmea-framework", label: "FMEA Framework", icon: AlertTriangle },
+      { to: "/framework/iso-31000-risk-management", label: "ISO 31000 Risk Management", icon: ShieldCheck },
+      { to: "/framework/carbon-footprint-scope-1-3", label: "Carbon Footprint (Scope 1-3)", icon: Globe },
+      { to: "/framework/business-continuity-plan-bcp", label: "Business Continuity Plan (BCP)", icon: Shield },
+    ],
+  },
+  {
+    title: "Leadership, Talent & Culture Management",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/9-box-talent-grid", label: "9-Box Talent Grid", icon: Grid2X2 },
+      { to: "/framework/situational-leadership", label: "Situational Leadership", icon: Compass },
+      { to: "/framework/johari-window", label: "Johari Window", icon: Eye },
+      { to: "/framework/culture-map", label: "Culture Map", icon: Heart },
+      { to: "/framework/lencionis-5-dysfunctions", label: "Lencioni’s 5 Dysfunctions", icon: AlertTriangle },
+      { to: "/framework/evp-canvas", label: "EVP Canvas", icon: Award },
+      { to: "/framework/360-degree-feedback", label: "360-Degree Feedback", icon: RefreshCw },
+      { to: "/framework/kirkpatrick-4-level-model", label: "Kirkpatrick 4-Level Model", icon: GraduationCap },
+    ],
+  },
+  {
+    title: "Sales, Pricing & Revenue Operations",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/meddpicc-framework", label: "MEDDPICC Framework", icon: Target },
+      { to: "/framework/pricing-matrix-elasticity", label: "Pricing Matrix & Elasticity", icon: DollarSign },
+      { to: "/framework/unit-economics-clvcac", label: "Unit Economics (CLV/CAC)", icon: Calculator },
+      { to: "/framework/spin-selling-framework", label: "SPIN Selling Framework", icon: MessagesSquare },
+      { to: "/framework/bant-framework", label: "BANT Framework", icon: CheckCircle2 },
+      { to: "/framework/revenue-engine-flywheel", label: "Revenue Engine (Flywheel)", icon: Zap },
+      { to: "/framework/value-based-pricing-canvas", label: "Value-Based Pricing Canvas", icon: Gem },
+      { to: "/framework/churn-analysis-matrix", label: "Churn Analysis Matrix", icon: TrendingUp },
+    ],
+  },
+  {
+    title: "Deep Tech, Innovation & Future Studies",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/technology-readiness-trl", label: "Technology Readiness (TRL)", icon: Binary },
+      { to: "/framework/horizon-scanning-futures", label: "Horizon Scanning (Futures)", icon: Compass },
+      { to: "/framework/gartner-hype-cycle", label: "Gartner Hype Cycle", icon: LineChart },
+      { to: "/framework/doblins-10-types-innovation", label: "Doblin’s 10 Types Innovation", icon: Sparkles },
+      { to: "/framework/scamper-ideation-canvas", label: "SCAMPER Ideation Canvas", icon: Lightbulb },
+      { to: "/framework/mvp-canvas", label: "MVP Canvas", icon: Briefcase },
+      { to: "/framework/open-innovation-model", label: "Open Innovation Model", icon: Globe },
+      { to: "/framework/value-proposition-testing", label: "Value Proposition Testing", icon: Target },
+    ],
+  },
+  {
+    title: "Public Relations, Crisis & Stakeholder Management",
+    isStandalone: false,
+    parentCategory: "100 Tools",
+    items: [
+      { to: "/framework/scr-framework-minto", label: "SCR Framework (Minto)", icon: FileText },
+      { to: "/framework/crisis-communication-scct", label: "Crisis Communication (SCCT)", icon: ShieldAlert },
+      { to: "/framework/brand-archetypes", label: "Brand Archetypes", icon: Award },
+      { to: "/framework/peso-model", label: "PESO Model", icon: Megaphone },
+      { to: "/framework/carrolls-csr-pyramid", label: "Carroll’s CSR Pyramid", icon: Building },
+      { to: "/framework/issue-life-cycle", label: "Issue Life Cycle", icon: RefreshCw },
+      { to: "/framework/stakeholder-engagement", label: "Stakeholder Engagement", icon: HeartHandshake },
+      { to: "/framework/press-release-canvas", label: "Press Release Canvas", icon: PenTool },
+    ],
+  },
+
+  // ============================================================================
+  // 3. PRODUCTIVITY, OPERATIONS & OWNERSHIP (STANDALONE + GROUPED UTILITIES)
+  // ============================================================================
   {
     title: "Productivity",
+    isStandalone: true,
+    parentCategory: "Productivity",
     items: [
+      { to: "/proyek", label: "Proyek & Tugas", icon: FolderKanban },
+      { to: "/task-manager", label: "Task Manager", icon: CheckSquare },
+      { to: "/kalender", label: "Kalender & Timeline", icon: CalendarDays },
+      { to: "/events", label: "Events & Agenda", icon: Ticket },
+      { to: "/pomodoro", label: "Pomodoro Timer", icon: Timer },
+      { to: "/eisenhower", label: "Eisenhower Matrix", icon: Grid2X2 },
       { to: "/lainnya?app=daily-planner", label: "Daily Planner", icon: Clock },
       { to: "/lainnya?app=roadmap", label: "Milestone & Roadmap", icon: Compass },
       { to: "/lainnya?app=retro", label: "Review & Retrospective", icon: RefreshCw },
@@ -543,15 +558,58 @@ export const navKonsultan: NavGroup[] = [
     ],
   },
   {
-    title: "Essentials",
+    title: "Business",
+    isStandalone: true,
+    parentCategory: "Productivity",
     items: [
-      { to: "/health", label: "Health", icon: Heart },
+      { to: "/katalog-produk", label: "Katalog Produk", icon: Package },
+      { to: "/inventory", label: "Inventory", icon: Archive },
+      { to: "/portal/pesan", label: "Pesan Klien", icon: MessagesSquare },
+      { to: "/contacts", label: "Kontak & CRM", icon: Users },
+      { to: "/reports", label: "Laporan Khusus", icon: NotebookText },
+    ],
+  },
+  {
+    title: "Knowledge",
+    isStandalone: true,
+    parentCategory: "Productivity",
+    items: [
+      { to: "/notes", label: "Notes & Docs", icon: FileText },
+      { to: "/catatan", label: "Catatan Cepat", icon: NotebookText },
+      { to: "/ideas", label: "Ideas & Ide", icon: Lightbulb },
+      { to: "/bookmarks", label: "Bookmarks", icon: Bookmark },
+      { to: "/incoterms", label: "Panduan Incoterms", icon: Navigation },
+      { to: "/reading", label: "Reading List", icon: Book },
+    ],
+  },
+
+  // ============================================================================
+  // 4. PERSONAL, ESSENTIALS & HOUSEHOLD (GROUPED LIFESTYLE, VEHICLE & ESSENTIALS)
+  // ============================================================================
+  {
+    title: "Personal",
+    isStandalone: true,
+    parentCategory: "Personal",
+    items: [
+      { to: "/goals", label: "Goals & Target", icon: Target },
+      { to: "/habits", label: "Habits & Rutinitas", icon: Activity },
+      { to: "/proyek-personal", label: "Personal Projects", icon: Briefcase },
+      { to: "/journal", label: "Journal Harian", icon: BookOpen },
+      { to: "/wallet", label: "Wallet & Kas", icon: Wallet },
+    ],
+  },
+  {
+    title: "Essentials",
+    isStandalone: false,
+    parentCategory: "Personal",
+    items: [
+      { to: "/health", label: "Health & Vitalitas", icon: Heart },
       { to: "/workouts", label: "Workouts", icon: Dumbbell },
       { to: "/water", label: "Water Tracker", icon: Droplet },
-      { to: "/pocket", label: "Pocket", icon: Pocket },
-      { to: "/pouch", label: "Pouch", icon: ShoppingBag },
-      { to: "/vault", label: "Vault", icon: Vault },
-      { to: "/trunk", label: "Trunk", icon: Luggage },
+      { to: "/pocket", label: "Pocket Organizer", icon: Pocket },
+      { to: "/pouch", label: "Pouch Organizer", icon: ShoppingBag },
+      { to: "/vault", label: "Vault & Brankas", icon: Vault },
+      { to: "/trunk", label: "Trunk Organizer", icon: Luggage },
       { to: "/passwords", label: "Passwords", icon: Key },
       { to: "/weather", label: "Weather", icon: CloudSun },
       { to: "/kalkulator", label: "Kalkulator Umum", icon: Calculator },
@@ -576,10 +634,12 @@ export const navKonsultan: NavGroup[] = [
   },
   {
     title: "Household",
+    isStandalone: false,
+    parentCategory: "Personal",
     items: [
       { to: "/shopping", label: "Shopping List", icon: ShoppingCart },
       { to: "/recipes", label: "Recipes", icon: Utensils },
-      { to: "/trips", label: "Trips", icon: Plane },
+      { to: "/trips", label: "Trips & Perjalanan", icon: Plane },
       { to: "/budget", label: "Anggaran Rumah", icon: Wallet },
       { to: "/kalender", label: "Jadwal Domestik", icon: CalendarDays },
       { to: "/contacts", label: "Kontak Keluarga", icon: Users },
@@ -600,8 +660,14 @@ export const navKonsultan: NavGroup[] = [
       { to: "/lainnya?app=item-disposal", label: "Barang Dihibahkan & Daur Ulang", icon: Trash2 },
     ],
   },
+
+  // ============================================================================
+  // 5. PEOPLE, FAMILY, AND SOCIETY (GROUPED CIVIC, FAMILY & MEDIA)
+  // ============================================================================
   {
     title: "People, Family, and Society",
+    isStandalone: true,
+    parentCategory: "Society",
     items: [
       { to: "/contacts", label: "Kontak & CRM", icon: Users },
       { to: "/klien", label: "Klien & Partner", icon: Briefcase },
@@ -643,7 +709,31 @@ export const navKonsultan: NavGroup[] = [
     ],
   },
   {
+    title: "Entertainment",
+    isStandalone: false,
+    parentCategory: "Creative & Media",
+    items: [
+      { to: "/movies", label: "Movies & Film", icon: Film },
+      { to: "/games", label: "Games & Hiburan", icon: Gamepad2 },
+      { to: "/podcasts", label: "Podcasts", icon: Podcast },
+      { to: "/music", label: "Music & Audio", icon: Music },
+    ],
+  },
+  {
+    title: "Creative",
+    isStandalone: false,
+    parentCategory: "Creative & Media",
+    items: [
+      { to: "/design", label: "Design Studio", icon: PenTool },
+      { to: "/photography", label: "Photography", icon: Camera },
+      { to: "/writing", label: "Writing & Editor", icon: Type },
+      { to: "/code", label: "Code & Dev", icon: Code },
+    ],
+  },
+  {
     title: "Other",
+    isStandalone: false,
+    parentCategory: "Academy & Tools",
     items: [
       { to: "/courses", label: "Courses", icon: GraduationCap },
       { to: "/flashcards", label: "Flashcards", icon: Layers },
