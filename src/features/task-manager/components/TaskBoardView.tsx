@@ -18,7 +18,7 @@ interface TaskBoardViewProps {
 }
 
 const COLUMNS: Array<{ id: TaskStatus; label: string; color: string }> = [
-  { id: "inbox", label: "Inbox", color: "bg-slate-500" },
+  { id: "inbox", label: "Inbox", color: "bg-muted-foreground/30" },
   { id: "planned", label: "Planned", color: "bg-blue-500" },
   { id: "in_progress", label: "In Progress", color: "bg-amber-500" },
   { id: "waiting", label: "Waiting", color: "bg-purple-500" },

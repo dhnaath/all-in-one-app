@@ -8,6 +8,7 @@ import {
   Filter,
   Plus,
 } from "lucide-react";
+import { useShellSections } from "@/app/shell-sections";
 
 interface RelianceItem {
   id: string;
@@ -81,10 +82,22 @@ export function RelianceView() {
       ? items
       : items.filter((item) => item.category === activeCategory);
 
+  const [activeSection, setActiveSection] = useState<string>("ringkasan");
+  const goSection = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(`soc-rel-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  useShellSections([
+    { id: "ringkasan", label: "Ringkasan", active: activeSection === "ringkasan", onSelect: () => goSection("ringkasan") },
+    { id: "metrik", label: "Metrik", active: activeSection === "metrik", onSelect: () => goSection("metrik") },
+    { id: "daftar", label: "Daftar Risiko", active: activeSection === "daftar", onSelect: () => goSection("daftar") },
+    { id: "checklist", label: "Checklist", active: activeSection === "checklist", onSelect: () => goSection("checklist") },
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-[20px] bg-card border border-border">
+      <div id="soc-rel-ringkasan" className="scroll-mt-24 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-[20px] bg-card border border-border">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
             <ShieldCheck className="size-4 text-foreground" />
@@ -106,7 +119,7 @@ export function RelianceView() {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div id="soc-rel-metrik" className="scroll-mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 rounded-[20px] bg-card border border-border flex flex-col justify-between">
           <span className="text-xs font-medium text-muted-foreground">Ketergantungan Kritis</span>
           <div className="mt-3 flex items-baseline justify-between">
@@ -155,7 +168,7 @@ export function RelianceView() {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Table / List (2 cols) */}
-        <div className="lg:col-span-2 space-y-4">
+        <div id="soc-rel-daftar" className="scroll-mt-24 lg:col-span-2 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <Filter className="size-4 text-muted-foreground" />
@@ -231,7 +244,7 @@ export function RelianceView() {
         </div>
 
         {/* Action / Checklist Sidebar (1 col) */}
-        <div className="space-y-4">
+        <div id="soc-rel-checklist" className="scroll-mt-24 space-y-4">
           <div className="p-5 rounded-[20px] bg-card border border-border">
             <h3 className="text-sm font-semibold text-foreground mb-3">
               Checklist Kesiapan Reliance

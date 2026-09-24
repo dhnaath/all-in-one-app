@@ -476,7 +476,7 @@ export function LanguagesView() {
               <span
                 className={cn(
                   "text-[11px] px-2 py-0.5 rounded-full font-mono font-normal",
-                  isSelected ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"
+                  isSelected ? "bg-card/20 text-white" : "bg-muted text-muted-foreground"
                 )}
               >
                 {lang.targetLevel}

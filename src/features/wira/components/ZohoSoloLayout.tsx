@@ -78,7 +78,7 @@ export function ZohoSoloLayout({
       <div className="md:hidden fixed top-4 right-4 z-50">
         {/* <div
           onClick={() => setIsMobileProfileOpen(!isMobileProfileOpen)}
-          className="w-10 h-10 rounded-full bg-primary text-white border-2 border-slate-600 flex items-center justify-center font-bold text-[10px] shadow-lg cursor-pointer relative"
+          className="w-10 h-10 rounded-full bg-primary text-white border-2 border-border flex items-center justify-center font-bold text-[10px] shadow-lg cursor-pointer relative"
         >
           ME
           <ProfileMenu
@@ -91,7 +91,7 @@ export function ZohoSoloLayout({
       </div>
 
       {/* Far Left Rail (Zoho Style) - Hidden on Mobile */}
-      <div className="hidden md:flex w-[68px] flex-shrink-0 bg-[#1E293B] border-r border-slate-800 flex-col items-center py-5 z-50 shadow-xl relative">
+      <div className="hidden md:flex w-[68px] flex-shrink-0 bg-[#1E293B] border-r border-border flex-col items-center py-5 z-50 shadow-xl relative">
         {/* User Profile / Logo */}
         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl text-white flex items-center justify-center font-bold text-lg mb-8 shadow-md">
           Z
@@ -128,7 +128,7 @@ export function ZohoSoloLayout({
           />
           <div
             onClick={() => setIsDesktopProfileOpen(!isDesktopProfileOpen)}
-            className="w-10 h-10 rounded-full bg-primary text-white border-2 border-slate-600 flex items-center justify-center font-bold text-xs mt-2 mx-auto cursor-pointer hover:border-slate-400 transition-colors relative"
+            className="w-10 h-10 rounded-full bg-primary text-white border-2 border-border flex items-center justify-center font-bold text-xs mt-2 mx-auto cursor-pointer hover:border-border transition-colors relative"
           >
             ME
             <ProfileMenu
@@ -152,7 +152,7 @@ export function ZohoSoloLayout({
       /> */}
 
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 h-[60px] bg-[#1E293B] border-t border-slate-800 flex items-center justify-around px-2 z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.1)]">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 h-[60px] bg-[#1E293B] border-t border-border flex items-center justify-around px-2 z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.1)]">
         <MobileRailItem
           icon={LayoutDashboard}
           label="Home"
@@ -206,10 +206,10 @@ function RailItem({ icon: Icon, label, active, onClick }: any) {
       <Icon size={20} strokeWidth={active ? 2.5 : 2} />
 
       {/* Tooltip */}
-      <div className="absolute left-full ml-4 px-2.5 py-1.5 bg-primary text-white text-[11px] font-medium rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-xl border border-slate-800 transform translate-x-2 group-hover:translate-x-0 transition-all">
+      <div className="absolute left-full ml-4 px-2.5 py-1.5 bg-primary text-white text-[11px] font-medium rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-xl border border-border transform translate-x-2 group-hover:translate-x-0 transition-all">
         {label}
         {/* Tooltip Triangle */}
-        <div className="absolute top-1/2 -left-1 -mt-1 border-t-4 border-b-4 border-r-4 border-t-transparent border-b-transparent border-r-slate-900"></div>
+        <div className="absolute top-1/2 -left-1 -mt-1 border-t-4 border-b-4 border-r-4 border-t-transparent border-b-transparent border-r-border"></div>
       </div>
     </div>
   );

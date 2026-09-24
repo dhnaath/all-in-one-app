@@ -640,7 +640,7 @@ export function TripsView() {
 
                   {/* Top Badges */}
                   <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                    <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-black/60 text-white backdrop-blur-md border border-white/15">
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-black/60 text-white backdrop-blur-md border border-border/15">
                       {trip.category}
                     </span>
                     <span
@@ -650,7 +650,7 @@ export function TripsView() {
                           ? "bg-emerald-500 text-white"
                           : trip.status === "Mendatang"
                           ? "bg-blue-600 text-white"
-                          : "bg-slate-700 text-slate-200"
+                          : "bg-card text-foreground"
                       )}
                     >
                       {trip.status}
@@ -747,7 +747,7 @@ export function TripsView() {
 
               <button
                 onClick={() => setSelectedTrip(null)}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md text-white hover:bg-black/80 flex items-center justify-center transition-colors border border-white/20"
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md text-white hover:bg-black/80 flex items-center justify-center transition-colors border border-border/20"
               >
                 <X size={18} />
               </button>
@@ -756,7 +756,7 @@ export function TripsView() {
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-600 text-white shadow-sm">
                   {selectedTrip.category}
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-black/60 text-white backdrop-blur-md border border-white/20">
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-black/60 text-white backdrop-blur-md border border-border/20">
                   {selectedTrip.status}
                 </span>
               </div>

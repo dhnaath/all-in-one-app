@@ -30,6 +30,7 @@ import {
   Info,
 } from "lucide-react";
 import { useDatabaseStore } from "./store";
+import { useShellSections } from "@/app/shell-sections";
 import {
   FieldType,
   ViewType,
@@ -105,6 +106,18 @@ export function DatabaseApp() {
     [records, currentTable]
   );
 
+  // Publish this app's tables as shell sections → they appear in the left
+  // sidebar ("Di aplikasi ini") and as interactive buttons in the header.
+  useShellSections(
+    tables.map((t) => ({
+      id: t.id,
+      label: t.name,
+      icon: TableIcon,
+      active: t.id === currentTable?.id,
+      onSelect: () => setActiveTableId(t.id),
+    })),
+  );
+
   // Filtered records
   const filteredRecords = useMemo(() => {
     if (!searchQuery.trim()) return tableRecords;
@@ -142,7 +155,7 @@ export function DatabaseApp() {
     switch (type) {
       case "text":
       case "long_text":
-        return <Type className="size-3 text-slate-400" />;
+        return <Type className="size-3 text-muted-foreground" />;
       case "number":
       case "currency":
         return <DollarSign className="size-3 text-emerald-500" />;
@@ -158,7 +171,7 @@ export function DatabaseApp() {
       case "rollup":
         return <Sigma className="size-3 text-amber-500" />;
       default:
-        return <Hash className="size-3 text-slate-400" />;
+        return <Hash className="size-3 text-muted-foreground" />;
     }
   };
 
@@ -234,17 +247,17 @@ export function DatabaseApp() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] bg-slate-50 dark:bg-zinc-950 text-slate-800 dark:text-zinc-100 overflow-hidden font-sans">
+    <div className="flex flex-col h-[calc(100vh-4rem)] bg-muted/40 dark:bg-background text-foreground dark:text-foreground overflow-hidden font-sans">
       {/* Top Bar: Tables & Global Actions */}
-      <div className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 px-4 py-2.5 flex items-center justify-between shrink-0 shadow-2xs">
+      <div className="bg-card dark:bg-background border-b border-border dark:border-border px-4 py-2.5 flex items-center justify-between shrink-0 shadow-2xs">
         <div className="flex items-center gap-3 overflow-x-auto">
-          <div className="w-8 h-8 rounded-xl bg-white border border-slate-300 dark:border-zinc-700 shadow-xs flex items-center justify-center text-zinc-900 dark:text-zinc-100 shrink-0 font-bold">
+          <div className="w-8 h-8 rounded-xl bg-card border border-border dark:border-border shadow-xs flex items-center justify-center text-foreground dark:text-foreground shrink-0 font-bold">
             <Database className="size-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-slate-900 dark:text-zinc-100">Database Engine</span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 font-semibold text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
+              <span className="text-sm font-bold text-foreground dark:text-foreground">Database Engine</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted dark:bg-card font-semibold text-muted-foreground dark:text-foreground border border-border dark:border-border">
                 #15 Standalone
               </span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 font-semibold border border-purple-200 dark:border-purple-800">
@@ -253,7 +266,7 @@ export function DatabaseApp() {
             </div>
           </div>
 
-          <div className="h-4 w-px bg-slate-200 dark:border-zinc-700 mx-1" />
+          <div className="h-4 w-px bg-muted dark:border-border mx-1" />
 
           {/* Table Tabs */}
           <div className="flex items-center gap-1">
@@ -268,8 +281,8 @@ export function DatabaseApp() {
                   }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                     isActive
-                      ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs"
-                      : "text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                      ? "bg-foreground text-background dark:bg-card dark:text-foreground shadow-xs"
+                      : "text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-card"
                   }`}
                 >
                   <TableIcon className="size-3.5" />
@@ -280,7 +293,7 @@ export function DatabaseApp() {
 
             <button
               onClick={() => setIsNewTableModalOpen(true)}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-dashed border-slate-300 dark:border-zinc-700 text-xs font-medium text-slate-500 hover:text-slate-800 hover:border-slate-400 transition-colors"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-dashed border-border dark:border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-border transition-colors"
             >
               <Plus className="size-3.5" /> Tambah Tabel
             </button>
@@ -290,17 +303,17 @@ export function DatabaseApp() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsStatsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border dark:border-border text-xs font-medium hover:bg-muted/40 dark:hover:bg-card transition-colors"
           >
-            <BarChart3 className="size-3.5 text-slate-500" />
+            <BarChart3 className="size-3.5 text-muted-foreground" />
             Statistik Tabel ({stats.totalRecs} baris)
           </button>
           <button
             onClick={handleExportCSV}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border dark:border-border text-xs font-medium hover:bg-muted/40 dark:hover:bg-card transition-colors"
             title="Export CSV"
           >
-            <Download className="size-3.5 text-slate-500" />
+            <Download className="size-3.5 text-muted-foreground" />
             CSV Export
           </button>
           <button
@@ -314,10 +327,10 @@ export function DatabaseApp() {
       </div>
 
       {/* Sub Bar: Views & Filter Toolbar */}
-      <div className="bg-slate-100/70 dark:bg-zinc-900/60 border-b border-slate-200 dark:border-zinc-800 px-4 py-2 flex items-center justify-between shrink-0">
+      <div className="bg-muted/70 dark:bg-background/60 border-b border-border dark:border-border px-4 py-2 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           {/* View Mode Switcher */}
-          <div className="flex items-center gap-1 bg-white dark:bg-zinc-800 p-0.5 rounded-lg border border-slate-200 dark:border-zinc-700">
+          <div className="flex items-center gap-1 bg-card dark:bg-card p-0.5 rounded-lg border border-border dark:border-border">
             {tableViews.map((vw) => {
               const isActive = vw.id === currentView?.id;
               return (
@@ -327,7 +340,7 @@ export function DatabaseApp() {
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
                     isActive
                       ? "bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 font-semibold"
-                      : "text-slate-600 dark:text-zinc-400 hover:text-slate-900"
+                      : "text-muted-foreground dark:text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {vw.type === "grid" && <Columns className="size-3.5" />}
@@ -350,14 +363,14 @@ export function DatabaseApp() {
                   groupByFieldId: currentFields.find((f) => f.type === "select")?.id,
                 });
               }}
-              className="px-2 py-1 text-xs text-slate-400 hover:text-slate-600"
+              className="px-2 py-1 text-xs text-muted-foreground hover:text-muted-foreground"
               title="Tambah View Baru"
             >
               <Plus className="size-3" />
             </button>
           </div>
 
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-muted-foreground">
             {filteredRecords.length} dari {tableRecords.length} records
           </span>
         </div>
@@ -365,28 +378,28 @@ export function DatabaseApp() {
         <div className="flex items-center gap-2">
           {/* Search Bar */}
           <div className="relative">
-            <Search className="size-3.5 absolute left-2.5 top-2 text-slate-400" />
+            <Search className="size-3.5 absolute left-2.5 top-2 text-muted-foreground" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari dalam tabel..."
-              className="pl-8 pr-3 py-1 rounded-lg border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-xs w-48 focus:w-64 transition-all outline-none"
+              className="pl-8 pr-3 py-1 rounded-lg border border-border dark:border-border bg-card dark:bg-card text-xs w-48 focus:w-64 transition-all outline-none"
             />
           </div>
 
           <button
             onClick={() => setIsNewFieldModalOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-xs font-medium hover:bg-slate-50 transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border dark:border-border bg-card dark:bg-card text-xs font-medium hover:bg-muted/40 transition-colors"
           >
-            <Plus className="size-3 text-slate-500" />
+            <Plus className="size-3 text-muted-foreground" />
             Tambah Kolom / Field
           </button>
         </div>
       </div>
 
       {/* Main Workspace Display based on View */}
-      <div className="flex-1 overflow-auto bg-white dark:bg-zinc-950">
+      <div className="flex-1 overflow-auto bg-card dark:bg-background">
         {currentView?.type === "kanban" ? (
           /* Kanban View (§8) */
           <div className="p-6 flex gap-6 overflow-x-auto min-h-full items-start">
@@ -407,16 +420,16 @@ export function DatabaseApp() {
                 return (
                   <div
                     key={opt.id}
-                    className="w-72 rounded-2xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex flex-col shrink-0 max-h-[calc(100vh-12rem)]"
+                    className="w-72 rounded-2xl bg-muted/40 dark:bg-background border border-border dark:border-border flex flex-col shrink-0 max-h-[calc(100vh-12rem)]"
                   >
-                    <div className="p-3 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between">
+                    <div className="p-3 border-b border-border dark:border-border flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-blue-500" />
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-zinc-100">
+                        <h4 className="text-xs font-bold text-foreground dark:text-foreground">
                           {opt.label}
                         </h4>
                       </div>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-zinc-800 font-semibold text-slate-600 dark:text-zinc-300">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted dark:bg-card font-semibold text-muted-foreground dark:text-foreground">
                         {colRecs.length}
                       </span>
                     </div>
@@ -428,16 +441,16 @@ export function DatabaseApp() {
                           <div
                             key={rec.id}
                             onClick={() => setSelectedRecord(rec)}
-                            className="p-3 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 hover:shadow-sm cursor-pointer transition-shadow space-y-2 text-xs"
+                            className="p-3 rounded-xl bg-card dark:bg-card border border-border dark:border-border hover:shadow-sm cursor-pointer transition-shadow space-y-2 text-xs"
                           >
-                            <div className="font-bold text-slate-900 dark:text-zinc-100">
+                            <div className="font-bold text-foreground dark:text-foreground">
                               {primaryVal}
                             </div>
-                            <div className="space-y-1 text-[11px] text-slate-500">
+                            <div className="space-y-1 text-[11px] text-muted-foreground">
                               {currentFields.slice(1, 4).map((f) => (
                                 <div key={f.id} className="flex items-center justify-between">
-                                  <span className="text-slate-400">{f.name}:</span>
-                                  <span className="font-medium text-slate-700 dark:text-zinc-300 truncate max-w-[120px]">
+                                  <span className="text-muted-foreground">{f.name}:</span>
+                                  <span className="font-medium text-foreground dark:text-foreground truncate max-w-[120px]">
                                     {String(computeFieldValue(rec, f) || "-")}
                                   </span>
                                 </div>
@@ -455,13 +468,13 @@ export function DatabaseApp() {
         ) : currentView?.type === "calendar" ? (
           /* Calendar View (§8) */
           <div className="p-6">
-            <div className="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 text-center space-y-4">
+            <div className="bg-muted/40 dark:bg-background border border-border dark:border-border rounded-2xl p-6 text-center space-y-4">
               <CalendarIcon className="size-10 text-blue-500 mx-auto" />
               <div>
                 <h3 className="text-sm font-bold">Calendar View Mode</h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Data dipetakan berdasarkan field tanggal:{" "}
-                  <span className="font-semibold text-slate-700 dark:text-zinc-300">
+                  <span className="font-semibold text-foreground dark:text-foreground">
                     {currentFields.find((f) => f.type === "date")?.name || "(Pilih Field Tanggal)"}
                   </span>
                 </p>
@@ -473,12 +486,12 @@ export function DatabaseApp() {
                   return (
                     <div
                       key={r.id}
-                      className="p-3 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs"
+                      className="p-3 rounded-xl bg-card dark:bg-card border border-border dark:border-border text-xs"
                     >
                       <div className="text-[10px] text-blue-600 font-bold uppercase">
                         {dateVal || "Belum ditentukan"}
                       </div>
-                      <div className="font-bold text-slate-900 dark:text-zinc-100 mt-1">
+                      <div className="font-bold text-foreground dark:text-foreground mt-1">
                         {r.values[currentTable.primaryFieldId] || "(Tanpa Judul)"}
                       </div>
                     </div>
@@ -490,14 +503,14 @@ export function DatabaseApp() {
         ) : (
           /* Grid View (Interactive Spreadsheet Table §8) */
           <div className="min-w-full inline-block align-middle">
-            <table className="min-w-full divide-y divide-slate-200 dark:divide-zinc-800 text-xs">
-              <thead className="bg-slate-50 dark:bg-zinc-900/80 sticky top-0 z-10">
+            <table className="min-w-full divide-y divide-border dark:divide-border text-xs">
+              <thead className="bg-muted/40 dark:bg-background/80 sticky top-0 z-10">
                 <tr>
-                  <th className="w-10 px-3 py-2 text-center text-slate-400 font-normal">#</th>
+                  <th className="w-10 px-3 py-2 text-center text-muted-foreground font-normal">#</th>
                   {currentFields.map((f) => (
                     <th
                       key={f.id}
-                      className="px-4 py-2.5 text-left font-semibold text-slate-700 dark:text-zinc-200 border-r border-slate-200 dark:border-zinc-800"
+                      className="px-4 py-2.5 text-left font-semibold text-foreground dark:text-foreground border-r border-border dark:border-border"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-1.5">
@@ -508,7 +521,7 @@ export function DatabaseApp() {
                         {f.id !== currentTable.primaryFieldId && (
                           <button
                             onClick={() => deleteField(f.id)}
-                            className="text-slate-300 hover:text-rose-500"
+                            className="text-foreground hover:text-rose-500"
                             title="Hapus Kolom"
                           >
                             <Trash2 className="size-3" />
@@ -517,15 +530,15 @@ export function DatabaseApp() {
                       </div>
                     </th>
                   ))}
-                  <th className="w-16 px-3 py-2 text-center text-slate-400">Aksi</th>
+                  <th className="w-16 px-3 py-2 text-center text-muted-foreground">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60 bg-white dark:bg-zinc-950">
+              <tbody className="divide-y divide-border dark:divide-border/60 bg-card dark:bg-background">
                 {filteredRecords.length === 0 ? (
                   <tr>
                     <td
                       colSpan={currentFields.length + 2}
-                      className="p-8 text-center text-slate-400 text-xs"
+                      className="p-8 text-center text-muted-foreground text-xs"
                     >
                       Belum ada data dalam tabel ini. Klik tombol &ldquo;Baris Baru&rdquo; untuk
                       menambah data.
@@ -535,9 +548,9 @@ export function DatabaseApp() {
                   filteredRecords.map((rec, rowIdx) => (
                     <tr
                       key={rec.id}
-                      className="hover:bg-blue-50/30 dark:hover:bg-zinc-800/40 transition-colors group"
+                      className="hover:bg-blue-50/30 dark:hover:bg-card/40 transition-colors group"
                     >
-                      <td className="w-10 px-3 py-2 text-center text-slate-400 font-mono text-[11px]">
+                      <td className="w-10 px-3 py-2 text-center text-muted-foreground font-mono text-[11px]">
                         {rowIdx + 1}
                       </td>
 
@@ -551,7 +564,7 @@ export function DatabaseApp() {
                         return (
                           <td
                             key={f.id}
-                            className="px-4 py-2 border-r border-slate-100 dark:border-zinc-800/60 max-w-xs truncate"
+                            className="px-4 py-2 border-r border-border dark:border-border/60 max-w-xs truncate"
                           >
                             {f.type === "formula" || f.type === "rollup" ? (
                               <span className="font-mono text-purple-600 dark:text-purple-400 font-semibold">
@@ -583,7 +596,7 @@ export function DatabaseApp() {
                                 value={rec.values[f.id] ?? ""}
                                 onChange={(e) => updateRecordValue(rec.id, f.id, e.target.value)}
                                 placeholder="-"
-                                className="w-full bg-transparent outline-none focus:bg-blue-50/50 dark:focus:bg-zinc-800 px-1 py-0.5 rounded"
+                                className="w-full bg-transparent outline-none focus:bg-blue-50/50 dark:focus:bg-card px-1 py-0.5 rounded"
                               />
                             )}
                           </td>
@@ -593,7 +606,7 @@ export function DatabaseApp() {
                       <td className="w-16 px-3 py-2 text-center">
                         <button
                           onClick={() => deleteRecord(rec.id)}
-                          className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-rose-600 transition-opacity"
+                          className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-rose-600 transition-opacity"
                           title="Hapus Baris"
                         >
                           <Trash2 className="size-3.5" />
@@ -611,8 +624,8 @@ export function DatabaseApp() {
       {/* Modal: Create Table */}
       {isNewTableModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-5 space-y-4">
+            <h3 className="text-sm font-bold text-foreground dark:text-foreground flex items-center gap-2">
               <TableIcon className="size-4 text-blue-500" />
               Buat Tabel Baru
             </h3>
@@ -624,7 +637,7 @@ export function DatabaseApp() {
                   value={newTableName}
                   onChange={(e) => setNewTableName(e.target.value)}
                   placeholder="Mis. Klien, Inventaris, Transaksi..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
               <div>
@@ -634,7 +647,7 @@ export function DatabaseApp() {
                   value={newTablePrimary}
                   onChange={(e) => setNewTablePrimary(e.target.value)}
                   placeholder="Nama / Kode Dokumen"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
               <div>
@@ -644,14 +657,14 @@ export function DatabaseApp() {
                   value={newTableDesc}
                   onChange={(e) => setNewTableDesc(e.target.value)}
                   placeholder="Penjelasan tujuan skema tabel ini..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsNewTableModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -669,8 +682,8 @@ export function DatabaseApp() {
       {/* Modal: Create Field / Column */}
       {isNewFieldModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-5 space-y-4">
+            <h3 className="text-sm font-bold text-foreground dark:text-foreground flex items-center gap-2">
               <Columns className="size-4 text-purple-500" />
               Tambah Kolom / Field Baru (§4)
             </h3>
@@ -682,7 +695,7 @@ export function DatabaseApp() {
                   value={newFieldName}
                   onChange={(e) => setNewFieldName(e.target.value)}
                   placeholder="Mis. Harga, Tanggal Jatuh Tempo, Status..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
 
@@ -691,7 +704,7 @@ export function DatabaseApp() {
                 <select
                   value={newFieldType}
                   onChange={(e) => setNewFieldType(e.target.value as FieldType)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 >
                   <option value="text">Text (String Bebas)</option>
                   <option value="number">Number (Angka Numerik)</option>
@@ -714,7 +727,7 @@ export function DatabaseApp() {
                     value={newFieldOptions}
                     onChange={(e) => setNewFieldOptions(e.target.value)}
                     placeholder="Aktif, Pending, Selesai"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                   />
                 </div>
               )}
@@ -725,7 +738,7 @@ export function DatabaseApp() {
                   <select
                     value={newFieldRelatedTable}
                     onChange={(e) => setNewFieldRelatedTable(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                   >
                     {tables.map((t) => (
                       <option key={t.id} value={t.id}>
@@ -740,7 +753,7 @@ export function DatabaseApp() {
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsNewFieldModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -758,23 +771,23 @@ export function DatabaseApp() {
       {/* Modal: Statistics (§11) */}
       {isStatsModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-6 space-y-4">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-6 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2">
                 <BarChart3 className="size-4 text-blue-500" />
                 Statistik Tabel: {currentTable?.name}
               </h3>
               <button onClick={() => setIsStatsModalOpen(false)}>
-                <X className="size-4 text-slate-400" />
+                <X className="size-4 text-muted-foreground" />
               </button>
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-center">
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700">
-                <div className="text-2xl font-bold text-slate-900 dark:text-zinc-100">
+              <div className="p-4 rounded-xl bg-muted/40 dark:bg-card border border-border dark:border-border">
+                <div className="text-2xl font-bold text-foreground dark:text-foreground">
                   {stats.totalRecs}
                 </div>
-                <div className="text-[10px] uppercase text-slate-400 font-semibold mt-1">
+                <div className="text-[10px] uppercase text-muted-foreground font-semibold mt-1">
                   Total Baris (Records)
                 </div>
               </div>
@@ -789,18 +802,18 @@ export function DatabaseApp() {
             </div>
 
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-zinc-800">
-                <span className="text-slate-500">Jumlah Kolom Terdefinisi:</span>
+              <div className="flex justify-between py-1 border-b border-border dark:border-border">
+                <span className="text-muted-foreground">Jumlah Kolom Terdefinisi:</span>
                 <span className="font-bold">{currentFields.length} Kolom</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-zinc-800">
-                <span className="text-slate-500">Primary Field Identitas:</span>
+              <div className="flex justify-between py-1 border-b border-border dark:border-border">
+                <span className="text-muted-foreground">Primary Field Identitas:</span>
                 <span className="font-bold">
                   {currentFields.find((f) => f.id === currentTable?.primaryFieldId)?.name}
                 </span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-slate-500">Tampilan Terkonfigurasi:</span>
+                <span className="text-muted-foreground">Tampilan Terkonfigurasi:</span>
                 <span className="font-bold">{tableViews.length} Views</span>
               </div>
             </div>
@@ -808,7 +821,7 @@ export function DatabaseApp() {
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => setIsStatsModalOpen(false)}
-                className="px-4 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold"
+                className="px-4 py-1.5 rounded-lg bg-foreground text-background text-xs font-semibold"
               >
                 Tutup
               </button>

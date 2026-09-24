@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { AppShell } from "@/app/app-shell";
+import { ShellSections } from "@/app/shell-sections";
 
 // Syariah imports
 import SyariahDashboard from "@/features/syariah/components/SyariahDashboard";
@@ -88,6 +89,22 @@ export function ShariaIndicesView() {
   const [activeSubTab, setActiveSubTab] = useState<"local" | "comprehensive">("local");
   return (
     <AppShell title="Indeks Saham Syariah" subtitle="Daftar indeks saham syariah lokal dan pasar modal syariah">
+      <ShellSections
+        sections={[
+          {
+            id: "local",
+            label: "Indeks Syariah Lokal (IDX / OJK)",
+            active: activeSubTab === "local",
+            onSelect: () => setActiveSubTab("local"),
+          },
+          {
+            id: "comprehensive",
+            label: "Terminal Portofolio & Benchmark",
+            active: activeSubTab === "comprehensive",
+            onSelect: () => setActiveSubTab("comprehensive"),
+          },
+        ]}
+      />
       <div className="space-y-6">
         <div className="flex items-center gap-2 border-b border-border pb-3">
           <button
@@ -394,8 +411,54 @@ export function SpectrumStageView({ stage }: { stage: "grow" | "flow" | "build" 
 
   const stageInfo = titles[stage] || { title: stage.toUpperCase(), subtitle: "Tahapan Wealth Spectrum" };
 
+  // Per-stage category tabs (ids/labels mirror nav.ts "Wealth Spectrum" deep-links).
+  const stageTabs: Record<string, { id: string; label: string }[]> = {
+    surety: [
+      { id: "cat_kepatuhan", label: "Kepatuhan Hukum" },
+      { id: "cat_publik", label: "Perlindungan Publik" },
+      { id: "cat_asuransi", label: "Asuransi Pribadi" },
+      { id: "cat_dana", label: "Kecukupan Dana" },
+      { id: "cat_proteksi", label: "Proteksi Aset" },
+    ],
+    flow: [
+      { id: "cat_liabilitas", label: "Beban Liabilitas" },
+      { id: "cat_pengeluaran", label: "Pemasukan-Pengeluaran" },
+      { id: "cat_kredit", label: "Kas-Kredit" },
+      { id: "cat_pajak", label: "Retribusi-Kontribusi" },
+      { id: "cat_otomatisasi", label: "Sistem Otomatisasi" },
+    ],
+    build: [
+      { id: "cat_modal", label: "Modal Manusia" },
+      { id: "cat_jaringan", label: "Jaringan" },
+      { id: "cat_portofolio", label: "Portofolio" },
+      { id: "cat_kekayaan", label: "Kekayaan Bersih" },
+      { id: "cat_pembukuan", label: "Pembukuan" },
+    ],
+    grow: [
+      { id: "cat_profil", label: "Profil Risiko" },
+      { id: "cat_alokasi", label: "Alokasi" },
+      { id: "cat_efektif", label: "Efektif-Efisien" },
+      { id: "cat_bunga", label: "Bunga Berbunga" },
+      { id: "cat_rebalance", label: "Rebalancing Periodik" },
+    ],
+    legacy: [
+      { id: "cat_pembelajaran", label: "Pembelajaran Seumur Hidup" },
+      { id: "cat_tatakelola", label: "Tata Kelola yang Baik" },
+      { id: "cat_amal", label: "Kontribusi Amal" },
+      { id: "cat_likuidasi", label: "Likuidasi Kewajiban" },
+      { id: "cat_transfer", label: "Transfer Kekayaan" },
+    ],
+  };
+  const stageSections = (stageTabs[stage] || []).map((t) => ({
+    id: t.id,
+    label: t.label,
+    active: tab === t.id,
+    onSelect: () => handleSelectTab(t.id),
+  }));
+
   return (
     <AppShell title={stageInfo.title} subtitle={stageInfo.subtitle}>
+      <ShellSections sections={stageSections} />
       <div className="w-full -mt-4">
         {stage === "grow" && <GrowView currentTab={tab} onBack={handleBack} onSelectTab={handleSelectTab} />}
         {stage === "flow" && <FlowView currentTab={tab} onBack={handleBack} onSelectTab={handleSelectTab} onNavigate={() => {}} />}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Plus, Trash2, Shield, AlertTriangle, Sparkles, TrendingUp } from "lucide-react";
+import { useShellSections } from "@/app/shell-sections";
 
 interface MatrixItem {
   id: string;
@@ -30,6 +31,44 @@ export function TOWSMatrix() {
   const [newItemText, setNewItemText] = useState("");
   const [targetQuadrant, setTargetQuadrant] = useState<"so" | "wo" | "st" | "wt">("so");
 
+  const focusQuadrant = (q: "so" | "wo" | "st" | "wt") => {
+    setTargetQuadrant(q);
+    document
+      .getElementById(`q-tows-${q}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  useShellSections([
+    {
+      id: "so",
+      label: "Strategi SO (Maxi-Maxi)",
+      icon: Sparkles,
+      active: targetQuadrant === "so",
+      onSelect: () => focusQuadrant("so"),
+    },
+    {
+      id: "wo",
+      label: "Strategi WO (Mini-Maxi)",
+      icon: TrendingUp,
+      active: targetQuadrant === "wo",
+      onSelect: () => focusQuadrant("wo"),
+    },
+    {
+      id: "st",
+      label: "Strategi ST (Maxi-Mini)",
+      icon: Shield,
+      active: targetQuadrant === "st",
+      onSelect: () => focusQuadrant("st"),
+    },
+    {
+      id: "wt",
+      label: "Strategi WT (Mini-Mini)",
+      icon: AlertTriangle,
+      active: targetQuadrant === "wt",
+      onSelect: () => focusQuadrant("wt"),
+    },
+  ]);
+
   const addItem = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newItemText.trim()) return;
@@ -55,7 +94,7 @@ export function TOWSMatrix() {
       {/* 2x2 Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* SO Strategy */}
-        <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 space-y-3">
+        <div id="q-tows-so" className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 space-y-3 scroll-mt-24">
           <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
             <Sparkles className="size-4" />
             <span>Strategi SO (Maxi-Maxi)</span>
@@ -82,7 +121,7 @@ export function TOWSMatrix() {
         </div>
 
         {/* WO Strategy */}
-        <div className="p-4 rounded-xl border border-blue-500/30 bg-blue-500/5 space-y-3">
+        <div id="q-tows-wo" className="p-4 rounded-xl border border-blue-500/30 bg-blue-500/5 space-y-3 scroll-mt-24">
           <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold text-sm">
             <TrendingUp className="size-4" />
             <span>Strategi WO (Mini-Maxi)</span>
@@ -109,7 +148,7 @@ export function TOWSMatrix() {
         </div>
 
         {/* ST Strategy */}
-        <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 space-y-3">
+        <div id="q-tows-st" className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 space-y-3 scroll-mt-24">
           <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-semibold text-sm">
             <Shield className="size-4" />
             <span>Strategi ST (Maxi-Mini)</span>
@@ -136,7 +175,7 @@ export function TOWSMatrix() {
         </div>
 
         {/* WT Strategy */}
-        <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/5 space-y-3">
+        <div id="q-tows-wt" className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/5 space-y-3 scroll-mt-24">
           <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-semibold text-sm">
             <AlertTriangle className="size-4" />
             <span>Strategi WT (Mini-Mini)</span>

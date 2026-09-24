@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React from "react";
 import { Droplet } from "lucide-react";
 import { HabitTracker } from "../wira/components/HabitTracker";
@@ -6,7 +7,7 @@ export default function WaterApp() {
   return (
     <div className="flex flex-col pb-16">
       {/* Header */}
-      <header className="sticky top-0 z-20">
+      <ShellHeader>
         <div className="border-b border-border bg-background/85 backdrop-blur">
           <div className="max-w-7xl mx-auto py-6 flex items-end justify-between">
             <div className="flex flex-col">
@@ -22,7 +23,7 @@ export default function WaterApp() {
             </div>
           </div>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Main Content */}
       <main className="max-w-7xl w-full mx-auto mt-8 space-y-8 max-w-lg">

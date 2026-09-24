@@ -16,6 +16,7 @@ import {
   Mail,
   Calendar,
 } from "lucide-react";
+import { useShellSections } from "@/app/shell-sections";
 
 interface InteractionItem {
   id: string;
@@ -183,10 +184,21 @@ export function InteractView() {
   const mutualCount = items.filter((i) => i.reciprocity === "Seimbang (Mutual)").length;
   const pendingCount = items.filter((i) => i.reciprocity === "Menunggu Respon").length;
 
+  const [activeSection, setActiveSection] = useState<string>("metrik");
+  const goSection = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(`soc-int-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  useShellSections([
+    { id: "metrik", label: "Metrik", active: activeSection === "metrik", onSelect: () => goSection("metrik") },
+    { id: "filter", label: "Filter & Cari", active: activeSection === "filter", onSelect: () => goSection("filter") },
+    { id: "daftar", label: "Interaksi", active: activeSection === "daftar", onSelect: () => goSection("daftar") },
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Header Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div id="soc-int-metrik" className="scroll-mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl border border-border bg-card shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Total Relasi Interaksi</span>
@@ -243,7 +255,7 @@ export function InteractView() {
       </div>
 
       {/* Control Bar: Categories, Search, and Add Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div id="soc-int-filter" className="scroll-mt-24 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
           {categories.map((cat) => (
             <button
@@ -284,7 +296,7 @@ export function InteractView() {
       </div>
 
       {/* Interactions List Table/Card view */}
-      <div className="rounded-xl border border-border bg-card overflow-hidden shadow-xs">
+      <div id="soc-int-daftar" className="scroll-mt-24 rounded-xl border border-border bg-card overflow-hidden shadow-xs">
         <div className="divide-y divide-border">
           {filteredItems.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground text-xs">

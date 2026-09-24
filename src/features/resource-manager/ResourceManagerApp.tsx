@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useMemo } from "react";
 import {
   Layers,
@@ -102,7 +103,7 @@ export function ResourceManagerApp() {
       case "software_license":
         return <Key className="w-4 h-4 text-cyan-400" />;
       default:
-        return <Box className="w-4 h-4 text-slate-400" />;
+        return <Box className="w-4 h-4 text-muted-foreground" />;
     }
   };
 
@@ -226,7 +227,7 @@ export function ResourceManagerApp() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       {/* Toast */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-emerald-400 animate-in fade-in slide-in-from-bottom-4">
@@ -236,7 +237,7 @@ export function ResourceManagerApp() {
       )}
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+      <ShellHeader>
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-gradient-to-tr from-amber-500 to-orange-600 rounded-xl shadow-lg shadow-amber-500/20">
@@ -248,11 +249,11 @@ export function ResourceManagerApp() {
                 <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
                   App #34
                 </span>
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-muted-foreground">
                   Source of Truth Kapasitas & Alokasi Lintas-Proyek
                 </span>
               </div>
-              <p className="text-xs md:text-sm text-slate-400">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Menjawab "apa yang dipakai, seberapa banyak, dan apakah cukup" (orang, alat, ruang meeting, budget, kendaraan, lisensi).
               </p>
             </div>
@@ -262,7 +263,7 @@ export function ResourceManagerApp() {
         <div className="flex items-center flex-wrap gap-2.5">
           <button
             onClick={() => setIsNewAllocOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition"
+            className="flex items-center gap-1.5 px-3 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-xs font-semibold transition"
           >
             <Clock className="w-3.5 h-3.5 text-amber-400" />
             <span>Alokasikan Resource</span>
@@ -276,16 +277,16 @@ export function ResourceManagerApp() {
             <span>Tambah Sumber Daya</span>
           </button>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-slate-800/80 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
         <button
           onClick={() => setActiveTab("capacity_overview")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
             activeTab === "capacity_overview"
               ? "bg-amber-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+              : "text-muted-foreground hover:text-foreground hover:bg-card"
           }`}
         >
           <BarChart3 className="w-4 h-4" />
@@ -297,7 +298,7 @@ export function ResourceManagerApp() {
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
             activeTab === "list"
               ? "bg-amber-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+              : "text-muted-foreground hover:text-foreground hover:bg-card"
           }`}
         >
           <Layers className="w-4 h-4 text-cyan-400" />
@@ -309,7 +310,7 @@ export function ResourceManagerApp() {
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
             activeTab === "conflicts"
               ? "bg-amber-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+              : "text-muted-foreground hover:text-foreground hover:bg-card"
           }`}
         >
           <AlertTriangle className="w-4 h-4 text-rose-400" />
@@ -321,7 +322,7 @@ export function ResourceManagerApp() {
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
             activeTab === "allocation_calendar"
               ? "bg-amber-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+              : "text-muted-foreground hover:text-foreground hover:bg-card"
           }`}
         >
           <Calendar className="w-4 h-4 text-purple-400" />
@@ -333,7 +334,7 @@ export function ResourceManagerApp() {
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
             activeTab === "stats"
               ? "bg-amber-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+              : "text-muted-foreground hover:text-foreground hover:bg-card"
           }`}
         >
           <TrendingUp className="w-4 h-4 text-emerald-400" />
@@ -347,46 +348,46 @@ export function ResourceManagerApp() {
         {activeTab === "stats" && (
           <div className="space-y-6 max-w-4xl">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Resource</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Total Resource</div>
                 <div className="text-3xl font-extrabold text-white mt-1">{stats.totalRes}</div>
-                <div className="text-xs text-slate-500 mt-1">Orang, alat, ruang, budget</div>
+                <div className="text-xs text-muted-foreground mt-1">Orang, alat, ruang, budget</div>
               </div>
 
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Overallocated</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Overallocated</div>
                 <div className="text-3xl font-extrabold text-rose-400 mt-1">{stats.overallocatedCount}</div>
-                <div className="text-xs text-slate-500 mt-1">Melebihi 100% kapasitas</div>
+                <div className="text-xs text-muted-foreground mt-1">Melebihi 100% kapasitas</div>
               </div>
 
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Konflik Aktif</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Konflik Aktif</div>
                 <div className="text-3xl font-extrabold text-amber-400 mt-1">{stats.activeConflictsCount}</div>
-                <div className="text-xs text-slate-500 mt-1">Tumpang tindih jadwal eksklusif</div>
+                <div className="text-xs text-muted-foreground mt-1">Tumpang tindih jadwal eksklusif</div>
               </div>
 
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Idle Resources</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Idle Resources</div>
                 <div className="text-3xl font-extrabold text-sky-400 mt-1">{stats.idleCount}</div>
-                <div className="text-xs text-slate-500 mt-1">Belum teralokasi</div>
+                <div className="text-xs text-muted-foreground mt-1">Belum teralokasi</div>
               </div>
             </div>
 
             {/* Budget spent vs remaining */}
-            <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-3">
+            <div className="p-5 bg-card/80 border border-border rounded-xl space-y-3">
               <h3 className="font-bold text-base text-white flex items-center gap-2">
                 <Coins className="w-5 h-5 text-yellow-400" />
                 Alokasi Pagu Anggaran (Budget Resource)
               </h3>
               <div className="grid grid-cols-2 gap-4 text-xs">
-                <div className="p-3 bg-slate-900 rounded-lg">
-                  <div className="text-slate-400">Total Dialokasikan ke Proyek:</div>
+                <div className="p-3 bg-background rounded-lg">
+                  <div className="text-muted-foreground">Total Dialokasikan ke Proyek:</div>
                   <div className="text-lg font-bold text-emerald-400 mt-1">
                     Rp {stats.budgetAllocated.toLocaleString("id-ID")}
                   </div>
                 </div>
-                <div className="p-3 bg-slate-900 rounded-lg">
-                  <div className="text-slate-400">Sisa Pagu Anggaran Bebas:</div>
+                <div className="p-3 bg-background rounded-lg">
+                  <div className="text-muted-foreground">Sisa Pagu Anggaran Bebas:</div>
                   <div className="text-lg font-bold text-sky-400 mt-1">
                     Rp {stats.budgetRemaining.toLocaleString("id-ID")}
                   </div>
@@ -399,33 +400,33 @@ export function ResourceManagerApp() {
         {/* CONFLICTS VIEW */}
         {activeTab === "conflicts" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400">
+            <div className="p-4 bg-card/40 border border-border/60 rounded-xl text-xs text-muted-foreground">
               Deteksi otomatis bentrok pemakaian untuk resource bertipe eksklusif (seperti ruang rapat fisik, unit kendaraan).
             </div>
 
             {conflicts.length === 0 ? (
-              <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
+              <div className="p-12 text-center bg-card/40 border border-border/60 rounded-xl">
                 <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto mb-2" />
-                <h3 className="font-semibold text-slate-200">Tidak ada konflik alokasi</h3>
-                <p className="text-xs text-slate-400 mt-1">Semua alokasi terdistribusi secara tertib tanpa jadwal ganda.</p>
+                <h3 className="font-semibold text-foreground">Tidak ada konflik alokasi</h3>
+                <p className="text-xs text-muted-foreground mt-1">Semua alokasi terdistribusi secara tertib tanpa jadwal ganda.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {conflicts.map((conf) => (
                   <div
                     key={conf.id}
-                    className={`p-5 bg-slate-800/80 border rounded-xl space-y-3 ${
-                      conf.resolved ? "border-slate-700 opacity-60" : "border-rose-500/50 shadow-lg shadow-rose-500/5"
+                    className={`p-5 bg-card/80 border rounded-xl space-y-3 ${
+                      conf.resolved ? "border-border opacity-60" : "border-rose-500/50 shadow-lg shadow-rose-500/5"
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <AlertTriangle className={`w-5 h-5 ${conf.resolved ? "text-slate-400" : "text-rose-400"}`} />
+                        <AlertTriangle className={`w-5 h-5 ${conf.resolved ? "text-muted-foreground" : "text-rose-400"}`} />
                         <span className="font-bold text-base text-white">{conf.resourceName}</span>
                         <span
                           className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                             conf.resolved
-                              ? "bg-slate-700 text-slate-400"
+                              ? "bg-card text-muted-foreground"
                               : "bg-rose-500/20 text-rose-300 border border-rose-500/30"
                           }`}
                         >
@@ -445,11 +446,11 @@ export function ResourceManagerApp() {
                       )}
                     </div>
 
-                    <p className="text-xs text-slate-300 bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+                    <p className="text-xs text-foreground bg-background/60 p-3 rounded-lg border border-border">
                       {conf.resolutionNote || "Tumpang tindih rentang waktu penggunaan pada resource eksklusif."}
                     </p>
 
-                    <div className="text-[11px] text-slate-500 font-mono">
+                    <div className="text-[11px] text-muted-foreground font-mono">
                       Alokasi yang Terlibat: {conf.conflictingAllocationIds.join(", ")}
                     </div>
                   </div>
@@ -462,7 +463,7 @@ export function ResourceManagerApp() {
         {/* ALLOCATION CALENDAR / TIMELINE VIEW */}
         {activeTab === "allocation_calendar" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400">
+            <div className="p-4 bg-card/40 border border-border/60 rounded-xl text-xs text-muted-foreground">
               Daftar komitmen pemakaian sumber daya per project atau deliverable kerja.
             </div>
 
@@ -470,18 +471,18 @@ export function ResourceManagerApp() {
               {allocations.map((alloc) => (
                 <div
                   key={alloc.id}
-                  className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between text-xs"
+                  className="p-4 bg-card/80 border border-border rounded-xl flex items-center justify-between text-xs"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-sm text-slate-100">{alloc.resourceName}</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="font-bold text-sm text-foreground">{alloc.resourceName}</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
                       <span className="text-amber-400 font-semibold">{alloc.allocatedToTitle}</span>
                     </div>
 
-                    <div className="text-slate-400">
-                      Beban Alokasi: <strong className="text-slate-200">{alloc.amount}</strong> • Periode:{" "}
-                      <span className="font-mono text-slate-300">
+                    <div className="text-muted-foreground">
+                      Beban Alokasi: <strong className="text-foreground">{alloc.amount}</strong> • Periode:{" "}
+                      <span className="font-mono text-foreground">
                         {alloc.periodStart} s/d {alloc.periodEnd}
                       </span>
                     </div>
@@ -493,7 +494,7 @@ export function ResourceManagerApp() {
                         alloc.status === "active"
                           ? "bg-emerald-500/20 text-emerald-300"
                           : alloc.status === "completed"
-                          ? "bg-slate-700 text-slate-400"
+                          ? "bg-card text-muted-foreground"
                           : "bg-amber-500/20 text-amber-300"
                       }`}
                     >
@@ -506,7 +507,7 @@ export function ResourceManagerApp() {
                           releaseAllocation(alloc.id);
                           showToast("Alokasi telah dibebaskan (Release)!");
                         }}
-                        className="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded text-xs"
+                        className="px-2.5 py-1 bg-card hover:bg-muted-foreground/30 text-foreground rounded text-xs"
                       >
                         Bebaskan
                       </button>
@@ -522,15 +523,15 @@ export function ResourceManagerApp() {
         {(activeTab === "capacity_overview" || activeTab === "list") && (
           <div className="space-y-4">
             {/* Filter Bar */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700 rounded-xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-card/80 border border-border rounded-xl">
               <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Cari resource, alat, ruangan, budget..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                  className="w-full pl-9 pr-3 py-1.5 bg-background border border-border rounded-lg text-xs md:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-amber-500"
                 />
               </div>
 
@@ -538,7 +539,7 @@ export function ResourceManagerApp() {
                 <select
                   value={typeFilter}
                   onChange={(e) => setTypeFilter(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-amber-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                 >
                   <option value="all">Semua Jenis Resource</option>
                   <option value="person">Orang / Personil</option>
@@ -564,15 +565,15 @@ export function ResourceManagerApp() {
                 return (
                   <div
                     key={res.id}
-                    className={`p-5 bg-slate-800/80 border rounded-xl flex flex-col justify-between space-y-4 transition ${
-                      res.isOverallocated ? "border-rose-500/60 shadow-lg shadow-rose-500/10" : "border-slate-700"
+                    className={`p-5 bg-card/80 border rounded-xl flex flex-col justify-between space-y-4 transition ${
+                      res.isOverallocated ? "border-rose-500/60 shadow-lg shadow-rose-500/10" : "border-border"
                     }`}
                   >
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="p-1.5 bg-slate-700/60 rounded-lg">{getTypeIcon(res.type)}</span>
-                          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+                          <span className="p-1.5 bg-card/60 rounded-lg">{getTypeIcon(res.type)}</span>
+                          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground font-mono">
                             {res.type.replace("_", " ")}
                           </span>
                         </div>
@@ -593,8 +594,8 @@ export function ResourceManagerApp() {
                       </div>
 
                       <div>
-                        <h3 className="font-bold text-base text-slate-100">{res.name}</h3>
-                        <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">
+                        <h3 className="font-bold text-base text-foreground">{res.name}</h3>
+                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
                           {res.notes || "Tanpa catatan spesifik"}
                         </p>
                       </div>
@@ -602,29 +603,29 @@ export function ResourceManagerApp() {
                       {/* Capacity Bar */}
                       <div className="space-y-1.5 pt-1">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span className="text-slate-400">
+                          <span className="text-muted-foreground">
                             Terpakai: {res.allocatedTotal} / {res.totalCapacity} {res.capacityUnit}
                           </span>
-                          <span className={res.isOverallocated ? "text-rose-400" : "text-slate-300"}>
+                          <span className={res.isOverallocated ? "text-rose-400" : "text-foreground"}>
                             {res.utilizationRate}%
                           </span>
                         </div>
 
-                        <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-700/50">
+                        <div className="w-full bg-background h-2.5 rounded-full overflow-hidden border border-border/50">
                           <div
                             className={`h-full ${barColor} transition-all duration-300`}
                             style={{ width: `${Math.min(100, res.utilizationRate)}%` }}
                           />
                         </div>
 
-                        <div className="flex justify-between text-[11px] text-slate-400 pt-0.5">
+                        <div className="flex justify-between text-[11px] text-muted-foreground pt-0.5">
                           <span>Sisa: {res.remaining} {res.capacityUnit}</span>
                           <span>{res.activeAllocsCount} alokasi aktif</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs">
+                    <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs">
                       <button
                         onClick={() => {
                           setAllocResId(res.id);
@@ -640,7 +641,7 @@ export function ResourceManagerApp() {
                           deleteResource(res.id);
                           showToast("Resource dihapus.");
                         }}
-                        className="p-1.5 text-slate-500 hover:text-rose-400 rounded hover:bg-slate-700"
+                        className="p-1.5 text-muted-foreground hover:text-rose-400 rounded hover:bg-card"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -656,17 +657,17 @@ export function ResourceManagerApp() {
       {/* MODAL: NEW RESOURCE */}
       {isNewResOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Daftarkan Sumber Daya (Resource) Baru</h3>
-              <button onClick={() => setIsNewResOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsNewResOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateResource} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Nama Resource <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -675,13 +676,13 @@ export function ResourceManagerApp() {
                   placeholder="mis. Ruang Rapat Beta, Laptop Cadangan #2"
                   value={resName}
                   onChange={(e) => setResName(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Kategori Tipe</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Kategori Tipe</label>
                   <select
                     value={resType}
                     onChange={(e) => {
@@ -696,7 +697,7 @@ export function ResourceManagerApp() {
                       if (t === "room" || t === "vehicle" || t === "equipment") setResExclusive(true);
                       else setResExclusive(false);
                     }}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                   >
                     <option value="person">Orang / Personil</option>
                     <option value="room">Ruang Rapat (Room)</option>
@@ -708,18 +709,18 @@ export function ResourceManagerApp() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Satuan Kapasitas</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Satuan Kapasitas</label>
                   <input
                     type="text"
                     value={resUnit}
                     onChange={(e) => setResUnit(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Kapasitas Total Periode <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -727,19 +728,19 @@ export function ResourceManagerApp() {
                   required
                   value={resTotalCap}
                   onChange={(e) => setResTotalCap(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                 />
               </div>
 
               {resType === "person" && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-foreground mb-1">
                     Tautkan ke Profil People Manager (#35)
                   </label>
                   <select
                     value={resPersonRef}
                     onChange={(e) => setResPersonRef(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                   >
                     <option value="">Pilih Orang...</option>
                     {people.map((p) => (
@@ -757,18 +758,18 @@ export function ResourceManagerApp() {
                   id="exclusiveCheck"
                   checked={resExclusive}
                   onChange={(e) => setResExclusive(e.target.checked)}
-                  className="rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-0"
+                  className="rounded bg-card border-border text-amber-500 focus:ring-0"
                 />
-                <label htmlFor="exclusiveCheck" className="text-xs text-slate-300">
+                <label htmlFor="exclusiveCheck" className="text-xs text-foreground">
                   Bersifat Eksklusif (Hanya 1 pihak dapat memakai pada satu waktu)
                 </label>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsNewResOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>
@@ -787,24 +788,24 @@ export function ResourceManagerApp() {
       {/* MODAL: ALLOCATE RESOURCE */}
       {isNewAllocOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Buat Alokasi Sumber Daya Baru</h3>
-              <button onClick={() => setIsNewAllocOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsNewAllocOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateAllocation} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Pilih Resource <span className="text-rose-400">*</span>
                 </label>
                 <select
                   required
                   value={allocResId}
                   onChange={(e) => setAllocResId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                 >
                   <option value="">Pilih Resource...</option>
                   {resources.map((r) => (
@@ -817,11 +818,11 @@ export function ResourceManagerApp() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Target Alokasi</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Target Alokasi</label>
                   <select
                     value={allocTargetType}
                     onChange={(e) => setAllocTargetType(e.target.value as any)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                   >
                     <option value="project">Project (#03)</option>
                     <option value="task">Task (#01)</option>
@@ -830,19 +831,19 @@ export function ResourceManagerApp() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Beban Jumlah</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Beban Jumlah</label>
                   <input
                     type="number"
                     required
                     value={allocAmount}
                     onChange={(e) => setAllocAmount(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Judul Proyek / Aktivitas <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -851,37 +852,37 @@ export function ResourceManagerApp() {
                   placeholder="mis. Proyek Core Banking Mandiri"
                   value={allocTargetTitle}
                   onChange={(e) => setAllocTargetTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Mulai</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Mulai</label>
                   <input
                     type="date"
                     value={allocStart}
                     onChange={(e) => setAllocStart(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Selesai</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Selesai</label>
                   <input
                     type="date"
                     value={allocEnd}
                     onChange={(e) => setAllocEnd(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsNewAllocOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>
@@ -900,17 +901,17 @@ export function ResourceManagerApp() {
       {/* MODAL: RESOLVE CONFLICT */}
       {selectedConflictId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Selesaikan Konflik Alokasi</h3>
-              <button onClick={() => setSelectedConflictId(null)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setSelectedConflictId(null)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleResolveConflict} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Catatan Resolusi / Negosiasi Jadwal
                 </label>
                 <textarea
@@ -919,15 +920,15 @@ export function ResourceManagerApp() {
                   placeholder="mis. Telah disepakati Ruang Rapat digeser 1 jam lebih lambat untuk tim vendor."
                   value={resolveNote}
                   onChange={(e) => setResolveNote(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setSelectedConflictId(null)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>

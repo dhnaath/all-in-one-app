@@ -235,7 +235,7 @@ export default function App_Component() {
             <AlertCircle size={20} className="text-[#00bcd4]" />
             <span className="flex-1 text-sm font-medium">{toastMessage}</span>
             <button onClick={() => setToastMessage("")}>
-              <X size={18} className="text-gray-400 hover:text-foreground" />
+              <X size={18} className="text-muted-foreground hover:text-foreground" />
             </button>
           </motion.div>
         )}

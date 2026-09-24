@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useMemo } from "react";
 import {
   HardDrive,
@@ -242,12 +243,12 @@ export function AssetManagerApp() {
       case "archive":
         return <ArchiveIcon className="w-4 h-4 text-amber-400" />;
       default:
-        return <File className="w-4 h-4 text-slate-400" />;
+        return <File className="w-4 h-4 text-muted-foreground" />;
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       {/* Toast */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-indigo-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-indigo-400 animate-in fade-in slide-in-from-bottom-4">
@@ -257,7 +258,7 @@ export function AssetManagerApp() {
       )}
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+      <ShellHeader>
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-xl shadow-lg shadow-blue-500/20">
@@ -269,11 +270,11 @@ export function AssetManagerApp() {
                 <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
                   App #29
                 </span>
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-muted-foreground">
                   {formatBytes(quota.totalBytesUsed)} / {formatBytes(quota.totalBytesAllowed)} ({stats.quotaPct}%)
                 </span>
               </div>
-              <p className="text-xs md:text-sm text-slate-400">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Single storage layer terpusat untuk file, riwayat versi (versioning), deteksi orphan, dan proteksi broken link.
               </p>
             </div>
@@ -283,7 +284,7 @@ export function AssetManagerApp() {
         <div className="flex items-center flex-wrap gap-2.5">
           <button
             onClick={() => setIsNewFolderOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition"
           >
             <FolderPlus className="w-4 h-4 text-amber-400" />
             <span>Folder Baru</span>
@@ -297,14 +298,14 @@ export function AssetManagerApp() {
             <span>Upload Asset</span>
           </button>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-slate-800/80 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
         <button
           onClick={() => setActiveTab("all")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "all" ? "bg-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "all" ? "bg-blue-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -314,7 +315,7 @@ export function AssetManagerApp() {
         <button
           onClick={() => setActiveTab("folder")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "folder" ? "bg-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "folder" ? "bg-blue-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <FolderIcon className="w-4 h-4 text-amber-400" />
@@ -324,7 +325,7 @@ export function AssetManagerApp() {
         <button
           onClick={() => setActiveTab("gallery")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "gallery" ? "bg-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "gallery" ? "bg-blue-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <ImageIcon className="w-4 h-4 text-sky-400" />
@@ -334,7 +335,7 @@ export function AssetManagerApp() {
         <button
           onClick={() => setActiveTab("orphans")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "orphans" ? "bg-rose-600 text-white shadow-sm" : "text-slate-400 hover:text-rose-400 hover:bg-slate-800"
+            activeTab === "orphans" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-rose-400 hover:bg-foreground"
           }`}
         >
           <AlertTriangle className="w-4 h-4 text-rose-400" />
@@ -344,7 +345,7 @@ export function AssetManagerApp() {
         <button
           onClick={() => setActiveTab("storage")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "storage" ? "bg-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "storage" ? "bg-blue-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <HardDrive className="w-4 h-4 text-cyan-400" />
@@ -354,7 +355,7 @@ export function AssetManagerApp() {
         <button
           onClick={() => setActiveTab("stats")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "stats" ? "bg-blue-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <BarChart3 className="w-4 h-4 text-indigo-400" />
@@ -367,17 +368,17 @@ export function AssetManagerApp() {
         {/* STORAGE OVERVIEW TAB */}
         {activeTab === "storage" && (
           <div className="space-y-6 max-w-4xl">
-            <div className="p-6 bg-slate-800/80 border border-slate-700 rounded-xl space-y-4">
+            <div className="p-6 bg-card/80 border border-border rounded-xl space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-bold text-lg text-white">Alokasi & Penggunaan Kuota Storage</h3>
-                  <p className="text-xs text-slate-400">Kapasitas penyimpanan fisik bersama untuk seluruh ekosistem.</p>
+                  <p className="text-xs text-muted-foreground">Kapasitas penyimpanan fisik bersama untuk seluruh ekosistem.</p>
                 </div>
                 <span className="text-xl font-extrabold text-cyan-400">{stats.quotaPct}% Terpakai</span>
               </div>
 
               {/* Progress Bar */}
-              <div className="w-full bg-slate-900 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+              <div className="w-full bg-background h-3 rounded-full overflow-hidden p-0.5 border border-border">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${
                     parseFloat(stats.quotaPct) > 90 ? "bg-rose-500" : "bg-gradient-to-r from-cyan-500 to-blue-500"
@@ -386,7 +387,7 @@ export function AssetManagerApp() {
                 />
               </div>
 
-              <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground pt-1">
                 <span>Terpakai: {formatBytes(quota.totalBytesUsed)}</span>
                 <span>Batas Workspace: {formatBytes(quota.totalBytesAllowed)}</span>
               </div>
@@ -400,33 +401,33 @@ export function AssetManagerApp() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-                <h4 className="font-semibold text-slate-200 mb-3 text-sm flex items-center gap-2">
+              <div className="p-5 bg-card/60 border border-border rounded-xl">
+                <h4 className="font-semibold text-foreground mb-3 text-sm flex items-center gap-2">
                   <Layers className="w-4 h-4 text-blue-400" />
                   Rincian Menurut Tipe File
                 </h4>
                 <div className="space-y-2">
                   {Object.entries(stats.typeBreakdown).map(([t, count]) => (
-                    <div key={t} className="flex items-center justify-between text-xs py-1 border-b border-slate-700/40">
-                      <span className="capitalize text-slate-300 flex items-center gap-1.5">
+                    <div key={t} className="flex items-center justify-between text-xs py-1 border-b border-border/40">
+                      <span className="capitalize text-foreground flex items-center gap-1.5">
                         {getFileIcon(t as any)}
                         {t}
                       </span>
-                      <span className="px-2 py-0.5 bg-slate-700 rounded text-slate-300 font-medium">{count} file</span>
+                      <span className="px-2 py-0.5 bg-card rounded text-foreground font-medium">{count} file</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-                <h4 className="font-semibold text-slate-200 mb-3 text-sm flex items-center gap-2">
+              <div className="p-5 bg-card/60 border border-border rounded-xl">
+                <h4 className="font-semibold text-foreground mb-3 text-sm flex items-center gap-2">
                   <ExternalLink className="w-4 h-4 text-emerald-400" />
                   File Paling Banyak Dirujuk (Most Referenced)
                 </h4>
                 <div className="space-y-2">
                   {stats.mostReferenced.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between text-xs py-1 border-b border-slate-700/40 truncate">
-                      <span className="text-slate-300 truncate mr-2">{item.name}</span>
+                    <div key={item.id} className="flex items-center justify-between text-xs py-1 border-b border-border/40 truncate">
+                      <span className="text-foreground truncate mr-2">{item.name}</span>
                       <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded shrink-0">
                         {item.refCount} app
                       </span>
@@ -466,20 +467,20 @@ export function AssetManagerApp() {
 
             {/* List of orphans */}
             {filteredAssets.length === 0 ? (
-              <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
+              <div className="p-12 text-center bg-card/40 border border-border/60 rounded-xl">
                 <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-3" />
-                <h3 className="text-base font-semibold text-slate-300">Tidak ada orphan asset</h3>
-                <p className="text-xs text-slate-500 mt-1">Seluruh file dalam ekosistem sedang aktif digunakan.</p>
+                <h3 className="text-base font-semibold text-foreground">Tidak ada orphan asset</h3>
+                <p className="text-xs text-muted-foreground mt-1">Seluruh file dalam ekosistem sedang aktif digunakan.</p>
               </div>
             ) : (
               <div className="space-y-2">
                 {filteredAssets.map((asset) => (
-                  <div key={asset.id} className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between gap-4">
+                  <div key={asset.id} className="p-4 bg-card/80 border border-border rounded-xl flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3 truncate">
                       {getFileIcon(asset.type)}
                       <div className="truncate">
-                        <div className="font-semibold text-sm text-slate-200 truncate">{asset.name}</div>
-                        <div className="text-xs text-slate-400">
+                        <div className="font-semibold text-sm text-foreground truncate">{asset.name}</div>
+                        <div className="text-xs text-muted-foreground">
                           {formatBytes(asset.sizeBytes)} • Diunggah {new Date(asset.createdAt).toLocaleDateString()} oleh {asset.uploadedBy}
                         </div>
                       </div>
@@ -503,8 +504,8 @@ export function AssetManagerApp() {
             {/* Sidebar for Folder Filter */}
             {activeTab === "folder" && (
               <div className="lg:col-span-1 space-y-3">
-                <div className="p-4 bg-slate-800/60 border border-slate-700 rounded-xl space-y-2">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <div className="p-4 bg-card/60 border border-border rounded-xl space-y-2">
+                  <div className="flex items-center justify-between text-xs font-bold text-foreground uppercase tracking-wider mb-2">
                     <span>Folder Asset</span>
                     {selectedFolderId && (
                       <button onClick={() => setSelectedFolderId(null)} className="text-sky-400 hover:underline">
@@ -515,7 +516,7 @@ export function AssetManagerApp() {
                   <button
                     onClick={() => setSelectedFolderId(null)}
                     className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition ${
-                      selectedFolderId === null ? "bg-blue-600 text-white font-semibold" : "text-slate-300 hover:bg-slate-700/50"
+                      selectedFolderId === null ? "bg-blue-600 text-background font-semibold" : "text-foreground hover:bg-foreground/50"
                     }`}
                   >
                     <span>Semua File</span>
@@ -526,7 +527,7 @@ export function AssetManagerApp() {
                       key={f.id}
                       onClick={() => setSelectedFolderId(f.id)}
                       className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition ${
-                        selectedFolderId === f.id ? "bg-blue-600 text-white font-semibold" : "text-slate-300 hover:bg-slate-700/50"
+                        selectedFolderId === f.id ? "bg-blue-600 text-background font-semibold" : "text-foreground hover:bg-foreground/50"
                       }`}
                     >
                       <span className="truncate flex items-center gap-1.5">
@@ -543,15 +544,15 @@ export function AssetManagerApp() {
             {/* Assets List / Grid */}
             <div className={`${activeTab === "folder" ? "lg:col-span-3" : "lg:col-span-4"} space-y-4`}>
               {/* Filter Bar */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700 rounded-xl">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-card/80 border border-border rounded-xl">
                 <div className="relative w-full sm:w-80">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                  <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
                   <input
                     type="text"
                     placeholder="Cari nama asset, uploader, tag..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                    className="w-full pl-9 pr-3 py-1.5 bg-background border border-border rounded-lg text-xs md:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
@@ -559,7 +560,7 @@ export function AssetManagerApp() {
                   <select
                     value={typeFilter}
                     onChange={(e) => setTypeFilter(e.target.value)}
-                    className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-blue-500"
+                    className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-blue-500"
                   >
                     <option value="all">Semua Tipe</option>
                     <option value="image">Gambar (Images)</option>
@@ -569,17 +570,17 @@ export function AssetManagerApp() {
                     <option value="archive">Archive (ZIP)</option>
                   </select>
 
-                  <div className="flex items-center border border-slate-700 rounded-lg overflow-hidden">
+                  <div className="flex items-center border border-border rounded-lg overflow-hidden">
                     <button
                       onClick={() => setViewLayout("grid")}
-                      className={`p-1.5 ${viewLayout === "grid" ? "bg-slate-700 text-white" : "text-slate-400"}`}
+                      className={`p-1.5 ${viewLayout === "grid" ? "bg-foreground text-background" : "text-muted-foreground"}`}
                       title="Grid View"
                     >
                       <LayoutGrid className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setViewLayout("table")}
-                      className={`p-1.5 ${viewLayout === "table" ? "bg-slate-700 text-white" : "text-slate-400"}`}
+                      className={`p-1.5 ${viewLayout === "table" ? "bg-foreground text-background" : "text-muted-foreground"}`}
                       title="Table View"
                     >
                       <List className="w-4 h-4" />
@@ -590,10 +591,10 @@ export function AssetManagerApp() {
 
               {/* Assets Grid */}
               {filteredAssets.length === 0 ? (
-                <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
-                  <HardDrive className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                  <h3 className="text-base font-semibold text-slate-300">Tidak ada asset ditemukan</h3>
-                  <p className="text-xs text-slate-500 mt-1">Coba unggah asset baru atau sesuaikan filter pencarian.</p>
+                <div className="p-12 text-center bg-card/40 border border-border/60 rounded-xl">
+                  <HardDrive className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                  <h3 className="text-base font-semibold text-foreground">Tidak ada asset ditemukan</h3>
+                  <p className="text-xs text-muted-foreground mt-1">Coba unggah asset baru atau sesuaikan filter pencarian.</p>
                 </div>
               ) : viewLayout === "grid" ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -602,12 +603,12 @@ export function AssetManagerApp() {
                     return (
                       <div
                         key={asset.id}
-                        className="bg-slate-800/80 border border-slate-700 hover:border-slate-600 rounded-xl overflow-hidden flex flex-col justify-between transition group"
+                        className="bg-card/80 border border-border hover:border-border rounded-xl overflow-hidden flex flex-col justify-between transition group"
                       >
                         {/* Thumbnail / Preview Header */}
                         <div
                           onClick={() => setSelectedAssetId(asset.id)}
-                          className="h-32 bg-slate-900/80 flex items-center justify-center relative cursor-pointer overflow-hidden"
+                          className="h-32 bg-background/80 flex items-center justify-center relative cursor-pointer overflow-hidden"
                         >
                           {asset.type === "image" ? (
                             <img
@@ -618,18 +619,18 @@ export function AssetManagerApp() {
                           ) : (
                             <div className="p-4 text-center">
                               {getFileIcon(asset.type)}
-                              <span className="text-[10px] text-slate-400 block mt-1 uppercase font-semibold">
+                              <span className="text-[10px] text-muted-foreground block mt-1 uppercase font-semibold">
                                 {asset.mimeType.split("/")[1] || asset.type}
                               </span>
                             </div>
                           )}
 
                           {refsCount > 0 ? (
-                            <span className="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900/90 text-emerald-400 border border-emerald-500/30">
+                            <span className="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold bg-background/90 text-emerald-400 border border-emerald-500/30">
                               {refsCount} used
                             </span>
                           ) : (
-                            <span className="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900/90 text-rose-400 border border-rose-500/30">
+                            <span className="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold bg-background/90 text-rose-400 border border-rose-500/30">
                               orphan
                             </span>
                           )}
@@ -640,18 +641,18 @@ export function AssetManagerApp() {
                           <div>
                             <h4
                               onClick={() => setSelectedAssetId(asset.id)}
-                              className="font-bold text-xs text-slate-200 truncate cursor-pointer hover:text-cyan-400"
+                              className="font-bold text-xs text-foreground truncate cursor-pointer hover:text-cyan-400"
                               title={asset.name}
                             >
                               {asset.name}
                             </h4>
-                            <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+                            <div className="text-[11px] text-muted-foreground mt-1 flex items-center justify-between">
                               <span>{formatBytes(asset.sizeBytes)}</span>
                               <span>{new Date(asset.createdAt).toLocaleDateString()}</span>
                             </div>
                           </div>
 
-                          <div className="flex items-center justify-between pt-2 border-t border-slate-700/60 text-xs">
+                          <div className="flex items-center justify-between pt-2 border-t border-border/60 text-xs">
                             <button
                               onClick={() => setSelectedAssetId(asset.id)}
                               className="text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1 text-[11px]"
@@ -662,7 +663,7 @@ export function AssetManagerApp() {
 
                             <button
                               onClick={() => handleDeleteClick(asset)}
-                              className="text-slate-500 hover:text-rose-400 p-1"
+                              className="text-muted-foreground hover:text-rose-400 p-1"
                               title="Hapus Asset"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -674,9 +675,9 @@ export function AssetManagerApp() {
                   })}
                 </div>
               ) : (
-                <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-x-auto">
+                <div className="bg-card/80 border border-border rounded-xl overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-900/60 text-slate-400 uppercase text-[10px] border-b border-slate-700">
+                    <thead className="bg-background/60 text-muted-foreground uppercase text-[10px] border-b border-border">
                       <tr>
                         <th className="p-3">Nama Asset</th>
                         <th className="p-3">Tipe</th>
@@ -686,12 +687,12 @@ export function AssetManagerApp() {
                         <th className="p-3 text-right">Aksi</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-700/50">
+                    <tbody className="divide-y divide-border/50">
                       {filteredAssets.map((asset) => {
                         const refsCount = references.filter((r) => r.assetId === asset.id).length;
                         return (
-                          <tr key={asset.id} className="hover:bg-slate-750">
-                            <td className="p-3 font-semibold text-slate-200 flex items-center gap-2">
+                          <tr key={asset.id} className="hover:bg-card">
+                            <td className="p-3 font-semibold text-foreground flex items-center gap-2">
                               {getFileIcon(asset.type)}
                               <span
                                 onClick={() => setSelectedAssetId(asset.id)}
@@ -700,9 +701,9 @@ export function AssetManagerApp() {
                                 {asset.name}
                               </span>
                             </td>
-                            <td className="p-3 uppercase text-[10px] text-slate-400">{asset.type}</td>
-                            <td className="p-3 text-slate-300">{formatBytes(asset.sizeBytes)}</td>
-                            <td className="p-3 text-slate-400 truncate max-w-xs">{asset.uploadedBy}</td>
+                            <td className="p-3 uppercase text-[10px] text-muted-foreground">{asset.type}</td>
+                            <td className="p-3 text-foreground">{formatBytes(asset.sizeBytes)}</td>
+                            <td className="p-3 text-muted-foreground truncate max-w-xs">{asset.uploadedBy}</td>
                             <td className="p-3">
                               {refsCount > 0 ? (
                                 <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded text-[10px] font-semibold">
@@ -745,48 +746,48 @@ export function AssetManagerApp() {
       {/* MODAL: DETAIL ASSET & VERSION HISTORY & USED IN */}
       {selectedAssetId && activeAsset && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2 truncate">
                 {getFileIcon(activeAsset.type)}
                 <h3 className="font-bold text-base text-white truncate">{activeAsset.name}</h3>
               </div>
-              <button onClick={() => setSelectedAssetId(null)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setSelectedAssetId(null)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Preview Box */}
-            <div className="h-44 bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center border border-slate-800">
+            <div className="h-44 bg-background rounded-xl overflow-hidden flex items-center justify-center border border-border">
               {activeAsset.type === "image" ? (
                 <img src={activeAsset.storageUrl} alt="" className="h-full object-contain" />
               ) : (
                 <div className="text-center p-4">
                   {getFileIcon(activeAsset.type)}
-                  <span className="text-xs text-slate-400 block mt-2">{activeAsset.mimeType}</span>
+                  <span className="text-xs text-muted-foreground block mt-2">{activeAsset.mimeType}</span>
                 </div>
               )}
             </div>
 
             {/* Metadata Information */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-slate-800/60 p-3 rounded-xl border border-slate-700">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-card/60 p-3 rounded-xl border border-border">
               <div>
-                <span className="text-slate-400 block">Ukuran</span>
-                <span className="font-semibold text-slate-200">{formatBytes(activeAsset.sizeBytes)}</span>
+                <span className="text-muted-foreground block">Ukuran</span>
+                <span className="font-semibold text-foreground">{formatBytes(activeAsset.sizeBytes)}</span>
               </div>
               <div>
-                <span className="text-slate-400 block">Checksum</span>
-                <span className="font-mono text-slate-300 text-[10px] truncate block" title={activeAsset.checksum}>
+                <span className="text-muted-foreground block">Checksum</span>
+                <span className="font-mono text-foreground text-[10px] truncate block" title={activeAsset.checksum}>
                   {activeAsset.checksum?.substring(0, 14)}...
                 </span>
               </div>
               <div>
-                <span className="text-slate-400 block">Pengunggah</span>
-                <span className="font-semibold text-slate-200 truncate block">{activeAsset.uploadedBy}</span>
+                <span className="text-muted-foreground block">Pengunggah</span>
+                <span className="font-semibold text-foreground truncate block">{activeAsset.uploadedBy}</span>
               </div>
               <div>
-                <span className="text-slate-400 block">Dimensi</span>
-                <span className="font-semibold text-slate-200">
+                <span className="text-muted-foreground block">Dimensi</span>
+                <span className="font-semibold text-foreground">
                   {activeAsset.dimensions ? `${activeAsset.dimensions.width}x${activeAsset.dimensions.height}` : "N/A"}
                 </span>
               </div>
@@ -794,12 +795,12 @@ export function AssetManagerApp() {
 
             {/* Used In (AssetReference) */}
             <div className="space-y-2">
-              <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <h4 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
                 <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
                 Digunakan di Aplikasi Lain ({activeAssetRefs.length})
               </h4>
               {activeAssetRefs.length === 0 ? (
-                <div className="p-3 bg-slate-800/40 rounded-lg text-xs text-slate-500">
+                <div className="p-3 bg-card/40 rounded-lg text-xs text-muted-foreground">
                   File ini belum dirujuk oleh Task, Deliverable, atau Knowledge Base manapun (Orphan Asset).
                 </div>
               ) : (
@@ -807,15 +808,15 @@ export function AssetManagerApp() {
                   {activeAssetRefs.map((ref) => (
                     <div
                       key={ref.id}
-                      className="p-2.5 bg-slate-800/80 border border-slate-700 rounded-lg text-xs flex items-center justify-between"
+                      className="p-2.5 bg-card/80 border border-border rounded-lg text-xs flex items-center justify-between"
                     >
                       <div>
-                        <span className="font-semibold text-slate-200">{ref.usedByTitle || ref.usedByEntityId}</span>
-                        <div className="text-[11px] text-slate-400">
+                        <span className="font-semibold text-foreground">{ref.usedByTitle || ref.usedByEntityId}</span>
+                        <div className="text-[11px] text-muted-foreground">
                           Aplikasi: <strong className="text-emerald-400">{ref.usedByApp}</strong> ({ref.usedByEntityType})
                         </div>
                       </div>
-                      <span className="text-[10px] text-slate-500">
+                      <span className="text-[10px] text-muted-foreground">
                         {new Date(ref.linkedAt).toLocaleDateString()}
                       </span>
                     </div>
@@ -827,7 +828,7 @@ export function AssetManagerApp() {
             {/* Version History (Rollback feature) */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <h4 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
                   <History className="w-3.5 h-3.5 text-blue-400" />
                   Riwayat Versi ({activeAssetVersions.length})
                 </h4>
@@ -848,21 +849,21 @@ export function AssetManagerApp() {
                       className={`p-3 rounded-lg border flex items-center justify-between gap-3 text-xs ${
                         isCurrent
                           ? "bg-blue-950/20 border-blue-500/40 text-blue-200"
-                          : "bg-slate-800/60 border-slate-700/80 text-slate-300"
+                          : "bg-card/60 border-border/80 text-foreground"
                       }`}
                     >
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-slate-100">Versi {ver.versionNumber}</span>
+                          <span className="font-bold text-foreground">Versi {ver.versionNumber}</span>
                           {isCurrent && (
                             <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-cyan-300 border border-blue-500/30">
                               Aktif
                             </span>
                           )}
-                          <span className="text-slate-400 text-[11px]">({formatBytes(ver.sizeBytes)})</span>
+                          <span className="text-muted-foreground text-[11px]">({formatBytes(ver.sizeBytes)})</span>
                         </div>
-                        <div className="text-slate-300 italic">{ver.changeNote || "Revisi berkas"}</div>
-                        <div className="text-[10px] text-slate-500">
+                        <div className="text-foreground italic">{ver.changeNote || "Revisi berkas"}</div>
+                        <div className="text-[10px] text-muted-foreground">
                           {ver.uploadedBy} • {new Date(ver.uploadedAt).toLocaleString()}
                         </div>
                       </div>
@@ -873,7 +874,7 @@ export function AssetManagerApp() {
                             revertToVersion(activeAsset.id, ver.id);
                             showToast(`Asset di-rollback ke Versi ${ver.versionNumber}.`);
                           }}
-                          className="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded text-xs font-medium flex items-center gap-1 shrink-0"
+                          className="px-2.5 py-1 bg-card hover:bg-muted-foreground/30 text-foreground rounded text-xs font-medium flex items-center gap-1 shrink-0"
                         >
                           <RotateCcw className="w-3 h-3" />
                           Rollback ke v{ver.versionNumber}
@@ -885,7 +886,7 @@ export function AssetManagerApp() {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-3 border-t border-slate-800">
+            <div className="flex justify-between items-center pt-3 border-t border-border">
               <button
                 onClick={() => handleDeleteClick(activeAsset)}
                 className="px-3.5 py-1.5 text-rose-400 hover:bg-rose-500/10 rounded-lg text-xs font-semibold flex items-center gap-1.5"
@@ -896,7 +897,7 @@ export function AssetManagerApp() {
 
               <button
                 onClick={() => setSelectedAssetId(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold"
+                className="px-4 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-semibold"
               >
                 Tutup
               </button>
@@ -908,7 +909,7 @@ export function AssetManagerApp() {
       {/* WARNING DIALOG: DELETE ASSET WITH ACTIVE REFERENCES */}
       {isWarningDeleteOpen && targetDeleteAsset && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-rose-500/50 rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+          <div className="bg-background border border-rose-500/50 rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
             <div className="flex items-center gap-3 text-rose-400">
               <ShieldAlert className="w-8 h-8 shrink-0" />
               <div>
@@ -920,10 +921,10 @@ export function AssetManagerApp() {
               </div>
             </div>
 
-            <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800 space-y-2 text-xs">
-              <div className="text-[11px] font-semibold text-slate-400 uppercase">Daftar Tempat Penggunaan:</div>
+            <div className="p-3 bg-background/80 rounded-xl border border-border space-y-2 text-xs">
+              <div className="text-[11px] font-semibold text-muted-foreground uppercase">Daftar Tempat Penggunaan:</div>
               {targetDeleteAsset.references.map((ref) => (
-                <div key={ref.id} className="text-slate-300 flex items-center gap-2">
+                <div key={ref.id} className="text-foreground flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
                   <span>
                     <strong>{ref.usedByApp}</strong>: {ref.usedByTitle || ref.usedByEntityId}
@@ -932,19 +933,19 @@ export function AssetManagerApp() {
               ))}
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-foreground leading-relaxed">
               Jika Anda melanjutkan penghapusan, referensi pada aplikasi tersebut akan menjadi <strong>Broken Link</strong>.
               Apakah Anda yakin ingin memaksakan penghapusan file ini?
             </p>
 
-            <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-800">
+            <div className="flex justify-end gap-2.5 pt-3 border-t border-border">
               <button
                 type="button"
                 onClick={() => {
                   setIsWarningDeleteOpen(false);
                   setTargetDeleteAsset(null);
                 }}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold"
+                className="px-4 py-2 bg-card hover:bg-card text-foreground rounded-lg text-xs font-semibold"
               >
                 Batalkan (Simpan File)
               </button>
@@ -963,17 +964,17 @@ export function AssetManagerApp() {
       {/* MODAL: UPLOAD ASSET */}
       {isUploadOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Upload Asset Baru</h3>
-              <button onClick={() => setIsUploadOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsUploadOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleUploadSubmit} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Nama File <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -982,17 +983,17 @@ export function AssetManagerApp() {
                   placeholder="mis. Q4-Pitch-Deck.pdf"
                   value={upName}
                   onChange={(e) => setUpName(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Tipe File</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Tipe File</label>
                   <select
                     value={upType}
                     onChange={(e) => setUpType(e.target.value as any)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                   >
                     <option value="image">Image (Gambar)</option>
                     <option value="document">Document (PDF/Doc)</option>
@@ -1003,22 +1004,22 @@ export function AssetManagerApp() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Ukuran (KB)</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Ukuran (KB)</label>
                   <input
                     type="number"
                     value={upSizeKb}
                     onChange={(e) => setUpSizeKb(parseInt(e.target.value) || 0)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Folder</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Folder</label>
                 <select
                   value={upFolderId}
                   onChange={(e) => setUpFolderId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 >
                   <option value="">Tanpa Folder (Root)</option>
                   {folders.map((f) => (
@@ -1030,20 +1031,20 @@ export function AssetManagerApp() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Catatan Versi Awal</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Catatan Versi Awal</label>
                 <input
                   type="text"
                   value={upChangeNote}
                   onChange={(e) => setUpChangeNote(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsUploadOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>
@@ -1062,43 +1063,43 @@ export function AssetManagerApp() {
       {/* MODAL: REPLACE VERSION (UPLOAD NEW VERSION) */}
       {isReplaceVersionOpen && activeAsset && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Upload Versi Baru</h3>
-              <button onClick={() => setIsReplaceVersionOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsReplaceVersionOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Catatan Perubahan (Change Note)</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Catatan Perubahan (Change Note)</label>
                 <textarea
                   rows={2}
                   required
                   placeholder="mis. Angka keuangan diperbarui pasca-audit internal..."
                   value={repChangeNote}
                   onChange={(e) => setRepChangeNote(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Ukuran File Baru (KB)</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Ukuran File Baru (KB)</label>
                 <input
                   type="number"
                   value={repNewSizeKb}
                   onChange={(e) => setRepNewSizeKb(parseInt(e.target.value) || 0)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+            <div className="flex justify-end gap-2 pt-3 border-t border-border">
               <button
                 type="button"
                 onClick={() => setIsReplaceVersionOpen(false)}
-                className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
               >
                 Batal
               </button>
@@ -1124,30 +1125,30 @@ export function AssetManagerApp() {
       {/* MODAL: CREATE FOLDER */}
       {isNewFolderOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Buat Folder Asset</h3>
-              <button onClick={() => setIsNewFolderOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsNewFolderOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Nama Folder</label>
+              <label className="block text-xs font-semibold text-foreground mb-1">Nama Folder</label>
               <input
                 type="text"
                 placeholder="mis. Dokumentasi Video Klien"
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-cyan-500"
+                className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-cyan-500"
               />
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+            <div className="flex justify-end gap-2 pt-3 border-t border-border">
               <button
                 type="button"
                 onClick={() => setIsNewFolderOpen(false)}
-                className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
               >
                 Batal
               </button>

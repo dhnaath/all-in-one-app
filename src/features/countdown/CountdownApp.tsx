@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useEffect, useMemo } from "react";
 import {
   Timer,
@@ -321,21 +322,21 @@ export function CountdownApp() {
   };
 
   return (
-    <div className="w-full min-h-[calc(100vh-4rem)] bg-slate-50/60 dark:bg-zinc-950 flex flex-col font-sans">
+    <div className="w-full min-h-[calc(100vh-4rem)] bg-muted/40/60 dark:bg-background flex flex-col font-sans">
       {/* 1. TOP HEADER - Standalone Ecosystem #11 */}
-      <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-6 py-3.5">
+      <ShellHeader>
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           {/* Brand & Temporary White Marker */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white text-zinc-950 border-2 border-zinc-200 dark:border-white shadow-md flex items-center justify-center shrink-0 ring-2 ring-white/60">
-              <Timer className="size-5 text-zinc-950" strokeWidth={2} />
+            <div className="w-10 h-10 rounded-2xl bg-card text-foreground border-2 border-border dark:border-border shadow-md flex items-center justify-center shrink-0 ring-2 ring-white/60">
+              <Timer className="size-5 text-foreground" strokeWidth={2} />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
                   Countdown
                 </h1>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-muted dark:bg-card text-foreground dark:text-foreground border border-border dark:border-border">
                   Tanda Sementara (#11)
                 </span>
               </div>
@@ -371,7 +372,7 @@ export function CountdownApp() {
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
               title="Audit trail & histori perubahan"
             >
-              <History className="size-3.5 text-slate-500" />
+              <History className="size-3.5 text-muted-foreground" />
               <span className="hidden md:inline">Audit Trail</span>
             </button>
 
@@ -384,7 +385,7 @@ export function CountdownApp() {
             </button>
           </div>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* 2. SUB-BAR: Filters, Search & View Modes */}
       <section className="border-b border-border bg-card/40 px-4 sm:px-6 py-2.5">
@@ -642,7 +643,7 @@ export function CountdownApp() {
                         </td>
                         <td className="p-3.5">
                           {item.linkedEntity ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] bg-muted dark:bg-card text-foreground dark:text-foreground">
                               <ExternalLink className="size-2.5" />
                               <span className="truncate max-w-[120px]">
                                 {item.linkedEntity.entityTitle || item.linkedEntity.entityId}
@@ -659,7 +660,7 @@ export function CountdownApp() {
                                 ? "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300"
                                 : item.status === "Reached"
                                 ? "bg-purple-100 dark:bg-purple-950/50 text-purple-800 dark:text-purple-300"
-                                : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+                                : "bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground"
                             }`}
                           >
                             {item.status}
@@ -818,7 +819,7 @@ export function CountdownApp() {
                 const hero = countdowns.find((c) => c.pinned && c.status === "Active")!;
                 const rem = calculateTimeRemaining(hero.targetAt, hero.direction);
                 return (
-                  <div className="relative rounded-3xl overflow-hidden border border-border shadow-lg bg-zinc-950 text-white p-6 sm:p-8">
+                  <div className="relative rounded-3xl overflow-hidden border border-border shadow-lg bg-foreground text-background p-6 sm:p-8">
                     {hero.coverImage?.url && (
                       <img
                         src={hero.coverImage.url}
@@ -828,7 +829,7 @@ export function CountdownApp() {
                     )}
                     <div className="relative z-10 space-y-4 max-w-2xl">
                       <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[10px] font-bold tracking-wider uppercase">
+                        <span className="px-2.5 py-1 rounded-full bg-card/20 backdrop-blur-md text-[10px] font-bold tracking-wider uppercase">
                           Spotlight Countdown
                         </span>
                         <span className="text-xs text-white/70">
@@ -844,7 +845,7 @@ export function CountdownApp() {
                       </p>
 
                       <div className="grid grid-cols-4 gap-2 sm:gap-4 pt-2 max-w-md">
-                        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 text-center border border-white/15">
+                        <div className="bg-card/10 backdrop-blur-md rounded-2xl p-3 text-center border border-border/15">
                           <span className="text-2xl sm:text-4xl font-mono font-black block">
                             {rem.days}
                           </span>
@@ -852,7 +853,7 @@ export function CountdownApp() {
                             Hari
                           </span>
                         </div>
-                        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 text-center border border-white/15">
+                        <div className="bg-card/10 backdrop-blur-md rounded-2xl p-3 text-center border border-border/15">
                           <span className="text-2xl sm:text-4xl font-mono font-black block">
                             {rem.hours}
                           </span>
@@ -860,7 +861,7 @@ export function CountdownApp() {
                             Jam
                           </span>
                         </div>
-                        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 text-center border border-white/15">
+                        <div className="bg-card/10 backdrop-blur-md rounded-2xl p-3 text-center border border-border/15">
                           <span className="text-2xl sm:text-4xl font-mono font-black block">
                             {rem.minutes}
                           </span>
@@ -868,7 +869,7 @@ export function CountdownApp() {
                             Menit
                           </span>
                         </div>
-                        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 text-center border border-white/15">
+                        <div className="bg-card/10 backdrop-blur-md rounded-2xl p-3 text-center border border-border/15">
                           <span className="text-2xl sm:text-4xl font-mono font-black block text-amber-300">
                             {rem.seconds}
                           </span>
@@ -1079,7 +1080,7 @@ export function CountdownApp() {
               <div className="p-3 rounded-xl border border-border bg-muted/20 space-y-2">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                    <ExternalLink className="size-3.5 text-slate-500" />
+                    <ExternalLink className="size-3.5 text-muted-foreground" />
                     Tautkan ke Entitas Eksternal (Ecosystem)
                   </label>
                   <span className="text-[10px] text-muted-foreground">Opsional</span>
@@ -1463,7 +1464,7 @@ function CountdownCard({
       }`}
     >
       {/* Cover Image Background Banner */}
-      <div className="relative h-32 sm:h-36 w-full bg-zinc-900 overflow-hidden">
+      <div className="relative h-32 sm:h-36 w-full bg-background overflow-hidden">
         {item.coverImage?.url ? (
           <img
             src={item.coverImage.url}
@@ -1471,9 +1472,9 @@ function CountdownCard({
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-900" />
+          <div className="w-full h-full bg-gradient-to-tr from-border via-indigo-950 to-border" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-border/90 via-border/40 to-transparent" />
 
         {/* Top Badges */}
         <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
@@ -1486,7 +1487,7 @@ function CountdownCard({
             </span>
 
             <span
-              className={`text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-md text-white border border-white/20 ${
+              className={`text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-md text-white border border-border/20 ${
                 isCountUp ? "bg-amber-600/80" : "bg-blue-600/80"
               }`}
             >
@@ -1537,7 +1538,7 @@ function CountdownCard({
       <div className="p-4 space-y-4 flex-1 flex flex-col justify-between">
         {/* Flip-style Digits Grid */}
         <div className="grid grid-cols-4 gap-2 text-center">
-          <div className="bg-muted/40 dark:bg-zinc-900 border border-border/70 rounded-xl p-2">
+          <div className="bg-muted/40 dark:bg-background border border-border/70 rounded-xl p-2">
             <span className="text-xl sm:text-2xl font-mono font-black text-foreground block">
               {remaining.days}
             </span>
@@ -1546,7 +1547,7 @@ function CountdownCard({
             </span>
           </div>
 
-          <div className="bg-muted/40 dark:bg-zinc-900 border border-border/70 rounded-xl p-2">
+          <div className="bg-muted/40 dark:bg-background border border-border/70 rounded-xl p-2">
             <span className="text-xl sm:text-2xl font-mono font-black text-foreground block">
               {String(remaining.hours).padStart(2, "0")}
             </span>
@@ -1555,7 +1556,7 @@ function CountdownCard({
             </span>
           </div>
 
-          <div className="bg-muted/40 dark:bg-zinc-900 border border-border/70 rounded-xl p-2">
+          <div className="bg-muted/40 dark:bg-background border border-border/70 rounded-xl p-2">
             <span className="text-xl sm:text-2xl font-mono font-black text-foreground block">
               {String(remaining.minutes).padStart(2, "0")}
             </span>
@@ -1564,7 +1565,7 @@ function CountdownCard({
             </span>
           </div>
 
-          <div className="bg-muted/40 dark:bg-zinc-900 border border-border/70 rounded-xl p-2">
+          <div className="bg-muted/40 dark:bg-background border border-border/70 rounded-xl p-2">
             <span className="text-xl sm:text-2xl font-mono font-black text-primary block">
               {String(remaining.seconds).padStart(2, "0")}
             </span>
@@ -1585,7 +1586,7 @@ function CountdownCard({
           {/* Linked entity pill (§10) */}
           {item.linkedEntity && (
             <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-muted/40 border border-border/60 text-[11px] text-muted-foreground">
-              <ExternalLink className="size-3 text-slate-500" />
+              <ExternalLink className="size-3 text-muted-foreground" />
               <span className="truncate">
                 {item.linkedEntity.entityType.toUpperCase()}:{" "}
                 <strong>{item.linkedEntity.entityTitle || item.linkedEntity.entityId}</strong>
@@ -1603,7 +1604,7 @@ function CountdownCard({
                   ? "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300"
                   : item.status === "Reached"
                   ? "bg-purple-100 dark:bg-purple-950/50 text-purple-800 dark:text-purple-300"
-                  : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+                  : "bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground"
               }`}
             >
               {item.status}

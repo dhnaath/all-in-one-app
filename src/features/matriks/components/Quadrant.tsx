@@ -7,9 +7,11 @@ interface QuadrantProps {
   items: Item[];
   onAddItem: (text: string) => void;
   onRemoveItem: (id: string) => void;
+  id?: string;
+  focused?: boolean;
 }
 
-export function Quadrant({ data, items, onAddItem, onRemoveItem }: QuadrantProps) {
+export function Quadrant({ data, items, onAddItem, onRemoveItem, id, focused }: QuadrantProps) {
   const [inputText, setInputText] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -35,7 +37,12 @@ export function Quadrant({ data, items, onAddItem, onRemoveItem }: QuadrantProps
   };
 
   return (
-    <div className={`flex flex-col p-5 rounded-2xl border ${getThemeClasses(data.theme)} shadow-sm`}>
+    <div
+      id={id}
+      className={`flex flex-col p-5 rounded-2xl border shadow-sm transition-all duration-200 ${getThemeClasses(data.theme)} ${
+        focused ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.01]" : ""
+      }`}
+    >
       <div className="mb-4">
         <h3 className="text-base font-semibold text-foreground">{data.title}</h3>
         <p className="text-xs text-muted-foreground mt-0.5">{data.subtitle}</p>

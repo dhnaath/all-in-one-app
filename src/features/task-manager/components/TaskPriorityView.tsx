@@ -197,17 +197,17 @@ export function TaskPriorityView({ tasks, onSelectTask }: TaskPriorityViewProps)
         </div>
 
         {/* Q4: Eliminate / Backlog (Not Urgent & Not Important) */}
-        <div className="rounded-2xl border-2 border-slate-500/30 bg-slate-500/5 p-4 flex flex-col space-y-3">
+        <div className="rounded-2xl border-2 border-border/30 bg-muted-foreground/30/5 p-4 flex flex-col space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 bg-slate-500/10 px-2 py-0.5 rounded">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground dark:text-muted-foreground bg-muted-foreground/30/10 px-2 py-0.5 rounded">
                 Kuadran 4 • Evaluasi / Eliminasi (Don&apos;t Do)
               </span>
               <h3 className="text-sm font-bold text-foreground mt-1">
                 Rendah / Backlog Rutin
               </h3>
             </div>
-            <span className="text-xs font-bold text-slate-600 bg-slate-500/20 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-muted-foreground bg-muted-foreground/30/20 px-2 py-0.5 rounded-full">
               {q4.length}
             </span>
           </div>
@@ -217,13 +217,13 @@ export function TaskPriorityView({ tasks, onSelectTask }: TaskPriorityViewProps)
               <div
                 key={t.id}
                 onClick={() => onSelectTask(t.id)}
-                className="p-3 rounded-xl bg-card border border-slate-500/20 hover:border-slate-500 hover:shadow-sm transition-all cursor-pointer text-left space-y-1"
+                className="p-3 rounded-xl bg-card border border-border/20 hover:border-border hover:shadow-sm transition-all cursor-pointer text-left space-y-1"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-foreground truncate block">
                     {t.title}
                   </span>
-                  <span className="text-[9px] uppercase font-bold text-slate-600 bg-slate-500/10 px-1.5 py-0.2 rounded">
+                  <span className="text-[9px] uppercase font-bold text-muted-foreground bg-muted-foreground/30/10 px-1.5 py-0.2 rounded">
                     {t.priority}
                   </span>
                 </div>

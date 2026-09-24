@@ -776,7 +776,7 @@ export function WritingView() {
       </div>
 
       {/* Template Frameworks Quick-Start Carousel */}
-      <div className="bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-slate-50/80 dark:from-slate-900/60 dark:via-blue-950/30 dark:to-slate-900/60 border border-blue-100 dark:border-blue-900/40 rounded-2xl p-4 sm:p-6">
+      <div className="bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-border/80 dark:from-border/60 dark:via-blue-950/30 dark:to-border/60 border border-blue-100 dark:border-blue-900/40 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Sparkles size={18} className="text-blue-600 dark:text-blue-400" />

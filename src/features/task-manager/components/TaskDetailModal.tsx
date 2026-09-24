@@ -141,7 +141,7 @@ export function TaskDetailModal({ taskId, onClose, onSelectTask }: TaskDetailMod
   const getStatusColor = (status: TaskStatus) => {
     switch (status) {
       case "inbox":
-        return "bg-slate-500/10 text-slate-600 dark:text-slate-300 border-slate-500/20";
+        return "bg-muted-foreground/30/10 text-muted-foreground dark:text-foreground border-border/20";
       case "planned":
         return "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20";
       case "in_progress":
@@ -153,7 +153,7 @@ export function TaskDetailModal({ taskId, onClose, onSelectTask }: TaskDetailMod
       case "cancelled":
         return "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20";
       case "archived":
-        return "bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-500/20";
+        return "bg-muted-foreground/30/10 text-muted-foreground dark:text-muted-foreground border-border/20";
     }
   };
 

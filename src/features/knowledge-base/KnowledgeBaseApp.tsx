@@ -29,6 +29,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useKnowledgeBaseStore } from "./store";
+import { useShellSections } from "@/app/shell-sections";
 import {
   Article,
   Category,
@@ -338,25 +339,63 @@ export function KnowledgeBaseApp() {
     [revisions, selectedArticleId]
   );
 
+  // Publish this app's views + categories as shell sections (sidebar + header).
+  useShellSections([
+    {
+      id: "all",
+      label: "Semua Artikel",
+      icon: BookOpen,
+      active: activeView === "all" && !selectedCategoryId,
+      onSelect: () => {
+        setActiveView("all");
+        setSelectedCategoryId(null);
+      },
+    },
+    {
+      id: "needs_review",
+      label: "Perlu Review",
+      icon: AlertTriangle,
+      active: activeView === "needs_review",
+      onSelect: () => setActiveView("needs_review"),
+    },
+    {
+      id: "graph",
+      label: "Graph View (Relasi)",
+      icon: Share2,
+      active: activeView === "graph",
+      onSelect: () => setActiveView("graph"),
+    },
+    ...categories.map((cat) => ({
+      id: cat.id,
+      label: cat.name,
+      icon: FolderTree,
+      active: activeView === "category" && selectedCategoryId === cat.id,
+      onSelect: () => {
+        setSelectedCategoryId(cat.id);
+        setActiveView("category");
+      },
+    })),
+  ]);
+
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] bg-slate-50 dark:bg-zinc-950 text-slate-800 dark:text-zinc-100 overflow-hidden font-sans">
+    <div className="flex flex-col h-[calc(100vh-4rem)] bg-muted/40 dark:bg-background text-foreground dark:text-foreground overflow-hidden font-sans">
       {/* Top Header Banner */}
-      <div className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 px-4 py-3 shrink-0 flex items-center justify-between shadow-2xs">
+      <div className="bg-card dark:bg-background border-b border-border dark:border-border px-4 py-3 shrink-0 flex items-center justify-between shadow-2xs">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white border border-slate-300 dark:border-zinc-700 shadow-xs flex items-center justify-center text-zinc-900 dark:text-zinc-100 shrink-0 font-bold">
+          <div className="w-9 h-9 rounded-xl bg-card border border-border dark:border-border shadow-xs flex items-center justify-center text-foreground dark:text-foreground shrink-0 font-bold">
             <BookOpen className="size-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-base font-bold text-slate-900 dark:text-zinc-100">Knowledge Base</h1>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 font-semibold text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
+              <h1 className="text-base font-bold text-foreground dark:text-foreground">Knowledge Base</h1>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted dark:bg-card font-semibold text-muted-foreground dark:text-foreground border border-border dark:border-border">
                 #14 Standalone
               </span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold border border-emerald-200 dark:border-emerald-800">
                 SSOT for Articles
               </span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-zinc-400">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
               Pengetahuan terstruktur, artikel terhubung dengan sumber kredibel & relasi bermakna
             </p>
           </div>
@@ -365,9 +404,9 @@ export function KnowledgeBaseApp() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsStatsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border dark:border-border text-xs font-medium hover:bg-muted/40 dark:hover:bg-card transition-colors"
           >
-            <BarChart3 className="size-3.5 text-slate-500" />
+            <BarChart3 className="size-3.5 text-muted-foreground" />
             Statistik ({stats.outdatedRatio}% perlu review)
           </button>
           <button
@@ -379,7 +418,7 @@ export function KnowledgeBaseApp() {
           </button>
           <button
             onClick={() => openEditModal()}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-semibold hover:opacity-90 shadow-xs transition-opacity"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-foreground dark:bg-card text-background dark:text-foreground text-xs font-semibold hover:opacity-90 shadow-xs transition-opacity"
           >
             <Plus className="size-4" />
             Artikel Baru
@@ -390,9 +429,9 @@ export function KnowledgeBaseApp() {
       {/* Main Workspace 3-Pane Layout */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar: Categories & Views */}
-        <div className="w-64 bg-slate-50 dark:bg-zinc-900/50 border-r border-slate-200 dark:border-zinc-800 flex flex-col shrink-0">
-          <div className="p-3 border-b border-slate-200 dark:border-zinc-800 space-y-1">
-            <span className="text-[11px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider px-2">
+        <div className="w-64 bg-muted/40 dark:bg-background/50 border-r border-border dark:border-border flex flex-col shrink-0">
+          <div className="p-3 border-b border-border dark:border-border space-y-1">
+            <span className="text-[11px] font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider px-2">
               Tampilan Pengetahuan
             </span>
             <button
@@ -402,15 +441,15 @@ export function KnowledgeBaseApp() {
               }}
               className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 activeView === "all" && !selectedCategoryId
-                  ? "bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 shadow-2xs font-semibold"
-                  : "text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/60"
+                  ? "bg-card dark:bg-card text-foreground dark:text-foreground shadow-2xs font-semibold"
+                  : "text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-card/60"
               }`}
             >
               <div className="flex items-center gap-2">
                 <BookOpen className="size-3.5 text-blue-500" />
                 <span>Semua Artikel</span>
               </div>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-zinc-700 text-slate-600 dark:text-zinc-300">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted dark:bg-card text-muted-foreground dark:text-foreground">
                 {articles.length}
               </span>
             </button>
@@ -420,7 +459,7 @@ export function KnowledgeBaseApp() {
               className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 activeView === "needs_review"
                   ? "bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-800 font-semibold"
-                  : "text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/60"
+                  : "text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-card/60"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -436,15 +475,15 @@ export function KnowledgeBaseApp() {
               onClick={() => setActiveView("graph")}
               className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 activeView === "graph"
-                  ? "bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 shadow-2xs font-semibold"
-                  : "text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/60"
+                  ? "bg-card dark:bg-card text-foreground dark:text-foreground shadow-2xs font-semibold"
+                  : "text-muted-foreground dark:text-muted-foreground hover:bg-muted dark:hover:bg-card/60"
               }`}
             >
               <div className="flex items-center gap-2">
                 <Share2 className="size-3.5 text-purple-500" />
                 <span>Graph View (Relasi)</span>
               </div>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-zinc-700 text-slate-600 dark:text-zinc-300">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted dark:bg-card text-muted-foreground dark:text-foreground">
                 {relations.length}
               </span>
             </button>
@@ -453,7 +492,7 @@ export function KnowledgeBaseApp() {
           {/* Hierarchical Categories */}
           <div className="flex-1 overflow-y-auto p-3 space-y-1">
             <div className="flex items-center justify-between px-2 py-1">
-              <span className="text-[11px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">
                 Kategori Hierarkis
               </span>
               <button
@@ -479,14 +518,14 @@ export function KnowledgeBaseApp() {
                   } ${
                     isSelected
                       ? "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-semibold border border-blue-200 dark:border-blue-800"
-                      : "text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800/60"
+                      : "text-foreground dark:text-foreground hover:bg-muted dark:hover:bg-card/60"
                   }`}
                 >
                   <div className="flex items-center gap-2 truncate">
-                    <FolderTree className="size-3.5 text-slate-400 shrink-0" />
+                    <FolderTree className="size-3.5 text-muted-foreground shrink-0" />
                     <span className="truncate">{cat.name}</span>
                   </div>
-                  <span className="text-[10px] text-slate-400">{count}</span>
+                  <span className="text-[10px] text-muted-foreground">{count}</span>
                 </button>
               );
             })}
@@ -494,25 +533,25 @@ export function KnowledgeBaseApp() {
         </div>
 
         {/* Center Panel: Article List */}
-        <div className="w-80 bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 flex flex-col shrink-0">
+        <div className="w-80 bg-card dark:bg-background border-r border-border dark:border-border flex flex-col shrink-0">
           {/* Search & Filter Bar */}
-          <div className="p-3 border-b border-slate-200 dark:border-zinc-800 space-y-2">
+          <div className="p-3 border-b border-border dark:border-border space-y-2">
             <div className="relative">
-              <Search className="size-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+              <Search className="size-3.5 absolute left-2.5 top-2.5 text-muted-foreground" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari judul, konten, tag..."
-                className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 text-xs focus:ring-1 focus:ring-blue-500 outline-none"
+                className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card text-xs focus:ring-1 focus:ring-blue-500 outline-none"
               />
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-400 font-medium">Status Review:</span>
+              <span className="text-muted-foreground font-medium">Status Review:</span>
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="text-xs bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-md px-2 py-0.5 outline-none"
+                className="text-xs bg-muted/40 dark:bg-card border border-border dark:border-border rounded-md px-2 py-0.5 outline-none"
               >
                 <option value="all">Semua Status</option>
                 <option value="verified">Verified (Teruji)</option>
@@ -524,9 +563,9 @@ export function KnowledgeBaseApp() {
           </div>
 
           {/* Article List Items */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-zinc-800/60">
+          <div className="flex-1 overflow-y-auto divide-y divide-border dark:divide-border/60">
             {filteredArticles.length === 0 ? (
-              <div className="p-6 text-center text-slate-400 text-xs">
+              <div className="p-6 text-center text-muted-foreground text-xs">
                 Tidak ada artikel yang cocok dengan filter.
               </div>
             ) : (
@@ -545,7 +584,7 @@ export function KnowledgeBaseApp() {
                     className={`w-full text-left p-3 transition-colors ${
                       isSelected
                         ? "bg-blue-50/70 dark:bg-blue-950/30 border-l-3 border-blue-600"
-                        : "hover:bg-slate-50 dark:hover:bg-zinc-800/50"
+                        : "hover:bg-muted/40 dark:hover:bg-card/50"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1 mb-1">
@@ -557,12 +596,12 @@ export function KnowledgeBaseApp() {
                             ? "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300"
                             : art.reviewStatus === "outdated" || needsRev
                             ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
-                            : "bg-slate-200 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300"
+                            : "bg-muted text-foreground dark:bg-card dark:text-foreground"
                         }`}
                       >
                         {needsRev && art.reviewStatus !== "outdated" ? "Needs Review" : art.reviewStatus}
                       </span>
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-[10px] text-muted-foreground">
                         {new Date(art.updatedAt).toLocaleDateString("id-ID", {
                           day: "numeric",
                           month: "short",
@@ -570,14 +609,14 @@ export function KnowledgeBaseApp() {
                       </span>
                     </div>
 
-                    <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 line-clamp-1">
+                    <h3 className="text-xs font-bold text-foreground dark:text-foreground line-clamp-1">
                       {art.title}
                     </h3>
-                    <p className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
+                    <p className="text-[11px] text-muted-foreground dark:text-muted-foreground line-clamp-2 mt-0.5">
                       {art.summary || art.content.slice(0, 90)}
                     </p>
 
-                    <div className="flex items-center gap-3 mt-2 text-[10px] text-slate-400">
+                    <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Link2 className="size-3" /> {srcCount} Sumber
                       </span>
@@ -593,19 +632,19 @@ export function KnowledgeBaseApp() {
         </div>
 
         {/* Right Panel: Content / Graph View */}
-        <div className="flex-1 bg-slate-50 dark:bg-zinc-950 flex flex-col overflow-hidden">
+        <div className="flex-1 bg-muted/40 dark:bg-background flex flex-col overflow-hidden">
           {activeView === "graph" ? (
             <div className="flex-1 flex flex-col p-6 overflow-hidden">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-sm font-bold text-slate-900 dark:text-zinc-100">
+                  <h2 className="text-sm font-bold text-foreground dark:text-foreground">
                     Interactive Knowledge Graph
                   </h2>
-                  <p className="text-xs text-slate-500 dark:text-zinc-400">
+                  <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                     Visualisasi jaringan hubungan antar-Artikel (prerequisite, related, dsb.)
                   </p>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-500">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> Artikel
                   </span>
@@ -616,7 +655,7 @@ export function KnowledgeBaseApp() {
               </div>
 
               {/* Node-Graph Visualizer */}
-              <div className="flex-1 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 p-6 flex flex-wrap gap-4 items-center justify-center relative overflow-auto shadow-2xs">
+              <div className="flex-1 rounded-2xl bg-card dark:bg-background border border-border dark:border-border p-6 flex flex-wrap gap-4 items-center justify-center relative overflow-auto shadow-2xs">
                 {articles.map((art, idx) => {
                   const outRels = relations.filter((r) => r.fromArticleId === art.id);
                   const isSel = art.id === selectedArticleId;
@@ -628,26 +667,26 @@ export function KnowledgeBaseApp() {
                       className={`p-4 rounded-xl border transition-all cursor-pointer max-w-xs shadow-xs ${
                         isSel
                           ? "ring-2 ring-blue-500 border-blue-500 bg-blue-50/50 dark:bg-blue-950/40"
-                          : "border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:scale-105"
+                          : "border-border dark:border-border bg-card dark:bg-card hover:scale-105"
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <span className="w-2 h-2 rounded-full bg-blue-500" />
-                        <span className="text-[10px] font-bold text-slate-400 uppercase">
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase">
                           {art.reviewStatus}
                         </span>
                       </div>
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-zinc-100">
+                      <h4 className="text-xs font-bold text-foreground dark:text-foreground">
                         {art.title}
                       </h4>
                       {outRels.length > 0 && (
-                        <div className="mt-2 pt-2 border-t border-slate-100 dark:border-zinc-700/60 space-y-1">
+                        <div className="mt-2 pt-2 border-t border-border dark:border-border/60 space-y-1">
                           {outRels.map((r) => {
                             const target = articles.find((a) => a.id === r.toArticleId);
                             return (
                               <div
                                 key={r.id}
-                                className="text-[10px] text-slate-500 flex items-center gap-1"
+                                className="text-[10px] text-muted-foreground flex items-center gap-1"
                               >
                                 <ArrowUpRight className="size-3 text-purple-500" />
                                 <span className="font-semibold text-purple-600 dark:text-purple-400">
@@ -667,7 +706,7 @@ export function KnowledgeBaseApp() {
           ) : selectedArticle ? (
             <div className="flex-1 flex flex-col overflow-y-auto">
               {/* Article Top Bar */}
-              <div className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 p-4 shrink-0 flex items-center justify-between">
+              <div className="bg-card dark:bg-background border-b border-border dark:border-border p-4 shrink-0 flex items-center justify-between">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span
@@ -678,18 +717,18 @@ export function KnowledgeBaseApp() {
                           ? "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300"
                           : selectedArticle.reviewStatus === "outdated" || isNeedsReview(selectedArticle)
                           ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300"
-                          : "bg-slate-200 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300"
+                          : "bg-muted text-foreground dark:bg-card dark:text-foreground"
                       }`}
                     >
                       {selectedArticle.reviewStatus}
                     </span>
                     {categories.find((c) => c.id === selectedArticle.categoryId) && (
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-muted dark:bg-card text-muted-foreground dark:text-foreground">
                         {categories.find((c) => c.id === selectedArticle.categoryId)?.name}
                       </span>
                     )}
                   </div>
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-zinc-100">
+                  <h2 className="text-lg font-bold text-foreground dark:text-foreground">
                     {selectedArticle.title}
                   </h2>
                 </div>
@@ -713,7 +752,7 @@ export function KnowledgeBaseApp() {
                   </button>
                   <button
                     onClick={() => duplicateArticle(selectedArticle.id)}
-                    className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 dark:border-zinc-700 text-slate-600 dark:text-zinc-300"
+                    className="p-1.5 rounded-lg border border-border hover:bg-muted dark:border-border text-muted-foreground dark:text-foreground"
                     title="Duplikasi"
                   >
                     <Copy className="size-3.5" />
@@ -748,7 +787,7 @@ export function KnowledgeBaseApp() {
                     </div>
                   )}
 
-                  <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 shadow-2xs">
+                  <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-6 shadow-2xs">
                     <div className="prose prose-slate dark:prose-invert max-w-none text-xs leading-relaxed whitespace-pre-wrap">
                       {selectedArticle.content}
                     </div>
@@ -757,11 +796,11 @@ export function KnowledgeBaseApp() {
                   {/* Tags */}
                   {selectedArticle.tags.length > 0 && (
                     <div className="flex items-center gap-2 flex-wrap">
-                      <Tag className="size-3.5 text-slate-400" />
+                      <Tag className="size-3.5 text-muted-foreground" />
                       {selectedArticle.tags.map((t) => (
                         <span
                           key={t}
-                          className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300"
+                          className="text-[11px] px-2 py-0.5 rounded-md bg-muted dark:bg-card text-muted-foreground dark:text-foreground"
                         >
                           #{t}
                         </span>
@@ -773,9 +812,9 @@ export function KnowledgeBaseApp() {
                 {/* Right Columns: Sources (§4), Relations (§6), Revisions (§7) */}
                 <div className="space-y-6">
                   {/* Sources (§4 Jejak Kredibilitas) */}
-                  <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-4 shadow-2xs">
+                  <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-4 shadow-2xs">
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+                      <h3 className="text-xs font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
                         <Link2 className="size-3.5 text-blue-500" />
                         Sumber Kredibel ({articleSources.length})
                       </h3>
@@ -789,14 +828,14 @@ export function KnowledgeBaseApp() {
 
                     <div className="space-y-2">
                       {articleSources.length === 0 ? (
-                        <p className="text-[11px] text-slate-400 italic">
+                        <p className="text-[11px] text-muted-foreground italic">
                           Belum ada sumber pendukung. Klaim penting idealnya memiliki rujukan terverifikasi.
                         </p>
                       ) : (
                         articleSources.map((src) => (
                           <div
                             key={src.id}
-                            className="p-2.5 rounded-xl border border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/40 text-xs space-y-1"
+                            className="p-2.5 rounded-xl border border-border dark:border-border bg-muted/40/50 dark:bg-card/40 text-xs space-y-1"
                           >
                             <div className="flex items-center justify-between">
                               <span
@@ -812,16 +851,16 @@ export function KnowledgeBaseApp() {
                               </span>
                               <button
                                 onClick={() => deleteSource(src.id)}
-                                className="text-slate-400 hover:text-rose-600"
+                                className="text-muted-foreground hover:text-rose-600"
                               >
                                 <Trash2 className="size-3" />
                               </button>
                             </div>
-                            <div className="font-semibold text-slate-800 dark:text-zinc-200">
+                            <div className="font-semibold text-foreground dark:text-foreground">
                               {src.title}
                             </div>
                             {src.author && (
-                              <div className="text-[10px] text-slate-500">Oleh: {src.author}</div>
+                              <div className="text-[10px] text-muted-foreground">Oleh: {src.author}</div>
                             )}
                             {src.url && (
                               <a
@@ -834,7 +873,7 @@ export function KnowledgeBaseApp() {
                               </a>
                             )}
                             {src.excerpt && (
-                              <p className="text-[10px] text-slate-500 italic border-l-2 border-slate-300 pl-1.5 mt-1">
+                              <p className="text-[10px] text-muted-foreground italic border-l-2 border-border pl-1.5 mt-1">
                                 &ldquo;{src.excerpt}&rdquo;
                               </p>
                             )}
@@ -845,9 +884,9 @@ export function KnowledgeBaseApp() {
                   </div>
 
                   {/* Relations (§6 Relasi Bermakna) */}
-                  <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-4 shadow-2xs">
+                  <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-4 shadow-2xs">
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+                      <h3 className="text-xs font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
                         <Share2 className="size-3.5 text-purple-500" />
                         Relasi Antar-Artikel
                       </h3>
@@ -862,11 +901,11 @@ export function KnowledgeBaseApp() {
                     <div className="space-y-3">
                       {/* Outbound */}
                       <div>
-                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">
                           Mengarah ke Artikel Lain
                         </div>
                         {outboundRelations.length === 0 ? (
-                          <p className="text-[11px] text-slate-400 italic">Tidak ada relasi keluar.</p>
+                          <p className="text-[11px] text-muted-foreground italic">Tidak ada relasi keluar.</p>
                         ) : (
                           <div className="space-y-1.5">
                             {outboundRelations.map((r) => {
@@ -880,13 +919,13 @@ export function KnowledgeBaseApp() {
                                     <span className="text-[10px] font-bold text-purple-700 uppercase mr-1.5">
                                       [{r.type}]
                                     </span>
-                                    <span className="font-medium text-slate-800 dark:text-zinc-200">
+                                    <span className="font-medium text-foreground dark:text-foreground">
                                       {target?.title || "Artikel tidak ditemukan"}
                                     </span>
                                   </div>
                                   <button
                                     onClick={() => deleteRelation(r.id)}
-                                    className="text-slate-400 hover:text-rose-600"
+                                    className="text-muted-foreground hover:text-rose-600"
                                   >
                                     <Trash2 className="size-3" />
                                   </button>
@@ -899,11 +938,11 @@ export function KnowledgeBaseApp() {
 
                       {/* Inbound (Backlink otomatis) */}
                       <div>
-                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">
                           Dirujuk oleh (Backlinks)
                         </div>
                         {inboundRelations.length === 0 ? (
-                          <p className="text-[11px] text-slate-400 italic">Belum ada artikel yang merujuk.</p>
+                          <p className="text-[11px] text-muted-foreground italic">Belum ada artikel yang merujuk.</p>
                         ) : (
                           <div className="space-y-1.5">
                             {inboundRelations.map((r) => {
@@ -912,11 +951,11 @@ export function KnowledgeBaseApp() {
                                 <div
                                   key={r.id}
                                   onClick={() => setSelectedArticleId(r.fromArticleId)}
-                                  className="p-2 rounded-lg bg-slate-50 dark:bg-zinc-800 border border-slate-100 dark:border-zinc-700 text-xs cursor-pointer hover:bg-slate-100"
+                                  className="p-2 rounded-lg bg-muted/40 dark:bg-card border border-border dark:border-border text-xs cursor-pointer hover:bg-muted"
                                 >
-                                  <span className="text-[10px] text-slate-400">Dirujuk sebagai </span>
+                                  <span className="text-[10px] text-muted-foreground">Dirujuk sebagai </span>
                                   <span className="font-bold text-purple-600">[{r.type}]</span>
-                                  <div className="font-semibold text-slate-800 dark:text-zinc-200 mt-0.5">
+                                  <div className="font-semibold text-foreground dark:text-foreground mt-0.5">
                                     {source?.title}
                                   </div>
                                 </div>
@@ -929,22 +968,22 @@ export function KnowledgeBaseApp() {
                   </div>
 
                   {/* Revisions (§7 Riwayat Versi) */}
-                  <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-4 shadow-2xs">
-                    <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5 mb-2">
-                      <History className="size-3.5 text-slate-500" />
+                  <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-4 shadow-2xs">
+                    <h3 className="text-xs font-bold text-foreground dark:text-foreground flex items-center gap-1.5 mb-2">
+                      <History className="size-3.5 text-muted-foreground" />
                       Riwayat Revisi ({articleRevisions.length})
                     </h3>
                     <div className="space-y-2 max-h-40 overflow-y-auto">
                       {articleRevisions.map((rev) => (
                         <div
                           key={rev.id}
-                          className="text-[11px] p-2 rounded-lg border border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/40"
+                          className="text-[11px] p-2 rounded-lg border border-border dark:border-border bg-muted/40/50 dark:bg-card/40"
                         >
-                          <div className="flex items-center justify-between text-[10px] text-slate-400">
+                          <div className="flex items-center justify-between text-[10px] text-muted-foreground">
                             <span>{rev.editedBy}</span>
                             <span>{new Date(rev.editedAt).toLocaleDateString()}</span>
                           </div>
-                          <div className="font-medium text-slate-700 dark:text-zinc-300 mt-0.5">
+                          <div className="font-medium text-foreground dark:text-foreground mt-0.5">
                             {rev.changeSummary || "Perubahan konten"}
                           </div>
                         </div>
@@ -955,7 +994,7 @@ export function KnowledgeBaseApp() {
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center text-slate-400 text-xs">
+            <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground text-xs">
               Pilih artikel dari daftar atau buat artikel baru.
             </div>
           )}
@@ -965,14 +1004,14 @@ export function KnowledgeBaseApp() {
       {/* Modal: Create/Edit Article */}
       {isArticleModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-2xl overflow-hidden shadow-xl flex flex-col max-h-[90vh]">
-            <div className="p-4 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-2xl overflow-hidden shadow-xl flex flex-col max-h-[90vh]">
+            <div className="p-4 border-b border-border dark:border-border flex items-center justify-between">
+              <h3 className="text-sm font-bold text-foreground dark:text-foreground">
                 {editingArticleId ? "Edit Artikel" : "Buat Artikel Baru"}
               </h3>
               <button
                 onClick={() => setIsArticleModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-muted-foreground hover:text-muted-foreground"
               >
                 <X className="size-4" />
               </button>
@@ -986,7 +1025,7 @@ export function KnowledgeBaseApp() {
                   value={articleForm.title}
                   onChange={(e) => setArticleForm({ ...articleForm, title: e.target.value })}
                   placeholder="Mis. Prinsip Dasar Vector Embeddings..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
 
@@ -996,7 +1035,7 @@ export function KnowledgeBaseApp() {
                   <select
                     value={articleForm.categoryId}
                     onChange={(e) => setArticleForm({ ...articleForm, categoryId: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                   >
                     <option value="">(Tanpa Kategori)</option>
                     {categories.map((c) => (
@@ -1016,7 +1055,7 @@ export function KnowledgeBaseApp() {
                         reviewStatus: e.target.value as ReviewStatus,
                       })
                     }
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                   >
                     <option value="draft">Draft (Dalam Penyusunan)</option>
                     <option value="reviewed">Reviewed (Telah Ditinjau)</option>
@@ -1033,7 +1072,7 @@ export function KnowledgeBaseApp() {
                   value={articleForm.summary}
                   onChange={(e) => setArticleForm({ ...articleForm, summary: e.target.value })}
                   placeholder="Intisari satu paragraf untuk pratinjau..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
 
@@ -1044,7 +1083,7 @@ export function KnowledgeBaseApp() {
                   value={articleForm.content}
                   onChange={(e) => setArticleForm({ ...articleForm, content: e.target.value })}
                   placeholder="Isi artikel terstruktur..."
-                  className="w-full font-mono text-xs px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 leading-relaxed"
+                  className="w-full font-mono text-xs px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card leading-relaxed"
                 />
               </div>
 
@@ -1055,15 +1094,15 @@ export function KnowledgeBaseApp() {
                   value={articleForm.tags}
                   onChange={(e) => setArticleForm({ ...articleForm, tags: e.target.value })}
                   placeholder="RAG, AI, Embedding"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
             </div>
 
-            <div className="p-4 border-t border-slate-200 dark:border-zinc-800 flex justify-end gap-2">
+            <div className="p-4 border-t border-border dark:border-border flex justify-end gap-2">
               <button
                 onClick={() => setIsArticleModalOpen(false)}
-                className="px-4 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 text-xs font-medium"
+                className="px-4 py-1.5 rounded-lg border border-border dark:border-border text-xs font-medium"
               >
                 Batal
               </button>
@@ -1081,8 +1120,8 @@ export function KnowledgeBaseApp() {
       {/* Modal: Add Source */}
       {isSourceModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-5 space-y-4">
+            <h3 className="text-sm font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
               <Link2 className="size-4 text-blue-500" />
               Tambah Sumber Kredibel
             </h3>
@@ -1094,7 +1133,7 @@ export function KnowledgeBaseApp() {
                   value={sourceForm.title}
                   onChange={(e) => setSourceForm({ ...sourceForm, title: e.target.value })}
                   placeholder="Mis. arXiv Paper / Official Specs..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -1105,7 +1144,7 @@ export function KnowledgeBaseApp() {
                     value={sourceForm.author}
                     onChange={(e) => setSourceForm({ ...sourceForm, author: e.target.value })}
                     placeholder="Meta AI"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                   />
                 </div>
                 <div>
@@ -1118,7 +1157,7 @@ export function KnowledgeBaseApp() {
                         reliability: e.target.value as SourceReliability,
                       })
                     }
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                   >
                     <option value="high">High (Peer-reviewed/Resmi)</option>
                     <option value="medium">Medium (Artikel Teknis)</option>
@@ -1133,7 +1172,7 @@ export function KnowledgeBaseApp() {
                   value={sourceForm.url}
                   onChange={(e) => setSourceForm({ ...sourceForm, url: e.target.value })}
                   placeholder="https://..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                 />
               </div>
               <div>
@@ -1143,14 +1182,14 @@ export function KnowledgeBaseApp() {
                   value={sourceForm.excerpt}
                   onChange={(e) => setSourceForm({ ...sourceForm, excerpt: e.target.value })}
                   placeholder="Kutipan penting yang mendasari klaim artikel..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsSourceModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -1168,8 +1207,8 @@ export function KnowledgeBaseApp() {
       {/* Modal: Add Relation */}
       {isRelationModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-5 space-y-4">
+            <h3 className="text-sm font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
               <Share2 className="size-4 text-purple-500" />
               Hubungkan Relasi Bermakna
             </h3>
@@ -1179,7 +1218,7 @@ export function KnowledgeBaseApp() {
                 <select
                   value={relationForm.toArticleId}
                   onChange={(e) => setRelationForm({ ...relationForm, toArticleId: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                 >
                   <option value="">-- Pilih Artikel Terhubung --</option>
                   {articles
@@ -1202,7 +1241,7 @@ export function KnowledgeBaseApp() {
                       type: e.target.value as RelationType,
                     })
                   }
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                 >
                   <option value="prerequisite">prerequisite (harus dipahami dulu)</option>
                   <option value="related">related (terkait secara umum)</option>
@@ -1220,7 +1259,7 @@ export function KnowledgeBaseApp() {
                   value={relationForm.note}
                   onChange={(e) => setRelationForm({ ...relationForm, note: e.target.value })}
                   placeholder="Mis. Wajib membaca ini sebelum praktik hybrid search..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                 />
               </div>
             </div>
@@ -1228,7 +1267,7 @@ export function KnowledgeBaseApp() {
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsRelationModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -1246,8 +1285,8 @@ export function KnowledgeBaseApp() {
       {/* Modal: Category Management */}
       {isCategoryModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-5 space-y-4">
+            <h3 className="text-sm font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
               <FolderTree className="size-4 text-blue-500" />
               Kelola Kategori Hierarkis
             </h3>
@@ -1259,7 +1298,7 @@ export function KnowledgeBaseApp() {
                   value={newCatName}
                   onChange={(e) => setNewCatName(e.target.value)}
                   placeholder="Mis. Machine Learning..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                 />
               </div>
               <div>
@@ -1267,7 +1306,7 @@ export function KnowledgeBaseApp() {
                 <select
                   value={newCatParent}
                   onChange={(e) => setNewCatParent(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                 >
                   <option value="">(Sebagai Kategori Utama)</option>
                   {categories
@@ -1286,14 +1325,14 @@ export function KnowledgeBaseApp() {
                   value={newCatDesc}
                   onChange={(e) => setNewCatDesc(e.target.value)}
                   placeholder="Fokus bahasan kategori..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsCategoryModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -1311,36 +1350,36 @@ export function KnowledgeBaseApp() {
       {/* Modal: Promote from Note (#12) */}
       {isPromoteModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-lg p-5 space-y-4 max-h-[85vh] flex flex-col">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-lg p-5 space-y-4 max-h-[85vh] flex flex-col">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+                <h3 className="text-sm font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
                   <Sparkles className="size-4 text-indigo-500" />
                   Promote dari Notes (#12)
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Naikkan catatan cepat yang sudah matang menjadi Artikel terstruktur Knowledge Base.
                 </p>
               </div>
               <button onClick={() => setIsPromoteModalOpen(false)}>
-                <X className="size-4 text-slate-400" />
+                <X className="size-4 text-muted-foreground" />
               </button>
             </div>
 
             <div className="flex-1 overflow-y-auto space-y-2 text-xs">
               {availableNotesToPromote.length === 0 ? (
-                <div className="p-8 text-center text-slate-400">
+                <div className="p-8 text-center text-muted-foreground">
                   Belum ada catatan yang tersimpan di Notes (#12).
                 </div>
               ) : (
                 availableNotesToPromote.map((n: any) => (
                   <div
                     key={n.id}
-                    className="p-3 rounded-xl border border-slate-200 dark:border-zinc-800 hover:border-indigo-300 flex items-center justify-between gap-3 bg-slate-50/50 dark:bg-zinc-800/40"
+                    className="p-3 rounded-xl border border-border dark:border-border hover:border-indigo-300 flex items-center justify-between gap-3 bg-muted/40/50 dark:bg-card/40"
                   >
                     <div>
-                      <h4 className="font-bold text-slate-900 dark:text-zinc-100">{n.title}</h4>
-                      <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                      <h4 className="font-bold text-foreground dark:text-foreground">{n.title}</h4>
+                      <p className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5">
                         {n.content || "(Catatan kosong)"}
                       </p>
                     </div>
@@ -1365,23 +1404,23 @@ export function KnowledgeBaseApp() {
       {/* Modal: Statistics (§12) */}
       {isStatsModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-lg p-6 space-y-5">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-lg p-6 space-y-5">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-foreground dark:text-foreground flex items-center gap-2">
                 <BarChart3 className="size-4 text-blue-500" />
                 Statistik & Metrik Knowledge Base (§12)
               </h3>
               <button onClick={() => setIsStatsModalOpen(false)}>
-                <X className="size-4 text-slate-400" />
+                <X className="size-4 text-muted-foreground" />
               </button>
             </div>
 
             <div className="grid grid-cols-3 gap-3">
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-center">
-                <div className="text-lg font-bold text-slate-900 dark:text-zinc-100">
+              <div className="p-3 rounded-xl bg-muted/40 dark:bg-card border border-border dark:border-border text-center">
+                <div className="text-lg font-bold text-foreground dark:text-foreground">
                   {stats.total}
                 </div>
-                <div className="text-[10px] text-slate-400 uppercase font-semibold">Total Artikel</div>
+                <div className="text-[10px] text-muted-foreground uppercase font-semibold">Total Artikel</div>
               </div>
               <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 text-center">
                 <div className="text-lg font-bold text-emerald-700 dark:text-emerald-300">
@@ -1398,19 +1437,19 @@ export function KnowledgeBaseApp() {
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-zinc-800">
-                <span className="text-slate-500">Rata-rata Sumber per Artikel:</span>
-                <span className="font-bold text-slate-900 dark:text-zinc-100">{stats.avgSources} Sumber</span>
+              <div className="flex justify-between py-1.5 border-b border-border dark:border-border">
+                <span className="text-muted-foreground">Rata-rata Sumber per Artikel:</span>
+                <span className="font-bold text-foreground dark:text-foreground">{stats.avgSources} Sumber</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-zinc-800">
-                <span className="text-slate-500">Artikel Paling Banyak Dirujuk (Hub):</span>
-                <span className="font-bold text-slate-900 dark:text-zinc-100 text-right">
+              <div className="flex justify-between py-1.5 border-b border-border dark:border-border">
+                <span className="text-muted-foreground">Artikel Paling Banyak Dirujuk (Hub):</span>
+                <span className="font-bold text-foreground dark:text-foreground text-right">
                   {stats.mostRefArticle?.title || "Belum ada relasi"} ({stats.maxRefs}x)
                 </span>
               </div>
               <div className="flex justify-between py-1.5">
-                <span className="text-slate-500">Interval Pengingat Kesegaran (Freshness):</span>
-                <span className="font-bold text-slate-900 dark:text-zinc-100">
+                <span className="text-muted-foreground">Interval Pengingat Kesegaran (Freshness):</span>
+                <span className="font-bold text-foreground dark:text-foreground">
                   {data.reviewReminderIntervalDays} Hari (6 Bulan)
                 </span>
               </div>
@@ -1419,7 +1458,7 @@ export function KnowledgeBaseApp() {
             <div className="flex justify-end">
               <button
                 onClick={() => setIsStatsModalOpen(false)}
-                className="px-4 py-1.5 rounded-lg bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-xs font-semibold"
+                className="px-4 py-1.5 rounded-lg bg-foreground dark:bg-muted text-background dark:text-foreground text-xs font-semibold"
               >
                 Tutup
               </button>

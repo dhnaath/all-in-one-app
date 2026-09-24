@@ -42,7 +42,7 @@ export function NewAccount({
           <input
             type="text"
             placeholder="Nama"
-            className="flex-1 bg-[#2a2a2a] border border-transparent rounded-xl px-4 py-4 text-foreground placeholder-gray-500 focus:outline-none focus:border-gray-600"
+            className="flex-1 bg-[#2a2a2a] border border-transparent rounded-xl px-4 py-4 text-foreground placeholder-muted-foreground focus:outline-none focus:border-border"
           />
           <button className="w-14 h-14 bg-[#4a72ff] rounded-xl flex items-center justify-center text-foreground text-2xl shrink-0 shadow-lg">
             🏦
@@ -51,7 +51,7 @@ export function NewAccount({
 
         <div>
           <label className="text-sm text-muted-foreground mb-2 block px-1">Mata uang</label>
-          <select className="w-full bg-[#2a2a2a] text-foreground rounded-xl px-4 py-4 appearance-none outline-none focus:ring-1 ring-gray-600">
+          <select className="w-full bg-[#2a2a2a] text-foreground rounded-xl px-4 py-4 appearance-none outline-none focus:ring-1 ring-ring">
             <option>Rp Rupiah Indonesia</option>
           </select>
         </div>
@@ -65,7 +65,7 @@ export function NewAccount({
             <input
               type="text"
               defaultValue="0"
-              className="w-full bg-[#2a2a2a] text-foreground rounded-xl pl-12 pr-28 py-4 outline-none focus:ring-1 ring-gray-600 text-lg"
+              className="w-full bg-[#2a2a2a] text-foreground rounded-xl pl-12 pr-28 py-4 outline-none focus:ring-1 ring-ring text-lg"
             />
             <div className="absolute right-3 top-1/2 -translate-y-1/2 bg-[#1a3a2d] text-[#4caf50] px-3 py-1.5 rounded-lg text-xs font-medium">
               Tersedia
@@ -83,7 +83,7 @@ export function NewAccount({
               <input
                 type="text"
                 defaultValue="0"
-                className="w-full bg-[#2a2a2a] text-foreground rounded-xl pl-12 pr-4 py-4 outline-none focus:ring-1 ring-gray-600 text-lg"
+                className="w-full bg-[#2a2a2a] text-foreground rounded-xl pl-12 pr-4 py-4 outline-none focus:ring-1 ring-ring text-lg"
               />
             </div>
           </div>

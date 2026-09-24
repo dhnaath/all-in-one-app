@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useFormStore } from "./store";
 import { FieldType, FormStatus, RuleOperator, RuleAction } from "./types";
+import { useShellSections } from "@/app/shell-sections";
 
 type ViewTab = "builder" | "preview" | "responses" | "failed" | "mappings" | "analytics";
 
@@ -146,6 +147,15 @@ export function FormsApp() {
     };
   }, [forms, responses, failedResponses]);
 
+  useShellSections([
+    { id: "builder", label: "Form Designer", icon: Sliders, active: activeTab === "builder", onSelect: () => setActiveTab("builder") },
+    { id: "preview", label: "Live Responder View", icon: Eye, active: activeTab === "preview", onSelect: () => setActiveTab("preview") },
+    { id: "responses", label: `Responses (${currentResponses.length})`, icon: FileText, active: activeTab === "responses", onSelect: () => setActiveTab("responses") },
+    { id: "mappings", label: "Action Mappings", icon: Split, active: activeTab === "mappings", onSelect: () => setActiveTab("mappings") },
+    { id: "failed", label: `Failed Queue (${failedResponses.length})`, icon: AlertTriangle, active: activeTab === "failed", onSelect: () => setActiveTab("failed") },
+    { id: "analytics", label: "Analytics", icon: BarChart3, active: activeTab === "analytics", onSelect: () => setActiveTab("analytics") },
+  ]);
+
   const handleCreateForm = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newFormTitle.trim()) return;
@@ -178,15 +188,15 @@ export function FormsApp() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 text-slate-100">
+    <div className="flex flex-col h-full bg-background text-foreground">
       {/* Top Header Bar */}
-      <div className="border-b border-slate-800 bg-slate-900/70 backdrop-blur px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="border-b border-border bg-background/70 backdrop-blur px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 text-xs font-semibold rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
               #22 Forms
             </span>
-            <span className="text-xs text-slate-400">Structured Data Collection • Conditional Logic & ActionMapping Pipeline</span>
+            <span className="text-xs text-muted-foreground">Structured Data Collection • Conditional Logic & ActionMapping Pipeline</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white mt-1 flex items-center gap-3">
             Forms Builder & Pipeline
@@ -194,7 +204,7 @@ export function FormsApp() {
               <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                 currentForm.status === "published"
                   ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                  : "bg-slate-700 text-slate-300"
+                  : "bg-card text-foreground"
               }`}>
                 {currentForm.status.toUpperCase()}
               </span>
@@ -203,11 +213,11 @@ export function FormsApp() {
         </div>
 
         {/* View Tabs */}
-        <div className="flex items-center gap-1.5 bg-slate-800/80 p-1 rounded-lg border border-slate-700/60 text-sm">
+        <div className="flex items-center gap-1.5 bg-card/80 p-1 rounded-lg border border-border/60 text-sm">
           <button
             onClick={() => setActiveTab("builder")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "builder" ? "bg-amber-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "builder" ? "bg-amber-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Form Designer
@@ -215,7 +225,7 @@ export function FormsApp() {
           <button
             onClick={() => setActiveTab("preview")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "preview" ? "bg-amber-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "preview" ? "bg-amber-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Live Responder View
@@ -223,7 +233,7 @@ export function FormsApp() {
           <button
             onClick={() => setActiveTab("responses")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "responses" ? "bg-amber-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "responses" ? "bg-amber-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Responses ({currentResponses.length})
@@ -231,7 +241,7 @@ export function FormsApp() {
           <button
             onClick={() => setActiveTab("mappings")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "mappings" ? "bg-amber-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "mappings" ? "bg-amber-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Action Mappings
@@ -239,7 +249,7 @@ export function FormsApp() {
           <button
             onClick={() => setActiveTab("failed")}
             className={`px-3 py-1.5 rounded-md font-medium transition flex items-center gap-1.5 ${
-              activeTab === "failed" ? "bg-rose-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "failed" ? "bg-rose-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             <AlertTriangle className="w-3.5 h-3.5" />
@@ -248,7 +258,7 @@ export function FormsApp() {
           <button
             onClick={() => setActiveTab("analytics")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "analytics" ? "bg-amber-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "analytics" ? "bg-amber-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Analytics
@@ -272,14 +282,14 @@ export function FormsApp() {
             {/* Left Column: Form Header & Fields */}
             <div className="lg:col-span-7 space-y-6">
               {/* Form Metadata Box */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+              <div className="bg-background border border-border rounded-xl p-5 shadow-sm space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-400 font-semibold uppercase">Form:</span>
+                    <span className="text-xs text-muted-foreground font-semibold uppercase">Form:</span>
                     <select
                       value={currentForm.id}
                       onChange={(e) => setSelectedFormId(e.target.value)}
-                      className="bg-slate-800 border border-slate-700 text-xs rounded-lg px-2.5 py-1 text-white font-semibold"
+                      className="bg-foreground border border-border text-xs rounded-lg px-2.5 py-1 text-background font-semibold"
                     >
                       {forms.map((f) => (
                         <option key={f.id} value={f.id}>{f.title}</option>
@@ -290,7 +300,7 @@ export function FormsApp() {
                   <select
                     value={currentForm.status}
                     onChange={(e) => updateForm(currentForm.id, { status: e.target.value as FormStatus })}
-                    className="text-xs bg-slate-800 border border-slate-700 text-slate-300 rounded px-2 py-1 font-semibold"
+                    className="text-xs bg-card border border-border text-foreground rounded px-2 py-1 font-semibold"
                   >
                     <option value="draft">Draft</option>
                     <option value="published">Published</option>
@@ -302,7 +312,7 @@ export function FormsApp() {
                   type="text"
                   value={currentForm.title}
                   onChange={(e) => updateForm(currentForm.id, { title: e.target.value })}
-                  className="w-full bg-slate-800/80 border border-slate-700/80 rounded-lg px-3 py-2 text-base font-bold text-white"
+                  className="w-full bg-foreground/80 border border-border/80 rounded-lg px-3 py-2 text-base font-bold text-background"
                 />
 
                 <textarea
@@ -310,22 +320,22 @@ export function FormsApp() {
                   value={currentForm.description || ""}
                   onChange={(e) => updateForm(currentForm.id, { description: e.target.value })}
                   placeholder="Instructions or questionnaire purpose..."
-                  className="w-full bg-slate-800/50 border border-slate-700/60 rounded-lg p-2.5 text-xs text-slate-300"
+                  className="w-full bg-card/50 border border-border/60 rounded-lg p-2.5 text-xs text-foreground"
                 />
               </div>
 
               {/* Questions / Fields List */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+              <div className="bg-background border border-border rounded-xl p-5 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-white text-base">Fields & Questions ({currentForm.fields.length})</h3>
-                  <span className="text-xs text-slate-400">Order is preserved during submission</span>
+                  <span className="text-xs text-muted-foreground">Order is preserved during submission</span>
                 </div>
 
                 <div className="space-y-3">
                   {currentForm.fields.map((field, idx) => (
                     <div
                       key={field.id}
-                      className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60 space-y-3 text-xs"
+                      className="p-4 rounded-xl bg-card/50 border border-border/60 space-y-3 text-xs"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -336,12 +346,12 @@ export function FormsApp() {
                           )}
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">
+                          <span className="text-[10px] px-2 py-0.5 rounded bg-card text-foreground font-mono">
                             {FIELD_TYPE_LABELS[field.type]}
                           </span>
                           <button
                             onClick={() => removeField(currentForm.id, field.id)}
-                            className="text-slate-500 hover:text-rose-400 p-1"
+                            className="text-muted-foreground hover:text-rose-400 p-1"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -351,7 +361,7 @@ export function FormsApp() {
                       {field.options && field.options.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 pt-1">
                           {field.options.map((opt, i) => (
-                            <span key={i} className="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-400 border border-slate-800">
+                            <span key={i} className="text-[10px] bg-background px-2 py-0.5 rounded text-muted-foreground border border-border">
                               {opt}
                             </span>
                           ))}
@@ -362,21 +372,21 @@ export function FormsApp() {
                 </div>
 
                 {/* Add Field Box */}
-                <div className="pt-4 border-t border-slate-800 space-y-3">
-                  <h4 className="font-bold text-xs uppercase text-slate-400">Add New Field</h4>
+                <div className="pt-4 border-t border-border space-y-3">
+                  <h4 className="font-bold text-xs uppercase text-muted-foreground">Add New Field</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                     <input
                       type="text"
                       placeholder="Question / Input Label..."
                       value={newFieldLabel}
                       onChange={(e) => setNewFieldLabel(e.target.value)}
-                      className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                      className="bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                     />
 
                     <select
                       value={newFieldType}
                       onChange={(e) => setNewFieldType(e.target.value as FieldType)}
-                      className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                      className="bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                     >
                       {Object.entries(FIELD_TYPE_LABELS).map(([k, v]) => (
                         <option key={k} value={k}>{v}</option>
@@ -390,17 +400,17 @@ export function FormsApp() {
                       placeholder="Comma-separated options (e.g. Red, Green, Blue)..."
                       value={newFieldOptions}
                       onChange={(e) => setNewFieldOptions(e.target.value)}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
+                      className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-xs text-background"
                     />
                   )}
 
                   <div className="flex items-center justify-between">
-                    <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                    <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
                       <input
                         type="checkbox"
                         checked={newFieldRequired}
                         onChange={(e) => setNewFieldRequired(e.target.checked)}
-                        className="rounded bg-slate-800 border-slate-700"
+                        className="rounded bg-card border-border"
                       />
                       Is Required Field
                     </label>
@@ -433,18 +443,18 @@ export function FormsApp() {
             {/* Right Column: Conditional Rules & ActionMapping Setup */}
             <div className="lg:col-span-5 space-y-6">
               {/* Conditional Rules Box */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+              <div className="bg-background border border-border rounded-xl p-5 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-white text-base flex items-center gap-2">
                     <Split className="w-5 h-5 text-amber-400" />
                     Conditional Logic Rules
                   </h3>
-                  <span className="text-xs text-slate-400">{currentForm.conditionalRules.length} rules</span>
+                  <span className="text-xs text-muted-foreground">{currentForm.conditionalRules.length} rules</span>
                 </div>
 
                 <div className="space-y-2">
                   {currentForm.conditionalRules.length === 0 ? (
-                    <div className="text-center py-4 text-slate-500 text-xs italic">
+                    <div className="text-center py-4 text-muted-foreground text-xs italic">
                       No conditional logic defined. Questions display unconditionally.
                     </div>
                   ) : (
@@ -452,19 +462,19 @@ export function FormsApp() {
                       const targetFld = currentForm.fields.find((f) => f.id === rule.targetFieldId);
                       const depFld = currentForm.fields.find((f) => f.id === rule.condition.dependsOnFieldId);
                       return (
-                        <div key={rule.id} className="p-3 bg-slate-800/60 border border-slate-700/60 rounded-xl text-xs space-y-1">
+                        <div key={rule.id} className="p-3 bg-card/60 border border-border/60 rounded-xl text-xs space-y-1">
                           <div className="flex items-center justify-between">
                             <span className="font-bold text-amber-300">
                               IF [{depFld?.label}] {rule.condition.operator} "{rule.condition.value}"
                             </span>
                             <button
                               onClick={() => removeConditionalRule(currentForm.id, rule.id)}
-                              className="text-slate-500 hover:text-rose-400"
+                              className="text-muted-foreground hover:text-rose-400"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
-                          <div className="text-slate-300 text-[11px]">
+                          <div className="text-foreground text-[11px]">
                             → THEN {rule.action.toUpperCase()} field [{targetFld?.label}]
                           </div>
                         </div>
@@ -475,15 +485,15 @@ export function FormsApp() {
 
                 {/* Add Rule Form */}
                 {currentForm.fields.length >= 2 && (
-                  <div className="pt-3 border-t border-slate-800 space-y-2 text-xs">
-                    <span className="text-[11px] font-bold text-slate-400 uppercase">Create Conditional Rule</span>
+                  <div className="pt-3 border-t border-border space-y-2 text-xs">
+                    <span className="text-[11px] font-bold text-muted-foreground uppercase">Create Conditional Rule</span>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-slate-400 text-[11px]">IF</span>
+                        <span className="text-muted-foreground text-[11px]">IF</span>
                         <select
                           value={ruleDependsField || currentForm.fields[0]?.id}
                           onChange={(e) => setRuleDependsField(e.target.value)}
-                          className="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white text-xs flex-1"
+                          className="bg-foreground border border-border rounded px-2 py-1 text-background text-xs flex-1"
                         >
                           {currentForm.fields.map((f) => (
                             <option key={f.id} value={f.id}>{f.label}</option>
@@ -492,7 +502,7 @@ export function FormsApp() {
                         <select
                           value={ruleOperator}
                           onChange={(e) => setRuleOperator(e.target.value as RuleOperator)}
-                          className="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white text-xs"
+                          className="bg-foreground border border-border rounded px-2 py-1 text-background text-xs"
                         >
                           <option value="equals">equals</option>
                           <option value="not_equals">not equals</option>
@@ -505,15 +515,15 @@ export function FormsApp() {
                         placeholder="Condition target value (e.g. Yes or Critical)..."
                         value={ruleValue}
                         onChange={(e) => setRuleValue(e.target.value)}
-                        className="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1 text-xs text-white"
+                        className="w-full bg-foreground border border-border rounded px-2.5 py-1 text-xs text-background"
                       />
 
                       <div className="flex items-center gap-2">
-                        <span className="text-slate-400 text-[11px]">THEN</span>
+                        <span className="text-muted-foreground text-[11px]">THEN</span>
                         <select
                           value={ruleAction}
                           onChange={(e) => setRuleAction(e.target.value as RuleAction)}
-                          className="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white text-xs"
+                          className="bg-foreground border border-border rounded px-2 py-1 text-background text-xs"
                         >
                           <option value="show">Show</option>
                           <option value="hide">Hide</option>
@@ -522,7 +532,7 @@ export function FormsApp() {
                         <select
                           value={ruleTargetField || currentForm.fields[1]?.id}
                           onChange={(e) => setRuleTargetField(e.target.value)}
-                          className="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white text-xs flex-1"
+                          className="bg-foreground border border-border rounded px-2 py-1 text-background text-xs flex-1"
                         >
                           {currentForm.fields.map((f) => (
                             <option key={f.id} value={f.id}>{f.label}</option>
@@ -558,14 +568,14 @@ export function FormsApp() {
         {/* TAB 2: LIVE PREVIEW & RESPONDER VIEW */}
         {activeTab === "preview" && currentForm && (
           <div className="max-w-2xl mx-auto space-y-6">
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-xl space-y-6">
-              <div className="border-b border-slate-800 pb-4">
+            <div className="bg-background border border-border rounded-2xl p-8 shadow-xl space-y-6">
+              <div className="border-b border-border pb-4">
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
                   Interactive Live Form
                 </span>
                 <h2 className="text-2xl font-bold text-white mt-2">{currentForm.title}</h2>
                 {currentForm.description && (
-                  <p className="text-xs text-slate-300 mt-2 leading-relaxed">{currentForm.description}</p>
+                  <p className="text-xs text-foreground mt-2 leading-relaxed">{currentForm.description}</p>
                 )}
               </div>
 
@@ -581,7 +591,7 @@ export function FormsApp() {
                   .filter((f) => visibleFieldIds.has(f.id))
                   .map((field) => (
                     <div key={field.id} className="space-y-1.5">
-                      <label className="block text-slate-200 font-semibold">
+                      <label className="block text-foreground font-semibold">
                         {field.label}
                         {field.isRequired && <span className="text-rose-400 ml-1">*</span>}
                       </label>
@@ -593,7 +603,7 @@ export function FormsApp() {
                           placeholder={field.placeholder || "Your answer..."}
                           value={previewAnswers[field.id] || ""}
                           onChange={(e) => setPreviewAnswers({ ...previewAnswers, [field.id]: e.target.value })}
-                          className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                          className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                         />
                       )}
 
@@ -604,7 +614,7 @@ export function FormsApp() {
                           placeholder={field.placeholder || "Enter details..."}
                           value={previewAnswers[field.id] || ""}
                           onChange={(e) => setPreviewAnswers({ ...previewAnswers, [field.id]: e.target.value })}
-                          className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white"
+                          className="w-full bg-foreground border border-border rounded-lg p-2.5 text-background"
                         />
                       )}
 
@@ -613,7 +623,7 @@ export function FormsApp() {
                           required={field.isRequired}
                           value={previewAnswers[field.id] || ""}
                           onChange={(e) => setPreviewAnswers({ ...previewAnswers, [field.id]: e.target.value })}
-                          className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                          className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                         >
                           <option value="">Select option...</option>
                           {field.options.map((opt, i) => (
@@ -625,14 +635,14 @@ export function FormsApp() {
                       {field.type === "single_choice" && field.options && (
                         <div className="space-y-1.5 pt-1">
                           {field.options.map((opt, i) => (
-                            <label key={i} className="flex items-center gap-2 text-slate-300 cursor-pointer">
+                            <label key={i} className="flex items-center gap-2 text-foreground cursor-pointer">
                               <input
                                 type="radio"
                                 name={field.id}
                                 value={opt}
                                 checked={previewAnswers[field.id] === opt}
                                 onChange={(e) => setPreviewAnswers({ ...previewAnswers, [field.id]: e.target.value })}
-                                className="text-amber-600 bg-slate-800 border-slate-700"
+                                className="text-amber-600 bg-card border-border"
                               />
                               {opt}
                             </label>
@@ -650,7 +660,7 @@ export function FormsApp() {
                               className={`w-9 h-9 rounded-lg font-bold border transition ${
                                 previewAnswers[field.id] === star
                                   ? "bg-amber-600 border-amber-500 text-white"
-                                  : "bg-slate-800 border-slate-700 text-slate-400 hover:text-white"
+                                  : "bg-foreground border-border text-muted-foreground hover:text-background"
                               }`}
                             >
                               ★ {star}
@@ -675,24 +685,24 @@ export function FormsApp() {
 
         {/* TAB 3: RESPONSES LIST */}
         {activeTab === "responses" && currentForm && (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+          <div className="bg-background border border-border rounded-xl p-6 space-y-4">
             <h2 className="text-lg font-bold text-white">Responses Recorded ({currentResponses.length})</h2>
 
             <div className="space-y-3">
               {currentResponses.length === 0 ? (
-                <div className="text-center py-8 text-slate-500 text-xs italic">
+                <div className="text-center py-8 text-muted-foreground text-xs italic">
                   No responses received yet for this form.
                 </div>
               ) : (
                 currentResponses.map((resp) => (
                   <div
                     key={resp.id}
-                    className="p-4 rounded-xl bg-slate-800/40 border border-slate-700/60 space-y-3 text-xs"
+                    className="p-4 rounded-xl bg-card/40 border border-border/60 space-y-3 text-xs"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-white">{resp.submittedBy}</span>
-                        <span className="text-slate-400">• {new Date(resp.submittedAt).toLocaleString()}</span>
+                        <span className="text-muted-foreground">• {new Date(resp.submittedAt).toLocaleString()}</span>
                       </div>
                       <span className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
                         resp.status === "processed"
@@ -703,13 +713,13 @@ export function FormsApp() {
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2 border-t border-slate-800/80">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2 border-t border-border/80">
                       {resp.answers.map((ans, i) => {
                         const fld = currentForm.fields.find((f) => f.id === ans.fieldId);
                         return (
-                          <div key={i} className="bg-slate-900/60 p-2 rounded border border-slate-800">
-                            <span className="text-[11px] text-slate-400 block font-medium">{fld?.label || ans.fieldId}:</span>
-                            <span className="text-slate-200 font-semibold">{String(ans.value)}</span>
+                          <div key={i} className="bg-background/60 p-2 rounded border border-border">
+                            <span className="text-[11px] text-muted-foreground block font-medium">{fld?.label || ans.fieldId}:</span>
+                            <span className="text-foreground font-semibold">{String(ans.value)}</span>
                           </div>
                         );
                       })}
@@ -723,16 +733,16 @@ export function FormsApp() {
 
         {/* TAB 4: ACTION MAPPINGS */}
         {activeTab === "mappings" && currentForm && (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+          <div className="bg-background border border-border rounded-xl p-6 space-y-4">
             <h2 className="text-lg font-bold text-white">ActionMapping Integration Pipeline</h2>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               When respondents submit forms, ActionMapping forwards structured answers into downstream applications
               (e.g. creating a Task in Task Manager #01 or a Record in Database #15) without duplicate data entry.
             </p>
 
             <div className="space-y-4">
               {currentForm.actionMappings.map((am) => (
-                <div key={am.id} className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                <div key={am.id} className="p-4 bg-background border border-border rounded-xl space-y-3 text-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-amber-400 text-sm">
                       Target: {am.targetApp} → {am.targetEntityType}
@@ -741,11 +751,11 @@ export function FormsApp() {
                   </div>
 
                   <div className="space-y-1">
-                    <span className="text-[11px] text-slate-400 font-medium">Mapped Fields:</span>
+                    <span className="text-[11px] text-muted-foreground font-medium">Mapped Fields:</span>
                     {am.fieldMappings.map((fm, idx) => {
                       const fld = currentForm.fields.find((f) => f.id === fm.sourceFieldId);
                       return (
-                        <div key={idx} className="flex items-center gap-2 bg-slate-900 p-2 rounded text-slate-300 font-mono text-[11px]">
+                        <div key={idx} className="flex items-center gap-2 bg-background p-2 rounded text-foreground font-mono text-[11px]">
                           <span>[{fld?.label || fm.sourceFieldId}]</span>
                           <span className="text-amber-400">➔</span>
                           <span className="text-cyan-300">{fm.targetField}</span>
@@ -761,12 +771,12 @@ export function FormsApp() {
 
         {/* TAB 5: FAILED RESPONSES (RETRY QUEUE) */}
         {activeTab === "failed" && (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+          <div className="bg-background border border-border rounded-xl p-6 space-y-4">
             <div className="flex items-center gap-3">
               <AlertTriangle className="w-6 h-6 text-rose-400" />
               <div>
                 <h2 className="text-lg font-bold text-white">Failed Response Retry Queue</h2>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Submissions that encountered downstream validation errors during ActionMapping execution.
                 </p>
               </div>
@@ -802,32 +812,32 @@ export function FormsApp() {
         {activeTab === "analytics" && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Total Forms</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Total Forms</span>
                 <div className="text-2xl font-bold text-white mt-1">{stats.totalForms}</div>
                 <div className="text-[11px] text-amber-400 mt-1">Structured collectors</div>
               </div>
 
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Total Responses</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Total Responses</span>
                 <div className="text-2xl font-bold text-amber-400 mt-1">{stats.totalResponses}</div>
-                <div className="text-[11px] text-slate-400 mt-1">{stats.processedResponses} forwarded</div>
+                <div className="text-[11px] text-muted-foreground mt-1">{stats.processedResponses} forwarded</div>
               </div>
 
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Completion Rate</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Completion Rate</span>
                 <div className="text-2xl font-bold text-emerald-400 mt-1">{stats.completionRate}%</div>
-                <div className="text-[11px] text-slate-400 mt-1">Processed successfully</div>
+                <div className="text-[11px] text-muted-foreground mt-1">Processed successfully</div>
               </div>
 
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Failed Mapping Rate</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Failed Mapping Rate</span>
                 <div className="text-2xl font-bold text-rose-400 mt-1">{stats.failedMappingRate}%</div>
-                <div className="text-[11px] text-slate-400 mt-1">{stats.failedCount} in error queue</div>
+                <div className="text-[11px] text-muted-foreground mt-1">{stats.failedCount} in error queue</div>
               </div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-xs text-slate-400 space-y-2">
+            <div className="bg-background border border-border rounded-xl p-6 text-xs text-muted-foreground space-y-2">
               <h3 className="font-bold text-white text-base">Data Entry Layer Architecture</h3>
               <p className="leading-relaxed">
                 Forms (#22) is not a persistent data store. It serves as the front door for human input,
@@ -842,38 +852,38 @@ export function FormsApp() {
       {/* New Form Modal */}
       {isNewFormModalOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
+          <div className="bg-background border border-border rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
             <h3 className="text-lg font-bold text-white">Create New Data Collection Form</h3>
 
             <form onSubmit={handleCreateForm} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-300 mb-1 font-medium">Form Title</label>
+                <label className="block text-foreground mb-1 font-medium">Form Title</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Vendor Registration Questionnaire"
                   value={newFormTitle}
                   onChange={(e) => setNewFormTitle(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                  className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1 font-medium">Instructions</label>
+                <label className="block text-foreground mb-1 font-medium">Instructions</label>
                 <textarea
                   rows={3}
                   placeholder="Explain what data is needed and how it will be processed..."
                   value={newFormDesc}
                   onChange={(e) => setNewFormDesc(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white"
+                  className="w-full bg-foreground border border-border rounded-lg p-2.5 text-background"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-4 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-4 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsNewFormModalOpen(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold"
+                  className="px-4 py-2 rounded-lg bg-card hover:bg-card text-foreground font-semibold"
                 >
                   Cancel
                 </button>

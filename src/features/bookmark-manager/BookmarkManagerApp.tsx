@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useMemo } from "react";
 import {
   Bookmark as BookmarkIcon,
@@ -235,7 +236,7 @@ export function BookmarkManagerApp() {
   const getSubfolders = (parentId: string) => folders.filter((f) => f.parentFolderId === parentId);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       {/* Toast Notification */}
       {notification && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-indigo-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-indigo-400 animate-in fade-in slide-in-from-bottom-4">
@@ -245,7 +246,7 @@ export function BookmarkManagerApp() {
       )}
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+      <ShellHeader>
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-gradient-to-tr from-sky-500 to-indigo-600 rounded-xl shadow-lg shadow-indigo-500/20">
@@ -258,7 +259,7 @@ export function BookmarkManagerApp() {
                   App #26
                 </span>
               </div>
-              <p className="text-xs md:text-sm text-slate-400">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Penyimpanan tautan terstruktur dengan folder hierarkis, tag, deteksi link rot, dan koleksi kurasi.
               </p>
             </div>
@@ -269,7 +270,7 @@ export function BookmarkManagerApp() {
           <button
             onClick={handleRunCheckAll}
             disabled={isCheckingLinks}
-            className="flex items-center gap-2 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-sm font-medium transition disabled:opacity-50"
+            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition disabled:opacity-50"
             title="Pindai apakah seluruh tautan masih aktif"
           >
             <RefreshCw className={`w-4 h-4 ${isCheckingLinks ? "animate-spin text-sky-400" : ""}`} />
@@ -278,7 +279,7 @@ export function BookmarkManagerApp() {
 
           <button
             onClick={() => setIsNewFolderOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition"
           >
             <FolderPlus className="w-4 h-4 text-amber-400" />
             <span>Folder Baru</span>
@@ -292,14 +293,14 @@ export function BookmarkManagerApp() {
             <span>Simpan Bookmark</span>
           </button>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-slate-800/80 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
         <button
           onClick={() => setActiveTab("all")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "all" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "all" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -309,7 +310,7 @@ export function BookmarkManagerApp() {
         <button
           onClick={() => setActiveTab("folder")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "folder" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "folder" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <FolderTree className="w-4 h-4" />
@@ -319,7 +320,7 @@ export function BookmarkManagerApp() {
         <button
           onClick={() => setActiveTab("tag")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "tag" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "tag" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <TagIcon className="w-4 h-4" />
@@ -329,7 +330,7 @@ export function BookmarkManagerApp() {
         <button
           onClick={() => setActiveTab("unread")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "unread" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "unread" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <BookOpen className="w-4 h-4 text-emerald-400" />
@@ -339,7 +340,7 @@ export function BookmarkManagerApp() {
         <button
           onClick={() => setActiveTab("broken")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "broken" ? "bg-rose-600 text-white shadow-sm" : "text-slate-400 hover:text-rose-400 hover:bg-slate-800"
+            activeTab === "broken" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-rose-400 hover:bg-foreground"
           }`}
         >
           <AlertTriangle className="w-4 h-4 text-rose-400" />
@@ -349,7 +350,7 @@ export function BookmarkManagerApp() {
         <button
           onClick={() => setActiveTab("collections")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "collections" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "collections" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Share2 className="w-4 h-4 text-purple-400" />
@@ -359,7 +360,7 @@ export function BookmarkManagerApp() {
         <button
           onClick={() => setActiveTab("stats")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "stats" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <BarChart2 className="w-4 h-4 text-sky-400" />
@@ -373,54 +374,54 @@ export function BookmarkManagerApp() {
         {activeTab === "stats" && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-5 bg-slate-800/80 border border-slate-700/80 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Bookmark</div>
+              <div className="p-5 bg-card/80 border border-border/80 rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Total Bookmark</div>
                 <div className="text-3xl font-extrabold text-white mt-1">{stats.total}</div>
-                <div className="text-xs text-slate-500 mt-1">Tersimpan di sistem</div>
+                <div className="text-xs text-muted-foreground mt-1">Tersimpan di sistem</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700/80 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Unread Ratio</div>
+              <div className="p-5 bg-card/80 border border-border/80 rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Unread Ratio</div>
                 <div className="text-3xl font-extrabold text-emerald-400 mt-1">{stats.unreadRatio}%</div>
-                <div className="text-xs text-slate-500 mt-1">{stats.unread} artikel belum dibaca</div>
+                <div className="text-xs text-muted-foreground mt-1">{stats.unread} artikel belum dibaca</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700/80 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Broken Links</div>
+              <div className="p-5 bg-card/80 border border-border/80 rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Broken Links</div>
                 <div className="text-3xl font-extrabold text-rose-400 mt-1">{stats.broken}</div>
-                <div className="text-xs text-slate-500 mt-1">Perlu ditinjau / dihapus</div>
+                <div className="text-xs text-muted-foreground mt-1">Perlu ditinjau / dihapus</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700/80 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Folder Aktif</div>
+              <div className="p-5 bg-card/80 border border-border/80 rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Folder Aktif</div>
                 <div className="text-3xl font-extrabold text-sky-400 mt-1">{folders.length}</div>
-                <div className="text-xs text-slate-500 mt-1">Struktur hierarkis</div>
+                <div className="text-xs text-muted-foreground mt-1">Struktur hierarkis</div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-                <h3 className="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+              <div className="p-5 bg-card/60 border border-border rounded-xl">
+                <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <TagIcon className="w-4 h-4 text-indigo-400" />
                   Most Used Tags
                 </h3>
                 <div className="space-y-2">
                   {stats.sortedTags.map(([tag, count]) => (
-                    <div key={tag} className="flex items-center justify-between text-sm py-1 border-b border-slate-700/40">
-                      <span className="text-slate-300">#{tag}</span>
-                      <span className="px-2 py-0.5 bg-slate-700 text-slate-300 rounded text-xs font-medium">{count} tautan</span>
+                    <div key={tag} className="flex items-center justify-between text-sm py-1 border-b border-border/40">
+                      <span className="text-foreground">#{tag}</span>
+                      <span className="px-2 py-0.5 bg-card text-foreground rounded text-xs font-medium">{count} tautan</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-                <h3 className="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+              <div className="p-5 bg-card/60 border border-border rounded-xl">
+                <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <FolderIcon className="w-4 h-4 text-amber-400" />
                   Bookmarks by Folder
                 </h3>
                 <div className="space-y-2">
                   {folders.map((f) => (
-                    <div key={f.id} className="flex items-center justify-between text-sm py-1 border-b border-slate-700/40">
-                      <span className="text-slate-300">{f.name}</span>
-                      <span className="px-2 py-0.5 bg-slate-700 text-slate-300 rounded text-xs font-medium">
+                    <div key={f.id} className="flex items-center justify-between text-sm py-1 border-b border-border/40">
+                      <span className="text-foreground">{f.name}</span>
+                      <span className="px-2 py-0.5 bg-card text-foreground rounded text-xs font-medium">
                         {stats.folderCounts[f.id] || 0} tautan
                       </span>
                     </div>
@@ -437,7 +438,7 @@ export function BookmarkManagerApp() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-bold text-white">Collections Tematik</h2>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Kumpulan tautan kurasi yang dapat dibagikan kepada tim atau publik tanpa memaparkan struktur folder pribadi.
                 </p>
               </div>
@@ -459,33 +460,33 @@ export function BookmarkManagerApp() {
               {collections.map((col) => {
                 const bms = bookmarks.filter((b) => col.bookmarkIds.includes(b.id));
                 return (
-                  <div key={col.id} className="p-5 bg-slate-800/70 border border-slate-700 rounded-xl flex flex-col justify-between">
+                  <div key={col.id} className="p-5 bg-card/70 border border-border rounded-xl flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between gap-2">
                         <h3 className="font-bold text-base text-white">{col.name}</h3>
-                        <span className={`px-2 py-0.5 text-[10px] rounded-full font-medium ${col.isPublic ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-slate-700 text-slate-400"}`}>
+                        <span className={`px-2 py-0.5 text-[10px] rounded-full font-medium ${col.isPublic ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-card text-muted-foreground"}`}>
                           {col.isPublic ? "Public" : "Private"}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 mt-2 line-clamp-2">{col.description}</p>
+                      <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{col.description}</p>
 
                       <div className="mt-4 space-y-2">
-                        <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                        <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
                           Tautan ({bms.length})
                         </div>
                         {bms.slice(0, 3).map((b) => (
-                          <div key={b.id} className="flex items-center gap-2 text-xs text-slate-300 truncate">
+                          <div key={b.id} className="flex items-center gap-2 text-xs text-foreground truncate">
                             <ArrowUpRight className="w-3 h-3 text-sky-400 shrink-0" />
                             <span className="truncate">{b.title}</span>
                           </div>
                         ))}
                         {bms.length > 3 && (
-                          <div className="text-[11px] text-slate-500">+{bms.length - 3} tautan lainnya</div>
+                          <div className="text-[11px] text-muted-foreground">+{bms.length - 3} tautan lainnya</div>
                         )}
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between mt-5 pt-3 border-t border-slate-700/60">
+                    <div className="flex items-center justify-between mt-5 pt-3 border-t border-border/60">
                       <button
                         onClick={() => {
                           const url = `${window.location.origin}/bookmarks?collection=${col.id}`;
@@ -519,9 +520,9 @@ export function BookmarkManagerApp() {
             {(activeTab === "folder" || activeTab === "tag" || activeTab === "all") && (
               <div className="lg:col-span-1 space-y-4">
                 {/* Folder Tree Filter */}
-                <div className="p-4 bg-slate-800/60 border border-slate-700/70 rounded-xl space-y-3">
+                <div className="p-4 bg-card/60 border border-border/70 rounded-xl space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
                       <FolderIcon className="w-3.5 h-3.5 text-amber-400" />
                       Folder
                     </span>
@@ -541,11 +542,11 @@ export function BookmarkManagerApp() {
                       className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between text-xs transition ${
                         selectedFolderId === null
                           ? "bg-indigo-600/30 text-indigo-300 font-semibold border border-indigo-500/40"
-                          : "text-slate-300 hover:bg-slate-700/60"
+                          : "text-foreground hover:bg-card/60"
                       }`}
                     >
                       <span>Semua Folder</span>
-                      <span className="text-[10px] text-slate-500">{bookmarks.length}</span>
+                      <span className="text-[10px] text-muted-foreground">{bookmarks.length}</span>
                     </button>
 
                     {rootFolders.map((rf) => {
@@ -560,19 +561,19 @@ export function BookmarkManagerApp() {
                             className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between text-xs transition ${
                               isSelected
                                 ? "bg-indigo-600/30 text-indigo-300 font-semibold border border-indigo-500/40"
-                                : "text-slate-300 hover:bg-slate-700/60"
+                                : "text-foreground hover:bg-card/60"
                             }`}
                           >
                             <span className="truncate flex items-center gap-1.5">
                               <FolderIcon className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                               {rf.name}
                             </span>
-                            <span className="text-[10px] text-slate-500">{count}</span>
+                            <span className="text-[10px] text-muted-foreground">{count}</span>
                           </button>
 
                           {/* Subfolders */}
                           {subs.length > 0 && (
-                            <div className="pl-4 space-y-1 border-l border-slate-700/50 ml-2">
+                            <div className="pl-4 space-y-1 border-l border-border/50 ml-2">
                               {subs.map((sf) => {
                                 const subCount = bookmarks.filter((b) => b.folderId === sf.id).length;
                                 const isSubSelected = selectedFolderId === sf.id;
@@ -583,14 +584,14 @@ export function BookmarkManagerApp() {
                                     className={`w-full text-left px-2 py-1 rounded flex items-center justify-between text-[11px] transition ${
                                       isSubSelected
                                         ? "bg-indigo-600/30 text-indigo-300 font-semibold"
-                                        : "text-slate-400 hover:bg-slate-700/40 hover:text-slate-200"
+                                        : "text-muted-foreground hover:bg-card/40 hover:text-foreground"
                                     }`}
                                   >
                                     <span className="truncate flex items-center gap-1">
-                                      <ChevronRight className="w-3 h-3 text-slate-500" />
+                                      <ChevronRight className="w-3 h-3 text-muted-foreground" />
                                       {sf.name}
                                     </span>
-                                    <span className="text-[10px] text-slate-500">{subCount}</span>
+                                    <span className="text-[10px] text-muted-foreground">{subCount}</span>
                                   </button>
                                 );
                               })}
@@ -603,9 +604,9 @@ export function BookmarkManagerApp() {
                 </div>
 
                 {/* Tags Filter */}
-                <div className="p-4 bg-slate-800/60 border border-slate-700/70 rounded-xl space-y-3">
+                <div className="p-4 bg-card/60 border border-border/70 rounded-xl space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
                       <TagIcon className="w-3.5 h-3.5 text-indigo-400" />
                       Tags
                     </span>
@@ -629,7 +630,7 @@ export function BookmarkManagerApp() {
                           className={`px-2 py-1 rounded-md text-xs transition border flex items-center gap-1 ${
                             isSel
                               ? "bg-indigo-600 text-white border-indigo-400 font-semibold"
-                              : "bg-slate-700/50 hover:bg-slate-700 text-slate-300 border-slate-600/50"
+                              : "bg-card/50 hover:bg-card text-foreground border-border/50"
                           }`}
                         >
                           <span>#{t.name}</span>
@@ -644,20 +645,20 @@ export function BookmarkManagerApp() {
             {/* Bookmarks Main List Area */}
             <div className={`${activeTab === "unread" || activeTab === "broken" ? "lg:col-span-4" : "lg:col-span-3"} space-y-4`}>
               {/* Search & Sort Bar */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700/80 rounded-xl">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-card/80 border border-border/80 rounded-xl">
                 <div className="relative w-full sm:w-80">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                  <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
                   <input
                     type="text"
                     placeholder="Cari judul, URL, tag..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                    className="w-full pl-9 pr-3 py-1.5 bg-background border border-border rounded-lg text-xs md:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-indigo-500"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery("")}
-                      className="absolute right-2.5 top-2.5 text-slate-500 hover:text-slate-300"
+                      className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -668,7 +669,7 @@ export function BookmarkManagerApp() {
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                    className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                   >
                     <option value="all">Semua Status</option>
                     <option value="active">Active</option>
@@ -680,7 +681,7 @@ export function BookmarkManagerApp() {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as any)}
-                    className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                    className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                   >
                     <option value="date-desc">Terbaru</option>
                     <option value="date-asc">Terlama</option>
@@ -713,10 +714,10 @@ export function BookmarkManagerApp() {
 
               {/* Bookmark Cards */}
               {filteredBookmarks.length === 0 ? (
-                <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
-                  <BookmarkIcon className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                  <h3 className="text-base font-semibold text-slate-300">Tidak ada bookmark ditemukan</h3>
-                  <p className="text-xs text-slate-500 mt-1">Coba sesuaikan kata kunci pencarian atau filter.</p>
+                <div className="p-12 text-center bg-card/40 border border-border/60 rounded-xl">
+                  <BookmarkIcon className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                  <h3 className="text-base font-semibold text-foreground">Tidak ada bookmark ditemukan</h3>
+                  <p className="text-xs text-muted-foreground mt-1">Coba sesuaikan kata kunci pencarian atau filter.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -725,12 +726,12 @@ export function BookmarkManagerApp() {
                     return (
                       <div
                         key={bm.id}
-                        className={`p-4 bg-slate-800/80 hover:bg-slate-800 border rounded-xl transition duration-150 flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+                        className={`p-4 bg-card/80 hover:bg-card border rounded-xl transition duration-150 flex flex-col md:flex-row md:items-center justify-between gap-4 ${
                           bm.status === "broken"
                             ? "border-rose-500/40 bg-rose-950/20"
                             : bm.status === "unread"
                             ? "border-emerald-500/30"
-                            : "border-slate-700/70"
+                            : "border-border/70"
                         }`}
                       >
                         <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -741,11 +742,11 @@ export function BookmarkManagerApp() {
                               onError={(e) => {
                                 (e.target as HTMLElement).style.display = "none";
                               }}
-                              className="w-5 h-5 rounded mt-0.5 shrink-0 bg-slate-700 p-0.5"
+                              className="w-5 h-5 rounded mt-0.5 shrink-0 bg-card p-0.5"
                             />
                           ) : (
-                            <div className="w-5 h-5 rounded bg-slate-700 flex items-center justify-center shrink-0 mt-0.5">
-                              <ExternalLink className="w-3 h-3 text-slate-400" />
+                            <div className="w-5 h-5 rounded bg-card flex items-center justify-center shrink-0 mt-0.5">
+                              <ExternalLink className="w-3 h-3 text-muted-foreground" />
                             </div>
                           )}
 
@@ -755,10 +756,10 @@ export function BookmarkManagerApp() {
                                 href={bm.url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="font-semibold text-sm text-slate-100 hover:text-sky-400 transition flex items-center gap-1 truncate"
+                                className="font-semibold text-sm text-foreground hover:text-sky-400 transition flex items-center gap-1 truncate"
                               >
                                 <span>{bm.title}</span>
-                                <ExternalLink className="w-3 h-3 text-slate-500 shrink-0 inline" />
+                                <ExternalLink className="w-3 h-3 text-muted-foreground shrink-0 inline" />
                               </a>
 
                               {/* Status Badge */}
@@ -773,20 +774,20 @@ export function BookmarkManagerApp() {
                                 </span>
                               )}
                               {bm.status === "archived" && (
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-700 text-slate-400">
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-card text-muted-foreground">
                                   Archived
                                 </span>
                               )}
                             </div>
 
-                            <div className="text-xs text-slate-400 truncate">{bm.url}</div>
+                            <div className="text-xs text-muted-foreground truncate">{bm.url}</div>
 
                             {bm.description && (
-                              <p className="text-xs text-slate-300 line-clamp-1">{bm.description}</p>
+                              <p className="text-xs text-foreground line-clamp-1">{bm.description}</p>
                             )}
 
                             {/* Meta & Tags */}
-                            <div className="flex items-center gap-3 pt-1 text-[11px] text-slate-400 flex-wrap">
+                            <div className="flex items-center gap-3 pt-1 text-[11px] text-muted-foreground flex-wrap">
                               {folder && (
                                 <span className="flex items-center gap-1 text-amber-400/90 font-medium">
                                   <FolderIcon className="w-3 h-3" />
@@ -798,14 +799,14 @@ export function BookmarkManagerApp() {
                                 <span
                                   key={t}
                                   onClick={() => setSelectedTag(t)}
-                                  className="text-slate-400 hover:text-indigo-400 cursor-pointer"
+                                  className="text-muted-foreground hover:text-indigo-400 cursor-pointer"
                                 >
                                   #{t}
                                 </span>
                               ))}
 
                               {bm.lastCheckedAt && (
-                                <span className="text-slate-500">
+                                <span className="text-muted-foreground">
                                   Checked: {new Date(bm.lastCheckedAt).toLocaleDateString()}
                                 </span>
                               )}
@@ -818,7 +819,7 @@ export function BookmarkManagerApp() {
                           {/* Recheck link */}
                           <button
                             onClick={() => handleRunCheckSingle(bm.id)}
-                            className="p-1.5 text-slate-400 hover:text-sky-400 hover:bg-slate-700/60 rounded"
+                            className="p-1.5 text-muted-foreground hover:text-sky-400 hover:bg-card/60 rounded"
                             title="Validasi Ulang Tautan"
                           >
                             <RefreshCw className="w-3.5 h-3.5" />
@@ -842,7 +843,7 @@ export function BookmarkManagerApp() {
                                 setBookmarkStatus(bm.id, "unread");
                                 showToast("Ditandai belum dibaca (Unread).");
                               }}
-                              className="p-1.5 text-slate-400 hover:text-emerald-400 hover:bg-slate-700/60 rounded"
+                              className="p-1.5 text-muted-foreground hover:text-emerald-400 hover:bg-card/60 rounded"
                               title="Tandai Belum Dibaca"
                             >
                               <BookOpen className="w-3.5 h-3.5" />
@@ -854,7 +855,7 @@ export function BookmarkManagerApp() {
                             onClick={() => {
                               showToast(`Tautan "${bm.title}" diteruskan ke Web Clipper (#17) untuk ekstraksi konten permanen.`);
                             }}
-                            className="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-slate-700/60 rounded"
+                            className="p-1.5 text-muted-foreground hover:text-indigo-400 hover:bg-card/60 rounded"
                             title="Promote to Web Clip (#17)"
                           >
                             <Scissors className="w-3.5 h-3.5" />
@@ -863,7 +864,7 @@ export function BookmarkManagerApp() {
                           {/* Edit */}
                           <button
                             onClick={() => handleOpenEditModal(bm)}
-                            className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-slate-700/60 rounded"
+                            className="p-1.5 text-muted-foreground hover:text-amber-400 hover:bg-card/60 rounded"
                             title="Edit Bookmark"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -875,7 +876,7 @@ export function BookmarkManagerApp() {
                               deleteBookmark(bm.id);
                               showToast("Bookmark dihapus.");
                             }}
-                            className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-700/60 rounded"
+                            className="p-1.5 text-muted-foreground hover:text-rose-400 hover:bg-card/60 rounded"
                             title="Hapus Bookmark"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -894,14 +895,14 @@ export function BookmarkManagerApp() {
       {/* MODAL: ADD / EDIT BOOKMARK */}
       {isAddBookmarkOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-lg text-white">
                 {editingBookmark ? "Edit Bookmark" : "Tambah Bookmark Baru"}
               </h3>
               <button
                 onClick={() => setIsAddBookmarkOpen(false)}
-                className="text-slate-400 hover:text-slate-200"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -909,7 +910,7 @@ export function BookmarkManagerApp() {
 
             <form onSubmit={handleSaveBookmark} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   URL Tujuan <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -918,12 +919,12 @@ export function BookmarkManagerApp() {
                   placeholder="https://example.com/article"
                   value={formUrl}
                   onChange={(e) => setFormUrl(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Judul Bookmark
                 </label>
                 <input
@@ -931,12 +932,12 @@ export function BookmarkManagerApp() {
                   placeholder="Judul halaman (opsional, default domain)"
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Catatan Singkat
                 </label>
                 <textarea
@@ -944,19 +945,19 @@ export function BookmarkManagerApp() {
                   placeholder="Deskripsi singkat konteks tautan..."
                   value={formDesc}
                   onChange={(e) => setFormDesc(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-foreground mb-1">
                     Folder
                   </label>
                   <select
                     value={formFolderId}
                     onChange={(e) => setFormFolderId(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                   >
                     <option value="">Tanpa Folder</option>
                     {folders.map((f) => (
@@ -968,13 +969,13 @@ export function BookmarkManagerApp() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-foreground mb-1">
                     Status Awal
                   </label>
                   <select
                     value={formStatus}
                     onChange={(e) => setFormStatus(e.target.value as any)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                   >
                     <option value="active">Active</option>
                     <option value="unread">Unread (Baca Nanti)</option>
@@ -985,7 +986,7 @@ export function BookmarkManagerApp() {
 
               {/* Tags Input */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Tag Klasifikasi
                 </label>
                 <div className="flex gap-2">
@@ -1000,12 +1001,12 @@ export function BookmarkManagerApp() {
                         handleAddTagToForm();
                       }
                     }}
-                    className="flex-1 px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                    className="flex-1 px-3 py-1.5 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                   />
                   <button
                     type="button"
                     onClick={handleAddTagToForm}
-                    className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-medium rounded-lg"
+                    className="px-3 py-1.5 bg-card hover:bg-muted-foreground/30 text-foreground text-xs font-medium rounded-lg"
                   >
                     Tambah
                   </button>
@@ -1031,11 +1032,11 @@ export function BookmarkManagerApp() {
                 )}
               </div>
 
-              <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2.5 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsAddBookmarkOpen(false)}
-                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-4 py-2 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>
@@ -1054,12 +1055,12 @@ export function BookmarkManagerApp() {
       {/* MODAL: CREATE NEW FOLDER */}
       {isNewFolderOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Buat Folder Baru</h3>
               <button
                 onClick={() => setIsNewFolderOpen(false)}
-                className="text-slate-400 hover:text-slate-200"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1067,7 +1068,7 @@ export function BookmarkManagerApp() {
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Nama Folder
                 </label>
                 <input
@@ -1075,18 +1076,18 @@ export function BookmarkManagerApp() {
                   placeholder="mis. Machine Learning"
                   value={newFolderName}
                   onChange={(e) => setNewFolderName(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Parent Folder (Opsional untuk Sub-folder)
                 </label>
                 <select
                   value={newFolderParentId}
                   onChange={(e) => setNewFolderParentId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                 >
                   <option value="">Folder Utama (Root)</option>
                   {rootFolders.map((rf) => (
@@ -1098,11 +1099,11 @@ export function BookmarkManagerApp() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+            <div className="flex justify-end gap-2 pt-3 border-t border-border">
               <button
                 type="button"
                 onClick={() => setIsNewFolderOpen(false)}
-                className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
               >
                 Batal
               </button>
@@ -1129,12 +1130,12 @@ export function BookmarkManagerApp() {
       {/* MODAL: CREATE COLLECTION */}
       {isCollectionModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Buat Collection Baru</h3>
               <button
                 onClick={() => setIsCollectionModalOpen(false)}
-                className="text-slate-400 hover:text-slate-200"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1142,7 +1143,7 @@ export function BookmarkManagerApp() {
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Nama Koleksi
                 </label>
                 <input
@@ -1150,12 +1151,12 @@ export function BookmarkManagerApp() {
                   placeholder="mis. Rekomendasi Bacaan Onboarding"
                   value={newCollectionName}
                   onChange={(e) => setNewCollectionName(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Deskripsi
                 </label>
                 <textarea
@@ -1163,19 +1164,19 @@ export function BookmarkManagerApp() {
                   placeholder="Keterangan singkat koleksi..."
                   value={newCollectionDesc}
                   onChange={(e) => setNewCollectionDesc(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Pilih Bookmark untuk Dimasukkan
                 </label>
-                <div className="max-h-40 overflow-y-auto space-y-1 p-2 bg-slate-800/80 border border-slate-700 rounded-lg">
+                <div className="max-h-40 overflow-y-auto space-y-1 p-2 bg-card/80 border border-border rounded-lg">
                   {bookmarks.map((b) => {
                     const isChecked = newCollectionBookmarks.includes(b.id);
                     return (
-                      <label key={b.id} className="flex items-center gap-2 text-xs text-slate-200 hover:bg-slate-700/50 p-1 rounded cursor-pointer">
+                      <label key={b.id} className="flex items-center gap-2 text-xs text-foreground hover:bg-card/50 p-1 rounded cursor-pointer">
                         <input
                           type="checkbox"
                           checked={isChecked}
@@ -1186,7 +1187,7 @@ export function BookmarkManagerApp() {
                               setNewCollectionBookmarks(newCollectionBookmarks.filter((id) => id !== b.id));
                             }
                           }}
-                          className="rounded border-slate-600 bg-slate-900 text-indigo-600"
+                          className="rounded border-border bg-background text-indigo-600"
                         />
                         <span className="truncate">{b.title}</span>
                       </label>
@@ -1196,11 +1197,11 @@ export function BookmarkManagerApp() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+            <div className="flex justify-end gap-2 pt-3 border-t border-border">
               <button
                 type="button"
                 onClick={() => setIsCollectionModalOpen(false)}
-                className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
               >
                 Batal
               </button>

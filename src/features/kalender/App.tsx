@@ -213,7 +213,7 @@ function MechanicalCalendar() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 flex items-center justify-center overflow-hidden w-full relative font-sans">
+    <div className="min-h-screen bg-background flex items-center justify-center overflow-hidden w-full relative font-sans">
       {/* --- AMBIENT BACKGROUND --- */}
       <AnimatedBackground theme="transparent" />
 
@@ -516,8 +516,8 @@ function MechanicalCalendar() {
               />
 
               {/* Hover Upload Overlay */}
-              <label className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center cursor-pointer backdrop-blur-md border border-white/20 rounded-[12px]">
-                <div className="bg-card/20 p-4 rounded-full mb-3 shadow-lg backdrop-blur-md border border-white/30">
+              <label className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center cursor-pointer backdrop-blur-md border border-border/20 rounded-[12px]">
+                <div className="bg-card/20 p-4 rounded-full mb-3 shadow-lg backdrop-blur-md border border-border/30">
                   <Camera size={32} className="text-white" />
                 </div>
                 <span className="text-white font-bold tracking-wide drop-shadow-md">

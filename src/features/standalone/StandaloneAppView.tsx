@@ -24,6 +24,7 @@ import {
   StandaloneAppConfig,
   StandaloneRecord,
 } from "./standaloneAppsData";
+import { useRouterState } from "@tanstack/react-router";
 
 interface StandaloneAppViewProps {
   appId: string;
@@ -61,6 +62,28 @@ export function StandaloneAppView({ appId }: StandaloneAppViewProps) {
 
   const [activeTab, setActiveTab] = React.useState<string>("all");
   const [searchQuery, setSearchQuery] = React.useState<string>("");
+
+  // Sync the active tab with the `?tab=` URL param so the shell's contextual
+  // sidebar can deep-link into a specific tab of this standalone app.
+  const searchStr = useRouterState({ select: (s) => s.location.searchStr });
+  React.useEffect(() => {
+    const param = new URLSearchParams(searchStr || "").get("tab");
+    if (param && param !== activeTab && config.tabs.some((t) => t.id === param)) {
+      setActiveTab(param);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchStr]);
+
+  const changeTab = (id: string) => {
+    setActiveTab(id);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", id);
+      window.history.replaceState(window.history.state, "", url.toString());
+    } catch {
+      // ignore
+    }
+  };
   const [selectedPriority, setSelectedPriority] = React.useState<string>("all");
   const [isAddModalOpen, setIsAddModalOpen] = React.useState<boolean>(false);
 
@@ -223,7 +246,7 @@ export function StandaloneAppView({ appId }: StandaloneAppViewProps) {
           {config.tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => changeTab(tab.id)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 activeTab === tab.id
                   ? "bg-background text-foreground shadow-sm"

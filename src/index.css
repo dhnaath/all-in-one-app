@@ -55,73 +55,73 @@
   font-family: Inter, sans-serif;
   font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
   --radius: 16px;
-  --background: #f0f0f0;
-  --foreground: #000000;
+  --background: #f6f7f9;
+  --foreground: #16181d;
   --card: #ffffff;
-  --card-foreground: #000000;
+  --card-foreground: #16181d;
   --popover: #ffffff;
-  --popover-foreground: #000000;
-  --primary: #000000;
+  --popover-foreground: #16181d;
+  --primary: #4f46e5;
   --primary-foreground: #ffffff;
-  --secondary: #e5e5e5;
-  --secondary-foreground: #000000;
-  --muted: #e5e5e5;
-  --muted-foreground: #525252;
-  --accent: #e5e5e5;
-  --accent-foreground: #000000;
+  --secondary: #eef0f4;
+  --secondary-foreground: #16181d;
+  --muted: #eef0f4;
+  --muted-foreground: #6b7280;
+  --accent: #eef2ff;
+  --accent-foreground: #4338ca;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #d4d4d4;
-  --input: #d4d4d4;
-  --ring: #000000;
-  --chart-1: #000000;
-  --chart-2: #525252;
-  --chart-3: #737373;
-  --chart-4: #a3a3a3;
-  --chart-5: #d4d4d4;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #4f46e5;
+  --chart-1: #4f46e5;
+  --chart-2: #7c3aed;
+  --chart-3: #06b6d4;
+  --chart-4: #f59e0b;
+  --chart-5: #10b981;
   --sidebar: #ffffff;
-  --sidebar-foreground: #000000;
-  --sidebar-primary: #000000;
+  --sidebar-foreground: #16181d;
+  --sidebar-primary: #4f46e5;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e5e5e5;
-  --sidebar-accent-foreground: #000000;
-  --sidebar-border: #d4d4d4;
-  --sidebar-ring: #000000;
+  --sidebar-accent: #eef2ff;
+  --sidebar-accent-foreground: #4338ca;
+  --sidebar-border: #eceef1;
+  --sidebar-ring: #4f46e5;
 }
 
 .dark {
-  --background: #101010;
-  --foreground: #ffffff;
-  --card: #18181b;
-  --card-foreground: #ffffff;
-  --popover: #18181b;
-  --popover-foreground: #ffffff;
-  --primary: #ffffff;
-  --primary-foreground: #000000;
-  --secondary: #27272a;
-  --secondary-foreground: #ffffff;
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-  --accent: #27272a;
-  --accent-foreground: #ffffff;
-  --destructive: #7f1d1d;
+  --background: #0a0a0b;
+  --foreground: #f4f4f5;
+  --card: #131316;
+  --card-foreground: #f4f4f5;
+  --popover: #16161a;
+  --popover-foreground: #f4f4f5;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --secondary: #1e1e24;
+  --secondary-foreground: #f4f4f5;
+  --muted: #1e1e24;
+  --muted-foreground: #9ca3af;
+  --accent: #1e1b4b;
+  --accent-foreground: #c7d2fe;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #ffffff;
-  --chart-1: #ffffff;
-  --chart-2: #a1a1aa;
-  --chart-3: #71717a;
-  --chart-4: #52525b;
-  --chart-5: #27272a;
-  --sidebar: #18181b;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #ffffff;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #27272a;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #27272a;
-  --sidebar-ring: #ffffff;
+  --border: #26262c;
+  --input: #26262c;
+  --ring: #6366f1;
+  --chart-1: #6366f1;
+  --chart-2: #a78bfa;
+  --chart-3: #22d3ee;
+  --chart-4: #fbbf24;
+  --chart-5: #34d399;
+  --sidebar: #0f0f12;
+  --sidebar-foreground: #f4f4f5;
+  --sidebar-primary: #6366f1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1a1a1f;
+  --sidebar-accent-foreground: #f4f4f5;
+  --sidebar-border: #1e1e24;
+  --sidebar-ring: #6366f1;
 }
 
 @supports (font-variation-settings: normal) {
@@ -226,4 +226,34 @@
   -webkit-filter: url(#glass-distortion);
   isolation: isolate;
   pointer-events: none;
+}
+
+/* ===== New design system helpers (additive) ===== */
+.glass {
+  background: color-mix(in srgb, var(--color-card) 72%, transparent);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+}
+
+.gradient-primary {
+  background-image: linear-gradient(135deg, #6366f1 0%, #8b5cf6 55%, #a855f7 100%);
+}
+.gradient-text {
+  background-image: linear-gradient(120deg, #6366f1, #a855f7 60%, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-muted-foreground) 30%, transparent);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--color-muted-foreground) 50%, transparent);
+  background-clip: content-box;
 }

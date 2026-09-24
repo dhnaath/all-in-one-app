@@ -67,7 +67,7 @@ export function EmiCalculatorView({ onBack }: { onBack: () => void }) {
 
         {/* Processing Fees */}
         <div className="flex gap-2 relative mt-4">
-          <fieldset className="flex-1 border border-border rounded-2xl px-4 py-2 bg-card focus-within:border-gray-500 pt-1.5">
+          <fieldset className="flex-1 border border-border rounded-2xl px-4 py-2 bg-card focus-within:border-border pt-1.5">
             <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
               Processing Fees
             </legend>
@@ -89,7 +89,7 @@ export function EmiCalculatorView({ onBack }: { onBack: () => void }) {
 
         {/* GST On Interest */}
         <div className="relative mt-2">
-          <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+          <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
             <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
               GST On Interest
             </legend>

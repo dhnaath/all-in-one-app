@@ -17,7 +17,7 @@ export function GovernanceView({ onBack }: { onBack: () => void }) {
       </div>
 
       <div ref={ref} onScroll={onScroll} className="flex-1 overflow-y-auto p-6 pb-20">
-        <div className="bg-gradient-to-br from-indigo-900/40 to-slate-900 border border-indigo-800/30 rounded-2xl p-6 mb-8 text-center text-foreground">
+        <div className="bg-gradient-to-br from-indigo-900/40 to-border border border-indigo-800/30 rounded-2xl p-6 mb-8 text-center text-foreground">
           <Users2 size={32} className="text-indigo-400 mx-auto mb-3" />
           <div className="text-lg font-bold tracking-tight mb-2">Konstitusi Keluarga</div>
           <p className="text-indigo-200/70 text-sm leading-relaxed max-w-xs mx-auto">

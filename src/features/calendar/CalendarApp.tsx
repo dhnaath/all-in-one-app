@@ -1,3 +1,5 @@
+import { ShellHeader } from "@/app/shell-header";
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState, useMemo } from "react";
 import {
   Calendar as CalendarIcon,
@@ -236,14 +238,14 @@ export function CalendarApp() {
   }, [currentDate]);
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-slate-50 text-slate-800">
+    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-muted/40 text-foreground">
       {/* LEFT SIDEBAR: Multi-Calendar & Availability */}
-      <aside className="w-72 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
+      <ShellSidebar>
         {/* Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <CalendarDays className="w-5 h-5 text-indigo-600" />
-            <h2 className="font-semibold text-slate-900 text-sm tracking-tight">Kalender & Waktu</h2>
+            <h2 className="font-semibold text-foreground text-sm tracking-tight">Kalender & Waktu</h2>
           </div>
           <button
             onClick={() => {
@@ -258,28 +260,28 @@ export function CalendarApp() {
         </div>
 
         {/* Mini Calendar Navigator */}
-        <div className="p-3 border-b border-slate-100">
-          <div className="flex items-center justify-between text-xs font-semibold text-slate-800 mb-2">
+        <div className="p-3 border-b border-border">
+          <div className="flex items-center justify-between text-xs font-semibold text-foreground mb-2">
             <span>
               {monthNames[month]} {year}
             </span>
             <div className="flex items-center gap-1">
               <button
                 onClick={handlePrev}
-                className="p-1 text-slate-400 hover:text-slate-800 rounded hover:bg-slate-100"
+                className="p-1 text-muted-foreground hover:text-foreground rounded hover:bg-muted"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={handleNext}
-                className="p-1 text-slate-400 hover:text-slate-800 rounded hover:bg-slate-100"
+                className="p-1 text-muted-foreground hover:text-foreground rounded hover:bg-muted"
               >
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-7 gap-1 text-center text-[10px] text-slate-400 font-medium mb-1">
+          <div className="grid grid-cols-7 gap-1 text-center text-[10px] text-muted-foreground font-medium mb-1">
             {dayNames.map((d) => (
               <span key={d}>{d}</span>
             ))}
@@ -299,8 +301,8 @@ export function CalendarApp() {
                       : cell.isToday
                       ? "border border-indigo-600 text-indigo-600 font-semibold"
                       : cell.isCurrentMonth
-                      ? "text-slate-700 hover:bg-slate-100"
-                      : "text-slate-300"
+                      ? "text-foreground hover:bg-muted"
+                      : "text-foreground"
                   }`}
                 >
                   {cell.date.getDate()}
@@ -311,13 +313,13 @@ export function CalendarApp() {
         </div>
 
         {/* Multi-Calendar Overlay Toggles (§4) */}
-        <div className="p-4 border-b border-slate-100 flex-1 overflow-y-auto space-y-4">
+        <div className="p-4 border-b border-border flex-1 overflow-y-auto space-y-4">
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-slate-700 tracking-tight">
+              <span className="text-xs font-semibold text-foreground tracking-tight">
                 Multi-Kalender (§4)
               </span>
-              <span className="text-[10px] text-slate-400">Overlay</span>
+              <span className="text-[10px] text-muted-foreground">Overlay</span>
             </div>
 
             <div className="space-y-2">
@@ -327,7 +329,7 @@ export function CalendarApp() {
                   <div
                     key={cal.id}
                     onClick={() => toggleCalendarVisibility(cal.id)}
-                    className="flex items-center justify-between text-xs py-1 px-1.5 rounded hover:bg-slate-50 cursor-pointer select-none transition-colors"
+                    className="flex items-center justify-between text-xs py-1 px-1.5 rounded hover:bg-muted/40 cursor-pointer select-none transition-colors"
                   >
                     <div className="flex items-center gap-2.5">
                       <div
@@ -337,14 +339,14 @@ export function CalendarApp() {
                           borderColor: cal.color,
                         }}
                       />
-                      <span className={`text-xs ${isShown ? "text-slate-800 font-medium" : "text-slate-400 line-through"}`}>
+                      <span className={`text-xs ${isShown ? "text-foreground font-medium" : "text-muted-foreground line-through"}`}>
                         {cal.name}
                       </span>
                     </div>
                     {isShown ? (
-                      <Eye className="w-3.5 h-3.5 text-slate-400" />
+                      <Eye className="w-3.5 h-3.5 text-muted-foreground" />
                     ) : (
-                      <EyeOff className="w-3.5 h-3.5 text-slate-300" />
+                      <EyeOff className="w-3.5 h-3.5 text-foreground" />
                     )}
                   </div>
                 );
@@ -365,42 +367,42 @@ export function CalendarApp() {
         </div>
 
         {/* Ecosystem Architecture Footnote (§0 & §14) */}
-        <div className="p-3 border-t border-slate-100 bg-slate-50/70 text-[11px] text-slate-500">
-          <p className="font-medium text-slate-700">Standalone App #02</p>
-          <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">
+        <div className="p-3 border-t border-border bg-muted/40/70 text-[11px] text-muted-foreground">
+          <p className="font-medium text-foreground">Standalone App #02</p>
+          <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">
             Source of truth untuk Event. Tugas & Milestone ditampilkan sebagai Linked Event terpadu.
           </p>
         </div>
-      </aside>
+      </ShellSidebar>
 
       {/* MAIN CALENDAR DISPLAY */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
         {/* Top Control Bar */}
-        <header className="p-4 border-b border-slate-200 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <ShellHeader>
           <div className="flex items-center gap-2">
             <button
               onClick={handleToday}
-              className="px-2.5 py-1 text-xs font-medium border border-slate-200 text-slate-700 rounded hover:bg-slate-50 transition-colors"
+              className="px-2.5 py-1 text-xs font-medium border border-border text-foreground rounded hover:bg-muted/40 transition-colors"
             >
               Hari Ini
             </button>
-            <div className="flex items-center border border-slate-200 rounded">
+            <div className="flex items-center border border-border rounded">
               <button
                 onClick={handlePrev}
-                className="p-1 hover:bg-slate-50 text-slate-600 rounded-l"
+                className="p-1 hover:bg-muted/40 text-muted-foreground rounded-l"
                 title="Sebelumnya"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={handleNext}
-                className="p-1 hover:bg-slate-50 text-slate-600 rounded-r"
+                className="p-1 hover:bg-muted/40 text-muted-foreground rounded-r"
                 title="Berikutnya"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight ml-2">
+            <h1 className="text-base font-bold text-foreground tracking-tight ml-2">
               {viewMode === "day" && currentDate.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
               {viewMode === "week" && `Minggu ${weekDays[0].getDate()} ${monthNames[weekDays[0].getMonth()]} - ${weekDays[6].getDate()} ${monthNames[weekDays[6].getMonth()]} ${year}`}
               {viewMode === "month" && `${monthNames[month]} ${year}`}
@@ -414,18 +416,18 @@ export function CalendarApp() {
           <div className="flex items-center gap-2 flex-wrap">
             {/* Search Input */}
             <div className="relative">
-              <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Cari event/peserta..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-40 md:w-52 pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:bg-white"
+                className="w-40 md:w-52 pl-8 pr-3 py-1.5 text-xs bg-muted/40 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:bg-card"
               />
             </div>
 
             {/* View Mode Segmented Controls (§9) */}
-            <div className="flex items-center border border-slate-200 rounded-md p-0.5 bg-slate-50 text-xs">
+            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
               {[
                 { id: "month", label: "Bulan" },
                 { id: "week", label: "Minggu" },
@@ -439,8 +441,8 @@ export function CalendarApp() {
                   onClick={() => setViewMode(v.id as CalendarViewMode)}
                   className={`px-2.5 py-1 rounded transition-colors ${
                     viewMode === v.id
-                      ? "bg-white text-slate-900 font-semibold shadow-xs"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {v.label}
@@ -460,11 +462,11 @@ export function CalendarApp() {
               Tambah Jadwal
             </button>
           </div>
-        </header>
+        </ShellHeader>
 
         {/* Quick Filter Bar (§10.2) */}
-        <div className="px-4 py-2 border-b border-slate-100 bg-slate-50/70 flex items-center gap-2 overflow-x-auto text-[11px] text-slate-600">
-          <span className="font-semibold text-slate-700 text-xs mr-1">Filter:</span>
+        <div className="px-4 py-2 border-b border-border bg-muted/40/70 flex items-center gap-2 overflow-x-auto text-[11px] text-muted-foreground">
+          <span className="font-semibold text-foreground text-xs mr-1">Filter:</span>
           {[
             { id: "all", label: "Semua" },
             { id: "today", label: "Hari Ini" },
@@ -478,8 +480,8 @@ export function CalendarApp() {
               onClick={() => setQuickFilter(f.id)}
               className={`px-2.5 py-0.5 rounded transition-colors ${
                 quickFilter === f.id
-                  ? "bg-slate-800 text-white font-medium"
-                  : "bg-white border border-slate-200 hover:bg-slate-100 text-slate-700"
+                  ? "bg-foreground text-background font-medium"
+                  : "bg-card border border-border hover:bg-muted text-foreground"
               }`}
             >
               {f.label}
@@ -491,14 +493,14 @@ export function CalendarApp() {
         {viewMode === "month" && (
           <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
             {/* Days Header */}
-            <div className="grid grid-cols-7 border-b border-slate-200 bg-slate-50/80 text-center py-2 text-xs font-semibold text-slate-600">
+            <div className="grid grid-cols-7 border-b border-border bg-muted/40/80 text-center py-2 text-xs font-semibold text-muted-foreground">
               {["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"].map((d) => (
                 <div key={d}>{d}</div>
               ))}
             </div>
 
             {/* Month Days Grid */}
-            <div className="flex-1 grid grid-cols-7 grid-rows-5 md:grid-rows-6 divide-x divide-y divide-slate-100 overflow-y-auto bg-slate-50/20">
+            <div className="flex-1 grid grid-cols-7 grid-rows-5 md:grid-rows-6 divide-x divide-y divide-border overflow-y-auto bg-muted/40/20">
               {monthGridDays.map((cell, idx) => {
                 const dayEvents = filteredEvents.filter((ev) => {
                   const evDateStr = ev.startAt.slice(0, 10);
@@ -512,7 +514,7 @@ export function CalendarApp() {
                       setNewEventDefaultDate(cell.dateKey);
                     }}
                     className={`min-h-[90px] p-1.5 transition-colors flex flex-col ${
-                      cell.isCurrentMonth ? "bg-white" : "bg-slate-50/50 text-slate-400"
+                      cell.isCurrentMonth ? "bg-card" : "bg-muted/40/50 text-muted-foreground"
                     } hover:bg-indigo-50/30`}
                   >
                     {/* Day number header */}
@@ -522,8 +524,8 @@ export function CalendarApp() {
                           cell.isToday
                             ? "bg-indigo-600 text-white font-bold"
                             : cell.isCurrentMonth
-                            ? "text-slate-800"
-                            : "text-slate-400"
+                            ? "text-foreground"
+                            : "text-muted-foreground"
                         }`}
                       >
                         {cell.date.getDate()}
@@ -535,7 +537,7 @@ export function CalendarApp() {
                             setNewEventDefaultDate(cell.dateKey);
                             setShowNewEventModal(true);
                           }}
-                          className="opacity-0 hover:opacity-100 p-0.5 text-slate-400 hover:text-indigo-600"
+                          className="opacity-0 hover:opacity-100 p-0.5 text-muted-foreground hover:text-indigo-600"
                           title="Tambah jadwal pada tanggal ini"
                         >
                           <Plus className="w-3 h-3" />
@@ -567,7 +569,7 @@ export function CalendarApp() {
                         );
                       })}
                       {dayEvents.length > 3 && (
-                        <div className="text-[10px] text-slate-400 font-medium pl-1">
+                        <div className="text-[10px] text-muted-foreground font-medium pl-1">
                           +{dayEvents.length - 3} lainnya
                         </div>
                       )}
@@ -583,24 +585,24 @@ export function CalendarApp() {
         {viewMode === "week" && (
           <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
             {/* Week Days Header */}
-            <div className="grid grid-cols-8 border-b border-slate-200 bg-slate-50 text-center py-2.5 text-xs font-semibold text-slate-700 sticky top-0 z-10">
-              <div className="text-slate-400 font-mono text-[11px]">Waktu (WIB)</div>
+            <div className="grid grid-cols-8 border-b border-border bg-muted/40 text-center py-2.5 text-xs font-semibold text-foreground sticky top-0 z-10">
+              <div className="text-muted-foreground font-mono text-[11px]">Waktu (WIB)</div>
               {weekDays.map((d, i) => {
                 const isToday = d.toDateString() === new Date().toDateString();
                 return (
                   <div key={i} className={isToday ? "text-indigo-600 font-bold" : ""}>
                     <span>{["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"][i]}</span>{" "}
-                    <span className="text-[11px] font-normal text-slate-400">{d.getDate()}</span>
+                    <span className="text-[11px] font-normal text-muted-foreground">{d.getDate()}</span>
                   </div>
                 );
               })}
             </div>
 
             {/* Hourly Grid */}
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-border">
               {timeSlots.map((hour) => (
-                <div key={hour} className="grid grid-cols-8 min-h-[50px] divide-x divide-slate-100">
-                  <div className="p-2 text-right text-[11px] font-mono text-slate-400 select-none">
+                <div key={hour} className="grid grid-cols-8 min-h-[50px] divide-x divide-border">
+                  <div className="p-2 text-right text-[11px] font-mono text-muted-foreground select-none">
                     {String(hour).padStart(2, "0")}:00
                   </div>
                   {weekDays.map((d, dayIdx) => {
@@ -652,12 +654,12 @@ export function CalendarApp() {
         {/* VIEW 3: DAY VIEW (§9) */}
         {viewMode === "day" && (
           <div className="flex-1 overflow-y-auto p-4 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs flex items-center justify-between">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-slate-900">
+                <h3 className="text-sm font-semibold text-foreground">
                   {currentDate.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted-foreground">
                   {filteredEvents.filter((ev) => ev.startAt.slice(0, 10) === currentDate.toISOString().slice(0, 10)).length} Jadwal Terjadwal Hari Ini
                 </p>
               </div>
@@ -674,7 +676,7 @@ export function CalendarApp() {
             </div>
 
             {/* Time Slot List */}
-            <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-100">
+            <div className="bg-card border border-border rounded-lg divide-y divide-border">
               {timeSlots.map((h) => {
                 const hourEvents = filteredEvents.filter((ev) => {
                   if (ev.startAt.slice(0, 10) !== currentDate.toISOString().slice(0, 10)) return false;
@@ -682,8 +684,8 @@ export function CalendarApp() {
                 });
 
                 return (
-                  <div key={h} className="p-3 flex items-start gap-4 hover:bg-slate-50/50">
-                    <span className="w-14 font-mono text-xs text-slate-400 font-medium pt-0.5">
+                  <div key={h} className="p-3 flex items-start gap-4 hover:bg-muted/40/50">
+                    <span className="w-14 font-mono text-xs text-muted-foreground font-medium pt-0.5">
                       {String(h).padStart(2, "0")}:00
                     </span>
                     <div className="flex-1 space-y-2">
@@ -693,7 +695,7 @@ export function CalendarApp() {
                             setNewEventDefaultDate(currentDate.toISOString().slice(0, 10));
                             setShowNewEventModal(true);
                           }}
-                          className="h-6 flex items-center text-xs text-slate-300 hover:text-indigo-600 cursor-pointer"
+                          className="h-6 flex items-center text-xs text-foreground hover:text-indigo-600 cursor-pointer"
                         >
                           + Tambah jadwal pada {String(h).padStart(2, "0")}:00
                         </div>
@@ -709,15 +711,15 @@ export function CalendarApp() {
                             }}
                           >
                             <div className="flex items-center justify-between">
-                              <h4 className="text-xs font-semibold text-slate-900">{ev.title}</h4>
+                              <h4 className="text-xs font-semibold text-foreground">{ev.title}</h4>
                               <span className="text-[11px] font-medium" style={{ color: ev.color || "#2563eb" }}>
                                 {new Date(ev.startAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })} -{" "}
                                 {new Date(ev.endAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
                               </span>
                             </div>
                             {ev.location && (
-                              <p className="text-[11px] text-slate-500 flex items-center gap-1">
-                                <MapPin className="w-3 h-3 text-slate-400" />
+                              <p className="text-[11px] text-muted-foreground flex items-center gap-1">
+                                <MapPin className="w-3 h-3 text-muted-foreground" />
                                 {ev.location}
                               </p>
                             )}
@@ -735,14 +737,14 @@ export function CalendarApp() {
         {/* VIEW 4: AGENDA / LIST VIEW (§9) */}
         {viewMode === "agenda" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Agenda Linear Mendatang</h3>
-              <p className="text-xs text-slate-500">Daftar terurut seluruh pertemuan, checkpoint, dan kegiatan berbatas waktu.</p>
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Agenda Linear Mendatang</h3>
+              <p className="text-xs text-muted-foreground">Daftar terurut seluruh pertemuan, checkpoint, dan kegiatan berbatas waktu.</p>
             </div>
 
             <div className="space-y-3">
               {filteredEvents.length === 0 ? (
-                <div className="p-8 text-center text-xs text-slate-400 bg-white border border-slate-200 rounded-lg">
+                <div className="p-8 text-center text-xs text-muted-foreground bg-card border border-border rounded-lg">
                   Tidak ada agenda yang cocok dengan pencarian / filter aktif.
                 </div>
               ) : (
@@ -754,7 +756,7 @@ export function CalendarApp() {
                       <div
                         key={ev.id}
                         onClick={() => setSelectedEvent(ev)}
-                        className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs hover:border-indigo-300 transition-all flex items-start justify-between gap-4 cursor-pointer"
+                        className="p-4 bg-card border border-border rounded-lg shadow-xs hover:border-indigo-300 transition-all flex items-start justify-between gap-4 cursor-pointer"
                       >
                         <div className="space-y-1 min-w-0">
                           <div className="flex items-center gap-2">
@@ -762,7 +764,7 @@ export function CalendarApp() {
                               className="w-2.5 h-2.5 rounded-full"
                               style={{ backgroundColor: ev.color || "#2563eb" }}
                             />
-                            <h4 className="text-xs font-semibold text-slate-900 truncate">
+                            <h4 className="text-xs font-semibold text-foreground truncate">
                               {ev.title}
                             </h4>
                             {isLinked && (
@@ -773,10 +775,10 @@ export function CalendarApp() {
                             )}
                           </div>
                           {ev.description && (
-                            <p className="text-xs text-slate-600 line-clamp-2">{ev.description}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-2">{ev.description}</p>
                           )}
                           {ev.location && (
-                            <p className="text-[11px] text-slate-400 flex items-center gap-1">
+                            <p className="text-[11px] text-muted-foreground flex items-center gap-1">
                               <MapPin className="w-3 h-3" />
                               {ev.location}
                             </p>
@@ -784,10 +786,10 @@ export function CalendarApp() {
                         </div>
 
                         <div className="text-right flex-shrink-0 text-xs">
-                          <p className="font-semibold text-slate-800">
+                          <p className="font-semibold text-foreground">
                             {new Date(ev.startAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
                           </p>
-                          <p className="text-[11px] text-slate-500">
+                          <p className="text-[11px] text-muted-foreground">
                             {ev.allDay
                               ? "Sepanjang Hari"
                               : `${new Date(ev.startAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })} - ${new Date(ev.endAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}`}
@@ -812,30 +814,30 @@ export function CalendarApp() {
               return (
                 <div
                   key={personName}
-                  className="w-80 flex-shrink-0 bg-white border border-slate-200 rounded-lg flex flex-col max-h-[calc(100vh-210px)]"
+                  className="w-80 flex-shrink-0 bg-card border border-border rounded-lg flex flex-col max-h-[calc(100vh-210px)]"
                 >
-                  <div className="p-3 border-b border-slate-100 bg-slate-50/70 flex items-center gap-2.5">
+                  <div className="p-3 border-b border-border bg-muted/40/70 flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-full bg-indigo-600 text-white font-semibold flex items-center justify-center text-xs">
                       {personName.slice(0, 2).toUpperCase()}
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold text-slate-900">{personName}</h4>
-                      <p className="text-[10px] text-slate-400">{personEvents.length} Jadwal Terlibat</p>
+                      <h4 className="text-xs font-semibold text-foreground">{personName}</h4>
+                      <p className="text-[10px] text-muted-foreground">{personEvents.length} Jadwal Terlibat</p>
                     </div>
                   </div>
 
                   <div className="flex-1 overflow-y-auto p-3 space-y-2">
                     {personEvents.length === 0 ? (
-                      <p className="text-xs text-slate-400 text-center py-6">Tidak ada agenda terkait.</p>
+                      <p className="text-xs text-muted-foreground text-center py-6">Tidak ada agenda terkait.</p>
                     ) : (
                       personEvents.map((ev) => (
                         <div
                           key={ev.id}
                           onClick={() => setSelectedEvent(ev)}
-                          className="p-2.5 border border-slate-200 rounded-md hover:border-indigo-400 cursor-pointer transition-all space-y-1 text-xs"
+                          className="p-2.5 border border-border rounded-md hover:border-indigo-400 cursor-pointer transition-all space-y-1 text-xs"
                         >
-                          <h5 className="font-medium text-slate-800 line-clamp-1">{ev.title}</h5>
-                          <p className="text-[11px] text-slate-500">
+                          <h5 className="font-medium text-foreground line-clamp-1">{ev.title}</h5>
+                          <p className="text-[11px] text-muted-foreground">
                             {new Date(ev.startAt).toLocaleDateString("id-ID", { day: "numeric", month: "short" })} ·{" "}
                             {new Date(ev.startAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
                           </p>
@@ -854,9 +856,9 @@ export function CalendarApp() {
           <div className="flex-1 overflow-y-auto p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
               {monthNames.map((mName, mIdx) => (
-                <div key={mName} className="p-3 bg-white border border-slate-200 rounded-lg shadow-xs space-y-2">
-                  <h4 className="text-xs font-bold text-slate-900 text-center">{mName}</h4>
-                  <div className="grid grid-cols-7 gap-1 text-center text-[9px] text-slate-400">
+                <div key={mName} className="p-3 bg-card border border-border rounded-lg shadow-xs space-y-2">
+                  <h4 className="text-xs font-bold text-foreground text-center">{mName}</h4>
+                  <div className="grid grid-cols-7 gap-1 text-center text-[9px] text-muted-foreground">
                     {dayNames.map((d) => (
                       <span key={d}>{d[0]}</span>
                     ))}
@@ -870,7 +872,7 @@ export function CalendarApp() {
                         <div
                           key={dNum}
                           className={`w-5 h-5 mx-auto rounded-full flex items-center justify-center ${
-                            hasEv ? "bg-indigo-600 text-white font-bold" : "text-slate-600 hover:bg-slate-100"
+                            hasEv ? "bg-indigo-600 text-white font-bold" : "text-muted-foreground hover:bg-muted"
                           }`}
                         >
                           {dNum}
@@ -887,8 +889,8 @@ export function CalendarApp() {
 
       {/* MODAL: EVENT DETAIL & ACTIONS (§3.2, §3.3) */}
       {selectedEvent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-lg bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-lg bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <span
@@ -900,25 +902,25 @@ export function CalendarApp() {
                 >
                   {selectedEvent.externalRef ? `Linked Event (${selectedEvent.externalRef.sourceApp})` : "Standalone Event (#02)"}
                 </span>
-                <h3 className="text-base font-bold text-slate-900 mt-1">{selectedEvent.title}</h3>
+                <h3 className="text-base font-bold text-foreground mt-1">{selectedEvent.title}</h3>
               </div>
               <button
                 onClick={() => setSelectedEvent(null)}
-                className="text-slate-400 hover:text-slate-700"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {selectedEvent.description && (
-              <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded border border-slate-100">
+              <p className="text-xs text-muted-foreground leading-relaxed bg-muted/40 p-3 rounded border border-border">
                 {selectedEvent.description}
               </p>
             )}
 
-            <div className="space-y-2 text-xs text-slate-600">
+            <div className="space-y-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-slate-400" />
+                <Clock className="w-4 h-4 text-muted-foreground" />
                 <span>
                   {new Date(selectedEvent.startAt).toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })} ·{" "}
                   {selectedEvent.allDay
@@ -929,7 +931,7 @@ export function CalendarApp() {
 
               {selectedEvent.location && (
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-slate-400" />
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
                   <span>{selectedEvent.location}</span>
                 </div>
               )}
@@ -937,14 +939,14 @@ export function CalendarApp() {
 
             {/* Participants & RSVP Section (§6) */}
             {selectedEvent.participants && selectedEvent.participants.length > 0 && (
-              <div className="pt-2 border-t border-slate-100 space-y-2">
-                <span className="text-xs font-semibold text-slate-700">Peserta & Status RSVP (§6):</span>
+              <div className="pt-2 border-t border-border space-y-2">
+                <span className="text-xs font-semibold text-foreground">Peserta & Status RSVP (§6):</span>
                 <div className="space-y-1.5">
                   {selectedEvent.participants.map((p) => (
-                    <div key={p.id} className="flex items-center justify-between text-xs p-1.5 bg-slate-50 rounded">
+                    <div key={p.id} className="flex items-center justify-between text-xs p-1.5 bg-muted/40 rounded">
                       <div>
-                        <span className="font-medium text-slate-800">{p.name}</span>
-                        <span className="text-[10px] text-slate-400 ml-1.5 capitalize">({p.role})</span>
+                        <span className="font-medium text-foreground">{p.name}</span>
+                        <span className="text-[10px] text-muted-foreground ml-1.5 capitalize">({p.role})</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <span className={`text-[10px] capitalize font-medium ${
@@ -977,7 +979,7 @@ export function CalendarApp() {
             )}
 
             {/* Actions Bar (§3.3) */}
-            <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2 flex-wrap">
+            <div className="pt-4 border-t border-border flex items-center justify-between gap-2 flex-wrap">
               {/* Convert to Task (§3.3: "event tanpa kejelasan penyelesaian diubah menjadi Task") */}
               {!selectedEvent.externalRef && (
                 <button
@@ -1004,7 +1006,7 @@ export function CalendarApp() {
                 </button>
                 <button
                   onClick={() => setSelectedEvent(null)}
-                  className="px-3 py-1.5 text-xs font-medium bg-slate-900 text-white rounded hover:bg-slate-800 transition-colors"
+                  className="px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded hover:bg-foreground transition-colors"
                 >
                   Tutup
                 </button>
@@ -1016,9 +1018,9 @@ export function CalendarApp() {
 
       {/* MODAL: CREATE NEW EVENT (§3.1 & §3.3) */}
       {showNewEventModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-lg bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Buat Jadwal / Pertemuan Baru</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-lg bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">Buat Jadwal / Pertemuan Baru</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -1050,22 +1052,22 @@ export function CalendarApp() {
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Nama Jadwal / Agenda *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Nama Jadwal / Agenda *</label>
                 <input
                   name="title"
                   type="text"
                   required
                   placeholder="mis. Rapat Koordinasi Audit Triwulan"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Pilih Kalender</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Pilih Kalender</label>
                 <select
                   name="calendarId"
                   defaultValue="cal-work"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 >
                   {state.calendars.map((c) => (
                     <option key={c.id} value={c.id}>{c.name}</option>
@@ -1075,62 +1077,62 @@ export function CalendarApp() {
 
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Tanggal</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Tanggal</label>
                   <input
                     name="date"
                     type="date"
                     defaultValue={newEventDefaultDate}
                     required
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Mulai</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Mulai</label>
                   <input
                     name="startTime"
                     type="time"
                     defaultValue="09:00"
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Selesai</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Selesai</label>
                   <input
                     name="endTime"
                     type="time"
                     defaultValue="10:30"
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Lokasi / Tautan Virtual</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Lokasi / Tautan Virtual</label>
                 <input
                   name="location"
                   type="text"
                   placeholder="mis. Google Meet / Ruang Rapat Lt 3"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Undang Peserta (Nama)</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Undang Peserta (Nama)</label>
                 <input
                   name="participantName"
                   type="text"
                   placeholder="mis. Senior Auditor Budi"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Deskripsi Tambahan</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Deskripsi Tambahan</label>
                 <textarea
                   name="description"
                   rows={2}
                   placeholder="Rincian topik bahasan..."
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
@@ -1138,7 +1140,7 @@ export function CalendarApp() {
                 <button
                   type="button"
                   onClick={() => setShowNewEventModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
                 >
                   Batal
                 </button>
@@ -1156,28 +1158,28 @@ export function CalendarApp() {
 
       {/* MODAL: AVAILABILITY & FIND A TIME (§8) */}
       {showAvailabilityModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-lg bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-lg bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
             <div>
-              <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Users className="w-4 h-4 text-indigo-600" />
                 Cek Ketersediaan & Slot Waktu Tim (§8)
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 Informasi slot bebas/sibuk anggota tim untuk menjadwalkan rapat bersama tanpa bentrok.
               </p>
             </div>
 
             <div className="space-y-3">
               {state.availability.map((av) => (
-                <div key={av.userId} className="p-3 border border-slate-200 rounded-lg bg-slate-50/50 space-y-1.5 text-xs">
+                <div key={av.userId} className="p-3 border border-border rounded-lg bg-muted/40/50 space-y-1.5 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-900">{av.userName}</span>
+                    <span className="font-semibold text-foreground">{av.userName}</span>
                     <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-medium">
                       Aktif: {av.startTime} - {av.endTime} WIB
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-muted-foreground">
                     Hari kerja: Senin s/d Jumat · Zona waktu: {av.timezone}
                   </p>
                 </div>
@@ -1198,7 +1200,7 @@ export function CalendarApp() {
               <button
                 type="button"
                 onClick={() => setShowAvailabilityModal(false)}
-                className="px-3 py-1.5 text-xs font-medium bg-slate-900 text-white rounded hover:bg-slate-800"
+                className="px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded hover:bg-foreground"
               >
                 Selesai
               </button>

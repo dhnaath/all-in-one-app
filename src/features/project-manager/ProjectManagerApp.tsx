@@ -1,3 +1,5 @@
+import { ShellHeader } from "@/app/shell-header";
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState, useMemo } from "react";
 import {
   FolderKanban,
@@ -166,13 +168,13 @@ export function ProjectManagerApp() {
       case "on_hold":
         return "text-amber-700 font-medium";
       case "completed":
-        return "text-slate-700 font-medium";
+        return "text-foreground font-medium";
       case "cancelled":
         return "text-red-700 font-medium";
       case "archived":
-        return "text-slate-400 font-medium";
+        return "text-muted-foreground font-medium";
       default:
-        return "text-slate-600";
+        return "text-muted-foreground";
     }
   };
 
@@ -188,25 +190,25 @@ export function ProjectManagerApp() {
       case "low":
         return "text-blue-600";
       default:
-        return "text-slate-500";
+        return "text-muted-foreground";
     }
   };
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-slate-50 text-slate-800">
+    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-muted/40 text-foreground">
       {/* LEFT SIDEBAR: Projects Navigator */}
-      <aside className="w-80 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
+      <ShellSidebar>
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FolderKanban className="w-5 h-5 text-indigo-600" />
-            <h2 className="font-semibold text-slate-900 text-sm tracking-tight">Proyek & Portofolio</h2>
+            <h2 className="font-semibold text-foreground text-sm tracking-tight">Proyek & Portofolio</h2>
           </div>
           <div className="flex items-center gap-1">
             <button
               onClick={() => setShowTemplateModal(true)}
               title="Gunakan Template Proyek"
-              className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-md transition-colors"
+              className="p-1.5 text-muted-foreground hover:text-indigo-600 hover:bg-muted rounded-md transition-colors"
             >
               <Sparkles className="w-4 h-4" />
             </button>
@@ -221,27 +223,27 @@ export function ProjectManagerApp() {
         </div>
 
         {/* Search & Filter */}
-        <div className="p-3 border-b border-slate-100 space-y-2">
+        <div className="p-3 border-b border-border space-y-2">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+            <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-muted-foreground" />
             <input
               type="text"
               placeholder="Cari proyek..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:bg-white"
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-muted/40 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:bg-card"
             />
           </div>
 
-          <div className="flex items-center gap-1 overflow-x-auto text-[11px] py-1 text-slate-500">
+          <div className="flex items-center gap-1 overflow-x-auto text-[11px] py-1 text-muted-foreground">
             {["all", "active", "planning", "on_hold", "completed"].map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
                 className={`px-2 py-0.5 rounded transition-colors whitespace-nowrap ${
                   statusFilter === st
-                    ? "bg-slate-900 text-white font-medium"
-                    : "hover:bg-slate-100 text-slate-600"
+                    ? "bg-foreground text-background font-medium"
+                    : "hover:bg-muted text-muted-foreground"
                 }`}
               >
                 {st === "all" ? "Semua" : st.replace("_", " ")}
@@ -253,7 +255,7 @@ export function ProjectManagerApp() {
         {/* Project List */}
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {filteredProjects.length === 0 ? (
-            <div className="p-6 text-center text-xs text-slate-400">
+            <div className="p-6 text-center text-xs text-muted-foreground">
               Tidak ada proyek yang sesuai kriteria.
             </div>
           ) : (
@@ -267,11 +269,11 @@ export function ProjectManagerApp() {
                   className={`p-3 rounded-lg cursor-pointer transition-all border ${
                     isActive
                       ? "bg-indigo-50/60 border-indigo-200 shadow-sm"
-                      : "bg-white border-transparent hover:bg-slate-50 hover:border-slate-200"
+                      : "bg-card border-transparent hover:bg-muted/40 hover:border-border"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className={`text-xs font-medium leading-snug truncate ${isActive ? "text-indigo-950 font-semibold" : "text-slate-800"}`}>
+                    <h3 className={`text-xs font-medium leading-snug truncate ${isActive ? "text-indigo-950 font-semibold" : "text-foreground"}`}>
                       {p.name}
                     </h3>
                     <span className={`text-[10px] capitalize whitespace-nowrap ${getProjectStatusStyle(p.status)}`}>
@@ -279,16 +281,16 @@ export function ProjectManagerApp() {
                     </span>
                   </div>
 
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
+                  <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-slate-400" />
+                      <Clock className="w-3 h-3 text-muted-foreground" />
                       {pProgress.totalTasks} tugas
                     </span>
-                    <span className="font-semibold text-slate-700">{pProgress.progressPercent}%</span>
+                    <span className="font-semibold text-foreground">{pProgress.progressPercent}%</span>
                   </div>
 
                   {/* Progress Line */}
-                  <div className="mt-1.5 h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+                  <div className="mt-1.5 h-1 w-full bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-indigo-600 transition-all duration-300"
                       style={{ width: `${pProgress.progressPercent}%` }}
@@ -301,22 +303,22 @@ export function ProjectManagerApp() {
         </div>
 
         {/* Standalone Ecosystem Reference Footer (§0) */}
-        <div className="p-3 border-t border-slate-100 bg-slate-50/70 text-[11px] text-slate-500">
-          <p className="font-medium text-slate-700">Standalone App #03</p>
-          <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">
+        <div className="p-3 border-t border-border bg-muted/40/70 text-[11px] text-muted-foreground">
+          <p className="font-medium text-foreground">Standalone App #03</p>
+          <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">
             Source of truth untuk Project. Tugas dieksekusi di Task Manager (#01).
           </p>
         </div>
-      </aside>
+      </ShellSidebar>
 
       {/* MAIN PROJECT WORKSPACE */}
       {activeProject ? (
-        <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+        <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
           {/* Top Project Header Bar */}
-          <header className="p-5 border-b border-slate-200 bg-white">
+          <ShellHeader>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1 min-w-0">
-                <div className="flex items-center gap-2 text-xs text-slate-500">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span>Proyek #{activeProject.id.slice(-6)}</span>
                   <span aria-hidden="true">·</span>
                   <span className={getProjectStatusStyle(activeProject.status)}>
@@ -329,11 +331,11 @@ export function ProjectManagerApp() {
                     </React.Fragment>
                   ))}
                 </div>
-                <h1 className="text-xl font-bold text-slate-900 tracking-tight truncate">
+                <h1 className="text-xl font-bold text-foreground tracking-tight truncate">
                   {activeProject.name}
                 </h1>
                 {activeProject.description && (
-                  <p className="text-xs text-slate-600 line-clamp-1 max-w-3xl">
+                  <p className="text-xs text-muted-foreground line-clamp-1 max-w-3xl">
                     {activeProject.description}
                   </p>
                 )}
@@ -342,7 +344,7 @@ export function ProjectManagerApp() {
               {/* Action Controls & State Machine Buttons (§6) */}
               <div className="flex items-center gap-2 flex-wrap">
                 {/* State Machine Transition Selector */}
-                <div className="flex items-center border border-slate-200 rounded-md p-0.5 bg-slate-50 text-xs">
+                <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
                   {activeProject.status === "planning" && (
                     <button
                       onClick={() => transitionProjectStatus(activeProject.id, "active")}
@@ -391,7 +393,7 @@ export function ProjectManagerApp() {
                   {activeProject.status !== "archived" && (
                     <button
                       onClick={() => transitionProjectStatus(activeProject.id, "archived")}
-                      className="px-2 py-1 text-slate-600 hover:bg-slate-200/60 rounded flex items-center gap-1 transition-colors"
+                      className="px-2 py-1 text-muted-foreground hover:bg-muted/60 rounded flex items-center gap-1 transition-colors"
                       title="Arsipkan Proyek"
                     >
                       <Archive className="w-3.5 h-3.5" />
@@ -411,7 +413,7 @@ export function ProjectManagerApp() {
                 <button
                   onClick={() => duplicateProject(activeProject.id)}
                   title="Duplikasi struktur proyek"
-                  className="p-1.5 border border-slate-200 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-md transition-colors"
+                  className="p-1.5 border border-border text-muted-foreground hover:text-indigo-600 hover:bg-muted/40 rounded-md transition-colors"
                 >
                   <Copy className="w-4 h-4" />
                 </button>
@@ -420,7 +422,7 @@ export function ProjectManagerApp() {
                 <button
                   onClick={() => setShowDeleteConfirm(true)}
                   title="Hapus proyek"
-                  className="p-1.5 border border-slate-200 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                  className="p-1.5 border border-border text-muted-foreground hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -437,7 +439,7 @@ export function ProjectManagerApp() {
             </div>
 
             {/* Navigation Tabs (7 Views per §10) */}
-            <div className="mt-6 flex items-center gap-1 border-b border-slate-200 -mb-5 pb-0 overflow-x-auto text-xs font-medium">
+            <div className="mt-6 flex items-center gap-1 border-b border-border -mb-5 pb-0 overflow-x-auto text-xs font-medium">
               {[
                 { id: "overview", label: "Ringkasan", icon: TrendingUp },
                 { id: "board", label: "Board (Kanban)", icon: FolderKanban },
@@ -456,7 +458,7 @@ export function ProjectManagerApp() {
                     className={`flex items-center gap-1.5 px-3.5 py-2.5 border-b-2 transition-all whitespace-nowrap ${
                       isActive
                         ? "border-indigo-600 text-indigo-600 font-semibold"
-                        : "border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300"
+                        : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -465,25 +467,25 @@ export function ProjectManagerApp() {
                 );
               })}
             </div>
-          </header>
+          </ShellHeader>
 
           {/* VIEW CONTAINER */}
-          <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50">
+          <div className="flex-1 overflow-y-auto p-6 bg-muted/40/50">
             {/* VIEW 1: OVERVIEW */}
             {viewMode === "overview" && (
               <div className="space-y-6 max-w-6xl mx-auto">
                 {/* 4 Stat Metric Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Card 1: Progress */}
-                  <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs space-y-2">
-                    <span className="text-xs text-slate-500 font-medium">Progres Keseluruhan</span>
+                  <div className="p-4 bg-card border border-border rounded-lg shadow-xs space-y-2">
+                    <span className="text-xs text-muted-foreground font-medium">Progres Keseluruhan</span>
                     <div className="flex items-baseline justify-between">
-                      <span className="text-2xl font-bold text-slate-900">{progressStats.progressPercent}%</span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-2xl font-bold text-foreground">{progressStats.progressPercent}%</span>
+                      <span className="text-xs text-muted-foreground">
                         {progressStats.completedTasks} / {progressStats.totalTasks} tugas
                       </span>
                     </div>
-                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                       <div
                         className="h-full bg-indigo-600 transition-all duration-500"
                         style={{ width: `${progressStats.progressPercent}%` }}
@@ -492,22 +494,22 @@ export function ProjectManagerApp() {
                   </div>
 
                   {/* Card 2: Tasks Status */}
-                  <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs space-y-2">
-                    <span className="text-xs text-slate-500 font-medium">Status Tugas</span>
+                  <div className="p-4 bg-card border border-border rounded-lg shadow-xs space-y-2">
+                    <span className="text-xs text-muted-foreground font-medium">Status Tugas</span>
                     <div className="flex items-baseline justify-between">
-                      <span className="text-2xl font-bold text-slate-900">{progressStats.activeTasks}</span>
+                      <span className="text-2xl font-bold text-foreground">{progressStats.activeTasks}</span>
                       <span className="text-xs text-amber-600 font-medium">
                         {progressStats.overdueTasks > 0 ? `${progressStats.overdueTasks} Terlambat` : "Tepat Waktu"}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-400">Tugas aktif dalam antrean eksekusi</p>
+                    <p className="text-[11px] text-muted-foreground">Tugas aktif dalam antrean eksekusi</p>
                   </div>
 
                   {/* Card 3: Milestones */}
-                  <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs space-y-2">
-                    <span className="text-xs text-slate-500 font-medium">Milestone Tercapai</span>
+                  <div className="p-4 bg-card border border-border rounded-lg shadow-xs space-y-2">
+                    <span className="text-xs text-muted-foreground font-medium">Milestone Tercapai</span>
                     <div className="flex items-baseline justify-between">
-                      <span className="text-2xl font-bold text-slate-900">
+                      <span className="text-2xl font-bold text-foreground">
                         {projectMilestones.filter((m) => m.status === "achieved").length} / {projectMilestones.length}
                       </span>
                       <span className="text-xs text-emerald-600 font-medium">
@@ -519,21 +521,21 @@ export function ProjectManagerApp() {
                         %
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-400">Checkpoint kunci penyelesaian</p>
+                    <p className="text-[11px] text-muted-foreground">Checkpoint kunci penyelesaian</p>
                   </div>
 
                   {/* Card 4: Budget Summary (§3.1) */}
-                  <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs space-y-2">
-                    <span className="text-xs text-slate-500 font-medium">Utilisasi Anggaran</span>
+                  <div className="p-4 bg-card border border-border rounded-lg shadow-xs space-y-2">
+                    <span className="text-xs text-muted-foreground font-medium">Utilisasi Anggaran</span>
                     <div className="flex items-baseline justify-between">
-                      <span className="text-sm font-bold text-slate-900 truncate">
+                      <span className="text-sm font-bold text-foreground truncate">
                         {formatCurrency(activeProject.budgetSummary?.spent || 0, activeProject.budgetSummary?.currency)}
                       </span>
-                      <span className="text-[11px] text-slate-500 truncate">
+                      <span className="text-[11px] text-muted-foreground truncate">
                         / {formatCurrency(activeProject.budgetSummary?.allocated || 0, activeProject.budgetSummary?.currency)}
                       </span>
                     </div>
-                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                       <div
                         className="h-full bg-emerald-500 transition-all duration-500"
                         style={{
@@ -553,11 +555,11 @@ export function ProjectManagerApp() {
                   {/* Left 2 Cols: Phases & Milestones Progress */}
                   <div className="lg:col-span-2 space-y-6">
                     {/* Phase Flow */}
-                    <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-xs">
+                    <div className="p-5 bg-card border border-border rounded-lg shadow-xs">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <Layers className="w-4 h-4 text-indigo-600" />
-                          <h3 className="text-sm font-semibold text-slate-900">Tahapan Proyek (Phases)</h3>
+                          <h3 className="text-sm font-semibold text-foreground">Tahapan Proyek (Phases)</h3>
                         </div>
                         <button
                           onClick={() => setShowNewPhaseModal(true)}
@@ -569,7 +571,7 @@ export function ProjectManagerApp() {
                       </div>
 
                       {projectPhases.length === 0 ? (
-                        <p className="text-xs text-slate-400 py-4 text-center">Belum ada fase yang disusun.</p>
+                        <p className="text-xs text-muted-foreground py-4 text-center">Belum ada fase yang disusun.</p>
                       ) : (
                         <div className="space-y-3">
                           {projectPhases.map((phase) => {
@@ -580,27 +582,27 @@ export function ProjectManagerApp() {
                             return (
                               <div
                                 key={phase.id}
-                                className="p-3 border border-slate-100 rounded-lg bg-slate-50/60 hover:bg-slate-50 transition-colors"
+                                className="p-3 border border-border rounded-lg bg-muted/40/60 hover:bg-muted/40 transition-colors"
                               >
                                 <div className="flex items-center justify-between text-xs">
-                                  <div className="flex items-center gap-2 font-medium text-slate-900">
+                                  <div className="flex items-center gap-2 font-medium text-foreground">
                                     <span className="w-5 h-5 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center text-[10px] font-bold">
                                       {phase.order}
                                     </span>
                                     <span>{phase.name}</span>
                                   </div>
                                   <span className={`capitalize text-[11px] ${
-                                    phase.status === "completed" ? "text-emerald-700 font-medium" : phase.status === "active" ? "text-indigo-700 font-medium" : "text-slate-500"
+                                    phase.status === "completed" ? "text-emerald-700 font-medium" : phase.status === "active" ? "text-indigo-700 font-medium" : "text-muted-foreground"
                                   }`}>
                                     {phase.status}
                                   </span>
                                 </div>
 
-                                <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
+                                <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
                                   <span>{phaseTasks.length} tugas terkait</span>
                                   <span>{phasePct}% selesai</span>
                                 </div>
-                                <div className="mt-1 h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                                <div className="mt-1 h-1.5 w-full bg-muted rounded-full overflow-hidden">
                                   <div className="h-full bg-indigo-600" style={{ width: `${phasePct}%` }} />
                                 </div>
                               </div>
@@ -611,11 +613,11 @@ export function ProjectManagerApp() {
                     </div>
 
                     {/* Milestones Checkpoints */}
-                    <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-xs">
+                    <div className="p-5 bg-card border border-border rounded-lg shadow-xs">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <Flag className="w-4 h-4 text-emerald-600" />
-                          <h3 className="text-sm font-semibold text-slate-900">Checkpoint Kunci (Milestones)</h3>
+                          <h3 className="text-sm font-semibold text-foreground">Checkpoint Kunci (Milestones)</h3>
                         </div>
                         <button
                           onClick={() => setShowNewMilestoneModal(true)}
@@ -627,9 +629,9 @@ export function ProjectManagerApp() {
                       </div>
 
                       {projectMilestones.length === 0 ? (
-                        <p className="text-xs text-slate-400 py-4 text-center">Belum ada milestone tercatat.</p>
+                        <p className="text-xs text-muted-foreground py-4 text-center">Belum ada milestone tercatat.</p>
                       ) : (
-                        <div className="divide-y divide-slate-100">
+                        <div className="divide-y divide-border">
                           {projectMilestones.map((ms) => {
                             const isAchieved = ms.status === "achieved";
                             return (
@@ -642,16 +644,16 @@ export function ProjectManagerApp() {
                                       })
                                     }
                                     className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center transition-colors ${
-                                      isAchieved ? "bg-emerald-600 border-emerald-600 text-white" : "border-slate-300 hover:border-emerald-500"
+                                      isAchieved ? "bg-emerald-600 border-emerald-600 text-white" : "border-border hover:border-emerald-500"
                                     }`}
                                   >
                                     {isAchieved && <CheckCircle2 className="w-3 h-3" />}
                                   </button>
                                   <div>
-                                    <h4 className={`text-xs font-medium ${isAchieved ? "line-through text-slate-400" : "text-slate-800"}`}>
+                                    <h4 className={`text-xs font-medium ${isAchieved ? "line-through text-muted-foreground" : "text-foreground"}`}>
                                       {ms.title}
                                     </h4>
-                                    <div className="mt-1 flex items-center gap-2 text-[11px] text-slate-400">
+                                    <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
                                       <span>Target: {new Date(ms.targetDate).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}</span>
                                       {ms.linkedTaskIds && ms.linkedTaskIds.length > 0 && (
                                         <>
@@ -662,7 +664,7 @@ export function ProjectManagerApp() {
                                     </div>
                                   </div>
                                 </div>
-                                <span className={`text-[10px] capitalize ${isAchieved ? "text-emerald-700 font-medium" : "text-slate-500"}`}>
+                                <span className={`text-[10px] capitalize ${isAchieved ? "text-emerald-700 font-medium" : "text-muted-foreground"}`}>
                                   {ms.status}
                                 </span>
                               </div>
@@ -676,11 +678,11 @@ export function ProjectManagerApp() {
                   {/* Right 1 Col: Risks & Objectives */}
                   <div className="space-y-6">
                     {/* Top Risks */}
-                    <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-xs">
+                    <div className="p-5 bg-card border border-border rounded-lg shadow-xs">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <AlertTriangle className="w-4 h-4 text-amber-600" />
-                          <h3 className="text-sm font-semibold text-slate-900">Potensi Risiko</h3>
+                          <h3 className="text-sm font-semibold text-foreground">Potensi Risiko</h3>
                         </div>
                         <button
                           onClick={() => setShowNewRiskModal(true)}
@@ -692,17 +694,17 @@ export function ProjectManagerApp() {
                       </div>
 
                       {projectRisks.length === 0 ? (
-                        <p className="text-xs text-slate-400 py-4 text-center">Tidak ada risiko aktif tercatat.</p>
+                        <p className="text-xs text-muted-foreground py-4 text-center">Tidak ada risiko aktif tercatat.</p>
                       ) : (
                         <div className="space-y-3">
                           {projectRisks.slice(0, 3).map((rk) => (
-                            <div key={rk.id} className="p-2.5 border border-slate-100 rounded-md bg-slate-50/50 text-xs space-y-1">
+                            <div key={rk.id} className="p-2.5 border border-border rounded-md bg-muted/40/50 text-xs space-y-1">
                               <div className="flex items-start justify-between gap-2">
-                                <span className="font-medium text-slate-800 line-clamp-1">{rk.title}</span>
+                                <span className="font-medium text-foreground line-clamp-1">{rk.title}</span>
                                 <span className="text-[10px] text-red-600 font-medium capitalize">{rk.impact} impact</span>
                               </div>
                               {rk.mitigationPlan && (
-                                <p className="text-[11px] text-slate-500 line-clamp-2">
+                                <p className="text-[11px] text-muted-foreground line-clamp-2">
                                   Mitigasi: {rk.mitigationPlan}
                                 </p>
                               )}
@@ -713,11 +715,11 @@ export function ProjectManagerApp() {
                     </div>
 
                     {/* Team Members */}
-                    <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-xs">
+                    <div className="p-5 bg-card border border-border rounded-lg shadow-xs">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <Users className="w-4 h-4 text-indigo-600" />
-                          <h3 className="text-sm font-semibold text-slate-900">Tim Proyek</h3>
+                          <h3 className="text-sm font-semibold text-foreground">Tim Proyek</h3>
                         </div>
                         <button
                           onClick={() => setShowNewMemberModal(true)}
@@ -728,16 +730,16 @@ export function ProjectManagerApp() {
                         </button>
                       </div>
 
-                      <div className="divide-y divide-slate-100">
+                      <div className="divide-y divide-border">
                         {projectMembers.map((m) => {
                           const assignedTasks = projectTasks.filter((t) => t.assigneeName === m.name || t.assigneeId === m.userId);
                           return (
                             <div key={m.id} className="py-2.5 flex items-center justify-between text-xs">
                               <div>
-                                <p className="font-medium text-slate-800">{m.name}</p>
-                                <p className="text-[11px] text-slate-400 capitalize">{m.role}</p>
+                                <p className="font-medium text-foreground">{m.name}</p>
+                                <p className="text-[11px] text-muted-foreground capitalize">{m.role}</p>
                               </div>
-                              <span className="text-[11px] text-slate-500 font-medium">
+                              <span className="text-[11px] text-muted-foreground font-medium">
                                 {assignedTasks.length} tugas aktif
                               </span>
                             </div>
@@ -768,14 +770,14 @@ export function ProjectManagerApp() {
                   return (
                     <div
                       key={status}
-                      className="w-72 flex-shrink-0 bg-slate-100/70 border border-slate-200 rounded-lg flex flex-col max-h-[calc(100vh-230px)]"
+                      className="w-72 flex-shrink-0 bg-muted/70 border border-border rounded-lg flex flex-col max-h-[calc(100vh-230px)]"
                     >
                       {/* Column Header */}
-                      <div className="p-3 border-b border-slate-200/60 flex items-center justify-between">
-                        <span className="text-xs font-semibold text-slate-700 capitalize">
+                      <div className="p-3 border-b border-border/60 flex items-center justify-between">
+                        <span className="text-xs font-semibold text-foreground capitalize">
                           {statusTitles[status]}
                         </span>
-                        <span className="text-[11px] text-slate-400 font-mono font-medium">
+                        <span className="text-[11px] text-muted-foreground font-mono font-medium">
                           {tasksInStatus.length}
                         </span>
                       </div>
@@ -787,10 +789,10 @@ export function ProjectManagerApp() {
                           return (
                             <div
                               key={t.id}
-                              className="p-3 bg-white border border-slate-200 rounded-md shadow-xs hover:border-indigo-300 transition-all space-y-2"
+                              className="p-3 bg-card border border-border rounded-md shadow-xs hover:border-indigo-300 transition-all space-y-2"
                             >
                               <div className="flex items-start justify-between gap-1">
-                                <h4 className="text-xs font-medium text-slate-800 leading-snug">
+                                <h4 className="text-xs font-medium text-foreground leading-snug">
                                   {t.title}
                                 </h4>
                                 <span className={`text-[10px] capitalize whitespace-nowrap ${getPriorityStyle(t.priority)}`}>
@@ -799,10 +801,10 @@ export function ProjectManagerApp() {
                               </div>
 
                               {t.description && (
-                                <p className="text-[11px] text-slate-500 line-clamp-2">{t.description}</p>
+                                <p className="text-[11px] text-muted-foreground line-clamp-2">{t.description}</p>
                               )}
 
-                              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
+                              <div className="pt-2 border-t border-border flex items-center justify-between text-[10px] text-muted-foreground">
                                 <span>{phase ? phase.name.slice(0, 14) + "..." : "Umum"}</span>
                                 {t.dueAt && (
                                   <span>{new Date(t.dueAt).toLocaleDateString("id-ID", { day: "numeric", month: "short" })}</span>
@@ -814,7 +816,7 @@ export function ProjectManagerApp() {
                                 <select
                                   value={t.status}
                                   onChange={(e) => updateTaskStatus(t.id, e.target.value as TaskStatus)}
-                                  className="w-full text-[10px] py-1 px-1.5 bg-slate-50 border border-slate-200 rounded text-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                  className="w-full text-[10px] py-1 px-1.5 bg-muted/40 border border-border rounded text-muted-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
                                 >
                                   <option value="inbox">Ke Inbox</option>
                                   <option value="planned">Ke Planned</option>
@@ -829,10 +831,10 @@ export function ProjectManagerApp() {
                       </div>
 
                       {/* Quick Add at bottom */}
-                      <div className="p-2 border-t border-slate-200/60">
+                      <div className="p-2 border-t border-border/60">
                         <button
                           onClick={() => setShowNewTaskModal(true)}
-                          className="w-full py-1.5 text-xs text-slate-600 hover:text-indigo-600 hover:bg-white rounded transition-colors flex items-center justify-center gap-1 font-medium"
+                          className="w-full py-1.5 text-xs text-muted-foreground hover:text-indigo-600 hover:bg-card rounded transition-colors flex items-center justify-center gap-1 font-medium"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           Tambah Kartu
@@ -847,11 +849,11 @@ export function ProjectManagerApp() {
             {/* VIEW 3: TIMELINE / GANTT */}
             {viewMode === "timeline" && (
               <div className="max-w-6xl mx-auto space-y-6">
-                <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-xs space-y-6">
+                <div className="p-5 bg-card border border-border rounded-lg shadow-xs space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Timeline & Fase Waktu</h3>
-                      <p className="text-xs text-slate-500">Visualisasi sekuens fase dan milestone dalam rentang proyek</p>
+                      <h3 className="text-sm font-semibold text-foreground">Timeline & Fase Waktu</h3>
+                      <p className="text-xs text-muted-foreground">Visualisasi sekuens fase dan milestone dalam rentang proyek</p>
                     </div>
                   </div>
 
@@ -860,24 +862,24 @@ export function ProjectManagerApp() {
                     {projectPhases.map((phase, idx) => (
                       <div key={phase.id} className="space-y-1.5">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-semibold text-slate-800">
+                          <span className="font-semibold text-foreground">
                             {phase.name}
                           </span>
-                          <span className="text-[11px] text-slate-500">
+                          <span className="text-[11px] text-muted-foreground">
                             {phase.startAt ? new Date(phase.startAt).toLocaleDateString("id-ID", { day: "numeric", month: "short" }) : "TBA"} -{" "}
                             {phase.dueAt ? new Date(phase.dueAt).toLocaleDateString("id-ID", { day: "numeric", month: "short" }) : "TBA"}
                           </span>
                         </div>
 
                         {/* Phase Bar */}
-                        <div className="h-6 w-full bg-slate-100 rounded-md overflow-hidden relative flex items-center px-3">
+                        <div className="h-6 w-full bg-muted rounded-md overflow-hidden relative flex items-center px-3">
                           <div
                             className={`h-full absolute left-0 top-0 rounded-md opacity-80 ${
                               phase.status === "completed"
                                 ? "bg-emerald-500"
                                 : phase.status === "active"
                                 ? "bg-indigo-600"
-                                : "bg-slate-400"
+                                : "bg-border"
                             }`}
                             style={{
                               width: `${Math.min(100, Math.max(25, 20 + idx * 25))}%`,
@@ -893,10 +895,10 @@ export function ProjectManagerApp() {
                           {projectMilestones
                             .filter((m) => m.phaseId === phase.id)
                             .map((m) => (
-                              <div key={m.id} className="flex items-center gap-2 text-[11px] text-slate-600">
+                              <div key={m.id} className="flex items-center gap-2 text-[11px] text-muted-foreground">
                                 <Flag className={`w-3 h-3 ${m.status === "achieved" ? "text-emerald-500" : "text-amber-500"}`} />
-                                <span className={m.status === "achieved" ? "line-through text-slate-400" : "font-medium"}>{m.title}</span>
-                                <span className="text-slate-400">· {new Date(m.targetDate).toLocaleDateString("id-ID", { day: "numeric", month: "short" })}</span>
+                                <span className={m.status === "achieved" ? "line-through text-muted-foreground" : "font-medium"}>{m.title}</span>
+                                <span className="text-muted-foreground">· {new Date(m.targetDate).toLocaleDateString("id-ID", { day: "numeric", month: "short" })}</span>
                               </div>
                             ))}
                         </div>
@@ -910,13 +912,13 @@ export function ProjectManagerApp() {
             {/* VIEW 4: LIST */}
             {viewMode === "list" && (
               <div className="max-w-6xl mx-auto space-y-4">
-                <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs flex items-center justify-between">
+                <div className="p-4 bg-card border border-border rounded-lg shadow-xs flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-semibold text-slate-800">
+                    <span className="text-xs font-semibold text-foreground">
                       Total: {projectTasks.length} Tugas
                     </span>
-                    <span aria-hidden="true" className="text-slate-300">|</span>
-                    <span className="text-xs text-slate-500">
+                    <span aria-hidden="true" className="text-foreground">|</span>
+                    <span className="text-xs text-muted-foreground">
                       {progressStats.completedTasks} Selesai · {progressStats.activeTasks} Aktif
                     </span>
                   </div>
@@ -929,9 +931,9 @@ export function ProjectManagerApp() {
                   </button>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-lg shadow-xs divide-y divide-slate-100">
+                <div className="bg-card border border-border rounded-lg shadow-xs divide-y divide-border">
                   {projectTasks.length === 0 ? (
-                    <div className="p-8 text-center text-xs text-slate-400">
+                    <div className="p-8 text-center text-xs text-muted-foreground">
                       Belum ada tugas yang diasosiasikan dengan proyek ini.
                     </div>
                   ) : (
@@ -940,23 +942,23 @@ export function ProjectManagerApp() {
                       const isCompleted = task.status === "completed";
 
                       return (
-                        <div key={task.id} className="p-4 flex items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
+                        <div key={task.id} className="p-4 flex items-center justify-between gap-4 hover:bg-muted/40/60 transition-colors">
                           <div className="flex items-center gap-3 min-w-0">
                             <button
                               onClick={() =>
                                 updateTaskStatus(task.id, isCompleted ? "inbox" : "completed")
                               }
                               className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
-                                isCompleted ? "bg-indigo-600 border-indigo-600 text-white" : "border-slate-300 hover:border-indigo-500"
+                                isCompleted ? "bg-indigo-600 border-indigo-600 text-white" : "border-border hover:border-indigo-500"
                               }`}
                             >
                               {isCompleted && <CheckCircle2 className="w-3 h-3" />}
                             </button>
                             <div className="min-w-0">
-                              <h4 className={`text-xs font-medium truncate ${isCompleted ? "line-through text-slate-400" : "text-slate-900"}`}>
+                              <h4 className={`text-xs font-medium truncate ${isCompleted ? "line-through text-muted-foreground" : "text-foreground"}`}>
                                 {task.title}
                               </h4>
-                              <div className="mt-0.5 flex items-center gap-2 text-[11px] text-slate-400">
+                              <div className="mt-0.5 flex items-center gap-2 text-[11px] text-muted-foreground">
                                 <span>{phase ? phase.name : "Umum"}</span>
                                 {task.dueAt && (
                                   <>
@@ -981,7 +983,7 @@ export function ProjectManagerApp() {
                             <select
                               value={task.status}
                               onChange={(e) => updateTaskStatus(task.id, e.target.value as TaskStatus)}
-                              className="text-xs py-1 px-2 bg-slate-50 border border-slate-200 rounded text-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                              className="text-xs py-1 px-2 bg-muted/40 border border-border rounded text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
                             >
                               <option value="inbox">Inbox</option>
                               <option value="planned">Planned</option>
@@ -1002,9 +1004,9 @@ export function ProjectManagerApp() {
             {/* VIEW 5: CALENDAR */}
             {viewMode === "calendar" && (
               <div className="max-w-6xl mx-auto space-y-4">
-                <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-                  <h3 className="text-sm font-semibold text-slate-900">Agenda Tanggal & Milestone Proyek</h3>
-                  <p className="text-xs text-slate-500">Daftar item berbatas waktu dan target checkpoint dalam format kalender.</p>
+                <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+                  <h3 className="text-sm font-semibold text-foreground">Agenda Tanggal & Milestone Proyek</h3>
+                  <p className="text-xs text-muted-foreground">Daftar item berbatas waktu dan target checkpoint dalam format kalender.</p>
 
                   <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {/* Milestones Card list */}
@@ -1017,8 +1019,8 @@ export function ProjectManagerApp() {
                           </span>
                           <span className="text-[10px] text-emerald-700 capitalize font-medium">{ms.status}</span>
                         </div>
-                        <p className="font-medium text-slate-800">{ms.title}</p>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="font-medium text-foreground">{ms.title}</p>
+                        <p className="text-[11px] text-muted-foreground">
                           {new Date(ms.targetDate).toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
                         </p>
                       </div>
@@ -1028,16 +1030,16 @@ export function ProjectManagerApp() {
                     {projectTasks
                       .filter((t) => t.dueAt)
                       .map((t) => (
-                        <div key={t.id} className="p-3 border border-slate-200 bg-white rounded-lg text-xs space-y-1">
+                        <div key={t.id} className="p-3 border border-border bg-card rounded-lg text-xs space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-medium text-slate-700 flex items-center gap-1.5">
+                            <span className="font-medium text-foreground flex items-center gap-1.5">
                               <Clock className="w-3.5 h-3.5 text-indigo-600" />
                               Tugas
                             </span>
                             <span className={`text-[10px] capitalize ${getPriorityStyle(t.priority)}`}>{t.priority}</span>
                           </div>
-                          <p className="font-medium text-slate-900 line-clamp-1">{t.title}</p>
-                          <p className="text-[11px] text-slate-500">
+                          <p className="font-medium text-foreground line-clamp-1">{t.title}</p>
+                          <p className="text-[11px] text-muted-foreground">
                             Tenggat: {new Date(t.dueAt!).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
                           </p>
                         </div>
@@ -1050,11 +1052,11 @@ export function ProjectManagerApp() {
             {/* VIEW 6: TEAM & WORKLOAD */}
             {viewMode === "team" && (
               <div className="max-w-6xl mx-auto space-y-6">
-                <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-xs">
+                <div className="p-5 bg-card border border-border rounded-lg shadow-xs">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Beban Kerja Tim (Workload)</h3>
-                      <p className="text-xs text-slate-500">Distribusi alokasi tugas per anggota untuk mencegah kelebihan beban</p>
+                      <h3 className="text-sm font-semibold text-foreground">Beban Kerja Tim (Workload)</h3>
+                      <p className="text-xs text-muted-foreground">Distribusi alokasi tugas per anggota untuk mencegah kelebihan beban</p>
                     </div>
                     <button
                       onClick={() => setShowNewMemberModal(true)}
@@ -1074,15 +1076,15 @@ export function ProjectManagerApp() {
                       const completedTasks = assignedTasks.filter((t) => t.status === "completed");
 
                       return (
-                        <div key={member.id} className="p-4 border border-slate-200 rounded-lg bg-slate-50/50 space-y-3">
+                        <div key={member.id} className="p-4 border border-border rounded-lg bg-muted/40/50 space-y-3">
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
                               <div className="w-9 h-9 rounded-full bg-indigo-600 text-white font-semibold flex items-center justify-center text-xs">
                                 {member.name.slice(0, 2).toUpperCase()}
                               </div>
                               <div>
-                                <h4 className="text-xs font-semibold text-slate-900">{member.name}</h4>
-                                <p className="text-[11px] text-slate-500">{member.email || "No email"}</p>
+                                <h4 className="text-xs font-semibold text-foreground">{member.name}</h4>
+                                <p className="text-[11px] text-muted-foreground">{member.email || "No email"}</p>
                               </div>
                             </div>
                             <span className="text-[10px] font-semibold text-indigo-700 capitalize bg-indigo-50 px-2 py-0.5 rounded">
@@ -1090,7 +1092,7 @@ export function ProjectManagerApp() {
                             </span>
                           </div>
 
-                          <div className="flex items-center justify-between text-xs text-slate-600 pt-2 border-t border-slate-200">
+                          <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border">
                             <span>Tugas Aktif: <strong>{activeTasks.length}</strong></span>
                             <span>Selesai: <strong>{completedTasks.length}</strong></span>
                             <span>Total Beban: <strong>{assignedTasks.length}</strong></span>
@@ -1106,11 +1108,11 @@ export function ProjectManagerApp() {
             {/* VIEW 7: RISK REGISTER */}
             {viewMode === "risks" && (
               <div className="max-w-6xl mx-auto space-y-6">
-                <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-xs">
+                <div className="p-5 bg-card border border-border rounded-lg shadow-xs">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Risk Register & Rencana Mitigasi</h3>
-                      <p className="text-xs text-slate-500">Matriks identifikasi risiko (Likelihood x Impact) dan rencana penanggulangan</p>
+                      <h3 className="text-sm font-semibold text-foreground">Risk Register & Rencana Mitigasi</h3>
+                      <p className="text-xs text-muted-foreground">Matriks identifikasi risiko (Likelihood x Impact) dan rencana penanggulangan</p>
                     </div>
                     <button
                       onClick={() => setShowNewRiskModal(true)}
@@ -1122,38 +1124,38 @@ export function ProjectManagerApp() {
                   </div>
 
                   {projectRisks.length === 0 ? (
-                    <div className="p-8 text-center text-xs text-slate-400">
+                    <div className="p-8 text-center text-xs text-muted-foreground">
                       Tidak ada catatan risiko yang teridentifikasi.
                     </div>
                   ) : (
                     <div className="space-y-3">
                       {projectRisks.map((risk) => (
-                        <div key={risk.id} className="p-4 border border-slate-200 rounded-lg bg-white space-y-2">
+                        <div key={risk.id} className="p-4 border border-border rounded-lg bg-card space-y-2">
                           <div className="flex items-start justify-between gap-4">
                             <div>
-                              <h4 className="text-xs font-semibold text-slate-900">{risk.title}</h4>
-                              <p className="text-xs text-slate-600 mt-0.5">{risk.description}</p>
+                              <h4 className="text-xs font-semibold text-foreground">{risk.title}</h4>
+                              <p className="text-xs text-muted-foreground mt-0.5">{risk.description}</p>
                             </div>
                             <div className="flex items-center gap-2 flex-shrink-0">
-                              <span className="text-[11px] font-medium text-slate-600">
+                              <span className="text-[11px] font-medium text-muted-foreground">
                                 Kemungkinan: <strong>{risk.likelihood}</strong>
                               </span>
-                              <span aria-hidden="true" className="text-slate-300">·</span>
+                              <span aria-hidden="true" className="text-foreground">·</span>
                               <span className="text-[11px] font-medium text-red-600">
                                 Dampak: <strong>{risk.impact}</strong>
                               </span>
-                              <span aria-hidden="true" className="text-slate-300">·</span>
-                              <span className="text-[10px] font-semibold text-slate-700 capitalize bg-slate-100 px-2 py-0.5 rounded">
+                              <span aria-hidden="true" className="text-foreground">·</span>
+                              <span className="text-[10px] font-semibold text-foreground capitalize bg-muted px-2 py-0.5 rounded">
                                 {risk.status}
                               </span>
                             </div>
                           </div>
 
                           {risk.mitigationPlan && (
-                            <div className="pt-2 border-t border-slate-100 text-xs text-slate-600">
-                              <strong className="text-slate-800">Rencana Mitigasi:</strong> {risk.mitigationPlan}
+                            <div className="pt-2 border-t border-border text-xs text-muted-foreground">
+                              <strong className="text-foreground">Rencana Mitigasi:</strong> {risk.mitigationPlan}
                               {risk.ownerName && (
-                                <span className="ml-2 text-slate-400">({risk.ownerName})</span>
+                                <span className="ml-2 text-muted-foreground">({risk.ownerName})</span>
                               )}
                             </div>
                           )}
@@ -1167,16 +1169,16 @@ export function ProjectManagerApp() {
           </div>
         </main>
       ) : (
-        <div className="flex-1 flex items-center justify-center p-8 text-center text-slate-400 text-xs">
+        <div className="flex-1 flex items-center justify-center p-8 text-center text-muted-foreground text-xs">
           Belum ada proyek yang dipilih. Silakan buat proyek baru atau pilih dari sidebar.
         </div>
       )}
 
       {/* MODAL: NEW PROJECT */}
       {showNewProjectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-lg bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Buat Proyek Baru</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-lg bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">Buat Proyek Baru</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -1202,33 +1204,33 @@ export function ProjectManagerApp() {
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Nama Proyek *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Nama Proyek *</label>
                 <input
                   name="name"
                   type="text"
                   required
                   placeholder="mis. Audit Kepatuhan & Tata Kelola Korporat"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Deskripsi & Ruang Lingkup</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Deskripsi & Ruang Lingkup</label>
                 <textarea
                   name="description"
                   rows={3}
                   placeholder="Latar belakang, tujuan, dan cakupan evaluasi..."
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Alokasi Anggaran (IDR)</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Alokasi Anggaran (IDR)</label>
                 <input
                   name="budgetAllocated"
                   type="number"
                   placeholder="mis. 150000000"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
@@ -1236,7 +1238,7 @@ export function ProjectManagerApp() {
                 <button
                   type="button"
                   onClick={() => setShowNewProjectModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
                 >
                   Batal
                 </button>
@@ -1254,20 +1256,20 @@ export function ProjectManagerApp() {
 
       {/* MODAL: USE TEMPLATE (§11) */}
       {showTemplateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-xl bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-xl bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
             <div>
-              <h3 className="text-sm font-semibold text-slate-900">Gunakan Template Proyek (§11)</h3>
-              <p className="text-xs text-slate-500">Menerapkan struktur fase, milestone, dan template task secara otomatis.</p>
+              <h3 className="text-sm font-semibold text-foreground">Gunakan Template Proyek (§11)</h3>
+              <p className="text-xs text-muted-foreground">Menerapkan struktur fase, milestone, dan template task secara otomatis.</p>
             </div>
 
             <div className="space-y-3">
               {PROJECT_TEMPLATES.map((tmpl) => (
-                <div key={tmpl.id} className="p-4 border border-slate-200 rounded-lg hover:border-indigo-400 transition-all space-y-2">
+                <div key={tmpl.id} className="p-4 border border-border rounded-lg hover:border-indigo-400 transition-all space-y-2">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h4 className="text-xs font-semibold text-slate-900">{tmpl.name}</h4>
-                      <p className="text-xs text-slate-500">{tmpl.description}</p>
+                      <h4 className="text-xs font-semibold text-foreground">{tmpl.name}</h4>
+                      <p className="text-xs text-muted-foreground">{tmpl.description}</p>
                     </div>
                     <span className="text-[10px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
                       {tmpl.phases.length} Fase
@@ -1294,7 +1296,7 @@ export function ProjectManagerApp() {
               <button
                 type="button"
                 onClick={() => setShowTemplateModal(false)}
-                className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
               >
                 Tutup
               </button>
@@ -1305,9 +1307,9 @@ export function ProjectManagerApp() {
 
       {/* MODAL: ADD TASK TO PROJECT (§3.3) */}
       {showNewTaskModal && activeProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Tambah Tugas ke Proyek</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">Tambah Tugas ke Proyek</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -1332,21 +1334,21 @@ export function ProjectManagerApp() {
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Judul Tugas *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Judul Tugas *</label>
                 <input
                   name="title"
                   type="text"
                   required
                   placeholder="mis. Review klausul liabilitas kontrak mitra"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Fase Proyek</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Fase Proyek</label>
                 <select
                   name="phaseId"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 >
                   <option value="">Umum / Tanpa Fase Khusus</option>
                   {projectPhases.map((ph) => (
@@ -1357,11 +1359,11 @@ export function ProjectManagerApp() {
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Prioritas</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Prioritas</label>
                   <select
                     name="priority"
                     defaultValue="medium"
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -1371,22 +1373,22 @@ export function ProjectManagerApp() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Tenggat Waktu</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Tenggat Waktu</label>
                   <input
                     name="dueAt"
                     type="date"
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Penanggung Jawab (PIC)</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Penanggung Jawab (PIC)</label>
                 <input
                   name="assigneeName"
                   type="text"
                   placeholder="mis. Konsultan Hukum"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
@@ -1394,7 +1396,7 @@ export function ProjectManagerApp() {
                 <button
                   type="button"
                   onClick={() => setShowNewTaskModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
                 >
                   Batal
                 </button>
@@ -1412,9 +1414,9 @@ export function ProjectManagerApp() {
 
       {/* MODAL: ADD PHASE (§4) */}
       {showNewPhaseModal && activeProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Tambah Fase Proyek (§4)</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">Tambah Fase Proyek (§4)</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -1436,31 +1438,31 @@ export function ProjectManagerApp() {
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Nama Fase *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Nama Fase *</label>
                 <input
                   name="name"
                   type="text"
                   required
                   placeholder="mis. Fase 4: Pengujian & Verifikasi Lapangan"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Tanggal Mulai</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Tanggal Mulai</label>
                   <input
                     name="startAt"
                     type="date"
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Target Selesai</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Target Selesai</label>
                   <input
                     name="dueAt"
                     type="date"
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   />
                 </div>
               </div>
@@ -1469,7 +1471,7 @@ export function ProjectManagerApp() {
                 <button
                   type="button"
                   onClick={() => setShowNewPhaseModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
                 >
                   Batal
                 </button>
@@ -1487,9 +1489,9 @@ export function ProjectManagerApp() {
 
       {/* MODAL: ADD MILESTONE (§7) */}
       {showNewMilestoneModal && activeProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Tambah Milestone Kunci (§7)</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">Tambah Milestone Kunci (§7)</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -1510,31 +1512,31 @@ export function ProjectManagerApp() {
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Judul Checkpoint Milestone *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Judul Checkpoint Milestone *</label>
                 <input
                   name="title"
                   type="text"
                   required
                   placeholder="mis. Penyerahan Laporan Final Opini Audit"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Target Tanggal *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Target Tanggal *</label>
                 <input
                   name="targetDate"
                   type="date"
                   required
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Kaitkan ke Fase (Opsional)</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Kaitkan ke Fase (Opsional)</label>
                 <select
                   name="phaseId"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 >
                   <option value="">Tanpa Fase</option>
                   {projectPhases.map((ph) => (
@@ -1547,7 +1549,7 @@ export function ProjectManagerApp() {
                 <button
                   type="button"
                   onClick={() => setShowNewMilestoneModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
                 >
                   Batal
                 </button>
@@ -1565,9 +1567,9 @@ export function ProjectManagerApp() {
 
       {/* MODAL: ADD RISK (§8) */}
       {showNewRiskModal && activeProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Identifikasi Risiko (§8)</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">Identifikasi Risiko (§8)</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -1592,33 +1594,33 @@ export function ProjectManagerApp() {
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Judul Risiko *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Judul Risiko *</label>
                 <input
                   name="title"
                   type="text"
                   required
                   placeholder="mis. Keterlambatan respons legal dari counterpart"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Deskripsi Dampak</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Deskripsi Dampak</label>
                 <textarea
                   name="description"
                   rows={2}
                   placeholder="Potensi terhambatnya jadwal penandatanganan..."
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Kemungkinan (Likelihood)</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Kemungkinan (Likelihood)</label>
                   <select
                     name="likelihood"
                     defaultValue="medium"
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   >
                     <option value="low">Rendah (Low)</option>
                     <option value="medium">Sedang (Medium)</option>
@@ -1626,11 +1628,11 @@ export function ProjectManagerApp() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Dampak (Impact)</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Dampak (Impact)</label>
                   <select
                     name="impact"
                     defaultValue="high"
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   >
                     <option value="low">Rendah (Low)</option>
                     <option value="medium">Sedang (Medium)</option>
@@ -1640,12 +1642,12 @@ export function ProjectManagerApp() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Rencana Mitigasi</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Rencana Mitigasi</label>
                 <input
                   name="mitigationPlan"
                   type="text"
                   placeholder="Eskalasi ke dewan direksi via surat resmi..."
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
@@ -1653,7 +1655,7 @@ export function ProjectManagerApp() {
                 <button
                   type="button"
                   onClick={() => setShowNewRiskModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
                 >
                   Batal
                 </button>
@@ -1671,9 +1673,9 @@ export function ProjectManagerApp() {
 
       {/* MODAL: ADD MEMBER (§5) */}
       {showNewMemberModal && activeProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Tambah Anggota Tim Proyek (§5)</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">Tambah Anggota Tim Proyek (§5)</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -1694,32 +1696,32 @@ export function ProjectManagerApp() {
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Nama Anggota *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Nama Anggota *</label>
                 <input
                   name="name"
                   type="text"
                   required
                   placeholder="mis. Konsultan Finansial"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Email</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Email</label>
                 <input
                   name="email"
                   type="email"
                   placeholder="konsultan@firma.co.id"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Peran dalam Proyek</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Peran dalam Proyek</label>
                 <select
                   name="role"
                   defaultValue="contributor"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 >
                   <option value="owner">Owner (Kontrol Penuh)</option>
                   <option value="manager">Manager (Ubah Struktur, Assign Task)</option>
@@ -1732,7 +1734,7 @@ export function ProjectManagerApp() {
                 <button
                   type="button"
                   onClick={() => setShowNewMemberModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
                 >
                   Batal
                 </button>
@@ -1750,13 +1752,13 @@ export function ProjectManagerApp() {
 
       {/* CONFIRM DELETE MODAL (§3.3) */}
       {showDeleteConfirm && activeProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
             <h3 className="text-sm font-semibold text-red-600 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" />
               Hapus Proyek: {activeProject.name}
             </h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               Aturan Ekosistem (§3.3): Menghapus proyek tidak menghapus task di dalamnya secara default — task akan dilepas referensinya dan tetap aman di Task Manager.
             </p>
 
@@ -1766,7 +1768,7 @@ export function ProjectManagerApp() {
                   deleteProject(activeProject.id, false);
                   setShowDeleteConfirm(false);
                 }}
-                className="w-full py-2 text-xs font-medium bg-slate-900 text-white rounded hover:bg-slate-800 transition-colors"
+                className="w-full py-2 text-xs font-medium bg-foreground text-background rounded hover:bg-foreground transition-colors"
               >
                 Hapus Proyek (Pertahankan Tugas di Task Manager)
               </button>
@@ -1781,7 +1783,7 @@ export function ProjectManagerApp() {
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="w-full py-1.5 text-xs text-slate-500 hover:bg-slate-100 rounded"
+                className="w-full py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
               >
                 Batal
               </button>

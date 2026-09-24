@@ -12,6 +12,7 @@ import {
   Boxes,
   Zap,
 } from "lucide-react";
+import { useShellSections } from "@/app/shell-sections";
 
 interface IntersectItem {
   id: string;
@@ -147,10 +148,21 @@ export function IntersectView() {
 
   const totalInitiatives = items.reduce((acc, curr) => acc + curr.activeInitiatives, 0);
 
+  const [activeSection, setActiveSection] = useState<string>("metrik");
+  const goSection = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(`soc-isect-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  useShellSections([
+    { id: "metrik", label: "Metrik", active: activeSection === "metrik", onSelect: () => goSection("metrik") },
+    { id: "filter", label: "Filter & Cari", active: activeSection === "filter", onSelect: () => goSection("filter") },
+    { id: "titiktemu", label: "Titik Temu", active: activeSection === "titiktemu", onSelect: () => goSection("titiktemu") },
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Header Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div id="soc-isect-metrik" className="scroll-mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl border border-border bg-card shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Titik Temu Sinergis</span>
@@ -207,7 +219,7 @@ export function IntersectView() {
       </div>
 
       {/* Categories & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div id="soc-isect-filter" className="scroll-mt-24 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
           {maturities.map((mat) => (
             <button
@@ -248,7 +260,7 @@ export function IntersectView() {
       </div>
 
       {/* Cards List */}
-      <div className="grid grid-cols-1 gap-4">
+      <div id="soc-isect-titiktemu" className="scroll-mt-24 grid grid-cols-1 gap-4">
         {filteredItems.map((item) => (
           <div key={item.id} className="p-4 rounded-xl border border-border bg-card shadow-xs space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">

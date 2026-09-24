@@ -1,3 +1,5 @@
+import { ShellHeader } from "@/app/shell-header";
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState, useMemo } from "react";
 import {
   LayoutGrid,
@@ -13,6 +15,7 @@ import {
   Maximize2,
   BarChart2,
   Plus,
+  Inbox,
 } from "lucide-react";
 import { useKanbanBoard } from "./store";
 import { KanbanViewMode, SwimlaneBy, Column } from "./types";
@@ -48,32 +51,32 @@ export function KanbanApp() {
   }, [activeBoard.swimlaneBy, tasks]);
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-slate-50 text-slate-800">
+    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-background text-foreground">
       {/* LEFT SIDEBAR: Board Controls & WIP Summary */}
-      <aside className="w-72 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
+      <ShellSidebar>
         {/* Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-white border-2 border-slate-200 shadow-xs flex items-center justify-center text-slate-800 shrink-0">
-            <LayoutGrid className="w-4 h-4 text-slate-800" />
+        <div className="p-4 border-b border-border flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl gradient-primary shadow-md shadow-indigo-500/25 flex items-center justify-center text-white shrink-0">
+            <LayoutGrid className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <h2 className="text-xs font-bold text-slate-900 tracking-tight">Kanban Board</h2>
-              <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 font-medium border border-slate-200">
+              <h2 className="text-xs font-bold text-foreground tracking-tight">Kanban Board</h2>
+              <span className="text-[9px] px-1.5 py-0.2 rounded bg-muted text-muted-foreground font-medium border border-border">
                 Tanda Sementara
               </span>
             </div>
-            <p className="text-[10px] text-slate-400">Lapisan Alur Kerja & WIP Limit (#09)</p>
+            <p className="text-[10px] text-muted-foreground">Lapisan Alur Kerja & WIP Limit (#09)</p>
           </div>
         </div>
 
         {/* Swimlane Selector (§6) */}
-        <div className="p-4 border-b border-slate-100 space-y-2">
-          <span className="text-[11px] font-semibold text-slate-700">Pengelompokan Swimlane</span>
+        <div className="p-4 border-b border-border space-y-2">
+          <span className="text-[11px] font-semibold text-muted-foreground">Pengelompokan Swimlane</span>
           <select
             value={activeBoard.swimlaneBy}
             onChange={(e) => setSwimlane(e.target.value as SwimlaneBy)}
-            className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500 bg-slate-50"
+            className="w-full text-xs p-2 border border-border rounded-lg focus:ring-1 focus:ring-ring bg-muted text-foreground"
           >
             <option value="none">Tanpa Swimlane (Standar)</option>
             <option value="priority">Berdasarkan Prioritas</option>
@@ -83,7 +86,7 @@ export function KanbanApp() {
 
         {/* WIP Limit Overview (§4.2 & §9) */}
         <div className="p-4 flex-1 overflow-y-auto space-y-3">
-          <span className="text-[11px] font-semibold text-slate-700">Utilisasi Batas WIP Kolom</span>
+          <span className="text-[11px] font-semibold text-muted-foreground">Utilisasi Batas WIP Kolom</span>
           <div className="space-y-2.5">
             {activeBoard.columns.map((col) => {
               const current = (columnTaskMap[col.id] || []).length;
@@ -92,19 +95,19 @@ export function KanbanApp() {
               const isBottleneck = max !== null && current >= max;
 
               return (
-                <div key={col.id} className="p-2.5 bg-slate-50 border border-slate-200 rounded text-xs space-y-1">
+                <div key={col.id} className="p-2.5 bg-muted/50 border border-border rounded-lg text-xs space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-800">{col.name}</span>
-                    <span className="font-mono text-[11px] text-slate-500">
+                    <span className="font-semibold text-foreground">{col.name}</span>
+                    <span className="font-mono text-[11px] text-muted-foreground">
                       {current} {max ? `/ ${max}` : "(Bebas)"}
                     </span>
                   </div>
 
                   {max && (
-                    <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                    <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
                       <div
                         className={`h-full transition-all ${
-                          isBottleneck ? "bg-red-500" : pct! > 70 ? "bg-amber-500" : "bg-indigo-600"
+                          isBottleneck ? "bg-destructive" : pct! > 70 ? "bg-amber-500" : "bg-primary"
                         }`}
                         style={{ width: `${pct}%` }}
                       />
@@ -112,7 +115,7 @@ export function KanbanApp() {
                   )}
 
                   {isBottleneck && (
-                    <p className="text-[10px] text-red-600 font-semibold flex items-center gap-1 mt-0.5">
+                    <p className="text-[10px] text-destructive font-semibold flex items-center gap-1 mt-0.5">
                       <AlertTriangle className="w-3 h-3" />
                       Potensi Bottleneck Aliran
                     </p>
@@ -124,25 +127,25 @@ export function KanbanApp() {
         </div>
 
         {/* Footnote */}
-        <div className="p-3 border-t border-slate-100 bg-slate-50 text-[10px] text-slate-500">
-          <p className="font-semibold text-slate-700">Standalone App #09</p>
+        <div className="p-3 border-t border-border bg-muted/40 text-[10px] text-muted-foreground">
+          <p className="font-semibold text-foreground">Standalone App #09</p>
           <p className="mt-0.5">Perpindahan card menulis balik ke Task Manager secara otomatis.</p>
         </div>
-      </aside>
+      </ShellSidebar>
 
       {/* MAIN KANBAN BOARD */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
         {/* Top Header */}
-        <header className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <ShellHeader>
           <div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight">{activeBoard.name}</h1>
-            <p className="text-xs text-slate-500">
+            <h1 className="text-base font-bold text-foreground tracking-tight">{activeBoard.name}</h1>
+            <p className="text-xs text-muted-foreground">
               Visualisasi tahapan kerja dinamis dengan kendali aliran WIP limit.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center border border-slate-200 rounded-md p-0.5 bg-slate-50 text-xs">
+            <div className="flex items-center border border-border rounded-lg p-0.5 bg-muted text-xs">
               {[
                 { id: "board", label: "Papan Kolom" },
                 { id: "compact", label: "Ringkas (Compact)" },
@@ -150,10 +153,10 @@ export function KanbanApp() {
                 <button
                   key={v.id}
                   onClick={() => setViewMode(v.id as KanbanViewMode)}
-                  className={`px-3 py-1 rounded transition-colors ${
+                  className={`px-3 py-1 rounded-md transition-colors ${
                     viewMode === v.id
-                      ? "bg-white text-slate-900 font-semibold shadow-xs"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {v.label}
@@ -161,10 +164,10 @@ export function KanbanApp() {
               ))}
             </div>
           </div>
-        </header>
+        </ShellHeader>
 
         {/* COLUMNS AREA */}
-        <div className="flex-1 overflow-x-auto p-4 flex gap-4 items-start bg-slate-100/60">
+        <div className="flex-1 overflow-x-auto p-4 flex gap-4 items-start bg-muted/40">
           {activeBoard.columns.map((col) => {
             const colTasks = columnTaskMap[col.id] || [];
             const isFull = col.wipLimit !== null && colTasks.length >= col.wipLimit;
@@ -172,20 +175,20 @@ export function KanbanApp() {
             return (
               <div
                 key={col.id}
-                className="w-72 flex-shrink-0 bg-white border border-slate-200 rounded-xl shadow-xs flex flex-col max-h-[calc(100vh-145px)]"
+                className="w-72 flex-shrink-0 bg-card border border-border rounded-2xl shadow-sm flex flex-col max-h-[calc(100vh-145px)]"
               >
                 {/* Column Header */}
-                <div className="p-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-xl">
+                <div className="p-3 border-b border-border flex items-center justify-between bg-muted/50 rounded-t-2xl">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: col.color }} />
-                    <h3 className="text-xs font-bold text-slate-900">{col.name}</h3>
+                    <h3 className="text-xs font-bold text-foreground">{col.name}</h3>
                   </div>
 
                   <span
                     className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border ${
                       isFull
-                        ? "bg-red-50 text-red-700 border-red-200"
-                        : "bg-white text-slate-600 border-slate-200"
+                        ? "bg-destructive/10 text-destructive border-destructive/30"
+                        : "bg-card text-muted-foreground border-border"
                     }`}
                   >
                     {colTasks.length} {col.wipLimit ? `/${col.wipLimit}` : ""}
@@ -195,32 +198,35 @@ export function KanbanApp() {
                 {/* Cards Container */}
                 <div className="p-2.5 flex-1 overflow-y-auto space-y-2">
                   {colTasks.length === 0 ? (
-                    <p className="text-xs text-slate-400 text-center py-8 italic">Kosong</p>
+                    <div className="flex flex-col items-center justify-center gap-2 py-10 text-muted-foreground">
+                      <Inbox className="w-6 h-6 opacity-40" />
+                      <p className="text-xs italic">Kosong</p>
+                    </div>
                   ) : (
                     colTasks.map((task) => (
                       <div
                         key={task.id}
-                        className={`p-3 bg-white border border-slate-200 rounded-lg shadow-2xs hover:border-indigo-400 transition-all space-y-2 ${
+                        className={`p-3 bg-card border border-border rounded-xl shadow-2xs hover:border-primary/50 transition-all space-y-2 ${
                           viewMode === "compact" ? "py-2" : ""
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2">
-                          <h4 className="text-xs font-semibold text-slate-900 line-clamp-2">{task.title}</h4>
-                          <span className="text-[9px] font-bold uppercase px-1 py-0.5 rounded bg-slate-100 text-slate-600 flex-shrink-0">
+                          <h4 className="text-xs font-semibold text-foreground line-clamp-2">{task.title}</h4>
+                          <span className="text-[9px] font-bold uppercase px-1 py-0.5 rounded bg-muted text-muted-foreground flex-shrink-0">
                             {task.priority}
                           </span>
                         </div>
 
                         {viewMode !== "compact" && (
-                          <div className="flex items-center justify-between text-[11px] text-slate-400">
+                          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                             <span>{task.dueAt ? new Date(task.dueAt).toLocaleDateString("id-ID", { day: "numeric", month: "short" }) : "Tanpa Batas"}</span>
                             <span>{task.assigneeName || "Unassigned"}</span>
                           </div>
                         )}
 
                         {/* Column Relocator Controls (§13) */}
-                        <div className="pt-1.5 border-t border-slate-100 flex items-center justify-between text-[10px]">
-                          <span className="text-slate-400">Pindah ke:</span>
+                        <div className="pt-1.5 border-t border-border flex items-center justify-between text-[10px]">
+                          <span className="text-muted-foreground">Pindah ke:</span>
                           <div className="flex items-center gap-1">
                             {activeBoard.columns
                               .filter((c) => c.id !== col.id)
@@ -228,7 +234,7 @@ export function KanbanApp() {
                                 <button
                                   key={c.id}
                                   onClick={() => moveCard(task.id, c.id)}
-                                  className="px-1.5 py-0.5 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 rounded text-slate-600 font-medium transition-colors"
+                                  className="px-1.5 py-0.5 bg-muted hover:bg-accent hover:text-accent-foreground rounded text-muted-foreground font-medium transition-colors"
                                   title={`Pindahkan ke ${c.name}`}
                                 >
                                   {c.name.slice(0, 3)}

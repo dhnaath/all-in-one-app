@@ -1,8 +1,15 @@
 import { AppDock } from "./shell/app-dock";
+import { ShellSidebarProvider } from "./shell-sidebar";
+import { ShellHeaderProvider } from "./shell-header";
+import {
+  ShellSectionsProvider,
+  type ShellSection,
+} from "./shell-sections";
+import { STANDALONE_APPS } from "@/features/standalone/standaloneAppsData";
 import { TypewriterSearchText } from "./shell/TypewriterSearchText";
 import { AnimatedSearchIcon } from "./shell/AnimatedSearchIcon";
-import { useState, useEffect } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { useState, useEffect, useMemo, useRef, useCallback, useLayoutEffect } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   PanelLeft,
   PanelRight,
@@ -90,6 +97,7 @@ import {
   Binary,
   Info,
   Workflow,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { useLanguage } from "@/features/finance/hooks/useLanguage";
@@ -280,6 +288,17 @@ export const APP_MODES: ModeItem[] = [
   },
 ];
 
+const CATEGORY_META: Record<string, { icon: LucideIcon; accent: string }> = {
+  Finance: { icon: Wallet, accent: "text-emerald-600 dark:text-emerald-400" },
+  "Phase Side": { icon: Compass, accent: "text-indigo-600 dark:text-indigo-400" },
+  "100 Tools": { icon: Grid2X2, accent: "text-purple-600 dark:text-purple-400" },
+  Productivity: { icon: CheckSquare, accent: "text-blue-600 dark:text-blue-400" },
+  Personal: { icon: User, accent: "text-rose-600 dark:text-rose-400" },
+  Society: { icon: Users, accent: "text-amber-600 dark:text-amber-400" },
+  "Creative & Media": { icon: PenTool, accent: "text-pink-600 dark:text-pink-400" },
+  "Academy & Tools": { icon: GraduationCap, accent: "text-sky-600 dark:text-sky-400" },
+};
+
 export function AppShell({
   title,
   subtitle,
@@ -292,6 +311,7 @@ export function AppShell({
   children: ReactNode;
 }) {
   const location = useRouterState({ select: (s) => s.location });
+  const navigate = useNavigate();
   const pathname = location.pathname;
   const fullPath = pathname + (location.searchStr || "");
   const rawNav = navKonsultan;
@@ -304,53 +324,137 @@ export function AppShell({
     ? findItemById(customIdParam)
     : findItemByPath(fullPath);
 
-  const selfShapingGroup = rawNav.find((g) => g.title === "Self-Shaping");
-  const mutualMappingGroup = rawNav.find((g) => g.title === "Mutual-Mapping");
-  const orgOptimizingGroup = rawNav.find((g) => g.title === "Organization-Optimizing");
+  // ---------------------------------------------------------------------------
+  // CONTEXT RESOLUTION — determine which nav group / parent-category the route
+  // that is currently open belongs to. This drives BOTH the left sidebar scope
+  // and the header's context pill so the shell adapts to the active app.
+  // ---------------------------------------------------------------------------
+  const contextMatch: { item: NavItem; group: NavGroupType } | null = (() => {
+    const all: { item: NavItem; group: NavGroupType }[] = [];
+    rawNav.forEach((g) => g.items.forEach((item) => all.push({ item, group: g })));
+    return (
+      all.find((x) => x.item.to === fullPath) ||
+      all.find((x) => x.item.to === pathname) ||
+      all.find((x) => x.item.to !== "/" && x.item.to.split("?")[0] === pathname) ||
+      all.find((x) => {
+        const base = x.item.to.split("?")[0];
+        return base !== "/" && pathname.startsWith(base);
+      }) ||
+      null
+    );
+  })();
 
-  const sidebarNav: NavGroupType[] = [
-    {
-      title: "",
-      items: [
-        { to: "/", label: "Launcher", icon: LayoutDashboard },
-        { to: "/terminal", label: "Terminal", icon: Terminal },
-      ],
-    },
-    {
-      title: "Self-Shaping",
-      items: selfShapingGroup?.items || [
-        { to: "/reliance", label: "Reliance", icon: ShieldCheck },
-        { to: "/sufficient", label: "Sufficient", icon: CheckCircle2 },
-        { to: "/improvement", label: "Improvement", icon: TrendingUp },
-        { to: "/development", label: "Development", icon: Sparkles },
-      ],
-    },
-    {
-      title: "Mutual-Mapping",
-      items: mutualMappingGroup?.items || [
-        { to: "/interact", label: "Interact", icon: MessagesSquare },
-        { to: "/interest", label: "Interest", icon: Heart },
-        { to: "/intersect", label: "Intersect", icon: Layers },
-        { to: "/interdependence", label: "Interdependence", icon: Workflow },
-      ],
-    },
-    {
-      title: "Organization-Optimizing",
-      items: orgOptimizingGroup?.items || [
-        { to: "/insider", label: "Insider", icon: Eye },
-        { to: "/insight", label: "Insight", icon: Lightbulb },
-        { to: "/outward", label: "Outward", icon: Compass },
-        { to: "/outlook", label: "Outlook", icon: TrendingUp },
-      ],
-    },
-  ];
+  const contextCategory =
+    pathname === "/" ? null : contextMatch?.group.parentCategory || null;
+  const ContextCategoryIcon = contextCategory
+    ? CATEGORY_META[contextCategory]?.icon
+    : null;
 
-  const nav = sidebarNav
-    .map((group) => ({
-      ...group,
-      items: group.items.filter((item) => enabledMenus[item.to] !== false),
+  // Standalone mini-app config for the current route, so the fallback sidebar
+  // can surface that app's own tabs as per-app navigation.
+  const appQueryParam = searchParams.get("app");
+  const pathSlug = pathname.replace(/^\//, "");
+  const standaloneConfig =
+    STANDALONE_APPS[appQueryParam || ""] || STANDALONE_APPS[pathSlug] || null;
+
+  // Parent-categories present in the nav, in declaration order (sidebar switcher)
+  const categoryList = Array.from(
+    new Set(
+      rawNav
+        .map((g) => g.parentCategory)
+        .filter((c): c is string => !!c),
+    ),
+  );
+
+  // The category currently browsed in the left sidebar. Follows the open app's
+  // context, but the user can override it via the switcher chips.
+  const [activeCategory, setActiveCategory] = useState<string>(
+    contextCategory || "All",
+  );
+  useEffect(() => {
+    setActiveCategory(contextCategory || "All");
+  }, [contextCategory, pathname]);
+
+  // Whether the currently-open app registered its own sidebar content via
+  // <ShellSidebar>. When it did, the left sidebar shows the app's own panel;
+  // the user can still flip to the browse/navigation view.
+  const [hasAppSidebar, setHasAppSidebar] = useState(false);
+  const [sidebarView, setSidebarView] = useState<"auto" | "browse">("auto");
+  useEffect(() => {
+    setSidebarView("auto");
+  }, [pathname]);
+  const showAppSidebar = hasAppSidebar && sidebarView === "auto";
+  const shellSidebarCtx = useMemo(() => ({ setHasAppSidebar }), []);
+
+  // Whether the currently-open app registered its own header via <ShellHeader>.
+  const [hasAppHeader, setHasAppHeader] = useState(false);
+  const shellHeaderCtx = useMemo(() => ({ setHasAppHeader }), []);
+
+  // Sections published by the open app via useShellSections(). Kept in a ref so
+  // click handlers are never stale; `bump` forces a re-render when they change.
+  // These drive BOTH the sidebar "Di aplikasi ini" list and the header's row of
+  // up to 5 interactive buttons (the header is an elaboration of the sidebar).
+  const sectionsRef = useRef<ShellSection[]>([]);
+  const [, setSectionsVersion] = useState(0);
+  const bumpSections = useCallback(() => setSectionsVersion((v) => v + 1), []);
+  const shellSectionsCtx = useMemo(
+    () => ({ sectionsRef, bump: bumpSections }),
+    [bumpSections],
+  );
+
+  // The section list to surface. Priority: app-registered sections, then a
+  // standalone mini-app's own tabs (deep-linked via ?tab=). Empty otherwise.
+  const registeredSections = sectionsRef.current;
+  const effectiveSections: ShellSection[] = useMemo(() => {
+    if (registeredSections.length > 0) return registeredSections;
+    if (standaloneConfig) {
+      const currentTab = searchParams.get("tab") || "all";
+      const baseSearch = Object.fromEntries(searchParams.entries());
+      return standaloneConfig.tabs.map((tab) => ({
+        id: tab.id,
+        label: tab.label,
+        active: currentTab === tab.id,
+        onSelect: () =>
+          navigate({
+            to: pathname,
+            search: { ...baseSearch, tab: tab.id } as any,
+          }),
+      }));
+    }
+    return [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [registeredSections, standaloneConfig, location.searchStr, pathname]);
+  const headerSections = effectiveSections.slice(0, 5);
+
+  // Measure the (variable-height) contextual header so the scrollable content
+  // always starts exactly below it.
+  const headerRef = useRef<HTMLElement | null>(null);
+  const [headerHeight, setHeaderHeight] = useState(64);
+  useLayoutEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const update = () => setHeaderHeight(el.offsetHeight || 64);
+    update();
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(update) : null;
+    ro?.observe(el);
+    return () => ro?.disconnect();
+  }, [hasAppHeader, pathname]);
+
+  const primaryItems = [
+    { to: "/", label: "Launcher", icon: LayoutDashboard },
+    { to: "/terminal", label: "Terminal", icon: Terminal },
+  ].filter((it) => enabledMenus[it.to] !== false);
+
+  // Groups rendered in the left sidebar, scoped to the active category.
+  const sidebarGroups: NavGroupType[] = rawNav
+    .filter(
+      (g) => activeCategory === "All" || g.parentCategory === activeCategory,
+    )
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((it) => enabledMenus[it.to] !== false),
     }))
-    .filter((group) => group.items.length > 0 || group.title === "Mutual-Mapping");
+    .filter((g) => g.items.length > 0);
 
   let categoryName = "Umum";
   let categoryGroup: { title?: string; items?: readonly any[] | any[] } | undefined = rawNav[0];
@@ -396,9 +500,15 @@ export function AppShell({
   const displayTitle =
     customMatch && pathname === "/lainnya" ? customMatch.item.label : title;
 
-  const [openDrawer, setOpenDrawer] = useState<"left" | "right" | null>(
-    null,
-  );
+  // Both sidebars are now symmetric off-canvas drawers. On desktop the left
+  // (contextual navigation) drawer starts open; on small screens both start
+  // closed and slide over the content. Either can be hidden/shown at will.
+  const [openDrawer, setOpenDrawer] = useState<"left" | "right" | null>(() => {
+    if (typeof window !== "undefined" && window.matchMedia) {
+      return window.matchMedia("(min-width: 1024px)").matches ? "left" : null;
+    }
+    return null;
+  });
   const [collapsedNavGroups, setCollapsedNavGroups] = useState<Record<string, boolean>>({});
   const [currentMode, setCurrentMode] = useState<AppModeId>(() => {
     try {
@@ -420,44 +530,35 @@ export function AppShell({
   const [activeSettingsTab, setActiveSettingsTab] = useState("general");
   const { favorites, toggleFavorite } = useFavorites();
 
+  // Gabungan semua item nav (untuk rail Favorit gaya remake) — mempertahankan
+  // label + ikon asli dari config navKonsultan beserta entri Launcher/Terminal.
+  const allNavItems: { to: string; label: string; icon: LucideIcon }[] = [
+    { to: "/", label: "Launcher", icon: LayoutDashboard },
+    { to: "/terminal", label: "Terminal", icon: Terminal },
+    ...navKonsultan.flatMap((g) => g.items as { to: string; label: string; icon: LucideIcon }[]),
+  ];
+  const favItems = favorites
+    .map((route) => allNavItems.find((i) => i.to === route))
+    .filter((x): x is { to: string; label: string; icon: LucideIcon } => !!x)
+    .slice(0, 10);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const isMobile = window.innerWidth < 1024;
-
-      if (isMobile) {
-        const mobileContainer = document.querySelector(
-          ".lg\\:hidden.overflow-x-auto",
-        ) as HTMLElement;
-        if (mobileContainer) {
-          const activeElement = mobileContainer.querySelector(".\\!bg-accent") as HTMLElement;
-          if (activeElement) {
-            const containerRect = mobileContainer.getBoundingClientRect();
-            const activeRect = activeElement.getBoundingClientRect();
-            const scrollLeft =
-              mobileContainer.scrollLeft +
-              (activeRect.left - containerRect.left) -
-              containerRect.width / 2 +
-              activeRect.width / 2;
-            mobileContainer.scrollTo({ left: scrollLeft, behavior: "smooth" });
-          }
-        }
-      } else {
-        const sidebarContainer = document.querySelector(
-          ".bg-sidebar .overflow-y-auto",
-        ) as HTMLElement;
-        if (sidebarContainer) {
-          const activeElement = sidebarContainer.querySelector(".nav-gooey-active") as HTMLElement;
-          if (activeElement) {
-            const containerRect = sidebarContainer.getBoundingClientRect();
-            const activeRect = activeElement.getBoundingClientRect();
-            const scrollTop =
-              sidebarContainer.scrollTop +
-              (activeRect.top - containerRect.top) -
-              containerRect.height / 2 +
-              activeRect.height / 2;
-            sidebarContainer.scrollTo({ top: scrollTop, behavior: "smooth" });
-          }
-        }
+      const sidebarContainer = document.querySelector(
+        "#sidenavLeft .overflow-y-auto",
+      ) as HTMLElement | null;
+      const activeElement = sidebarContainer?.querySelector(
+        '[data-status="active"]',
+      ) as HTMLElement | null;
+      if (sidebarContainer && activeElement) {
+        const containerRect = sidebarContainer.getBoundingClientRect();
+        const activeRect = activeElement.getBoundingClientRect();
+        const scrollTop =
+          sidebarContainer.scrollTop +
+          (activeRect.top - containerRect.top) -
+          containerRect.height / 2 +
+          activeRect.height / 2;
+        sidebarContainer.scrollTo({ top: scrollTop, behavior: "smooth" });
       }
     }, 150);
 
@@ -605,6 +706,9 @@ export function AppShell({
   };
 
   return (
+    <ShellSidebarProvider value={shellSidebarCtx}>
+    <ShellHeaderProvider value={shellHeaderCtx}>
+    <ShellSectionsProvider value={shellSectionsCtx}>
     <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
       <SettingsModal
         isOpen={isSettingsOpen}
@@ -612,91 +716,425 @@ export function AppShell({
         initialTab={activeSettingsTab}
       />
 
-      <aside id="sidenavLeft" className={`fixed inset-y-0 left-0 z-50 flex w-[275px] flex-col border-r border-border bg-background transition-transform duration-500 ease-in-out ${openDrawer === "left" ? "translate-x-0" : "-translate-x-full"}`}>
-        <div className="flex items-center gap-3 px-4 py-4 sm:px-6 shrink-0">
-          <button className="hidden p-2 -ml-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0" onClick={() => setOpenDrawer(null)}><PanelLeft size={20} /></button>
-          <div className="flex flex-col opacity-0 pointer-events-none select-none">
-            <h1 className="truncate text-xl font-semibold tracking-tight sm:text-2xl">T</h1>
-            <div className="mt-1 flex items-center font-mono text-xs sm:text-sm">T</div>
+      <aside
+        id="sidenavLeft"
+        className={`fixed inset-y-0 left-0 z-50 flex w-[275px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-300 ease-in-out ${openDrawer === "left" ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        {/* Brand header (gaya remake) */}
+        <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border px-4 shrink-0">
+          <div className="grid h-8 w-8 place-items-center rounded-xl gradient-primary text-white shadow-md shadow-indigo-500/25 shrink-0">
+            <Grid2X2 className="h-4 w-4" />
           </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold leading-tight truncate text-sidebar-foreground">All in One</p>
+            <p className="text-[11px] text-muted-foreground truncate">
+              {contextCategory ? contextCategory : "Workspace Konsultan"}
+            </p>
+          </div>
+          <button
+            type="button"
+            className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors shrink-0"
+            onClick={() => setOpenDrawer(null)}
+            aria-label="Sembunyikan navigasi"
+            title="Sembunyikan sidebar"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
-        <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-4 py-6 sm:px-6 sm:py-8">
-          <nav className="flex flex-col gap-6">
-            {nav.map((group) => {
-              const isGroupCollapsed = group.title ? !!collapsedNavGroups[group.title] : false;
-              return (
-              <div key={group.title} className="flex flex-col gap-2 ml-[5px]">
-                {group.title && (
-                  <button
-                    type="button"
-                    onClick={() => setCollapsedNavGroups(prev => ({ ...prev, [group.title!]: !prev[group.title!] }))}
-                    className="flex items-center justify-between w-full text-left outline-none mb-1 group"
-                  >
-                    <h4 className="text-lg font-bold capitalize text-muted-foreground group-hover:text-foreground transition-colors">
-                      {group.title}
-                    </h4>
-                    {isGroupCollapsed ? (
-                      <ChevronRight className="size-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-                    ) : (
-                      <ChevronDown className="size-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-                    )}
-                  </button>
-                )}
-                {!isGroupCollapsed && (
-                  <div className="flex flex-col gap-2">
-                    {group.items.length === 0 ? (
-                      <span className="text-xs text-muted-foreground/60 italic py-1 px-2 -ml-2 select-none">
-                        (Kosong)
-                      </span>
-                    ) : (
-                      group.items.map((item) => {
-                        const isFav = favorites.includes(item.to);
-                        const toPath = item.to.split("?")[0];
-                        const toSearch = item.to.includes("?")
-                          ? Object.fromEntries(new URLSearchParams(item.to.split("?")[1]))
-                          : undefined;
+
+        {/* View switcher: app-provided sidebar vs browse/navigation */}
+        {hasAppSidebar && (
+          <div className="flex items-center gap-1 px-3 py-2 border-b border-sidebar-border shrink-0">
+            <button
+              type="button"
+              onClick={() => setSidebarView("auto")}
+              className={`flex-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold transition-colors ${
+                sidebarView === "auto"
+                  ? "bg-primary/15 text-primary"
+                  : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+              }`}
+            >
+              Konten App
+            </button>
+            <button
+              type="button"
+              onClick={() => setSidebarView("browse")}
+              className={`flex-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold transition-colors ${
+                sidebarView === "browse"
+                  ? "bg-primary/15 text-primary"
+                  : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+              }`}
+            >
+              Navigasi
+            </button>
+          </div>
+        )}
+
+        <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar px-3 py-4">
+          {/* Slot untuk konten sidebar milik app (target portal ShellSidebar) */}
+          <div
+            id="shellSidebarSlot"
+            className={showAppSidebar ? "flex flex-col gap-1" : "hidden"}
+          />
+
+          {!showAppSidebar && (
+            <>
+          {/* Per-app contextual block: the open app's OWN sections/tabs when it
+              registered them (or a standalone app's tabs); otherwise the family
+              menu of sibling items in the same nav group. */}
+          {pathname !== "/" && (effectiveSections.length > 0 || contextMatch) && (
+            <div className="mb-4">
+              <p className="px-2.5 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Di aplikasi ini
+              </p>
+              <div className="flex flex-col gap-0.5">
+                {effectiveSections.length > 0
+                  ? effectiveSections.map((sec) => {
+                      const SecIcon = sec.icon;
                       return (
-                        <div key={item.to} className="group/item relative flex items-center">
-                          <Link
-                            to={toPath}
-                            search={toSearch as any}
-                            activeOptions={{ exact: item.to === "/" || item.to === "/portal" || item.to.includes("?") }}
-                            onClick={() => setOpenDrawer(null)}
-                            className="flex-1 whitespace-nowrap text-sm text-muted-foreground hover:text-foreground py-1 px-2 -ml-2 rounded-md hover:bg-muted/50 transition-colors"
-                            activeProps={{ className: "text-foreground font-bold" }}
-                          >
-                            {item.label}
-                          </Link>
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              toggleFavorite(item.to);
-                            }}
-                            className={`absolute right-0 p-1.5 rounded-md transition-opacity ${isFav ? 'opacity-100' : 'opacity-0 group-hover/item:opacity-100'} hover:bg-accent`}
-                            title={isFav ? "Hapus dari Favorit" : "Tambah ke Favorit"}
-                          >
-                            <Star className={`size-3.5 ${isFav ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`} />
-                          </button>
-                        </div>
+                        <button
+                          key={sec.id}
+                          type="button"
+                          onClick={() => {
+                            sec.onSelect();
+                            setOpenDrawer(null);
+                          }}
+                          className={`flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-[13px] text-left transition-colors ${
+                            sec.active
+                              ? "bg-primary/15 text-primary font-medium"
+                              : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                          }`}
+                        >
+                          {SecIcon ? (
+                            <SecIcon className="h-4 w-4 shrink-0" />
+                          ) : (
+                            <span className="h-4 w-4 shrink-0 rounded-full border border-current opacity-40" />
+                          )}
+                          <span className="truncate">{sec.label}</span>
+                        </button>
                       );
-                    }))}
-                  </div>
-                )}
+                    })
+                  : contextMatch!.group.items.slice(0, 10).map((item) => {
+                      const toPath = item.to.split("?")[0];
+                      const toSearch = item.to.includes("?")
+                        ? Object.fromEntries(
+                            new URLSearchParams(item.to.split("?")[1]),
+                          )
+                        : undefined;
+                      return (
+                        <Link
+                          key={item.to}
+                          to={toPath}
+                          search={toSearch as any}
+                          activeOptions={{
+                            exact:
+                              item.to === "/" ||
+                              item.to === "/portal" ||
+                              item.to.includes("?"),
+                          }}
+                          onClick={() => setOpenDrawer(null)}
+                          className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-[13px] text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
+                          activeProps={{
+                            className: "bg-primary/15 text-primary font-medium",
+                          }}
+                        >
+                          {item.icon ? (
+                            <item.icon className="h-4 w-4 shrink-0" />
+                          ) : (
+                            <span className="h-4 w-4 shrink-0" />
+                          )}
+                          <span className="truncate">{item.label}</span>
+                        </Link>
+                      );
+                    })}
               </div>
-            )})}
+            </div>
+          )}
+
+          {/* Category switcher — follows the open app's context, user can override */}
+          <div className="mb-4">
+            <p className="px-2.5 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Kategori
+            </p>
+            <div className="flex flex-wrap gap-1.5 px-1">
+              <button
+                type="button"
+                onClick={() => setActiveCategory("All")}
+                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium border transition-colors ${
+                  activeCategory === "All"
+                    ? "border-primary/40 bg-primary/15 text-primary"
+                    : "border-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                }`}
+              >
+                <LayoutDashboard className="h-3.5 w-3.5 shrink-0" />
+                <span>Semua</span>
+              </button>
+              {categoryList.map((cat) => {
+                const Meta = CATEGORY_META[cat];
+                const Icon = Meta?.icon || Grid2X2;
+                const isActive = activeCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setActiveCategory(cat)}
+                    className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium border transition-colors ${
+                      isActive
+                        ? "border-primary/40 bg-primary/15 text-primary"
+                        : "border-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className={`h-3.5 w-3.5 shrink-0 ${isActive ? "" : Meta?.accent || ""}`} />
+                    <span className="truncate">{cat}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Rail Favorit (gaya remake) */}
+          {favItems.length > 0 && (
+            <div className="mb-4">
+              <p className="px-2.5 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                <Star className="h-3 w-3 fill-amber-400 text-amber-400" /> Favorit
+              </p>
+              <div className="flex flex-col gap-0.5">
+                {favItems.map((item) => {
+                  const toPath = item.to.split("?")[0];
+                  const toSearch = item.to.includes("?")
+                    ? Object.fromEntries(new URLSearchParams(item.to.split("?")[1]))
+                    : undefined;
+                  return (
+                    <Link
+                      key={`fav-${item.to}`}
+                      to={toPath}
+                      search={toSearch as any}
+                      activeOptions={{ exact: item.to === "/" || item.to === "/portal" || item.to.includes("?") }}
+                      onClick={() => setOpenDrawer(null)}
+                      className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-[13px] text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
+                      activeProps={{ className: "bg-primary/15 text-primary font-medium" }}
+                    >
+                      <item.icon className="h-4 w-4 shrink-0" />
+                      <span className="truncate">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Primary shortcuts (Launcher / Terminal) */}
+          {primaryItems.length > 0 && (
+            <div className="mb-2 flex flex-col gap-0.5">
+              {primaryItems.map((item) => (
+                <Link
+                  key={`primary-${item.to}`}
+                  to={item.to}
+                  activeOptions={{ exact: true }}
+                  onClick={() => setOpenDrawer(null)}
+                  className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-[13px] text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
+                  activeProps={{ className: "bg-primary/15 text-primary font-medium" }}
+                >
+                  <item.icon className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {/* Grup nav — scoped to the active category / context */}
+          <nav className="flex flex-col gap-1">
+            {sidebarGroups.map((group) => {
+              const isGroupCollapsed = group.title ? !!collapsedNavGroups[group.title] : false;
+              const isActiveGroup = group.items.some((item) => {
+                const base = item.to.split("?")[0];
+                if (base === "/" || base === "/portal") return pathname === base;
+                return pathname.startsWith(base);
+              });
+              return (
+                <div key={group.title || "_primary"} className="mb-1">
+                  {group.title && (
+                    <button
+                      type="button"
+                      onClick={() => setCollapsedNavGroups(prev => ({ ...prev, [group.title!]: !prev[group.title!] }))}
+                      className={`flex w-full items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-semibold transition-colors ${isActiveGroup ? "text-foreground" : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"}`}
+                    >
+                      <ChevronRight className={`h-3.5 w-3.5 shrink-0 transition-transform ${!isGroupCollapsed ? "rotate-90" : ""}`} />
+                      <span className="truncate flex-1 text-left capitalize">{group.title}</span>
+                      <span className="text-[10px] text-muted-foreground/60 shrink-0">{group.items.length}</span>
+                    </button>
+                  )}
+                  {!isGroupCollapsed && (
+                    <div className={`flex flex-col gap-0.5 ${group.title ? "ml-3 mt-0.5 border-l border-sidebar-border pl-2" : ""}`}>
+                      {group.items.length === 0 ? (
+                        <span className="text-xs text-muted-foreground/60 italic py-1 px-2 select-none">
+                          (Kosong)
+                        </span>
+                      ) : (
+                        group.items.map((item) => {
+                          const isFav = favorites.includes(item.to);
+                          const toPath = item.to.split("?")[0];
+                          const toSearch = item.to.includes("?")
+                            ? Object.fromEntries(new URLSearchParams(item.to.split("?")[1]))
+                            : undefined;
+                          return (
+                            <div key={item.to} className="group/item relative flex items-center">
+                              <Link
+                                to={toPath}
+                                search={toSearch as any}
+                                activeOptions={{ exact: item.to === "/" || item.to === "/portal" || item.to.includes("?") }}
+                                onClick={() => setOpenDrawer(null)}
+                                className="flex-1 min-w-0 flex items-center gap-2.5 rounded-lg pl-2.5 pr-8 py-1.5 text-[13px] text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
+                                activeProps={{ className: "bg-primary/15 text-primary font-medium" }}
+                              >
+                                {item.icon ? <item.icon className="h-4 w-4 shrink-0" /> : <span className="h-4 w-4 shrink-0" />}
+                                <span className="truncate">{item.label}</span>
+                              </Link>
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  toggleFavorite(item.to);
+                                }}
+                                className={`absolute right-1 p-1.5 rounded-md transition-opacity ${isFav ? 'opacity-100' : 'opacity-0 group-hover/item:opacity-100'} hover:bg-accent`}
+                                title={isFav ? "Hapus dari Favorit" : "Tambah ke Favorit"}
+                              >
+                                <Star className={`size-3.5 ${isFav ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`} />
+                              </button>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </nav>
+            </>
+          )}
         </div>
       </aside>
 
       <aside id="sidenavRight" className={`fixed inset-y-0 right-0 z-50 flex w-[275px] flex-col border-l border-border bg-background transition-transform duration-500 ease-in-out ${openDrawer === "right" ? "translate-x-0" : "translate-x-full"}`}>
-        <div className="flex items-center justify-end gap-3 px-4 py-4 sm:px-6 shrink-0">
-          <button className="hidden p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0" onClick={() => setOpenDrawer(null)}><PanelRight size={20} /></button>
+        {/* Control Center header */}
+        <div className="flex items-center justify-between gap-3 px-4 h-14 border-b border-border shrink-0 sm:px-6">
+          <span className="text-sm font-semibold text-foreground truncate">Control Center</span>
+          <button
+            type="button"
+            className="p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0"
+            onClick={() => setOpenDrawer(null)}
+            title="Sembunyikan panel kanan"
+            aria-label="Sembunyikan panel kanan"
+          >
+            <PanelRight size={18} />
+          </button>
         </div>
-        <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-4 py-2 sm:px-6">
-          <nav className="flex flex-col gap-4 items-start">
+        <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-4 py-4 sm:px-6">
+          <nav className="flex flex-col gap-5 items-start">
             <div className="flex flex-col gap-3 w-full">
 
+              {/* Quick actions — dipindahkan dari header atas */}
+              <div className="flex items-center gap-2 w-full">
+                <button
+                  type="button"
+                  onClick={() => setIsCommandPaletteOpen(true)}
+                  className="flex-1 min-w-0 flex items-center gap-2 px-3 h-9 rounded-lg border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  title="Pencarian Global (Cmd/Ctrl + K)"
+                >
+                  <Search className="h-4 w-4 shrink-0" />
+                  <span className="text-[13px] flex-1 text-left truncate">Pencarian</span>
+                  <kbd className="text-[10px] px-1.5 py-0.5 rounded border border-border bg-muted/50 font-mono shrink-0">⌘K</kbd>
+                </button>
+                <Link
+                  to="/notification-center"
+                  onClick={() => setOpenDrawer(null)}
+                  className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground transition-colors shrink-0"
+                  title="Notifikasi"
+                  aria-label="Notifikasi"
+                >
+                  <Bell className="h-4 w-4" />
+                </Link>
+              </div>
 
+              {/* Mode switcher — dipindahkan dari header atas */}
+              <div className="pt-3 border-t border-border/70 w-full">
+                <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <ActiveModeIcon className="h-3.5 w-3.5" /> Mode Aktif
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  {APP_MODES.map((m) => {
+                    const Icon = m.icon;
+                    const isSelected = currentMode === m.id;
+                    return (
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => {
+                          setCurrentMode(m.id);
+                          try {
+                            localStorage.setItem("client_os_active_mode", m.id);
+                            window.dispatchEvent(new Event("aio_mode_changed"));
+                          } catch {}
+                        }}
+                        className={`flex items-center gap-2.5 w-full px-2.5 py-2 rounded-xl border text-left transition-colors cursor-pointer ${
+                          isSelected
+                            ? "border-primary/40 bg-primary/10 text-foreground"
+                            : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground"
+                        }`}
+                      >
+                        <span
+                          className={`grid h-7 w-7 place-items-center rounded-lg shrink-0 ${
+                            isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          <Icon className="h-4 w-4" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-[13px] font-medium truncate">{m.label}</span>
+                          <span className="block text-[10.5px] text-muted-foreground truncate">{m.desc}</span>
+                        </span>
+                        {isSelected && <span className="size-1.5 rounded-full bg-primary shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Akun — profil & pengaturan dipindahkan dari header atas */}
+              <div className="relative pt-3 border-t border-border/70 w-full">
+                <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Akun
+                </p>
+                <div className="flex items-center gap-2 w-full">
+                  <button
+                    type="button"
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className={`flex-1 min-w-0 flex items-center gap-2 px-3 h-9 rounded-lg border transition-colors ${
+                      isProfileOpen
+                        ? "border-primary/40 bg-primary/10 text-foreground"
+                        : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground"
+                    }`}
+                    title="Profil"
+                  >
+                    <User className="h-4 w-4 shrink-0" />
+                    <span className="text-[13px] truncate">Profil</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenSettings("general")}
+                    className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground transition-colors shrink-0"
+                    title="Pengaturan"
+                    aria-label="Pengaturan"
+                  >
+                    <Settings className="h-4 w-4" />
+                  </button>
+                </div>
+                <ProfileMenu
+                  isOpen={isProfileOpen}
+                  onClose={() => setIsProfileOpen(false)}
+                  onOpenSettings={handleOpenSettings}
+                />
+              </div>
 
               <ThemeLangToggle />
               
@@ -792,30 +1230,22 @@ export function AppShell({
           </div>
         </div>
       </aside>
-      <main id="mainContent" className={`relative flex flex-1 flex-col overflow-hidden transition-[margin] duration-500 ease-in-out ${openDrawer === "left" ? "ml-[275px]" : openDrawer === "right" ? "mr-[275px]" : "ml-0"}`}>
+      <main id="mainContent" className={`relative flex flex-1 flex-col overflow-hidden transition-[margin] duration-300 ease-in-out ${openDrawer === "left" ? "lg:ml-[275px]" : "ml-0"} ${openDrawer === "right" ? "lg:mr-[275px]" : "mr-0"}`}>
         {openDrawer && (
-          <div className="absolute inset-0 z-40 bg-black/40 transition-opacity duration-500" onClick={() => setOpenDrawer(null)} />
+          <div className="absolute inset-0 z-40 bg-black/40 transition-opacity duration-500 lg:hidden" onClick={() => setOpenDrawer(null)} />
         )}
-        <header className="absolute top-0 inset-x-0 z-20 bg-background border-b border-border shadow-xs">
+        <header ref={headerRef as any} className="absolute top-0 inset-x-0 z-20 border-b border-border bg-background/80 backdrop-blur-xl shadow-xs">
           <div className="flex items-center justify-between gap-2 px-3 py-2.5 sm:px-6 sm:py-3">
-            {/* Bagian Kiri Header: Breadcrumb & Nav Toggle */}
+            {/* Bagian Kiri Header: Nav Toggle (semua ukuran) + Breadcrumb kontekstual */}
             <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 flex-1 basis-0 justify-start">
               <button
                 type="button"
-                className="p-2 -ml-1 sm:-ml-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0 block"
+                className={`p-2 -ml-1 sm:-ml-2 rounded-lg shrink-0 transition-colors ${openDrawer === "left" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`}
                 onClick={() => setOpenDrawer(openDrawer === "left" ? null : "left")}
-                title="Buka Navigasi"
+                title={openDrawer === "left" ? "Sembunyikan Navigasi" : "Tampilkan Navigasi"}
+                aria-label="Toggle sidebar kiri"
               >
                 <PanelLeft size={20} />
-              </button>
-
-              <button
-                type="button"
-                className="p-2 relative text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0 flex items-center justify-center transition-colors"
-                title="Notifikasi"
-                aria-label="Notifications"
-              >
-                <Bell className="size-5 shrink-0" />
               </button>
 
               <div className="min-w-0 flex-1 overflow-hidden">
@@ -843,154 +1273,96 @@ export function AppShell({
               </div>
             </div>
 
-            {/* Bagian Tengah Header: Nama Menu yang Dibuka */}
-            <div className="shrink-0 px-2 text-center max-w-[35%] sm:max-w-[45%]">
-              <h1 className="truncate text-base sm:text-lg font-bold tracking-tight text-foreground">
-                {displayTitle}
-              </h1>
-            </div>
-
-            {/* Bagian Kanan Header: Switch Profile & Actions */}
-            <div className="flex items-center justify-end gap-1.5 sm:gap-2.5 min-w-0 flex-1 basis-0">
-              {actions && (
-                <div className="flex items-center gap-1.5 shrink-0">
-                  {actions}
-                </div>
-              )}
-
-              {/* Universal Search (Cmd+K) Button */}
+            {/* Bagian Kanan Header: toggle panel kanan (pill & actions pindah ke band header app) */}
+            <div className="flex items-center justify-end gap-1.5 sm:gap-2.5 min-w-0 shrink-0">
               <button
                 type="button"
-                onClick={() => setIsCommandPaletteOpen(true)}
-                className="p-2 relative text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0 flex items-center justify-center transition-colors"
-                title="Pencarian Global (Cmd/Ctrl + K)"
-                aria-label="Search"
-              >
-                <Search className="size-5 shrink-0" />
-              </button>
-
-              {/* 6-Mode Dropdown Switcher */}
-              <div className="relative">
-                <button
-                  type="button"
-                  className={`p-2 flex items-center gap-1 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0 transition-colors ${
-                    isModeOpen ? "bg-accent text-foreground" : ""
-                  }`}
-                  title={`Mode Aktif: ${activeModeConfig.label}`}
-                  aria-label="Mode Switcher"
-                  onClick={() => {
-                    setIsModeOpen(!isModeOpen);
-                    setIsProfileOpen(false);
-                  }}
-                >
-                  <ActiveModeIcon className="size-5 shrink-0" />
-                  <ChevronDown
-                    className={`size-3.5 shrink-0 transition-transform duration-200 ${
-                      isModeOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-
-                {isModeOpen && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setIsModeOpen(false)}
-                    />
-                    <div
-                      className="absolute z-50 w-72 sm:w-80 rounded-3xl bg-white/85 dark:bg-zinc-900/85 backdrop-blur-[30px] border border-white/60 dark:border-white/15 shadow-[0px_4px_21px_-8px_rgba(255,255,255,0.5),0_20px_50px_rgba(0,0,0,0.15)] liquid-glass-dock p-2 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 cursor-default text-left top-[calc(100%+8px)] right-0 select-none"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {/* Focus Rows List - Styled identical to Dock Items */}
-                      <div className="flex flex-col gap-1.5 px-0.5 py-0.5">
-                        {APP_MODES.map((m) => {
-                          const Icon = m.icon;
-                          const isSelected = currentMode === m.id;
-
-                          return (
-                            <button
-                              key={m.id}
-                              type="button"
-                              onClick={() => {
-                                setCurrentMode(m.id);
-                                try {
-                                  localStorage.setItem("client_os_active_mode", m.id);
-                                  window.dispatchEvent(new Event("aio_mode_changed"));
-                                } catch {}
-                              }}
-                              className={`group flex items-center justify-between w-full px-3 py-2 rounded-2xl text-left transition-all duration-150 select-none cursor-pointer backdrop-blur-md border ${
-                                isSelected
-                                  ? "bg-indigo-600 text-white shadow-md border-indigo-400/50"
-                                  : "bg-white/80 dark:bg-zinc-800/80 text-neutral-600 dark:text-neutral-300 shadow-xs hover:bg-neutral-100 dark:hover:bg-zinc-700/80 hover:text-neutral-900 dark:hover:text-white border-neutral-200/50 dark:border-zinc-700/60"
-                              }`}
-                            >
-                              <div className="flex items-center gap-3 min-w-0">
-                                <div
-                                  className={`size-8 rounded-xl flex items-center justify-center shrink-0 transition-all duration-150 ${
-                                    isSelected
-                                      ? "bg-white/20 text-white shadow-xs"
-                                      : "bg-white dark:bg-zinc-700 text-neutral-500 dark:text-neutral-300 shadow-2xs border border-neutral-200/40 dark:border-transparent group-hover:text-neutral-900 dark:group-hover:text-white"
-                                  }`}
-                                >
-                                  <Icon className="size-4 shrink-0" strokeWidth={2.2} />
-                                </div>
-                                <div className="flex flex-col min-w-0">
-                                  <span className={`text-[13.5px] font-medium tracking-tight truncate leading-tight ${
-                                    isSelected ? "text-white font-semibold" : "text-neutral-800 dark:text-neutral-100"
-                                  }`}>
-                                    {m.label}
-                                  </span>
-                                  <span className={`text-[10.5px] truncate leading-tight mt-0.5 ${
-                                    isSelected ? "text-white/80" : "text-neutral-500 dark:text-neutral-400"
-                                  }`}>
-                                    {m.desc}
-                                  </span>
-                                </div>
-                              </div>
-                              {isSelected && (
-                                <span className="size-1.5 rounded-full bg-white shadow-xs mr-1 shrink-0" />
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Profile Icon & Menu */}
-              <div className="relative">
-                <button
-                  type="button"
-                  className={`p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0 flex items-center justify-center transition-colors ${
-                    isProfileOpen ? "bg-accent text-foreground" : ""
-                  }`}
-                  title="Pengaturan & Profil"
-                  onClick={() => {
-                    setIsProfileOpen(!isProfileOpen);
-                    setIsModeOpen(false);
-                  }}
-                >
-                  <Settings className="size-5 shrink-0" />
-                </button>
-                <ProfileMenu
-                  isOpen={isProfileOpen}
-                  onClose={() => setIsProfileOpen(false)}
-                  onOpenSettings={handleOpenSettings}
-                />
-              </div>
-              <button
-                className="p-2 -mr-1 sm:-mr-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg shrink-0 block"
+                className={`p-2 -mr-1 sm:-mr-2 rounded-lg shrink-0 transition-colors ${openDrawer === "right" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`}
                 onClick={() => setOpenDrawer(openDrawer === "right" ? null : "right")}
-                title="Buka Menu Kanan"
+                title={openDrawer === "right" ? "Sembunyikan Control Center" : "Tampilkan Control Center"}
+                aria-label="Toggle sidebar kanan"
               >
                 <PanelRight size={20} />
               </button>
             </div>
           </div>
+
+          {/* Band header app (kontekstual): milik app via ShellHeader, atau generated */}
+          <div className="border-t border-border/60 px-3 py-2.5 sm:px-6 sm:py-3">
+            <div
+              id="shellHeaderSlot"
+              className={hasAppHeader ? "flex flex-col" : "hidden"}
+            />
+            {!hasAppHeader && (
+              <div className="flex flex-col gap-2.5">
+                <div className="flex flex-wrap items-center gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary/10 text-primary shrink-0">
+                  {(() => {
+                    const HIcon =
+                      contextMatch?.item.icon || ContextCategoryIcon || Grid2X2;
+                    return <HIcon className="h-5 w-5" />;
+                  })()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <h1 className="truncate text-base sm:text-lg font-bold tracking-tight text-foreground">
+                      {displayTitle}
+                    </h1>
+                    {standaloneConfig && (
+                      <span className="hidden sm:inline-flex shrink-0 items-center rounded-full border border-border bg-muted/50 px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                        {standaloneConfig.badge}
+                      </span>
+                    )}
+                  </div>
+                  {(subtitle || (contextMatch && contextMatch.group.title)) && (
+                    <p className="truncate text-xs text-muted-foreground">
+                      {subtitle || contextMatch?.group.title}
+                    </p>
+                  )}
+                </div>
+                {contextCategory && ContextCategoryIcon && (
+                  <span className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/50 px-3 py-1 text-[11px] font-semibold text-muted-foreground shrink-0">
+                    <ContextCategoryIcon className={`h-3.5 w-3.5 ${CATEGORY_META[contextCategory]?.accent || ""}`} />
+                    {contextCategory}
+                  </span>
+                )}
+                {actions && (
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {actions}
+                  </div>
+                )}
+                </div>
+
+                {/* Interactive section buttons — elaboration of the sidebar's
+                    "Di aplikasi ini" list (max 5). Clicking switches the app's
+                    own section/tab. Only for shell-generated headers. */}
+                {headerSections.length > 0 && (
+                  <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-0.5 px-0.5 pb-0.5">
+                    {headerSections.map((sec) => {
+                      const SecIcon = sec.icon;
+                      return (
+                        <button
+                          key={sec.id}
+                          type="button"
+                          onClick={() => sec.onSelect()}
+                          className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-colors ${
+                            sec.active
+                              ? "border-primary/40 bg-primary text-primary-foreground shadow-xs"
+                              : "border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground"
+                          }`}
+                        >
+                          {SecIcon && <SecIcon className="h-3.5 w-3.5 shrink-0" />}
+                          <span className="truncate max-w-[160px]">{sec.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </header>
-        <div className="flex-1 overflow-y-auto no-scrollbar px-4 pt-16 pb-[90px] sm:px-6 sm:pt-20 sm:pb-[90px] relative z-10">{children}</div>
+        <div className="flex-1 overflow-y-auto no-scrollbar px-4 pb-[90px] sm:px-6 sm:pb-[90px] relative z-10" style={{ paddingTop: headerHeight }}>{children}</div>
         {/* iOS-Style Floating Search Pill above Dock (Active when not in Launcher) */}
         {pathname !== "/" && (
           <div className="fixed bottom-[calc(5rem+10pt)] left-0 right-0 flex justify-center pb-1 pointer-events-none z-30 animate-in fade-in duration-200">
@@ -1102,5 +1474,8 @@ export function AppShell({
         )}
       </main>
     </div>
+    </ShellSectionsProvider>
+    </ShellHeaderProvider>
+    </ShellSidebarProvider>
   );
 }

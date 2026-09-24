@@ -288,8 +288,8 @@ export function PodcastsView() {
 
       {/* Featured Current Episode Banner */}
       {activeEpisode && (
-        <div className="bg-gradient-to-r from-purple-900 via-indigo-950 to-slate-950 text-white rounded-3xl p-5 sm:p-7 shadow-xl border border-purple-800/40 relative overflow-hidden flex flex-col md:flex-row items-center gap-6">
-          <div className="relative aspect-square w-32 sm:w-44 shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+        <div className="bg-gradient-to-r from-purple-900 via-indigo-950 to-border text-white rounded-3xl p-5 sm:p-7 shadow-xl border border-purple-800/40 relative overflow-hidden flex flex-col md:flex-row items-center gap-6">
+          <div className="relative aspect-square w-32 sm:w-44 shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-border/10">
             <img
               src={activeEpisode.coverUrl}
               alt={activeEpisode.title}

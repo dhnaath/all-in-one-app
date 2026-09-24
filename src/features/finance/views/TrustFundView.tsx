@@ -17,7 +17,7 @@ export function TrustFundView({ onBack }: { onBack: () => void }) {
       </div>
 
       <div ref={ref} onScroll={onScroll} className="flex-1 overflow-y-auto p-6 pb-20">
-        <div className="bg-gradient-to-br from-blue-900/40 to-slate-900 border border-blue-800/30 rounded-2xl p-6 mb-8 text-center text-foreground relative">
+        <div className="bg-gradient-to-br from-blue-900/40 to-border border border-blue-800/30 rounded-2xl p-6 mb-8 text-center text-foreground relative">
           <Building size={32} className="text-blue-400 mx-auto mb-3" />
           <div className="text-lg font-bold tracking-tight mb-2">Struktur PT Keluarga (Holdco)</div>
           <p className="text-blue-200/70 text-xs leading-relaxed max-w-xs mx-auto mb-4">

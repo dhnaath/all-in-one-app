@@ -161,7 +161,7 @@ export function PersonalEssentialsSection({
         group: "personal-management",
         icon: Target,
         getItems: () => [
-          resolveApp("/goals", "Goals & Target", Target),
+          resolveApp("/goal-manager", "Goals & Target", Target),
           resolveApp("/habits", "Habit Tracker", Activity),
           resolveApp("/lainnya?app=vision-board", "Vision Board & Impian", Compass),
           resolveApp("/lainnya?app=bucket-list", "Bucket List & Cita-Cita", CheckSquare),
@@ -223,10 +223,6 @@ export function PersonalEssentialsSection({
         getItems: () => [
           resolveApp("/lainnya?app=warranty", "Garansi & Bukti Nota", ShieldCheck),
           resolveApp("/lainnya?app=subscription", "Langganan & Berlangganan", RefreshCw),
-          resolveApp("/katalog-produk", "Katalog Pembelian", Package),
-          resolveApp("/inventory", "Inventory & Barang", Archive),
-          resolveApp("/pouch", "Nota & Bukti Pembelian", ShoppingBag),
-          resolveApp("/pocket", "Garansi & Panduan Produk", Pocket),
         ],
       },
 
@@ -240,7 +236,6 @@ export function PersonalEssentialsSection({
           resolveApp("/health", "Catatan Kesehatan", Heart),
           resolveApp("/lainnya?app=medical-history", "Riwayat Rekam Medis", Stethoscope),
           resolveApp("/lainnya?app=vitals", "Tekanan & Gula Darah", Activity),
-          resolveApp("/habits", "Pola Hidup & Vitalitas", Activity),
           resolveApp("/weather", "Cuaca & Lingkungan", CloudSun),
         ],
       },
@@ -265,7 +260,6 @@ export function PersonalEssentialsSection({
         getItems: () => [
           resolveApp("/lainnya?app=sleep-tracker", "Kualitas Tidur & Istirahat", Moon),
           resolveApp("/lainnya?app=skincare-routine", "Skincare & Grooming", Sparkles),
-          resolveApp("/habits", "Rutinitas Perawatan", Sparkles),
           resolveApp("/trips", "Relaksasi & Liburan", Plane),
           resolveApp("/music", "Audio Relaksasi", Music),
           resolveApp("/podcasts", "Wellness Podcasts", Podcast),
@@ -279,11 +273,8 @@ export function PersonalEssentialsSection({
         group: "food-pantry",
         icon: Utensils,
         getItems: () => [
-          resolveApp("/recipes", "Buku Resep & Menu", Utensils),
           resolveApp("/lainnya?app=kitchen-inventory", "Inventaris Bahan Dapur", Archive),
           resolveApp("/lainnya?app=cook-log", "Jurnal Memasak", BookOpen),
-          resolveApp("/shopping", "Bahan Makanan (Groceries)", ShoppingCart),
-          resolveApp("/inventory", "Stok Dapur & Pantry", Archive),
         ],
       },
       {
@@ -294,9 +285,6 @@ export function PersonalEssentialsSection({
         getItems: () => [
           resolveApp("/lainnya?app=expiry-alert", "Peringatan Kadaluarsa", AlertTriangle),
           resolveApp("/lainnya?app=leftover-ideas", "Manajemen Makanan Sisa", RefreshCw),
-          resolveApp("/countdown", "Masa Simpan & Kadaluarsa", Timer),
-          resolveApp("/water", "Konsumsi Air Harian", Droplet),
-          resolveApp("/habits", "Pola Konsumsi Seimbang", Activity),
         ],
       },
 
@@ -310,7 +298,6 @@ export function PersonalEssentialsSection({
           resolveApp("/home", "Manajemen Hunian", Home),
           resolveApp("/lainnya?app=home-chores", "Jadwal Piket & Kebersihan", CheckSquare),
           resolveApp("/lainnya?app=utility-tracker", "Catatan Meteran Listrik & Air", Zap),
-          resolveApp("/kalender", "Jadwal Domestik", CalendarDays),
           resolveApp("/contacts", "Kontak Keluarga & Darurat", Users),
           resolveApp("/task-manager", "Tugas & Urusan Rumah", CheckSquare),
         ],
@@ -325,8 +312,6 @@ export function PersonalEssentialsSection({
           resolveApp("/lainnya?app=home-inventory", "Inventaris Perabot & Ruangan", Home),
           resolveApp("/proyek", "Pemeliharaan & Renovasi", CheckSquare),
           resolveApp("/trunk", "Gudang & Perkakas", Luggage),
-          resolveApp("/vault", "Berkas Hunian Terenkripsi", Vault),
-          resolveApp("/events", "Agenda Servis Rumah", CalendarDays),
         ],
       },
 
@@ -339,9 +324,6 @@ export function PersonalEssentialsSection({
         getItems: () => [
           resolveApp("/lainnya?app=vehicle-identity", "BPKB, STNK & Data Kendaraan", Car),
           resolveApp("/lainnya?app=mileage-fuel", "Catatan BBM & Odometer", Fuel),
-          resolveApp("/trips", "Riwayat Perjalanan (Trips)", Plane),
-          resolveApp("/pocket", "Dokumen & STNK Kendaraan", Pocket),
-          resolveApp("/vault", "Arsip Manual & Legal Kendaraan", Vault),
         ],
       },
       {
@@ -352,9 +334,6 @@ export function PersonalEssentialsSection({
         getItems: () => [
           resolveApp("/lainnya?app=vehicle-service", "Riwayat Servis & Bengkel", Wrench),
           resolveApp("/lainnya?app=parts-lifecycle", "Siklus Ban, Aki & Komponen", RefreshCw),
-          resolveApp("/kalender", "Jadwal Servis Berkala", CalendarDays),
-          resolveApp("/countdown", "Tenggat Servis & Uji Emisi", Timer),
-          resolveApp("/proyek", "Log Pemeliharaan Kendaraan", CheckSquare),
         ],
       },
 
@@ -367,11 +346,6 @@ export function PersonalEssentialsSection({
         getItems: () => [
           resolveApp("/lainnya?app=household-renewals", "Jatuh Tempo Pajak, Asuransi & Iuran", CalendarDays),
           resolveApp("/lainnya?app=item-disposal", "Barang Dihibahkan & Daur Ulang", Trash2),
-          resolveApp("/countdown", "Pengingat Kadaluarsa & Tenggat", Timer),
-          resolveApp("/kalender", "Jadwal Perpanjangan Domestik", CalendarDays),
-          resolveApp("/portal.dokumen", "Arsip Pembaruan Dokumen", FileText),
-          resolveApp("/passwords", "Pembaruan Akses & Sandi", Key),
-          resolveApp("/events", "Jadwal Pembaruan Dokumen", CalendarDays),
         ],
       },
     ];

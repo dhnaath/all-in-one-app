@@ -187,7 +187,7 @@ const CATEGORIES: { label: EventCategory; color: string }[] = [
   { label: "Konferensi & Seminar", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20" },
   { label: "Advisory & Board", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" },
   { label: "Keluarga & Personal", color: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20" },
-  { label: "Lainnya", color: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20" },
+  { label: "Lainnya", color: "bg-muted-foreground/30/10 text-muted-foreground dark:text-muted-foreground border-border/20" },
 ];
 
 export function EventsView() {

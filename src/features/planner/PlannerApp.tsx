@@ -1,3 +1,5 @@
+import { ShellHeader } from "@/app/shell-header";
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState, useMemo } from "react";
 import {
   Clock,
@@ -90,25 +92,25 @@ export function PlannerApp() {
   const isCommitted = currentPlan?.status === "committed";
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-slate-50 text-slate-800">
+    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-muted/40 text-foreground">
       {/* LEFT SIDEBAR: WorkQueue (§5) */}
-      <aside className="w-80 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
+      <ShellSidebar>
         {/* WorkQueue Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Zap className="w-4 h-4 text-amber-500" />
             <div>
-              <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">WorkQueue (§5)</h2>
-              <p className="text-[10px] text-slate-400">Tugas belum terjadwal dari Task Manager</p>
+              <h2 className="text-xs font-bold text-foreground uppercase tracking-wider">WorkQueue (§5)</h2>
+              <p className="text-[10px] text-muted-foreground">Tugas belum terjadwal dari Task Manager</p>
             </div>
           </div>
-          <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+          <span className="text-xs font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
             {workQueue.length}
           </span>
         </div>
 
         {/* Auto-Planning Trigger Banner (§10) */}
-        <div className="p-3 border-b border-slate-100 bg-indigo-50/60">
+        <div className="p-3 border-b border-border bg-indigo-50/60">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs font-semibold text-indigo-900 flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
@@ -134,31 +136,31 @@ export function PlannerApp() {
         {/* WorkQueue Items List */}
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
           {workQueue.length === 0 ? (
-            <div className="text-center py-8 text-xs text-slate-400">
+            <div className="text-center py-8 text-xs text-muted-foreground">
               Semua tugas aktif telah dialokasikan atau selesai.
             </div>
           ) : (
             workQueue.map((item) => (
               <div
                 key={item.sourceId}
-                className="p-3 bg-white border border-slate-200 rounded-lg hover:border-indigo-400 transition-all shadow-2xs space-y-2"
+                className="p-3 bg-card border border-border rounded-lg hover:border-indigo-400 transition-all shadow-2xs space-y-2"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <h4 className="text-xs font-semibold text-slate-800 line-clamp-2">{item.title}</h4>
+                  <h4 className="text-xs font-semibold text-foreground line-clamp-2">{item.title}</h4>
                   <span
                     className={`text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded flex-shrink-0 ${
                       item.priority === "urgent"
                         ? "text-red-700 bg-red-50"
                         : item.priority === "high"
                         ? "text-orange-700 bg-orange-50"
-                        : "text-slate-600 bg-slate-100"
+                        : "text-muted-foreground bg-muted"
                     }`}
                   >
                     {item.priority}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-400">
+                <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {item.estimatedDuration} mnt
@@ -183,7 +185,7 @@ export function PlannerApp() {
                       syncCompletion: true,
                     });
                   }}
-                  className="w-full py-1 text-[11px] font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded transition-colors flex items-center justify-center gap-1"
+                  className="w-full py-1 text-[11px] font-medium text-foreground bg-muted/40 hover:bg-muted border border-border rounded transition-colors flex items-center justify-center gap-1"
                 >
                   <Plus className="w-3 h-3" />
                   Alokasikan ke Hari Ini
@@ -194,38 +196,38 @@ export function PlannerApp() {
         </div>
 
         {/* Footnote */}
-        <div className="p-3 border-t border-slate-100 bg-slate-50 text-[10px] text-slate-500">
-          <p className="font-semibold text-slate-700">Standalone App Ecosystem #04</p>
+        <div className="p-3 border-t border-border bg-muted/40 text-[10px] text-muted-foreground">
+          <p className="font-semibold text-foreground">Standalone App Ecosystem #04</p>
           <p className="mt-0.5">Time-first allocation layer. Mengorkestrasi Task & Calendar tanpa salinan data.</p>
         </div>
-      </aside>
+      </ShellSidebar>
 
       {/* MAIN PLANNER CONTENT */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
         {/* Top Header */}
-        <header className="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <ShellHeader>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentDate(new Date())}
-              className="px-2.5 py-1 text-xs font-medium border border-slate-200 text-slate-700 rounded hover:bg-slate-50 transition-colors"
+              className="px-2.5 py-1 text-xs font-medium border border-border text-foreground rounded hover:bg-muted/40 transition-colors"
             >
               Hari Ini
             </button>
-            <div className="flex items-center border border-slate-200 rounded">
+            <div className="flex items-center border border-border rounded">
               <button
                 onClick={handlePrevDay}
-                className="p-1 hover:bg-slate-50 text-slate-600 rounded-l"
+                className="p-1 hover:bg-muted/40 text-muted-foreground rounded-l"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={handleNextDay}
-                className="p-1 hover:bg-slate-50 text-slate-600 rounded-r"
+                className="p-1 hover:bg-muted/40 text-muted-foreground rounded-r"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight ml-2">
+            <h1 className="text-base font-bold text-foreground tracking-tight ml-2">
               {currentDate.toLocaleDateString("id-ID", {
                 weekday: "long",
                 day: "numeric",
@@ -243,7 +245,7 @@ export function PlannerApp() {
 
           {/* Right Controls */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center border border-slate-200 rounded-md p-0.5 bg-slate-50 text-xs">
+            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
               {[
                 { id: "daily", label: "Daily Plan" },
                 { id: "weekly", label: "Weekly Plan" },
@@ -255,8 +257,8 @@ export function PlannerApp() {
                   onClick={() => setViewMode(v.id as PlannerViewMode)}
                   className={`px-3 py-1 rounded transition-colors ${
                     viewMode === v.id
-                      ? "bg-white text-slate-900 font-semibold shadow-xs"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {v.label}
@@ -266,7 +268,7 @@ export function PlannerApp() {
 
             <button
               onClick={() => commitDailyPlan(dateStr)}
-              className="px-3 py-1.5 text-xs font-medium border border-slate-300 rounded hover:bg-slate-50 text-slate-700 flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-medium border border-border rounded hover:bg-muted/40 text-foreground flex items-center gap-1.5"
             >
               <Lock className="w-3.5 h-3.5" />
               Kunci Rencana
@@ -280,11 +282,11 @@ export function PlannerApp() {
               Tambah Blok Waktu
             </button>
           </div>
-        </header>
+        </ShellHeader>
 
         {/* CAPACITY BAR & OVERALLOCATION WARNING (§4) */}
-        <div className="p-4 border-b border-slate-200 bg-slate-50/70">
-          <div className="flex items-center justify-between text-xs font-semibold text-slate-700 mb-1.5">
+        <div className="p-4 border-b border-border bg-muted/40/70">
+          <div className="flex items-center justify-between text-xs font-semibold text-foreground mb-1.5">
             <span>Kapasitas Kerja Hari Ini (§4)</span>
             <span>
               {capacity.allocatedMinutes} mnt teralokasi / {capacity.availableMinutes} mnt tersedia
@@ -292,7 +294,7 @@ export function PlannerApp() {
             </span>
           </div>
 
-          <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden flex">
+          <div className="w-full h-2.5 bg-muted rounded-full overflow-hidden flex">
             <div
               className={`h-full transition-all ${
                 isOverallocated ? "bg-red-500" : "bg-indigo-600"
@@ -319,10 +321,10 @@ export function PlannerApp() {
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
             <div className="space-y-3">
               {dailyBlocks.length === 0 ? (
-                <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-xl bg-white p-6 space-y-3">
-                  <Clock className="w-10 h-10 text-slate-300 mx-auto" />
-                  <p className="text-xs font-medium text-slate-600">Belum ada blok waktu yang dialokasikan untuk tanggal ini.</p>
-                  <p className="text-[11px] text-slate-400">
+                <div className="text-center py-12 border-2 border-dashed border-border rounded-xl bg-card p-6 space-y-3">
+                  <Clock className="w-10 h-10 text-foreground mx-auto" />
+                  <p className="text-xs font-medium text-muted-foreground">Belum ada blok waktu yang dialokasikan untuk tanggal ini.</p>
+                  <p className="text-[11px] text-muted-foreground">
                     Gunakan Auto-Planning di panel kiri atau buat TimeBlock secara manual.
                   </p>
                 </div>
@@ -339,10 +341,10 @@ export function PlannerApp() {
                         isDone
                           ? "bg-emerald-50/40 border-emerald-200"
                           : isSkipped
-                          ? "bg-slate-100 border-slate-200 opacity-60"
+                          ? "bg-muted border-border opacity-60"
                           : isCarriedOver
                           ? "bg-amber-50/40 border-amber-200"
-                          : "bg-white border-slate-200 hover:border-indigo-300"
+                          : "bg-card border-border hover:border-indigo-300"
                       }`}
                     >
                       <div className="space-y-1 min-w-0">
@@ -357,22 +359,22 @@ export function PlannerApp() {
                             }`}
                           />
                           <h3
-                            className={`text-xs font-bold text-slate-900 truncate ${
-                              isDone ? "line-through text-slate-500" : ""
+                            className={`text-xs font-bold text-foreground truncate ${
+                              isDone ? "line-through text-muted-foreground" : ""
                             }`}
                           >
                             {block.title}
                           </h3>
-                          <span className="text-[10px] uppercase font-semibold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] uppercase font-semibold text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
                             {block.sourceType}
                           </span>
                         </div>
 
                         {block.notes && (
-                          <p className="text-xs text-slate-500 italic">{block.notes}</p>
+                          <p className="text-xs text-muted-foreground italic">{block.notes}</p>
                         )}
 
-                        <div className="flex items-center gap-3 text-[11px] text-slate-500">
+                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
                           <span className="font-mono">
                             {new Date(block.startAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })} -{" "}
                             {new Date(block.endAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
@@ -405,7 +407,7 @@ export function PlannerApp() {
                           <button
                             onClick={() => updateTimeBlock(block.id, { status: "planned" })}
                             title="Batal Selesai"
-                            className="p-1.5 text-slate-400 hover:bg-slate-100 rounded"
+                            className="p-1.5 text-muted-foreground hover:bg-muted rounded"
                           >
                             <RotateCcw className="w-4 h-4" />
                           </button>
@@ -424,7 +426,7 @@ export function PlannerApp() {
                         <button
                           onClick={() => updateTimeBlock(block.id, { status: "skipped" })}
                           title="Lewati Hari Ini"
-                          className="p-1.5 text-slate-400 hover:bg-slate-100 rounded"
+                          className="p-1.5 text-muted-foreground hover:bg-muted rounded"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -457,31 +459,31 @@ export function PlannerApp() {
               return (
                 <div
                   key={dKey}
-                  className="w-72 flex-shrink-0 bg-white border border-slate-200 rounded-lg flex flex-col max-h-[calc(100vh-250px)]"
+                  className="w-72 flex-shrink-0 bg-card border border-border rounded-lg flex flex-col max-h-[calc(100vh-250px)]"
                 >
-                  <div className="p-3 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                  <div className="p-3 border-b border-border bg-muted/40 flex items-center justify-between">
                     <div>
-                      <span className={`text-xs font-semibold ${isToday ? "text-indigo-600" : "text-slate-800"}`}>
+                      <span className={`text-xs font-semibold ${isToday ? "text-indigo-600" : "text-foreground"}`}>
                         {["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"][i]}
                       </span>
-                      <p className="text-[10px] text-slate-400">{d.getDate()} {d.toLocaleString("id-ID", { month: "short" })}</p>
+                      <p className="text-[10px] text-muted-foreground">{d.getDate()} {d.toLocaleString("id-ID", { month: "short" })}</p>
                     </div>
-                    <span className="text-[10px] font-mono bg-slate-200 px-1.5 py-0.5 rounded text-slate-600">
+                    <span className="text-[10px] font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
                       {dayBlocks.length} blok
                     </span>
                   </div>
 
                   <div className="p-2 space-y-2 flex-1 overflow-y-auto">
                     {dayBlocks.length === 0 ? (
-                      <p className="text-[11px] text-slate-300 text-center py-6">Kosong</p>
+                      <p className="text-[11px] text-foreground text-center py-6">Kosong</p>
                     ) : (
                       dayBlocks.map((b) => (
                         <div
                           key={b.id}
-                          className="p-2 bg-slate-50 border border-slate-200 rounded text-xs space-y-1"
+                          className="p-2 bg-muted/40 border border-border rounded text-xs space-y-1"
                         >
-                          <p className="font-semibold text-slate-800 line-clamp-1">{b.title}</p>
-                          <p className="text-[10px] text-slate-400 font-mono">
+                          <p className="font-semibold text-foreground line-clamp-1">{b.title}</p>
+                          <p className="text-[10px] text-muted-foreground font-mono">
                             {new Date(b.startAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
                           </p>
                         </div>
@@ -497,9 +499,9 @@ export function PlannerApp() {
         {/* VIEW 3: RITUALS (§6) */}
         {viewMode === "rituals" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Ritual Tetap Berulang (§6)</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Ritual Tetap Berulang (§6)</h3>
+              <p className="text-xs text-muted-foreground">
                 Blok waktu tetap yang mengisi jadwal terlebih dahulu sebelum pekerjaan lain dialokasikan.
               </p>
             </div>
@@ -508,17 +510,17 @@ export function PlannerApp() {
               {state.rituals.map((r) => (
                 <div
                   key={r.id}
-                  className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs flex items-center justify-between"
+                  className="p-4 bg-card border border-border rounded-lg shadow-xs flex items-center justify-between"
                 >
                   <div className="space-y-1">
-                    <h4 className="text-xs font-bold text-slate-900">{r.title}</h4>
-                    <p className="text-[11px] text-slate-500">
+                    <h4 className="text-xs font-bold text-foreground">{r.title}</h4>
+                    <p className="text-[11px] text-muted-foreground">
                       Pukul {r.preferredStartTime} · Durasi {r.duration} menit · Pola: {r.recurrence.type}
                     </p>
                   </div>
                   <span
                     className={`text-[10px] font-semibold px-2 py-0.5 rounded ${
-                      r.isFixed ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-slate-100 text-slate-600"
+                      r.isFixed ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {r.isFixed ? "Fixed (Tidak Boleh Digeser)" : "Flexible"}
@@ -532,27 +534,27 @@ export function PlannerApp() {
         {/* VIEW 4: CARRYOVER AUDIT (§8) */}
         {viewMode === "carryover" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Riwayat Carryover Pekerjaan (§8)</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Riwayat Carryover Pekerjaan (§8)</h3>
+              <p className="text-xs text-muted-foreground">
                 Item yang belum selesai di akhir hari dan dialihkan ke tanggal berikutnya.
               </p>
             </div>
 
             <div className="space-y-3">
               {state.carryovers.length === 0 ? (
-                <div className="p-6 text-center text-xs text-slate-400 bg-white border border-slate-200 rounded-lg">
+                <div className="p-6 text-center text-xs text-muted-foreground bg-card border border-border rounded-lg">
                   Belum ada carryover yang tercatat.
                 </div>
               ) : (
                 state.carryovers.map((c) => (
                   <div
                     key={c.id}
-                    className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs flex items-center justify-between"
+                    className="p-4 bg-card border border-border rounded-lg shadow-xs flex items-center justify-between"
                   >
                     <div>
-                      <h4 className="text-xs font-bold text-slate-900">{c.title}</h4>
-                      <p className="text-[11px] text-slate-500">
+                      <h4 className="text-xs font-bold text-foreground">{c.title}</h4>
+                      <p className="text-[11px] text-muted-foreground">
                         Dari tanggal {c.fromDate} ke {c.toDate} · Alasan: {c.reason}
                       </p>
                     </div>
@@ -569,9 +571,9 @@ export function PlannerApp() {
 
       {/* MODAL: ADD TIMEBLOCK */}
       {showAddBlockModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Tambah Blok Waktu Manual</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">Tambah Blok Waktu Manual</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -594,46 +596,46 @@ export function PlannerApp() {
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Judul Pekerjaan *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Judul Pekerjaan *</label>
                 <input
                   name="title"
                   type="text"
                   required
                   placeholder="mis. Review Kontrak Hukum"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Mulai</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Mulai</label>
                   <input
                     name="startTime"
                     type="time"
                     defaultValue="10:00"
                     required
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Selesai</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Selesai</label>
                   <input
                     name="endTime"
                     type="time"
                     defaultValue="11:30"
                     required
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Catatan Konteks</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Catatan Konteks</label>
                 <textarea
                   name="notes"
                   rows={2}
                   placeholder="Catatan pengerjaan..."
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
@@ -641,7 +643,7 @@ export function PlannerApp() {
                 <button
                   type="button"
                   onClick={() => setShowAddBlockModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
                 >
                   Batal
                 </button>

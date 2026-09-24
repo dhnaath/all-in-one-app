@@ -60,7 +60,7 @@ export function SubscriptionSettingsView({
               <span className="text-sm text-muted-foreground">Sembunyikan nominal di Dasbor</span>
             </div>
             <div className="w-10 h-5 bg-[#2a2a2a] rounded-full flex items-center p-1 cursor-pointer">
-              <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+              <div className="w-3 h-3 bg-border rounded-full"></div>
             </div>
           </div>
         </div>

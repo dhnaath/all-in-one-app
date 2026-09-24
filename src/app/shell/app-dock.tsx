@@ -77,7 +77,7 @@ function DockIcon({
         style={{ width, height: width, borderRadius: "24%" }}
         className={`flex items-center justify-center cursor-pointer ${
           isActive 
-            ? "bg-primary text-primary-foreground shadow-md border-primary/40" 
+            ? "gradient-primary text-white shadow-lg shadow-indigo-500/30 border-white/20" 
             : "bg-card/90 text-muted-foreground shadow-xs hover:bg-accent hover:text-foreground border-border"
         } backdrop-blur-md border`}
       >

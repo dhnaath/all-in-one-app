@@ -1,3 +1,5 @@
+import { ShellHeader } from "@/app/shell-header";
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState, useEffect, useMemo } from "react";
 import {
   Timer,
@@ -79,28 +81,28 @@ export function FocusTimerApp() {
     .reduce((acc, s) => acc + s.actualDuration, 0);
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-slate-50 text-slate-800">
+    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-muted/40 text-foreground">
       {/* LEFT SIDEBAR: Presets & Task Linking */}
-      <aside className="w-80 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
+      <ShellSidebar>
         {/* Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-white border-2 border-slate-200 shadow-xs flex items-center justify-center text-slate-800 shrink-0">
-            <Timer className="w-4 h-4 text-slate-800" />
+        <div className="p-4 border-b border-border flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-card border-2 border-border shadow-xs flex items-center justify-center text-foreground shrink-0">
+            <Timer className="w-4 h-4 text-foreground" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <h2 className="text-xs font-bold text-slate-900 tracking-tight">Focus Timer</h2>
-              <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 font-medium border border-slate-200">
+              <h2 className="text-xs font-bold text-foreground tracking-tight">Focus Timer</h2>
+              <span className="text-[9px] px-1.5 py-0.2 rounded bg-muted text-muted-foreground font-medium border border-border">
                 Tanda Sementara
               </span>
             </div>
-            <p className="text-[10px] text-slate-400">Eksekusi Sesi Fokus Real-Time (#07)</p>
+            <p className="text-[10px] text-muted-foreground">Eksekusi Sesi Fokus Real-Time (#07)</p>
           </div>
         </div>
 
         {/* Mode Selector */}
-        <div className="p-4 border-b border-slate-100 space-y-3">
-          <span className="text-[11px] font-semibold text-slate-700">Pilih Mode Kerja</span>
+        <div className="p-4 border-b border-border space-y-3">
+          <span className="text-[11px] font-semibold text-foreground">Pilih Mode Kerja</span>
           <div className="grid grid-cols-2 gap-2">
             {[
               { id: "pomodoro", label: "Pomodoro (25m)", min: 25 },
@@ -119,19 +121,19 @@ export function FocusTimerApp() {
                 className={`p-2.5 rounded-lg border text-left text-xs transition-all ${
                   selectedMode === m.id
                     ? "border-indigo-600 bg-indigo-50/50 text-indigo-900 font-semibold shadow-2xs"
-                    : "border-slate-200 hover:bg-slate-50 text-slate-700"
+                    : "border-border hover:bg-muted/40 text-foreground"
                 } ${activeSession ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 <p className="font-semibold text-xs">{m.label}</p>
-                <p className="text-[10px] text-slate-400 mt-0.5 capitalize">{m.id.replace("_", " ")}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5 capitalize">{m.id.replace("_", " ")}</p>
               </button>
             ))}
           </div>
         </div>
 
         {/* Link to Task Manager (#01) */}
-        <div className="p-4 border-b border-slate-100 space-y-2">
-          <span className="text-[11px] font-semibold text-slate-700 flex items-center gap-1.5">
+        <div className="p-4 border-b border-border space-y-2">
+          <span className="text-[11px] font-semibold text-foreground flex items-center gap-1.5">
             <LinkIcon className="w-3.5 h-3.5 text-indigo-600" />
             Tautkan ke Task (#01)
           </span>
@@ -139,7 +141,7 @@ export function FocusTimerApp() {
             disabled={!!activeSession}
             value={selectedTaskId}
             onChange={(e) => setSelectedTaskId(e.target.value)}
-            className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500 bg-slate-50"
+            className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500 bg-muted/40"
           >
             <option value="">-- Fokus Umum (Tanpa Task) --</option>
             {tasks
@@ -150,23 +152,23 @@ export function FocusTimerApp() {
                 </option>
               ))}
           </select>
-          <p className="text-[10px] text-slate-400">
+          <p className="text-[10px] text-muted-foreground">
             Durasi fokus akan dicatat dan status task dapat diperbarui otomatis setelah sesi.
           </p>
         </div>
 
         {/* Quick Stats Summary */}
         <div className="p-4 flex-1 overflow-y-auto space-y-3">
-          <span className="text-[11px] font-semibold text-slate-700">Performa Fokus Hari Ini</span>
+          <span className="text-[11px] font-semibold text-foreground">Performa Fokus Hari Ini</span>
           <div className="space-y-2">
-            <div className="p-2.5 bg-slate-50 border border-slate-200 rounded flex items-center justify-between text-xs">
-              <span className="text-slate-600">Total Waktu Selesai:</span>
-              <span className="font-bold text-slate-900 font-mono">
+            <div className="p-2.5 bg-muted/40 border border-border rounded flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">Total Waktu Selesai:</span>
+              <span className="font-bold text-foreground font-mono">
                 {Math.round(totalFocusSeconds / 60)} Menit
               </span>
             </div>
-            <div className="p-2.5 bg-slate-50 border border-slate-200 rounded flex items-center justify-between text-xs">
-              <span className="text-slate-600">Selesai vs Batal:</span>
+            <div className="p-2.5 bg-muted/40 border border-border rounded flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">Selesai vs Batal:</span>
               <span className="font-bold text-emerald-600">
                 {totalCompleted} / {totalCompleted + totalAbandoned}
               </span>
@@ -175,25 +177,25 @@ export function FocusTimerApp() {
         </div>
 
         {/* Footnote */}
-        <div className="p-3 border-t border-slate-100 bg-slate-50 text-[10px] text-slate-500">
-          <p className="font-semibold text-slate-700">Standalone App Ecosystem #07</p>
+        <div className="p-3 border-t border-border bg-muted/40 text-[10px] text-muted-foreground">
+          <p className="font-semibold text-foreground">Standalone App Ecosystem #07</p>
           <p className="mt-0.5">Eksekusi fokus real-time. Interupsi dicatat sebagai data kualitas fokus.</p>
         </div>
-      </aside>
+      </ShellSidebar>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
         {/* Top Header */}
-        <header className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <ShellHeader>
           <div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight">Sesi Kerja Fokus</h1>
-            <p className="text-xs text-slate-500">
+            <h1 className="text-base font-bold text-foreground tracking-tight">Sesi Kerja Fokus</h1>
+            <p className="text-xs text-muted-foreground">
               Kelola ritme kerja bebas distraksi dengan pencatatan interupsi real-time.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center border border-slate-200 rounded-md p-0.5 bg-slate-50 text-xs">
+            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
               {[
                 { id: "timer", label: "Timer Aktif" },
                 { id: "history", label: "Riwayat Sesi" },
@@ -205,8 +207,8 @@ export function FocusTimerApp() {
                   onClick={() => setViewMode(v.id as FocusTimerViewMode)}
                   className={`px-3 py-1 rounded transition-colors ${
                     viewMode === v.id
-                      ? "bg-white text-slate-900 font-semibold shadow-xs"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {v.label}
@@ -214,7 +216,7 @@ export function FocusTimerApp() {
               ))}
             </div>
           </div>
-        </header>
+        </ShellHeader>
 
         {/* VIEW 1: ACTIVE TIMER */}
         {viewMode === "timer" && (
@@ -226,18 +228,18 @@ export function FocusTimerApp() {
                 <span>Target: <strong>{activeSession.linkedItem.title || "Tugas Tertaut"}</strong></span>
               </div>
             ) : selectedTaskId ? (
-              <div className="px-4 py-2 bg-slate-100 border border-slate-200 rounded-full text-xs text-slate-600 font-medium flex items-center gap-2">
+              <div className="px-4 py-2 bg-muted border border-border rounded-full text-xs text-muted-foreground font-medium flex items-center gap-2">
                 <LinkIcon className="w-3.5 h-3.5" />
                 <span>Target Terpilih: {tasks.find((t) => t.id === selectedTaskId)?.title}</span>
               </div>
             ) : null}
 
             {/* Giant Clock Face */}
-            <div className="w-72 h-72 rounded-full border-8 border-indigo-50 bg-gradient-to-b from-white to-slate-50 shadow-lg flex flex-col items-center justify-center relative">
-              <span className="text-6xl font-bold font-mono tracking-tighter text-slate-900">
+            <div className="w-72 h-72 rounded-full border-8 border-indigo-50 bg-gradient-to-b from-white to-border shadow-lg flex flex-col items-center justify-center relative">
+              <span className="text-6xl font-bold font-mono tracking-tighter text-foreground">
                 {formatTime(secondsRemaining)}
               </span>
-              <span className="text-xs uppercase tracking-widest text-slate-400 mt-2 font-semibold">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground mt-2 font-semibold">
                 {activeSession ? activeSession.mode.replace("_", " ") : selectedMode.replace("_", " ")}
               </span>
               {activeSession && (
@@ -270,7 +272,7 @@ export function FocusTimerApp() {
                   {activeSession.status === "running" ? (
                     <button
                       onClick={() => pauseSession(activeSession.id)}
-                      className="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5"
+                      className="px-5 py-2.5 bg-foreground hover:bg-foreground text-background rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5"
                     >
                       <Pause className="w-4 h-4 fill-white" />
                       Jeda
@@ -304,7 +306,7 @@ export function FocusTimerApp() {
                         stopSessionEarly(activeSession.id);
                       }
                     }}
-                    className="px-4 py-2.5 text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-lg text-xs font-medium transition-all"
+                    className="px-4 py-2.5 text-muted-foreground hover:bg-red-50 hover:text-red-600 rounded-lg text-xs font-medium transition-all"
                   >
                     Hentikan Awal
                   </button>
@@ -325,7 +327,7 @@ export function FocusTimerApp() {
                   {/* Extend Session */}
                   <button
                     onClick={() => extendSession(activeSession.id, 5)}
-                    className="px-3 py-2 text-slate-600 hover:bg-slate-100 rounded text-xs border border-slate-200"
+                    className="px-3 py-2 text-muted-foreground hover:bg-muted rounded text-xs border border-border"
                     title="Tambah 5 Menit"
                   >
                     +5m
@@ -339,9 +341,9 @@ export function FocusTimerApp() {
         {/* VIEW 2: HISTORY */}
         {viewMode === "history" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Riwayat Sesi Fokus Lampau</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Riwayat Sesi Fokus Lampau</h3>
+              <p className="text-xs text-muted-foreground">
                 Daftar rekaman durasi aktual, status keberhasilan, dan refleksi pasca sesi.
               </p>
             </div>
@@ -350,7 +352,7 @@ export function FocusTimerApp() {
               {state.sessions.map((s) => (
                 <div
                   key={s.id}
-                  className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs flex items-start justify-between gap-4"
+                  className="p-4 bg-card border border-border rounded-lg shadow-xs flex items-start justify-between gap-4"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -363,18 +365,18 @@ export function FocusTimerApp() {
                       >
                         {s.status}
                       </span>
-                      <h4 className="text-xs font-bold text-slate-900">
+                      <h4 className="text-xs font-bold text-foreground">
                         {s.linkedItem?.title || "Sesi Fokus Umum"}
                       </h4>
                     </div>
 
                     {s.note && (
-                      <p className="text-xs text-slate-600 italic bg-slate-50 p-2 rounded">
+                      <p className="text-xs text-muted-foreground italic bg-muted/40 p-2 rounded">
                         "{s.note}"
                       </p>
                     )}
 
-                    <div className="flex items-center gap-3 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
                       <span>Mulai: {new Date(s.startedAt).toLocaleTimeString("id-ID")}</span>
                       <span>Durasi: {Math.round(s.actualDuration / 60)} menit</span>
                       {s.interruptions.length > 0 && (
@@ -385,7 +387,7 @@ export function FocusTimerApp() {
                     </div>
                   </div>
 
-                  <span className="text-xs font-mono font-bold text-slate-700">
+                  <span className="text-xs font-mono font-bold text-foreground">
                     {s.mode.replace("_", " ")}
                   </span>
                 </div>
@@ -397,9 +399,9 @@ export function FocusTimerApp() {
         {/* VIEW 3: BY LINKED ITEM */}
         {viewMode === "by_linked" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Agregasi Waktu Fokus Per Task / Habit</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Agregasi Waktu Fokus Per Task / Habit</h3>
+              <p className="text-xs text-muted-foreground">
                 Total alokasi waktu nyata yang dihabiskan untuk menyelesaikan masing-masing tugas.
               </p>
             </div>
@@ -416,11 +418,11 @@ export function FocusTimerApp() {
                 return (
                   <div
                     key={t.id}
-                    className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs flex items-center justify-between"
+                    className="p-4 bg-card border border-border rounded-lg shadow-xs flex items-center justify-between"
                   >
                     <div>
-                      <h4 className="text-xs font-bold text-slate-900">{t.title}</h4>
-                      <p className="text-[11px] text-slate-400">
+                      <h4 className="text-xs font-bold text-foreground">{t.title}</h4>
+                      <p className="text-[11px] text-muted-foreground">
                         {taskSessions.length} sesi fokus terselesaikan
                       </p>
                     </div>
@@ -437,25 +439,25 @@ export function FocusTimerApp() {
         {/* VIEW 4: INTERRUPTION LOG */}
         {viewMode === "interruptions" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Daftar Gangguan & Interupsi (§6)</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Daftar Gangguan & Interupsi (§6)</h3>
+              <p className="text-xs text-muted-foreground">
                 Pencatatan jeda untuk menganalisis dan mengeliminasi pola distraksi saat jam kerja fokus.
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-100">
+            <div className="bg-card border border-border rounded-lg divide-y divide-border">
               {state.sessions
                 .flatMap((s) => s.interruptions)
                 .map((int) => (
                   <div key={int.id} className="p-3 text-xs flex items-center justify-between">
                     <div>
-                      <span className="font-semibold text-slate-800">
+                      <span className="font-semibold text-foreground">
                         {int.reason || "Interupsi tidak dijelaskan"}
                       </span>
-                      <p className="text-[10px] text-slate-400">Sesi ID: {int.sessionId}</p>
+                      <p className="text-[10px] text-muted-foreground">Sesi ID: {int.sessionId}</p>
                     </div>
-                    <span className="text-[11px] font-mono text-slate-400">
+                    <span className="text-[11px] font-mono text-muted-foreground">
                       {new Date(int.startedAt).toLocaleTimeString("id-ID")}
                     </span>
                   </div>

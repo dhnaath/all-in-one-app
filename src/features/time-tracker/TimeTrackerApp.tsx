@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useEffect, useMemo } from "react";
 import {
   Timer,
@@ -225,7 +226,7 @@ export function TimeTrackerApp() {
   }, [entries, rateCards]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       {/* Toast */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-emerald-400 animate-in fade-in slide-in-from-bottom-4">
@@ -235,7 +236,7 @@ export function TimeTrackerApp() {
       )}
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+      <ShellHeader>
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-xl shadow-lg shadow-cyan-500/20">
@@ -247,11 +248,11 @@ export function TimeTrackerApp() {
                 <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                   App #33
                 </span>
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-muted-foreground">
                   Catatan Waktu Resmi/Legal-Grade • Timesheet & Billing
                 </span>
               </div>
-              <p className="text-xs md:text-sm text-slate-400">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Pencatatan waktu kerja aktual per task/project, diferensiasi billable, persetujuan atasan, dan konversi rate card.
               </p>
             </div>
@@ -261,7 +262,7 @@ export function TimeTrackerApp() {
         <div className="flex items-center flex-wrap gap-2.5">
           <button
             onClick={() => setFocusModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold transition"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-card hover:bg-card text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold transition"
             title="Tarik sesi selesai dari Focus Timer #07"
           >
             <Zap className="w-3.5 h-3.5 text-cyan-400" />
@@ -270,20 +271,20 @@ export function TimeTrackerApp() {
 
           <button
             onClick={() => setManualModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-card hover:bg-card text-foreground border border-border rounded-lg text-xs font-semibold transition"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Log Waktu Manual</span>
           </button>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-slate-800/80 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
         <button
           onClick={() => setActiveTab("timer")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "timer" ? "bg-cyan-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "timer" ? "bg-cyan-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Timer className="w-4 h-4" />
@@ -293,7 +294,7 @@ export function TimeTrackerApp() {
         <button
           onClick={() => setActiveTab("weekly_timesheet")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "weekly_timesheet" ? "bg-cyan-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "weekly_timesheet" ? "bg-cyan-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Calendar className="w-4 h-4 text-cyan-400" />
@@ -303,7 +304,7 @@ export function TimeTrackerApp() {
         <button
           onClick={() => setActiveTab("pending_approvals")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "pending_approvals" ? "bg-cyan-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "pending_approvals" ? "bg-cyan-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <UserCheck className="w-4 h-4 text-emerald-400" />
@@ -313,7 +314,7 @@ export function TimeTrackerApp() {
         <button
           onClick={() => setActiveTab("billing_summary")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "billing_summary" ? "bg-cyan-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "billing_summary" ? "bg-cyan-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <DollarSign className="w-4 h-4 text-emerald-400" />
@@ -323,7 +324,7 @@ export function TimeTrackerApp() {
         <button
           onClick={() => setActiveTab("stats")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-cyan-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "stats" ? "bg-cyan-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <BarChart3 className="w-4 h-4 text-amber-400" />
@@ -337,40 +338,40 @@ export function TimeTrackerApp() {
         {activeTab === "stats" && (
           <div className="space-y-6 max-w-4xl">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Jam Kerja</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Total Jam Kerja</div>
                 <div className="text-3xl font-extrabold text-white mt-1">{stats.totalHours} jam</div>
-                <div className="text-xs text-slate-500 mt-1">Dicatat resmi di sistem</div>
+                <div className="text-xs text-muted-foreground mt-1">Dicatat resmi di sistem</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Rasio Billable</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Rasio Billable</div>
                 <div className="text-3xl font-extrabold text-emerald-400 mt-1">{stats.billableRatio}%</div>
-                <div className="text-xs text-slate-500 mt-1">{stats.billableHours} jam dapat ditagihkan</div>
+                <div className="text-xs text-muted-foreground mt-1">{stats.billableHours} jam dapat ditagihkan</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Estimasi Billing</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Estimasi Billing</div>
                 <div className="text-2xl font-extrabold text-cyan-400 mt-1">
                   Rp {(stats.totalBillingIDR / 1000000).toFixed(1)} Juta
                 </div>
-                <div className="text-xs text-slate-500 mt-1">Berdasarkan RateCard resmi</div>
+                <div className="text-xs text-muted-foreground mt-1">Berdasarkan RateCard resmi</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Timesheet Terkirim</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Timesheet Terkirim</div>
                 <div className="text-3xl font-extrabold text-amber-400 mt-1">{timesheets.length}</div>
-                <div className="text-xs text-slate-500 mt-1">Rekap periode mingguan</div>
+                <div className="text-xs text-muted-foreground mt-1">Rekap periode mingguan</div>
               </div>
             </div>
 
-            <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-              <h4 className="font-semibold text-slate-200 mb-3 text-sm flex items-center gap-2">
+            <div className="p-5 bg-card/60 border border-border rounded-xl">
+              <h4 className="font-semibold text-foreground mb-3 text-sm flex items-center gap-2">
                 <FolderKanban className="w-4 h-4 text-cyan-400" />
                 Alokasi Waktu per Project / Entitas
               </h4>
               <div className="space-y-2">
                 {Object.entries(stats.projectMinutes).map(([proj, mins]) => (
-                  <div key={proj} className="flex items-center justify-between text-xs py-1 border-b border-slate-700/40">
-                    <span className="text-slate-300">{proj}</span>
-                    <span className="px-2 py-0.5 bg-slate-700 rounded text-slate-300 font-semibold">
+                  <div key={proj} className="flex items-center justify-between text-xs py-1 border-b border-border/40">
+                    <span className="text-foreground">{proj}</span>
+                    <span className="px-2 py-0.5 bg-card rounded text-foreground font-semibold">
                       {(mins / 60).toFixed(1)} jam ({mins} menit)
                     </span>
                   </div>
@@ -383,10 +384,10 @@ export function TimeTrackerApp() {
         {/* BILLING SUMMARY VIEW */}
         {activeTab === "billing_summary" && (
           <div className="space-y-6 max-w-4xl">
-            <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between">
+            <div className="p-5 bg-card/80 border border-border rounded-xl flex items-center justify-between">
               <div>
                 <h3 className="font-bold text-base text-white">Daftar Tarif per Jam (RateCard)</h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Tarif resmi yang dikalikan dengan jam billable untuk menghasilkan draf invoice ke klien.
                 </p>
               </div>
@@ -400,12 +401,12 @@ export function TimeTrackerApp() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {rateCards.map((rc) => (
-                <div key={rc.id} className="p-4 bg-slate-800/60 border border-slate-700 rounded-xl space-y-2">
-                  <div className="text-xs text-slate-400 font-semibold">{rc.appliesTo}</div>
+                <div key={rc.id} className="p-4 bg-card/60 border border-border rounded-xl space-y-2">
+                  <div className="text-xs text-muted-foreground font-semibold">{rc.appliesTo}</div>
                   <div className="text-2xl font-black text-emerald-400">
-                    Rp {rc.hourlyRate.toLocaleString()} <span className="text-xs font-normal text-slate-400">/ jam</span>
+                    Rp {rc.hourlyRate.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">/ jam</span>
                   </div>
-                  <div className="text-[11px] text-slate-500">Berlaku sejak: {rc.effectiveFrom}</div>
+                  <div className="text-[11px] text-muted-foreground">Berlaku sejak: {rc.effectiveFrom}</div>
                 </div>
               ))}
             </div>
@@ -415,7 +416,7 @@ export function TimeTrackerApp() {
                 <DollarSign className="w-5 h-5" />
                 Total Nilai Billable yang Siap Ditagihkan (Ready to Bill)
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-foreground leading-relaxed">
                 Seluruh <strong>{stats.billableHours} jam kerja billable</strong> setara dengan estimasi tagihan <strong>Rp {stats.totalBillingIDR.toLocaleString()}</strong>. Data ini dapat ditarik langsung oleh <em>Invoice Manager (#44)</em>.
               </p>
             </div>
@@ -425,23 +426,23 @@ export function TimeTrackerApp() {
         {/* PENDING APPROVALS VIEW */}
         {activeTab === "pending_approvals" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400">
+            <div className="p-4 bg-card/40 border border-border/60 rounded-xl text-xs text-muted-foreground">
               Review timesheet resmi sebelum difinalisasi untuk payroll dan penagihan klien.
             </div>
 
             {timesheets.length === 0 ? (
-              <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
-                <UserCheck className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-                <p className="text-xs text-slate-400">Tidak ada timesheet dalam antrean.</p>
+              <div className="p-12 text-center bg-card/40 border border-border/60 rounded-xl">
+                <UserCheck className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground">Tidak ada timesheet dalam antrean.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {timesheets.map((ts) => (
-                  <div key={ts.id} className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-3">
+                  <div key={ts.id} className="p-5 bg-card/80 border border-border rounded-xl space-y-3">
                     <div className="flex items-start justify-between">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-base text-slate-100">{ts.userName}</span>
+                          <span className="font-bold text-base text-foreground">{ts.userName}</span>
                           <span
                             className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase ${
                               ts.status === "approved"
@@ -454,7 +455,7 @@ export function TimeTrackerApp() {
                             {ts.status}
                           </span>
                         </div>
-                        <div className="text-xs text-slate-400 mt-0.5">
+                        <div className="text-xs text-muted-foreground mt-0.5">
                           Periode: {ts.periodStart} s/d {ts.periodEnd} • {ts.entryIds.length} entri waktu
                         </div>
                       </div>
@@ -463,12 +464,12 @@ export function TimeTrackerApp() {
                         <span className="text-xl font-black text-cyan-400">
                           {(ts.totalMinutes / 60).toFixed(1)} Jam
                         </span>
-                        <div className="text-[11px] text-slate-500">{ts.totalMinutes} menit</div>
+                        <div className="text-[11px] text-muted-foreground">{ts.totalMinutes} menit</div>
                       </div>
                     </div>
 
                     {ts.status === "submitted" && (
-                      <div className="flex justify-end gap-2 pt-2 border-t border-slate-700/60">
+                      <div className="flex justify-end gap-2 pt-2 border-t border-border/60">
                         <button
                           onClick={() => {
                             reviewTimesheet(ts.id, "rejected", "Manager", "Perlu revisi entri non-billable.");
@@ -499,10 +500,10 @@ export function TimeTrackerApp() {
         {/* WEEKLY TIMESHEET VIEW */}
         {activeTab === "weekly_timesheet" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between">
+            <div className="p-4 bg-card/80 border border-border rounded-xl flex items-center justify-between">
               <div>
                 <h3 className="font-bold text-base text-white">Timesheet Mingguan (Grid)</h3>
-                <p className="text-xs text-slate-400">Rekap entri waktu per hari sepanjang minggu berjalan.</p>
+                <p className="text-xs text-muted-foreground">Rekap entri waktu per hari sepanjang minggu berjalan.</p>
               </div>
               <button
                 onClick={() => {
@@ -521,9 +522,9 @@ export function TimeTrackerApp() {
               </button>
             </div>
 
-            <div className="overflow-x-auto bg-slate-800/80 border border-slate-700 rounded-xl">
+            <div className="overflow-x-auto bg-card/80 border border-border rounded-xl">
               <table className="w-full text-xs text-left">
-                <thead className="bg-slate-900/60 border-b border-slate-700 text-slate-400">
+                <thead className="bg-background/60 border-b border-border text-muted-foreground">
                   <tr>
                     <th className="p-3">Project / Aktivitas</th>
                     <th className="p-3">Sen</th>
@@ -535,23 +536,23 @@ export function TimeTrackerApp() {
                     <th className="p-3">Tipe</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-700/60">
+                <tbody className="divide-y divide-border/60">
                   {entries.map((e) => (
-                    <tr key={e.id} className="hover:bg-slate-700/30">
-                      <td className="p-3 font-semibold text-slate-200">
+                    <tr key={e.id} className="hover:bg-card/30">
+                      <td className="p-3 font-semibold text-foreground">
                         {e.linkedItem?.title || "Aktivitas Bebas"}
-                        <div className="text-[10px] text-slate-400 font-normal">{e.note}</div>
+                        <div className="text-[10px] text-muted-foreground font-normal">{e.note}</div>
                       </td>
-                      <td className="p-3 text-slate-300">-</td>
-                      <td className="p-3 text-slate-300">{(e.durationMinutes / 60).toFixed(1)}h</td>
-                      <td className="p-3 text-slate-300">-</td>
-                      <td className="p-3 text-slate-300">-</td>
-                      <td className="p-3 text-slate-300">-</td>
+                      <td className="p-3 text-foreground">-</td>
+                      <td className="p-3 text-foreground">{(e.durationMinutes / 60).toFixed(1)}h</td>
+                      <td className="p-3 text-foreground">-</td>
+                      <td className="p-3 text-foreground">-</td>
+                      <td className="p-3 text-foreground">-</td>
                       <td className="p-3 font-bold text-cyan-400">{(e.durationMinutes / 60).toFixed(1)}h</td>
                       <td className="p-3">
                         <span
                           className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
-                            e.isBillable ? "bg-emerald-500/20 text-emerald-300" : "bg-slate-700 text-slate-400"
+                            e.isBillable ? "bg-emerald-500/20 text-emerald-300" : "bg-card text-muted-foreground"
                           }`}
                         >
                           {e.isBillable ? "Billable" : "Internal"}
@@ -569,14 +570,14 @@ export function TimeTrackerApp() {
         {activeTab === "timer" && (
           <div className="space-y-6">
             {/* ACTIVE TIMER WIDGET */}
-            <div className="p-6 bg-gradient-to-r from-slate-800 to-slate-850 border border-slate-700 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="p-6 bg-gradient-to-r from-border to-border border border-border rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-6">
                 <div className="size-20 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
                   <Clock className={`w-10 h-10 ${isTimerRunning ? "animate-pulse text-cyan-300" : ""}`} />
                 </div>
 
                 <div>
-                  <div className="text-xs uppercase font-mono tracking-widest text-slate-400">
+                  <div className="text-xs uppercase font-mono tracking-widest text-muted-foreground">
                     {isTimerRunning ? "Pencatatan Waktu Sedang Berjalan..." : "Timer Tidak Aktif"}
                   </div>
                   <div className="text-4xl md:text-5xl font-black font-mono tracking-tight text-white mt-1">
@@ -586,7 +587,7 @@ export function TimeTrackerApp() {
                     <div className="text-xs text-cyan-300 mt-1 flex items-center gap-2">
                       <span className="size-2 rounded-full bg-emerald-400 animate-ping" />
                       <span>{timerNote}</span>
-                      <span className="text-slate-400">• {timerIsBillable ? "Billable" : "Non-billable"}</span>
+                      <span className="text-muted-foreground">• {timerIsBillable ? "Billable" : "Non-billable"}</span>
                     </div>
                   )}
                 </div>
@@ -600,13 +601,13 @@ export function TimeTrackerApp() {
                       placeholder="Apa yang sedang dikerjakan?"
                       value={timerFormNote}
                       onChange={(e) => setTimerFormNote(e.target.value)}
-                      className="px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 flex-1 md:w-60"
+                      className="px-3 py-2 bg-background border border-border rounded-xl text-xs text-foreground placeholder-muted-foreground focus:outline-none focus:border-cyan-500 flex-1 md:w-60"
                     />
 
                     <select
                       value={timerFormType}
                       onChange={(e) => setTimerFormType(e.target.value as any)}
-                      className="px-2.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-cyan-500"
+                      className="px-2.5 py-2 bg-background border border-border rounded-xl text-xs text-foreground focus:outline-none focus:border-cyan-500"
                     >
                       <option value="project">Project (#03)</option>
                       <option value="task">Task (#01)</option>
@@ -619,7 +620,7 @@ export function TimeTrackerApp() {
                       className={`px-3 py-2 rounded-xl text-xs font-semibold border ${
                         timerFormBillable
                           ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
-                          : "bg-slate-800 text-slate-400 border-slate-700"
+                          : "bg-card text-muted-foreground border-border"
                       }`}
                     >
                       {timerFormBillable ? "$ Billable" : "Internal"}
@@ -646,15 +647,15 @@ export function TimeTrackerApp() {
             </div>
 
             {/* Filter Bar */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700 rounded-xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-card/80 border border-border rounded-xl">
               <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Cari entri waktu, task, project..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                  className="w-full pl-9 pr-3 py-1.5 bg-background border border-border rounded-lg text-xs md:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
@@ -662,7 +663,7 @@ export function TimeTrackerApp() {
                 <select
                   value={billableFilter}
                   onChange={(e) => setBillableFilter(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-cyan-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 >
                   <option value="all">Semua Entri</option>
                   <option value="billable">Hanya Billable ($)</option>
@@ -676,29 +677,29 @@ export function TimeTrackerApp() {
               {filteredEntries.map((entry) => (
                 <div
                   key={entry.id}
-                  className="p-4 bg-slate-800/80 border border-slate-700 hover:border-slate-600 rounded-xl flex items-center justify-between gap-4 transition"
+                  className="p-4 bg-card/80 border border-border hover:border-border rounded-xl flex items-center justify-between gap-4 transition"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-sm text-slate-100">
+                      <span className="font-bold text-sm text-foreground">
                         {entry.linkedItem?.title || "Aktivitas Bebas"}
                       </span>
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                           entry.isBillable
                             ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                            : "bg-slate-700 text-slate-400"
+                            : "bg-card text-muted-foreground"
                         }`}
                       >
                         {entry.isBillable ? "Billable" : "Non-billable"}
                       </span>
-                      <span className="px-2 py-0.5 rounded bg-slate-700/60 text-slate-300 text-[10px] capitalize">
+                      <span className="px-2 py-0.5 rounded bg-card/60 text-foreground text-[10px] capitalize">
                         {entry.source.replace("_", " ")}
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-300">{entry.note}</p>
-                    <div className="text-[11px] text-slate-500">
+                    <p className="text-xs text-foreground">{entry.note}</p>
+                    <div className="text-[11px] text-muted-foreground">
                       Oleh {entry.userName} • {new Date(entry.createdAt).toLocaleDateString()}
                     </div>
                   </div>
@@ -708,12 +709,12 @@ export function TimeTrackerApp() {
                       <div className="text-lg font-black text-cyan-400">
                         {(entry.durationMinutes / 60).toFixed(1)} Jam
                       </div>
-                      <div className="text-[11px] text-slate-500">{entry.durationMinutes} menit</div>
+                      <div className="text-[11px] text-muted-foreground">{entry.durationMinutes} menit</div>
                     </div>
 
                     <button
                       onClick={() => deleteEntry(entry.id)}
-                      className="p-2 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-slate-700"
+                      className="p-2 text-muted-foreground hover:text-rose-400 rounded-lg hover:bg-card"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -728,17 +729,17 @@ export function TimeTrackerApp() {
       {/* MODAL: MANUAL TIME LOG */}
       {manualModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Log Entri Waktu Manual</h3>
-              <button onClick={() => setManualModalOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setManualModalOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveManualLog} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Durasi (Menit) <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -746,12 +747,12 @@ export function TimeTrackerApp() {
                   required
                   value={manualDuration}
                   onChange={(e) => setManualDuration(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Deskripsi Pekerjaan <span className="text-rose-400">*</span>
                 </label>
                 <textarea
@@ -760,17 +761,17 @@ export function TimeTrackerApp() {
                   placeholder="mis. Review arsitektur & code review PR #42"
                   value={manualNote}
                   onChange={(e) => setManualNote(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Tipe Entitas</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Tipe Entitas</label>
                   <select
                     value={manualType}
                     onChange={(e) => setManualType(e.target.value as any)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                   >
                     <option value="project">Project (#03)</option>
                     <option value="task">Task (#01)</option>
@@ -779,23 +780,23 @@ export function TimeTrackerApp() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Tanggal</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Tanggal</label>
                   <input
                     type="date"
                     value={manualDate}
                     onChange={(e) => setManualDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Nama Project / Task</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Nama Project / Task</label>
                 <input
                   type="text"
                   value={manualTitle}
                   onChange={(e) => setManualTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
@@ -807,16 +808,16 @@ export function TimeTrackerApp() {
                   onChange={(e) => setManualBillable(e.target.checked)}
                   className="size-4 accent-cyan-500 rounded"
                 />
-                <label htmlFor="manualBillableCheck" className="text-xs text-slate-300 font-medium">
+                <label htmlFor="manualBillableCheck" className="text-xs text-foreground font-medium">
                   Tandai sebagai waktu Billable (dapat ditagihkan ke klien)
                 </label>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setManualModalOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>
@@ -835,49 +836,49 @@ export function TimeTrackerApp() {
       {/* MODAL: FOCUS SESSION SIMULATOR */}
       {focusModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm">
                 <Zap className="w-4 h-4" />
                 <span>Simulator Integrasi Focus Timer (#07)</span>
               </div>
-              <button onClick={() => setFocusModalOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setFocusModalOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               Mensimulasikan satu Focus Session yang baru saja selesai di Focus Timer (#07) untuk otomatis dikonversi menjadi entri resmi Time Tracker (legal-grade).
             </p>
 
             <form onSubmit={handleImportFocus} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Nama Task / Sesi</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Nama Task / Sesi</label>
                 <input
                   type="text"
                   required
                   value={focusTaskTitle}
                   onChange={(e) => setFocusTaskTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Durasi Bersih (Menit)</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Durasi Bersih (Menit)</label>
                 <input
                   type="number"
                   required
                   value={focusMinutes}
                   onChange={(e) => setFocusMinutes(Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setFocusModalOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>
@@ -896,17 +897,17 @@ export function TimeTrackerApp() {
       {/* MODAL: RATE CARD */}
       {rateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Tambah RateCard Baru</h3>
-              <button onClick={() => setRateModalOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setRateModalOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleAddRateCard} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Role / Target Entitas <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -915,12 +916,12 @@ export function TimeTrackerApp() {
                   placeholder="mis. Lead DevOps Engineer atau Klien Spesifik"
                   value={newRateRole}
                   onChange={(e) => setNewRateRole(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Tarif per Jam (IDR) <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -928,15 +929,15 @@ export function TimeTrackerApp() {
                   required
                   value={newRateHourly}
                   onChange={(e) => setNewRateHourly(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setRateModalOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>

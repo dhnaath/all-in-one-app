@@ -422,7 +422,7 @@ export function TasksView({
             {/* Q4: Not Urgent & Not Important */}
             <div className="bg-background border border-border rounded-lg p-4 shadow-sm flex flex-col min-h-[200px]">
               <h3 className="font-bold text-muted-foreground mb-3 flex items-center text-sm">
-                <span className="w-2.5 h-2.5 rounded-full bg-gray-400 mr-2"></span>Don't Do (Not
+                <span className="w-2.5 h-2.5 rounded-full bg-border mr-2"></span>Don't Do (Not
                 Urgent & Not Important)
               </h3>
               <div className="flex-1 overflow-y-auto space-y-2 pr-1">
@@ -470,7 +470,7 @@ export function TasksView({
                   className={cn(
                     "px-3 py-1.5 border border-border rounded-md text-sm font-medium transition-colors",
                     calendarFilter === "grid"
-                      ? "bg-foreground text-white border-slate-800 shadow-sm"
+                      ? "bg-foreground text-white border-border shadow-sm"
                       : "bg-background hover:bg-secondary text-foreground/80",
                   )}
                 >
@@ -481,7 +481,7 @@ export function TasksView({
                   className={cn(
                     "px-3 py-1.5 border border-border rounded-md text-sm font-medium transition-colors",
                     calendarFilter === "today"
-                      ? "bg-foreground text-white border-slate-800 shadow-sm"
+                      ? "bg-foreground text-white border-border shadow-sm"
                       : "bg-background hover:bg-secondary text-foreground/80",
                   )}
                 >
@@ -492,7 +492,7 @@ export function TasksView({
                   className={cn(
                     "px-3 py-1.5 border border-border rounded-md text-sm font-medium transition-colors",
                     calendarFilter === "thisWeek"
-                      ? "bg-foreground text-white border-slate-800 shadow-sm"
+                      ? "bg-foreground text-white border-border shadow-sm"
                       : "bg-background hover:bg-secondary text-foreground/80",
                   )}
                 >
@@ -503,7 +503,7 @@ export function TasksView({
                   className={cn(
                     "px-3 py-1.5 border border-border rounded-md text-sm font-medium transition-colors",
                     calendarFilter === "thisMonth"
-                      ? "bg-foreground text-white border-slate-800 shadow-sm"
+                      ? "bg-foreground text-white border-border shadow-sm"
                       : "bg-background hover:bg-secondary text-foreground/80",
                   )}
                 >
@@ -514,7 +514,7 @@ export function TasksView({
                   className={cn(
                     "px-3 py-1.5 border border-border rounded-md text-sm font-medium transition-colors",
                     calendarFilter === "laterThisMonth"
-                      ? "bg-foreground text-white border-slate-800 shadow-sm"
+                      ? "bg-foreground text-white border-border shadow-sm"
                       : "bg-background hover:bg-secondary text-foreground/80",
                   )}
                 >
@@ -525,7 +525,7 @@ export function TasksView({
                   className={cn(
                     "px-3 py-1.5 border border-border rounded-md text-sm font-medium transition-colors",
                     calendarFilter === "nextYear"
-                      ? "bg-foreground text-white border-slate-800 shadow-sm"
+                      ? "bg-foreground text-white border-border shadow-sm"
                       : "bg-background hover:bg-secondary text-foreground/80",
                   )}
                 >
@@ -536,7 +536,7 @@ export function TasksView({
                   className={cn(
                     "px-3 py-1.5 border border-border rounded-md text-sm font-medium transition-colors",
                     calendarFilter === "unscheduled"
-                      ? "bg-foreground text-white border-slate-800 shadow-sm"
+                      ? "bg-foreground text-white border-border shadow-sm"
                       : "bg-background hover:bg-secondary text-foreground/80",
                   )}
                 >

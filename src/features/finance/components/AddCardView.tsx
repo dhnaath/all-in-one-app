@@ -289,7 +289,7 @@ export function AddCardView({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Nama Pinjaman
           </legend>
@@ -304,7 +304,7 @@ export function AddCardView({
           />
         </fieldset>
 
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Jenis Kredit
           </legend>
@@ -325,7 +325,7 @@ export function AddCardView({
           </div>
         </fieldset>
 
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Tanggal Mulai
           </legend>
@@ -339,7 +339,7 @@ export function AddCardView({
         </fieldset>
 
         <div className="grid grid-cols-2 gap-4">
-          <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+          <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
             <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
               Jumlah Tenor
             </legend>
@@ -352,7 +352,7 @@ export function AddCardView({
               placeholder="12"
             />
           </fieldset>
-          <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+          <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
             <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
               Bunga (%)
             </legend>
@@ -368,7 +368,7 @@ export function AddCardView({
           </fieldset>
         </div>
 
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Pokok Pinjaman (Rp)
           </legend>
@@ -383,7 +383,7 @@ export function AddCardView({
           />
         </fieldset>
 
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Cicilan Per Tenor (Rp)
           </legend>
@@ -398,7 +398,7 @@ export function AddCardView({
           />
         </fieldset>
 
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Sisa Pokok (Rp)
           </legend>
@@ -414,7 +414,7 @@ export function AddCardView({
           />
         </fieldset>
 
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Total Dibayar (Rp)
           </legend>
@@ -429,7 +429,7 @@ export function AddCardView({
           />
         </fieldset>
 
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Status
           </legend>
@@ -451,7 +451,7 @@ export function AddCardView({
           </select>
         </fieldset>
 
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Plafon Kredit - Opsional
           </legend>
@@ -466,7 +466,7 @@ export function AddCardView({
           />
         </fieldset>
 
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Denda Berjalan - Opsional
           </legend>
@@ -496,7 +496,7 @@ export function AddCardView({
           </div>
         </fieldset>
 
-        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-gray-500">
+        <fieldset className="relative border border-border rounded-2xl px-4 pt-1.5 pb-2 bg-card focus-within:border-border">
           <legend className="text-xs font-medium text-muted-foreground px-1 ml-1 bg-background -mt-0.5">
             Catatan
           </legend>
@@ -729,7 +729,7 @@ export function AddCardView({
             <button
               type="button"
               onClick={handleAddFee}
-              className="w-full py-3 flex items-center justify-center gap-2 border border-dashed border-border rounded-2xl text-muted-foreground hover:text-foreground hover:border-gray-500 transition-colors"
+              className="w-full py-3 flex items-center justify-center gap-2 border border-dashed border-border rounded-2xl text-muted-foreground hover:text-foreground hover:border-border transition-colors"
             >
               <Plus size={16} />
               <span className="text-sm font-medium">Tambah Komponen Biaya</span>

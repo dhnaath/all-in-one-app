@@ -913,7 +913,7 @@ export function WorkoutsView() {
                   
                   {/* Category & Difficulty Badges */}
                   <div className="absolute top-3 left-3 flex items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-black/60 backdrop-blur-md text-white border border-white/10">
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-black/60 backdrop-blur-md text-white border border-border/10">
                       {program.category}
                     </span>
                   </div>

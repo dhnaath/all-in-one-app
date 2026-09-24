@@ -16,6 +16,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { AppShell } from "@/app/app-shell";
+import { ShellSections } from "@/app/shell-sections";
 import { Panel } from "@/app/ui-bits";
 import { VisualLayoutMockup } from "@/app/VisualMockups";
 import { getFrameworkData, FrameworkContent } from "@/frameworkData";
@@ -41,6 +42,14 @@ export function FrameworkView({ frameworkName, customCanvas }: FrameworkViewProp
 
   const [activeTab, setActiveTab] = useState<'hints' | 'worksheet'>('hints');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string>('teori');
+
+  const goSection = (id: string) => {
+    setActiveSection(id);
+    document
+      .getElementById(`fw-${id}`)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const [worksheetNotes, setWorksheetNotes] = useState<Record<string, string>>(() => {
     try {
@@ -181,6 +190,15 @@ ${fwData.actionPlan.map(a => `[ ] ${a}`).join('\n')}`;
         </div>
       }
     >
+      <ShellSections
+        sections={[
+          { id: "teori", label: "Teori & Konsep", icon: BookOpen, active: activeSection === "teori", onSelect: () => goSection("teori") },
+          { id: "layout", label: "Desain Visual", icon: LayoutTemplate, active: activeSection === "layout", onSelect: () => goSection("layout") },
+          { id: "draft", label: "Draft & Lembar Kerja", icon: PenTool, active: activeSection === "draft", onSelect: () => goSection("draft") },
+          { id: "tutorial", label: "Tutorial Eksekusi", icon: ListOrdered, active: activeSection === "tutorial", onSelect: () => goSection("tutorial") },
+          { id: "action", label: "Action Plan", icon: CheckSquare, active: activeSection === "action", onSelect: () => goSection("action") },
+        ]}
+      />
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-foreground text-background text-xs font-semibold px-4 py-2.5 rounded-lg shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
@@ -198,7 +216,7 @@ ${fwData.actionPlan.map(a => `[ ] ${a}`).join('\n')}`;
         )}
 
         {/* 1. Teori & Konsep Dasar */}
-        <section className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-sm">
+        <section id="fw-teori" className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-sm scroll-mt-24">
           <SectionHeader number="1" title="Teori & Konsep Dasar" icon={BookOpen} />
           
           <div className="grid md:grid-cols-2 gap-6">
@@ -225,7 +243,7 @@ ${fwData.actionPlan.map(a => `[ ] ${a}`).join('\n')}`;
         </section>
 
         {/* 2. Desain & Layout Visual (UI) */}
-        <section className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-sm">
+        <section id="fw-layout" className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-sm scroll-mt-24">
           <SectionHeader number="2" title="Desain & Layout Visual (UI)" icon={LayoutTemplate} />
           <div className="mb-4 text-xs text-muted-foreground">
             Representasi visual standar industri (<span className="font-semibold text-foreground">{fwData.layout.tipe}</span>):
@@ -240,7 +258,7 @@ ${fwData.actionPlan.map(a => `[ ] ${a}`).join('\n')}`;
         </section>
 
         {/* 3. Draft Konten & Lembar Kerja Interaktif */}
-        <section className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-sm">
+        <section id="fw-draft" className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-sm scroll-mt-24">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shadow-sm">
@@ -363,7 +381,7 @@ ${fwData.actionPlan.map(a => `[ ] ${a}`).join('\n')}`;
         </section>
 
         {/* 4. Tutorial Eksekusi */}
-        <section className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-sm">
+        <section id="fw-tutorial" className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-sm scroll-mt-24">
           <SectionHeader number="4" title="Tutorial Eksekusi" icon={ListOrdered} />
           
           <div className="relative pl-6 space-y-8 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
@@ -386,7 +404,7 @@ ${fwData.actionPlan.map(a => `[ ] ${a}`).join('\n')}`;
         </section>
 
         {/* 5. Action Plan & Takeaways */}
-        <section className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-sm">
+        <section id="fw-action" className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-sm scroll-mt-24">
           <div className="flex items-center justify-between gap-4 mb-6">
             <SectionHeader number="5" title="Action Plan & Takeaways" icon={CheckSquare} />
             

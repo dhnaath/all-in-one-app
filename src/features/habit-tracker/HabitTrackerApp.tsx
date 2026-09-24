@@ -1,3 +1,5 @@
+import { ShellHeader } from "@/app/shell-header";
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState, useMemo } from "react";
 import {
   Activity,
@@ -82,16 +84,16 @@ export function HabitTrackerApp() {
   }, []);
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-slate-50 text-slate-800">
+    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-muted/40 text-foreground">
       {/* LEFT SIDEBAR: Categories & Streak Ranking */}
-      <aside className="w-72 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
+      <ShellSidebar>
         {/* Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Activity className="w-5 h-5 text-indigo-600" />
             <div>
-              <h2 className="text-xs font-bold text-slate-900 tracking-tight">Habit Tracker</h2>
-              <p className="text-[10px] text-slate-400">Source of Truth Kebiasaan (#06)</p>
+              <h2 className="text-xs font-bold text-foreground tracking-tight">Habit Tracker</h2>
+              <p className="text-[10px] text-muted-foreground">Source of Truth Kebiasaan (#06)</p>
             </div>
           </div>
           <button
@@ -104,7 +106,7 @@ export function HabitTrackerApp() {
         </div>
 
         {/* Daily Streak Highlight */}
-        <div className="p-3 border-b border-slate-100 bg-gradient-to-br from-amber-50 to-orange-50/40">
+        <div className="p-3 border-b border-border bg-gradient-to-br from-amber-50 to-orange-50/40">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-amber-900 flex items-center gap-1.5">
               <Flame className="w-4 h-4 text-amber-500 fill-amber-500" />
@@ -125,15 +127,15 @@ export function HabitTrackerApp() {
         </div>
 
         {/* Categories Filter */}
-        <div className="p-3 border-b border-slate-100 flex-1 overflow-y-auto space-y-3">
-          <span className="text-[11px] font-semibold text-slate-700">Kategori Kebiasaan</span>
+        <div className="p-3 border-b border-border flex-1 overflow-y-auto space-y-3">
+          <span className="text-[11px] font-semibold text-foreground">Kategori Kebiasaan</span>
           <div className="space-y-1">
             <button
               onClick={() => setSelectedCategory("all")}
               className={`w-full text-left px-2.5 py-1.5 rounded text-xs transition-colors flex items-center justify-between ${
                 selectedCategory === "all"
                   ? "bg-indigo-50 text-indigo-700 font-semibold"
-                  : "text-slate-600 hover:bg-slate-100"
+                  : "text-muted-foreground hover:bg-muted"
               }`}
             >
               <span>Semua Kategori</span>
@@ -148,7 +150,7 @@ export function HabitTrackerApp() {
                   className={`w-full text-left px-2.5 py-1.5 rounded text-xs transition-colors flex items-center justify-between ${
                     selectedCategory === cat.id
                       ? "bg-indigo-50 text-indigo-700 font-semibold"
-                      : "text-slate-600 hover:bg-slate-100"
+                      : "text-muted-foreground hover:bg-muted"
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -165,8 +167,8 @@ export function HabitTrackerApp() {
           </div>
 
           {/* Top Streaks */}
-          <div className="pt-3 border-t border-slate-100">
-            <span className="text-[11px] font-semibold text-slate-700 mb-2 block">
+          <div className="pt-3 border-t border-border">
+            <span className="text-[11px] font-semibold text-foreground mb-2 block">
               Streak Tertinggi
             </span>
             <div className="space-y-2">
@@ -175,9 +177,9 @@ export function HabitTrackerApp() {
                 return (
                   <div
                     key={h.id}
-                    className="p-2 bg-slate-50 border border-slate-200 rounded text-xs flex items-center justify-between"
+                    className="p-2 bg-muted/40 border border-border rounded text-xs flex items-center justify-between"
                   >
-                    <span className="font-medium text-slate-800 truncate mr-2">{h.title}</span>
+                    <span className="font-medium text-foreground truncate mr-2">{h.title}</span>
                     <span className="flex items-center gap-1 font-bold text-amber-600 flex-shrink-0">
                       <Flame className="w-3.5 h-3.5 fill-amber-500" />
                       {s.currentStreak} hr
@@ -190,26 +192,26 @@ export function HabitTrackerApp() {
         </div>
 
         {/* Footnote */}
-        <div className="p-3 border-t border-slate-100 bg-slate-50 text-[10px] text-slate-500">
-          <p className="font-semibold text-slate-700">Standalone App #06</p>
+        <div className="p-3 border-t border-border bg-muted/40 text-[10px] text-muted-foreground">
+          <p className="font-semibold text-foreground">Standalone App #06</p>
           <p className="mt-0.5">Dilacak berdasarkan frekuensi & konsistensi (streak). Berbeda dari Task.</p>
         </div>
-      </aside>
+      </ShellSidebar>
 
       {/* MAIN VIEW CONTENT */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
         {/* Top Header */}
-        <header className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <ShellHeader>
           <div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight">Kebiasaan & Rutinitas Konsisten</h1>
-            <p className="text-xs text-slate-500">
+            <h1 className="text-base font-bold text-foreground tracking-tight">Kebiasaan & Rutinitas Konsisten</h1>
+            <p className="text-xs text-muted-foreground">
               Pelacakan harian dengan toleransi cuti terencana (skip tanpa putus streak).
             </p>
           </div>
 
           {/* View Modes */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center border border-slate-200 rounded-md p-0.5 bg-slate-50 text-xs">
+            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
               {[
                 { id: "today", label: "Hari Ini" },
                 { id: "heatmap", label: "Heatmap (§9)" },
@@ -221,8 +223,8 @@ export function HabitTrackerApp() {
                   onClick={() => setViewMode(v.id as HabitViewMode)}
                   className={`px-3 py-1 rounded transition-colors ${
                     viewMode === v.id
-                      ? "bg-white text-slate-900 font-semibold shadow-xs"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {v.label}
@@ -238,7 +240,7 @@ export function HabitTrackerApp() {
               Kebiasaan Baru
             </button>
           </div>
-        </header>
+        </ShellHeader>
 
         {/* VIEW 1: TODAY LIST */}
         {viewMode === "today" && (
@@ -251,8 +253,8 @@ export function HabitTrackerApp() {
                     isDone
                       ? "bg-emerald-50/30 border-emerald-200"
                       : isSkipped
-                      ? "bg-slate-100 border-slate-200 opacity-60"
-                      : "bg-white border-slate-200 hover:border-indigo-300"
+                      ? "bg-muted border-border opacity-60"
+                      : "bg-card border-border hover:border-indigo-300"
                   }`}
                 >
                   <div className="space-y-1 min-w-0">
@@ -262,24 +264,24 @@ export function HabitTrackerApp() {
                         style={{ backgroundColor: habit.color || "#10b981" }}
                       />
                       <h3
-                        className={`text-xs font-bold text-slate-900 truncate ${
+                        className={`text-xs font-bold text-foreground truncate ${
                           isDone ? "text-emerald-900" : ""
                         }`}
                       >
                         {habit.title}
                       </h3>
                       {isSkipped && (
-                        <span className="text-[10px] text-slate-500 bg-slate-200 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
                           Skipped (Streak Aman)
                         </span>
                       )}
                     </div>
 
                     {habit.description && (
-                      <p className="text-xs text-slate-500 line-clamp-1">{habit.description}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-1">{habit.description}</p>
                     )}
 
-                    <div className="flex items-center gap-4 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
                       <span className="flex items-center gap-1 font-semibold text-amber-600">
                         <Flame className="w-3.5 h-3.5 fill-amber-500" />
                         {streak.currentStreak} Hari Beruntun (Max: {streak.longestStreak})
@@ -297,17 +299,17 @@ export function HabitTrackerApp() {
                   <div className="flex items-center gap-2 flex-shrink-0">
                     {/* Quantity or Duration Stepper if applicable */}
                     {habit.type === "quantity" && (
-                      <div className="flex items-center gap-1 bg-slate-100 p-1 rounded">
+                      <div className="flex items-center gap-1 bg-muted p-1 rounded">
                         <button
                           onClick={() => {
                             const cur = occurrence?.value || 0;
                             markOccurrence(habit.id, todayStr, "done", Math.max(0, cur - 1));
                           }}
-                          className="w-6 h-6 flex items-center justify-center text-xs font-bold text-slate-600 hover:bg-slate-200 rounded"
+                          className="w-6 h-6 flex items-center justify-center text-xs font-bold text-muted-foreground hover:bg-muted rounded"
                         >
                           -
                         </button>
-                        <span className="font-mono text-xs px-2 font-bold text-slate-800">
+                        <span className="font-mono text-xs px-2 font-bold text-foreground">
                           {occurrence?.value || 0} / {habit.target?.goalValue || 8}
                         </span>
                         <button
@@ -315,7 +317,7 @@ export function HabitTrackerApp() {
                             const cur = occurrence?.value || 0;
                             markOccurrence(habit.id, todayStr, "done", cur + 1);
                           }}
-                          className="w-6 h-6 flex items-center justify-center text-xs font-bold text-slate-600 hover:bg-slate-200 rounded"
+                          className="w-6 h-6 flex items-center justify-center text-xs font-bold text-muted-foreground hover:bg-muted rounded"
                         >
                           +
                         </button>
@@ -336,7 +338,7 @@ export function HabitTrackerApp() {
                     {isDone && (
                       <button
                         onClick={() => undoOccurrence(habit.id, todayStr)}
-                        className="p-1.5 text-slate-400 hover:text-slate-700 rounded hover:bg-slate-100"
+                        className="p-1.5 text-muted-foreground hover:text-foreground rounded hover:bg-muted"
                         title="Batalkan Check-in"
                       >
                         <RotateCcw className="w-4 h-4" />
@@ -352,7 +354,7 @@ export function HabitTrackerApp() {
                             markOccurrence(habit.id, todayStr, "skipped", undefined, note);
                           }
                         }}
-                        className="px-2.5 py-1.5 text-xs text-slate-500 hover:bg-slate-100 rounded transition-colors"
+                        className="px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded transition-colors"
                         title="Skip hari ini tanpa memutus streak"
                       >
                         Skip
@@ -368,9 +370,9 @@ export function HabitTrackerApp() {
         {/* VIEW 2: HEATMAP (§9) */}
         {viewMode === "heatmap" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-6">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Grafik Konsistensi Harian (Heatmap 35 Hari)</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Grafik Konsistensi Harian (Heatmap 35 Hari)</h3>
+              <p className="text-xs text-muted-foreground">
                 Visualisasi frekuensi keberhasilan habit layaknya grafik kontribusi.
               </p>
             </div>
@@ -381,7 +383,7 @@ export function HabitTrackerApp() {
                 return (
                   <div
                     key={h.id}
-                    className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs space-y-3"
+                    className="p-4 bg-card border border-border rounded-lg shadow-xs space-y-3"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -389,7 +391,7 @@ export function HabitTrackerApp() {
                           className="w-2.5 h-2.5 rounded-full"
                           style={{ backgroundColor: h.color || "#10b981" }}
                         />
-                        <h4 className="text-xs font-bold text-slate-900">{h.title}</h4>
+                        <h4 className="text-xs font-bold text-foreground">{h.title}</h4>
                       </div>
                       <span className="text-xs font-semibold text-amber-600 flex items-center gap-1">
                         <Flame className="w-3.5 h-3.5 fill-amber-500" />
@@ -415,7 +417,7 @@ export function HabitTrackerApp() {
                                 ? "bg-emerald-500"
                                 : isSkipped
                                 ? "bg-amber-300"
-                                : "bg-slate-100 hover:bg-slate-200"
+                                : "bg-muted hover:bg-muted"
                             }`}
                           />
                         );
@@ -431,9 +433,9 @@ export function HabitTrackerApp() {
         {/* VIEW 3: STREAK BOARD */}
         {viewMode === "streak_board" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Papan Peringkat Konsistensi (Streak Board)</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Papan Peringkat Konsistensi (Streak Board)</h3>
+              <p className="text-xs text-muted-foreground">
                 Diurutkan berdasarkan rentetan hari terpanjang tanpa putus.
               </p>
             </div>
@@ -445,15 +447,15 @@ export function HabitTrackerApp() {
                 .map(({ habit, streak, rate }, index) => (
                   <div
                     key={habit.id}
-                    className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs flex items-center justify-between"
+                    className="p-4 bg-card border border-border rounded-lg shadow-xs flex items-center justify-between"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="w-6 text-center font-bold text-slate-400 text-sm">
+                      <span className="w-6 text-center font-bold text-muted-foreground text-sm">
                         #{index + 1}
                       </span>
                       <div>
-                        <h4 className="text-xs font-bold text-slate-900">{habit.title}</h4>
-                        <p className="text-[11px] text-slate-400">
+                        <h4 className="text-xs font-bold text-foreground">{habit.title}</h4>
+                        <p className="text-[11px] text-muted-foreground">
                           Tingkat keberhasilan: {rate}% · Terpanjang: {streak.longestStreak} hari
                         </p>
                       </div>
@@ -471,30 +473,30 @@ export function HabitTrackerApp() {
         {/* VIEW 4: SUMMARY & STATS */}
         {viewMode === "summary" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Ringkasan & Metrik Performa Kebiasaan</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Ringkasan & Metrik Performa Kebiasaan</h3>
+              <p className="text-xs text-muted-foreground">
                 Statistik konsistensi lintas seluruh kategori untuk evaluasi mingguan/bulanan.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-                <span className="text-xs text-slate-400 font-medium">Total Check-in Bulan Ini</span>
-                <p className="text-2xl font-bold text-slate-900 mt-1">
+              <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+                <span className="text-xs text-muted-foreground font-medium">Total Check-in Bulan Ini</span>
+                <p className="text-2xl font-bold text-foreground mt-1">
                   {state.occurrences.filter((o) => o.status === "done").length}
                 </p>
               </div>
 
-              <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-                <span className="text-xs text-slate-400 font-medium">Kebiasaan Aktif</span>
+              <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+                <span className="text-xs text-muted-foreground font-medium">Kebiasaan Aktif</span>
                 <p className="text-2xl font-bold text-indigo-600 mt-1">
                   {state.habits.filter((h) => h.status === "active").length}
                 </p>
               </div>
 
-              <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-                <span className="text-xs text-slate-400 font-medium">Rata-rata Konsistensi</span>
+              <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+                <span className="text-xs text-muted-foreground font-medium">Rata-rata Konsistensi</span>
                 <p className="text-2xl font-bold text-emerald-600 mt-1">84%</p>
               </div>
             </div>
@@ -504,9 +506,9 @@ export function HabitTrackerApp() {
 
       {/* MODAL: CREATE HABIT */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Buat Kebiasaan Baru</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">Buat Kebiasaan Baru</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -533,22 +535,22 @@ export function HabitTrackerApp() {
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Nama Kebiasaan *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Nama Kebiasaan *</label>
                 <input
                   name="title"
                   type="text"
                   required
                   placeholder="mis. Meditasi & Pernapasan 10 Menit"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Kategori</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Kategori</label>
                 <select
                   name="categoryId"
                   defaultValue="cat-health"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 >
                   {state.categories.map((c) => (
                     <option key={c.id} value={c.id}>{c.name}</option>
@@ -557,11 +559,11 @@ export function HabitTrackerApp() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Tipe Kebiasaan</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Tipe Kebiasaan</label>
                 <select
                   name="type"
                   defaultValue="binary"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 >
                   <option value="binary">Biner (Checklist Ya/Tidak)</option>
                   <option value="quantity">Kuantitas (mis. 8 Gelas Air)</option>
@@ -570,22 +572,22 @@ export function HabitTrackerApp() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Waktu Pengingat Harian (Opsional)</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Waktu Pengingat Harian (Opsional)</label>
                 <input
                   name="reminderTime"
                   type="time"
                   defaultValue="07:00"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Motivasi / Catatan</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Motivasi / Catatan</label>
                 <textarea
                   name="description"
                   rows={2}
                   placeholder="Mengapa kebiasaan ini penting bagi Anda..."
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
@@ -593,7 +595,7 @@ export function HabitTrackerApp() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
                 >
                   Batal
                 </button>

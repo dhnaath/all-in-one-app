@@ -1,3 +1,5 @@
+import { ShellHeader } from "@/app/shell-header";
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState, useMemo } from "react";
 import {
   FileCheck,
@@ -267,9 +269,9 @@ export function DocumentsApp() {
       case "Rejected":
         return "bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800";
       case "Archived":
-        return "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700";
+        return "bg-muted dark:bg-card text-muted-foreground dark:text-muted-foreground border-border dark:border-border";
       default:
-        return "bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700";
+        return "bg-muted dark:bg-card text-foreground dark:text-foreground border-border dark:border-border";
     }
   };
 
@@ -283,26 +285,26 @@ export function DocumentsApp() {
       case "Internal":
         return "bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border-blue-300";
       default:
-        return "bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-300";
+        return "bg-muted dark:bg-card text-foreground dark:text-foreground border-border";
     }
   };
 
   return (
-    <div className="w-full min-h-[calc(100vh-4rem)] bg-slate-50/60 dark:bg-zinc-950 flex flex-col font-sans">
+    <div className="w-full min-h-[calc(100vh-4rem)] bg-muted/40/60 dark:bg-background flex flex-col font-sans">
       {/* 1. HEADER */}
-      <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-6 py-3.5">
+      <ShellHeader>
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           {/* Brand & Temporary White Marker */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white text-zinc-950 border-2 border-zinc-200 dark:border-white shadow-md flex items-center justify-center shrink-0 ring-2 ring-white/60">
-              <FileCheck className="size-5 text-zinc-950" strokeWidth={2} />
+            <div className="w-10 h-10 rounded-2xl bg-card text-foreground border-2 border-border dark:border-border shadow-md flex items-center justify-center shrink-0 ring-2 ring-white/60">
+              <FileCheck className="size-5 text-foreground" strokeWidth={2} />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
                   Documents
                 </h1>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-muted dark:bg-card text-foreground dark:text-foreground border border-border dark:border-border">
                   Tanda Sementara (#13)
                 </span>
               </div>
@@ -334,7 +336,7 @@ export function DocumentsApp() {
               onClick={() => setIsAuditModalOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
             >
-              <History className="size-3.5 text-slate-500" />
+              <History className="size-3.5 text-muted-foreground" />
               <span className="hidden md:inline">Audit Trail</span>
             </button>
 
@@ -350,12 +352,12 @@ export function DocumentsApp() {
             </button>
           </div>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* 2. MAIN SPLIT INTERFACE */}
       <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col md:flex-row gap-5">
         {/* LEFT COLUMN: Navigation & Filtered Documents List */}
-        <aside className="w-full md:w-88 shrink-0 flex flex-col gap-3.5">
+        <ShellSidebar>
           {/* View Filter Pills */}
           <div className="bg-card border border-border rounded-2xl p-2.5 flex flex-wrap gap-1 text-xs shadow-2xs">
             <button
@@ -516,7 +518,7 @@ export function DocumentsApp() {
               })
             )}
           </div>
-        </aside>
+        </ShellSidebar>
 
         {/* RIGHT COLUMN: Full Detail Reader, Status Machine & Workflow Operations */}
         <main className="flex-1 bg-card border border-border rounded-3xl p-5 sm:p-7 flex flex-col shadow-xs overflow-hidden">

@@ -1,3 +1,5 @@
+import { ShellHeader } from "@/app/shell-header";
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState, useMemo } from "react";
 import {
   Bell,
@@ -69,16 +71,16 @@ export function ReminderManagerApp() {
   ];
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-slate-50 text-slate-800">
+    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-muted/40 text-foreground">
       {/* LEFT SIDEBAR: Source Filter & Delivery Stats */}
-      <aside className="w-72 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
+      <ShellSidebar>
         {/* Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Bell className="w-5 h-5 text-indigo-600" />
             <div>
-              <h2 className="text-xs font-bold text-slate-900 tracking-tight">Reminder Manager</h2>
-              <p className="text-[10px] text-slate-400">Eksekusi Pengingat Terpusat (§0)</p>
+              <h2 className="text-xs font-bold text-foreground tracking-tight">Reminder Manager</h2>
+              <p className="text-[10px] text-muted-foreground">Eksekusi Pengingat Terpusat (§0)</p>
             </div>
           </div>
           <button
@@ -91,30 +93,30 @@ export function ReminderManagerApp() {
         </div>
 
         {/* Delivery Engine Metrics */}
-        <div className="p-3 border-b border-slate-100 bg-slate-50/70 space-y-2">
-          <span className="text-[11px] font-semibold text-slate-700">Metrik Pengiriman Antrian</span>
+        <div className="p-3 border-b border-border bg-muted/40/70 space-y-2">
+          <span className="text-[11px] font-semibold text-foreground">Metrik Pengiriman Antrian</span>
           <div className="grid grid-cols-2 gap-2 text-center text-xs">
-            <div className="p-2 bg-white border border-slate-200 rounded">
+            <div className="p-2 bg-card border border-border rounded">
               <span className="text-base font-bold text-indigo-600">{upcomingInstances.length}</span>
-              <p className="text-[10px] text-slate-400">Terjadwal</p>
+              <p className="text-[10px] text-muted-foreground">Terjadwal</p>
             </div>
-            <div className="p-2 bg-white border border-slate-200 rounded">
+            <div className="p-2 bg-card border border-border rounded">
               <span className="text-base font-bold text-emerald-600">{deliveredInstances.length}</span>
-              <p className="text-[10px] text-slate-400">Terkirim</p>
+              <p className="text-[10px] text-muted-foreground">Terkirim</p>
             </div>
           </div>
         </div>
 
         {/* Source App Filter */}
-        <div className="p-3 border-b border-slate-100 flex-1 overflow-y-auto space-y-3">
-          <span className="text-[11px] font-semibold text-slate-700">Filter Sumber Aplikasi</span>
+        <div className="p-3 border-b border-border flex-1 overflow-y-auto space-y-3">
+          <span className="text-[11px] font-semibold text-foreground">Filter Sumber Aplikasi</span>
           <div className="space-y-1">
             <button
               onClick={() => setFilterSource("all")}
               className={`w-full text-left px-2.5 py-1.5 rounded text-xs transition-colors flex items-center justify-between ${
                 filterSource === "all"
                   ? "bg-indigo-50 text-indigo-700 font-semibold"
-                  : "text-slate-600 hover:bg-slate-100"
+                  : "text-muted-foreground hover:bg-muted"
               }`}
             >
               <span>Semua Sumber</span>
@@ -129,7 +131,7 @@ export function ReminderManagerApp() {
                   className={`w-full text-left px-2.5 py-1.5 rounded text-xs transition-colors flex items-center justify-between ${
                     filterSource === src.id
                       ? "bg-indigo-50 text-indigo-700 font-semibold"
-                      : "text-slate-600 hover:bg-slate-100"
+                      : "text-muted-foreground hover:bg-muted"
                   }`}
                 >
                   <span className="truncate">{src.label}</span>
@@ -141,27 +143,27 @@ export function ReminderManagerApp() {
 
           {/* Active Rules Mini List */}
           <div className="pt-2">
-            <span className="text-[11px] font-semibold text-slate-700 mb-2 block">
+            <span className="text-[11px] font-semibold text-foreground mb-2 block">
               Aturan Aktif ({state.rules.length})
             </span>
             <div className="space-y-1.5">
               {state.rules.map((rule) => (
                 <div
                   key={rule.id}
-                  className="p-2 bg-slate-50 border border-slate-200 rounded text-xs space-y-1"
+                  className="p-2 bg-muted/40 border border-border rounded text-xs space-y-1"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-800 capitalize text-[11px]">
+                    <span className="font-semibold text-foreground capitalize text-[11px]">
                       {rule.triggerType} Trigger
                     </span>
                     <button
                       onClick={() => togglePauseRule(rule.id)}
-                      className="text-slate-400 hover:text-slate-700 text-[10px] underline"
+                      className="text-muted-foreground hover:text-foreground text-[10px] underline"
                     >
                       {rule.status === "active" ? "Pause" : "Resume"}
                     </button>
                   </div>
-                  <p className="text-[10px] text-slate-500 line-clamp-1">{rule.message}</p>
+                  <p className="text-[10px] text-muted-foreground line-clamp-1">{rule.message}</p>
                 </div>
               ))}
             </div>
@@ -169,26 +171,26 @@ export function ReminderManagerApp() {
         </div>
 
         {/* Footnote */}
-        <div className="p-3 border-t border-slate-100 bg-slate-50 text-[10px] text-slate-500">
-          <p className="font-semibold text-slate-700">Standalone App #05</p>
+        <div className="p-3 border-t border-border bg-muted/40 text-[10px] text-muted-foreground">
+          <p className="font-semibold text-foreground">Standalone App #05</p>
           <p className="mt-0.5">Definisi pengingat tersebar, eksekusi pengiriman terpusat.</p>
         </div>
-      </aside>
+      </ShellSidebar>
 
       {/* MAIN VIEW CONTENT */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
         {/* Top Header */}
-        <header className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <ShellHeader>
           <div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight">Antrian Pengingat & Notifikasi</h1>
-            <p className="text-xs text-slate-500">
+            <h1 className="text-base font-bold text-foreground tracking-tight">Antrian Pengingat & Notifikasi</h1>
+            <p className="text-xs text-muted-foreground">
               Layanan scheduler & delivery terpusat untuk seluruh aplikasi ekosistem.
             </p>
           </div>
 
           {/* View Mode Switcher */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center border border-slate-200 rounded-md p-0.5 bg-slate-50 text-xs">
+            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
               {[
                 { id: "upcoming", label: "Mendatang" },
                 { id: "snoozed", label: "Ditunda (Snoozed)" },
@@ -200,8 +202,8 @@ export function ReminderManagerApp() {
                   onClick={() => setViewMode(v.id as ReminderViewMode)}
                   className={`px-3 py-1 rounded transition-colors ${
                     viewMode === v.id
-                      ? "bg-white text-slate-900 font-semibold shadow-xs"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {v.label}
@@ -217,35 +219,35 @@ export function ReminderManagerApp() {
               Buat Pengingat
             </button>
           </div>
-        </header>
+        </ShellHeader>
 
         {/* VIEW 1: UPCOMING REMINDERS */}
         {viewMode === "upcoming" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
             <div className="space-y-3">
               {upcomingInstances.length === 0 ? (
-                <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-xl bg-white p-6 space-y-2">
+                <div className="text-center py-12 border-2 border-dashed border-border rounded-xl bg-card p-6 space-y-2">
                   <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto" />
-                  <p className="text-xs font-medium text-slate-700">Tidak ada pengingat tertunda saat ini.</p>
-                  <p className="text-[11px] text-slate-400">Semua jadwal pengingat telah terkirim atau ditangguhkan.</p>
+                  <p className="text-xs font-medium text-foreground">Tidak ada pengingat tertunda saat ini.</p>
+                  <p className="text-[11px] text-muted-foreground">Semua jadwal pengingat telah terkirim atau ditangguhkan.</p>
                 </div>
               ) : (
                 upcomingInstances.map((item) => (
                   <div
                     key={item.id}
-                    className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs hover:border-indigo-300 transition-all flex items-start justify-between gap-4"
+                    className="p-4 bg-card border border-border rounded-lg shadow-xs hover:border-indigo-300 transition-all flex items-start justify-between gap-4"
                   >
                     <div className="space-y-1.5 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700">
                           {item.sourceApp.replace("_", " ")}
                         </span>
-                        <h3 className="text-xs font-bold text-slate-900 truncate">{item.title}</h3>
+                        <h3 className="text-xs font-bold text-foreground truncate">{item.title}</h3>
                       </div>
 
-                      <div className="flex items-center gap-3 text-[11px] text-slate-500">
-                        <span className="flex items-center gap-1 font-mono text-slate-700">
-                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                      <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                        <span className="flex items-center gap-1 font-mono text-foreground">
+                          <Clock className="w-3.5 h-3.5 text-muted-foreground" />
                           {new Date(item.scheduledAt).toLocaleString("id-ID", {
                             day: "numeric",
                             month: "short",
@@ -282,7 +284,7 @@ export function ReminderManagerApp() {
                       <button
                         onClick={() => dismissInstance(item.id)}
                         title="Tutup / Dismiss"
-                        className="p-1.5 text-slate-400 hover:text-slate-700 rounded hover:bg-slate-100"
+                        className="p-1.5 text-muted-foreground hover:text-foreground rounded hover:bg-muted"
                       >
                         <CheckCircle2 className="w-4 h-4" />
                       </button>
@@ -297,33 +299,33 @@ export function ReminderManagerApp() {
         {/* VIEW 2: SNOOZED */}
         {viewMode === "snoozed" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Pengingat Ditunda (Snoozed §7)</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Pengingat Ditunda (Snoozed §7)</h3>
+              <p className="text-xs text-muted-foreground">
                 Pengingat yang sengaja ditunda dan akan dijadwalkan ulang sesuai waktu tunda.
               </p>
             </div>
 
             <div className="space-y-3">
               {snoozedInstances.length === 0 ? (
-                <div className="p-8 text-center text-xs text-slate-400 bg-white border border-slate-200 rounded-lg">
+                <div className="p-8 text-center text-xs text-muted-foreground bg-card border border-border rounded-lg">
                   Tidak ada pengingat yang sedang ditunda.
                 </div>
               ) : (
                 snoozedInstances.map((item) => (
                   <div
                     key={item.id}
-                    className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs flex items-center justify-between"
+                    className="p-4 bg-card border border-border rounded-lg shadow-xs flex items-center justify-between"
                   >
                     <div>
-                      <h4 className="text-xs font-bold text-slate-900">{item.title}</h4>
+                      <h4 className="text-xs font-bold text-foreground">{item.title}</h4>
                       <p className="text-[11px] text-amber-700 mt-0.5">
                         Ditunda sampai: {item.snoozeUntil ? new Date(item.snoozeUntil).toLocaleTimeString("id-ID") : "-"}
                       </p>
                     </div>
                     <button
                       onClick={() => dismissInstance(item.id)}
-                      className="px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                      className="px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted rounded"
                     >
                       Batalkan Penundaan
                     </button>
@@ -337,9 +339,9 @@ export function ReminderManagerApp() {
         {/* VIEW 3: LOCATION-BASED */}
         {viewMode === "location" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Pengingat Berbasis Geofence / Lokasi (§4)</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Pengingat Berbasis Geofence / Lokasi (§4)</h3>
+              <p className="text-xs text-muted-foreground">
                 Notifikasi dipicu saat pengguna memasuki atau meninggalkan radius koordinat tertentu.
               </p>
             </div>
@@ -350,12 +352,12 @@ export function ReminderManagerApp() {
                 .map((r) => (
                   <div
                     key={r.id}
-                    className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs space-y-2"
+                    className="p-4 bg-card border border-border rounded-lg shadow-xs space-y-2"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <MapPin className="w-4 h-4 text-rose-500" />
-                        <h4 className="text-xs font-bold text-slate-900">
+                        <h4 className="text-xs font-bold text-foreground">
                           {r.triggerConfig.locationName || "Titik Koordinat Geofence"}
                         </h4>
                       </div>
@@ -364,11 +366,11 @@ export function ReminderManagerApp() {
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded border border-slate-100">
+                    <p className="text-xs text-muted-foreground bg-muted/40 p-2.5 rounded border border-border">
                       {r.message}
                     </p>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                       <span>Pemicu: Saat Memasuki Area (Enter)</span>
                       <button
                         onClick={() => triggerManually(r.id)}
@@ -386,21 +388,21 @@ export function ReminderManagerApp() {
         {/* VIEW 4: AUDIT LOGS */}
         {viewMode === "logs" && (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
-              <h3 className="text-sm font-semibold text-slate-900">Audit Trail Riwayat Pengiriman (§8)</h3>
-              <p className="text-xs text-slate-500">
+            <div className="p-4 bg-card border border-border rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-foreground">Audit Trail Riwayat Pengiriman (§8)</h3>
+              <p className="text-xs text-muted-foreground">
                 Log append-only pelacakan pengiriman notifikasi, kegagalan channel, dan respon pengguna.
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-100">
+            <div className="bg-card border border-border rounded-lg divide-y divide-border">
               {state.logs.map((log) => (
                 <div key={log.id} className="p-3 text-xs flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <span className="font-semibold text-slate-800 capitalize">{log.event}</span>
-                    <p className="text-[10px] text-slate-400 font-mono">ID: {log.instanceId}</p>
+                    <span className="font-semibold text-foreground capitalize">{log.event}</span>
+                    <p className="text-[10px] text-muted-foreground font-mono">ID: {log.instanceId}</p>
                   </div>
-                  <span className="text-[11px] font-mono text-slate-400">
+                  <span className="text-[11px] font-mono text-muted-foreground">
                     {new Date(log.timestamp).toLocaleTimeString("id-ID")}
                   </span>
                 </div>
@@ -412,9 +414,9 @@ export function ReminderManagerApp() {
 
       {/* MODAL: CREATE REMINDER RULE (§3.2) */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Buat Pengingat Baru</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-card rounded-lg shadow-xl border border-border p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">Buat Pengingat Baru</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -439,22 +441,22 @@ export function ReminderManagerApp() {
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Pesan Pengingat *</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Pesan Pengingat *</label>
                 <textarea
                   name="message"
                   required
                   rows={2}
                   placeholder="mis. Jangan lupa kirim faktur pajak ke divisi keuangan"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Jenis Pemicu (Trigger)</label>
+                <label className="block text-xs font-medium text-foreground mb-1">Jenis Pemicu (Trigger)</label>
                 <select
                   name="triggerType"
                   defaultValue="absolute"
-                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                 >
                   <option value="absolute">Waktu Spesifik (Absolute Time)</option>
                   <option value="relative">Relatif Terhadap Deadline</option>
@@ -464,23 +466,23 @@ export function ReminderManagerApp() {
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Tanggal</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Tanggal</label>
                   <input
                     name="date"
                     type="date"
                     defaultValue={new Date().toISOString().slice(0, 10)}
                     required
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">Jam</label>
+                  <label className="block text-xs font-medium text-foreground mb-1">Jam</label>
                   <input
                     name="time"
                     type="time"
                     defaultValue="14:00"
                     required
-                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                    className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500"
                   />
                 </div>
               </div>
@@ -489,7 +491,7 @@ export function ReminderManagerApp() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted rounded"
                 >
                   Batal
                 </button>

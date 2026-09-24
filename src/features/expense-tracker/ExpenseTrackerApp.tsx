@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useMemo } from "react";
 import {
   DollarSign,
@@ -174,7 +175,7 @@ export function ExpenseTrackerApp() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       {/* Toast */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-emerald-400 animate-in fade-in slide-in-from-bottom-4">
@@ -184,7 +185,7 @@ export function ExpenseTrackerApp() {
       )}
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+      <ShellHeader>
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-gradient-to-tr from-rose-500 to-pink-600 rounded-xl shadow-lg shadow-rose-500/20">
@@ -196,11 +197,11 @@ export function ExpenseTrackerApp() {
                 <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
                   App #39
                 </span>
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-muted-foreground">
                   Pencatatan Biaya, Akun, Merchant & Kepatuhan Bukti Struk
                 </span>
               </div>
-              <p className="text-xs md:text-sm text-slate-400">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Mencatat pengeluaran operasional berdasarkan kategori, akun kas/bank, merchant, struk bukti, dan validasi pajak.
               </p>
             </div>
@@ -216,63 +217,63 @@ export function ExpenseTrackerApp() {
             <span>Catat Pengeluaran</span>
           </button>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Top Metrics Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-        <div className="p-4 bg-slate-800/80 border border-slate-700/80 rounded-xl space-y-1">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+        <div className="p-4 bg-card/80 border border-border/80 rounded-xl space-y-1">
+          <div className="flex items-center justify-between text-muted-foreground text-xs font-semibold uppercase tracking-wider">
             <span>Total Pengeluaran</span>
             <ArrowDownRight className="w-4 h-4 text-rose-400" />
           </div>
           <div className="text-xl md:text-2xl font-bold text-white">
             {formatIDR(metrics.totalAmount)}
           </div>
-          <div className="text-[11px] text-slate-400">{expenses.length} transaksi tercatat</div>
+          <div className="text-[11px] text-muted-foreground">{expenses.length} transaksi tercatat</div>
         </div>
 
-        <div className="p-4 bg-slate-800/80 border border-slate-700/80 rounded-xl space-y-1">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+        <div className="p-4 bg-card/80 border border-border/80 rounded-xl space-y-1">
+          <div className="flex items-center justify-between text-muted-foreground text-xs font-semibold uppercase tracking-wider">
             <span>Tax-Deductible</span>
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="text-xl md:text-2xl font-bold text-emerald-400">
             {formatIDR(metrics.taxDeductibleTotal)}
           </div>
-          <div className="text-[11px] text-slate-400">Biaya fiskal pengurang pajak</div>
+          <div className="text-[11px] text-muted-foreground">Biaya fiskal pengurang pajak</div>
         </div>
 
-        <div className="p-4 bg-slate-800/80 border border-slate-700/80 rounded-xl space-y-1">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+        <div className="p-4 bg-card/80 border border-border/80 rounded-xl space-y-1">
+          <div className="flex items-center justify-between text-muted-foreground text-xs font-semibold uppercase tracking-wider">
             <span>Rata-Rata Transaksi</span>
             <TrendingDown className="w-4 h-4 text-sky-400" />
           </div>
           <div className="text-xl md:text-2xl font-bold text-sky-400">
             {formatIDR(metrics.avgExpense)}
           </div>
-          <div className="text-[11px] text-slate-400">Per pengeluaran rata-rata</div>
+          <div className="text-[11px] text-muted-foreground">Per pengeluaran rata-rata</div>
         </div>
 
-        <div className="p-4 bg-slate-800/80 border border-slate-700/80 rounded-xl space-y-1">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+        <div className="p-4 bg-card/80 border border-border/80 rounded-xl space-y-1">
+          <div className="flex items-center justify-between text-muted-foreground text-xs font-semibold uppercase tracking-wider">
             <span>Kepatuhan Struk (Receipt)</span>
             <FileCheck2 className="w-4 h-4 text-amber-400" />
           </div>
           <div className="text-xl md:text-2xl font-bold text-amber-400">
             {metrics.receiptCompliance}%
           </div>
-          <div className="text-[11px] text-slate-400">Memiliki bukti pembayaran valid</div>
+          <div className="text-[11px] text-muted-foreground">Memiliki bukti pembayaran valid</div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 mt-4 border-b border-slate-800/80 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 mt-4 border-b border-border/80 scrollbar-none">
         <button
           onClick={() => setActiveTab("all")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
             activeTab === "all"
               ? "bg-rose-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+              : "text-muted-foreground hover:text-foreground hover:bg-card"
           }`}
         >
           <Receipt className="w-4 h-4" />
@@ -284,7 +285,7 @@ export function ExpenseTrackerApp() {
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
             activeTab === "by_category"
               ? "bg-rose-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+              : "text-muted-foreground hover:text-foreground hover:bg-card"
           }`}
         >
           <PieChart className="w-4 h-4 text-purple-400" />
@@ -296,7 +297,7 @@ export function ExpenseTrackerApp() {
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
             activeTab === "merchants"
               ? "bg-rose-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+              : "text-muted-foreground hover:text-foreground hover:bg-card"
           }`}
         >
           <Store className="w-4 h-4 text-amber-400" />
@@ -308,7 +309,7 @@ export function ExpenseTrackerApp() {
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
             activeTab === "tax_deductible"
               ? "bg-rose-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+              : "text-muted-foreground hover:text-foreground hover:bg-card"
           }`}
         >
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -321,7 +322,7 @@ export function ExpenseTrackerApp() {
         {/* CATEGORY BREAKDOWN VIEW */}
         {activeTab === "by_category" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-4">
+            <div className="p-5 bg-card/80 border border-border rounded-xl space-y-4">
               <h3 className="font-bold text-base text-white flex items-center gap-2">
                 <PieChart className="w-5 h-5 text-rose-400" />
                 Alokasi Pengeluaran per Kategori
@@ -335,14 +336,14 @@ export function ExpenseTrackerApp() {
                   return (
                     <div key={cat} className="space-y-1">
                       <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-200">
+                        <span className="text-foreground">
                           {getCategoryLabel(cat as ExpenseCategoryKey)}
                         </span>
-                        <span className="text-slate-300">
+                        <span className="text-foreground">
                           {formatIDR(total)} ({percentage}%)
                         </span>
                       </div>
-                      <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-700">
+                      <div className="w-full bg-background h-2 rounded-full overflow-hidden border border-border">
                         <div
                           className="h-full bg-rose-500 rounded-full"
                           style={{ width: `${percentage}%` }}
@@ -363,19 +364,19 @@ export function ExpenseTrackerApp() {
               {Object.entries(metrics.merchantTotals).map(([merchant, data]) => (
                 <div
                   key={merchant}
-                  className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between"
+                  className="p-4 bg-card/80 border border-border rounded-xl flex items-center justify-between"
                 >
                   <div className="space-y-0.5">
-                    <div className="font-bold text-sm text-slate-100 flex items-center gap-2">
+                    <div className="font-bold text-sm text-foreground flex items-center gap-2">
                       <Store className="w-4 h-4 text-amber-400" />
                       {merchant}
                     </div>
-                    <div className="text-xs text-slate-400">{data.count} transaksi pembelian</div>
+                    <div className="text-xs text-muted-foreground">{data.count} transaksi pembelian</div>
                   </div>
 
                   <div className="text-right">
                     <div className="text-sm font-bold text-rose-400">{formatIDR(data.total)}</div>
-                    <div className="text-[10px] text-slate-500">Total Akumulasi</div>
+                    <div className="text-[10px] text-muted-foreground">Total Akumulasi</div>
                   </div>
                 </div>
               ))}
@@ -387,15 +388,15 @@ export function ExpenseTrackerApp() {
         {(activeTab === "all" || activeTab === "tax_deductible") && (
           <div className="space-y-4">
             {/* Filter Bar */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700 rounded-xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-card/80 border border-border rounded-xl">
               <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Cari deskripsi, merchant, tag..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-rose-500"
+                  className="w-full pl-9 pr-3 py-1.5 bg-background border border-border rounded-lg text-xs md:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-rose-500"
                 />
               </div>
 
@@ -403,7 +404,7 @@ export function ExpenseTrackerApp() {
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-rose-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                 >
                   <option value="all">Semua Kategori</option>
                   <option value="food_beverage">Makanan & Minuman</option>
@@ -417,7 +418,7 @@ export function ExpenseTrackerApp() {
                 <select
                   value={accountFilter}
                   onChange={(e) => setAccountFilter(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-rose-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                 >
                   <option value="all">Semua Akun / Sumber</option>
                   {accountsList.map((acc) => (
@@ -434,12 +435,12 @@ export function ExpenseTrackerApp() {
               {filteredExpenses.map((exp) => (
                 <div
                   key={exp.id}
-                  className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between gap-4 hover:border-slate-600 transition"
+                  className="p-4 bg-card/80 border border-border rounded-xl flex items-center justify-between gap-4 hover:border-border transition"
                 >
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-bold text-sm text-slate-100">{exp.title}</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-700 text-slate-300">
+                      <span className="font-bold text-sm text-foreground">{exp.title}</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-card text-foreground">
                         {getCategoryLabel(exp.category)}
                       </span>
                       {exp.isTaxDeductible && (
@@ -458,20 +459,20 @@ export function ExpenseTrackerApp() {
                       )}
                     </div>
 
-                    <div className="text-xs text-slate-400 flex items-center gap-3 flex-wrap">
+                    <div className="text-xs text-muted-foreground flex items-center gap-3 flex-wrap">
                       <span>
-                        Merchant: <strong className="text-slate-300">{exp.merchant}</strong>
+                        Merchant: <strong className="text-foreground">{exp.merchant}</strong>
                       </span>
                       <span>•</span>
                       <span>
-                        Akun: <strong className="text-slate-300">{exp.paymentAccount}</strong>
+                        Akun: <strong className="text-foreground">{exp.paymentAccount}</strong>
                       </span>
                       <span>•</span>
-                      <span className="font-mono text-slate-300">{exp.date}</span>
+                      <span className="font-mono text-foreground">{exp.date}</span>
                     </div>
 
                     {exp.notes && (
-                      <p className="text-[11px] text-slate-500 italic">"{exp.notes}"</p>
+                      <p className="text-[11px] text-muted-foreground italic">"{exp.notes}"</p>
                     )}
                   </div>
 
@@ -480,7 +481,7 @@ export function ExpenseTrackerApp() {
                       <div className="text-base font-extrabold text-rose-400">
                         -{formatIDR(exp.amount)}
                       </div>
-                      <div className="text-[10px] text-slate-400 capitalize">{exp.status}</div>
+                      <div className="text-[10px] text-muted-foreground capitalize">{exp.status}</div>
                     </div>
 
                     <button
@@ -488,7 +489,7 @@ export function ExpenseTrackerApp() {
                         deleteExpense(exp.id);
                         showToast("Pengeluaran dihapus.");
                       }}
-                      className="p-1.5 text-slate-500 hover:text-rose-400 rounded hover:bg-slate-700"
+                      className="p-1.5 text-muted-foreground hover:text-rose-400 rounded hover:bg-card"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -503,17 +504,17 @@ export function ExpenseTrackerApp() {
       {/* MODAL: ADD EXPENSE */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Catat Pengeluaran Baru</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsModalOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleAddExpense} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Deskripsi Pengeluaran <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -522,13 +523,13 @@ export function ExpenseTrackerApp() {
                   placeholder="mis. Makan Siang Klien, Bensin Operasional"
                   value={expTitle}
                   onChange={(e) => setExpTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-foreground mb-1">
                     Jumlah Biaya (Rp) <span className="text-rose-400">*</span>
                   </label>
                   <input
@@ -536,29 +537,29 @@ export function ExpenseTrackerApp() {
                     required
                     value={expAmount}
                     onChange={(e) => setExpAmount(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Tanggal</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Tanggal</label>
                   <input
                     type="date"
                     required
                     value={expDate}
                     onChange={(e) => setExpDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Kategori</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Kategori</label>
                   <select
                     value={expCategory}
                     onChange={(e) => setExpCategory(e.target.value as any)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                   >
                     <option value="food_beverage">Makanan & Minuman</option>
                     <option value="transportation">Transportasi & Bensin</option>
@@ -571,25 +572,25 @@ export function ExpenseTrackerApp() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Merchant / Vendor</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Merchant / Vendor</label>
                   <input
                     type="text"
                     placeholder="mis. Pertamina, Tokopedia"
                     value={expMerchant}
                     onChange={(e) => setExpMerchant(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Akun Sumber Pembayaran
                 </label>
                 <select
                   value={expAccount}
                   onChange={(e) => setExpAccount(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                 >
                   <option value="Kas Kecil (Petty Cash)">Kas Kecil (Petty Cash)</option>
                   <option value="Bank Mandiri Operasional">Bank Mandiri Operasional</option>
@@ -598,16 +599,16 @@ export function ExpenseTrackerApp() {
                 </select>
               </div>
 
-              <div className="flex items-center justify-between p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+              <div className="flex items-center justify-between p-2.5 bg-card/80 rounded-lg border border-border">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     id="hasReceipt"
                     checked={expHasReceipt}
                     onChange={(e) => setExpHasReceipt(e.target.checked)}
-                    className="rounded bg-slate-800 border-slate-700 text-rose-500 focus:ring-0"
+                    className="rounded bg-card border-border text-rose-500 focus:ring-0"
                   />
-                  <label htmlFor="hasReceipt" className="text-xs text-slate-300 font-medium">
+                  <label htmlFor="hasReceipt" className="text-xs text-foreground font-medium">
                     Ada Struk / Bukti Bayar
                   </label>
                 </div>
@@ -618,16 +619,16 @@ export function ExpenseTrackerApp() {
                     id="taxDeduct"
                     checked={expIsTaxDeductible}
                     onChange={(e) => setExpIsTaxDeductible(e.target.checked)}
-                    className="rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-0"
+                    className="rounded bg-card border-border text-emerald-500 focus:ring-0"
                   />
-                  <label htmlFor="taxDeduct" className="text-xs text-slate-300 font-medium">
+                  <label htmlFor="taxDeduct" className="text-xs text-foreground font-medium">
                     Tax-Deductible
                   </label>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Catatan / Keterangan
                 </label>
                 <textarea
@@ -635,15 +636,15 @@ export function ExpenseTrackerApp() {
                   placeholder="Keterangan tambahan keperluan bisnis..."
                   value={expNotes}
                   onChange={(e) => setExpNotes(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>

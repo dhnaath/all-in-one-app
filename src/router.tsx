@@ -87,6 +87,7 @@ import { ExpenseTrackerApp } from "./features/expense-tracker/ExpenseTrackerApp"
 import { ShariaIndexApp } from "./features/sharia-index/ShariaIndexApp";
 import { getFramework } from "./frameworkData";
 import { AppShell } from "./app/app-shell";
+import { ShellSections } from "./app/shell-sections";
 import { navKonsultan, type NavItem } from "./config/nav";
 import { COMMODITY_DATA } from "./commodityData";
 import {
@@ -203,11 +204,18 @@ function FrameworkDetailView() {
     });
   };
 
+  const frameworkSections = [
+    { id: "teori", label: "Teori & Konsep", active: activeTab === "teori", onSelect: () => setActiveTab("teori" as const) },
+    { id: "draft", label: "Lembar Kerja", active: activeTab === "draft", onSelect: () => setActiveTab("draft" as const) },
+    { id: "action", label: "Rencana Aksi", active: activeTab === "action", onSelect: () => setActiveTab("action" as const) },
+  ];
+
   return (
     <AppShell
       title={fw ? cleanName.toUpperCase() : "Framework"}
       subtitle={fw?.layout.tipe || "Strategic Framework & Consulting Tool"}
     >
+      <ShellSections sections={frameworkSections} />
       <div className="w-full max-w-[1720px] mx-auto p-4 sm:p-6 space-y-6">
         {/* Navigation & Header Bar */}
         <div className="flex flex-wrap items-center justify-between gap-4 bg-card border border-border rounded-[1.25rem] p-4 sm:p-6 shadow-xs">

@@ -12,6 +12,7 @@ import {
   PieChart,
   Scale,
 } from "lucide-react";
+import { useShellSections } from "@/app/shell-sections";
 
 interface InterestItem {
   id: string;
@@ -156,10 +157,21 @@ export function InterestView() {
     }
   };
 
+  const [activeSection, setActiveSection] = useState<string>("metrik");
+  const goSection = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(`soc-interest-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  useShellSections([
+    { id: "metrik", label: "Metrik", active: activeSection === "metrik", onSelect: () => goSection("metrik") },
+    { id: "filter", label: "Filter & Cari", active: activeSection === "filter", onSelect: () => goSection("filter") },
+    { id: "mitra", label: "Mitra", active: activeSection === "mitra", onSelect: () => goSection("mitra") },
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Header Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div id="soc-interest-metrik" className="scroll-mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl border border-border bg-card shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Rata-Rata Alignment</span>
@@ -218,7 +230,7 @@ export function InterestView() {
       </div>
 
       {/* Categories & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div id="soc-interest-filter" className="scroll-mt-24 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
           {categories.map((cat) => (
             <button
@@ -259,7 +271,7 @@ export function InterestView() {
       </div>
 
       {/* Cards List */}
-      <div className="grid grid-cols-1 gap-4">
+      <div id="soc-interest-mitra" className="scroll-mt-24 grid grid-cols-1 gap-4">
         {filteredItems.map((item) => (
           <div key={item.id} className="p-4 rounded-xl border border-border bg-card shadow-xs space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">

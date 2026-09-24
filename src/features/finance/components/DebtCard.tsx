@@ -165,7 +165,7 @@ export function DebtCard({
           )}
 
           <div className="bg-primary text-primary-foreground p-3.5 rounded-xl text-xs space-y-2">
-            <div className="flex items-center gap-1.5 font-semibold text-foreground mb-1 border-b border-white/10 pb-2">
+            <div className="flex items-center gap-1.5 font-semibold text-foreground mb-1 border-b border-border/10 pb-2">
               <Calculator size={14} className="text-emerald-400" /> Simulasi Membayar{" "}
               {utang.persentaseMinPayment}%
             </div>
@@ -179,7 +179,7 @@ export function DebtCard({
                 {formatRupiah(simulasi.minPayment)}
               </span>
             </div>
-            <div className="flex justify-between text-muted-foreground/70 pt-1 border-t border-white/10">
+            <div className="flex justify-between text-muted-foreground/70 pt-1 border-t border-border/10">
               <span>Estimasi Sisa Bln Depan</span>
               <span className="text-foreground">{formatRupiah(simulasi.tagihanBulanDepan)}</span>
             </div>

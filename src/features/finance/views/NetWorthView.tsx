@@ -16,7 +16,7 @@ export function NetWorthView({ onBack }: { onBack: () => void }) {
         <h1 className="text-lg font-medium text-foreground tracking-wide">Kekayaan Bersih</h1>
       </div>
       <div ref={ref} onScroll={onScroll} className="flex-1 overflow-y-auto p-6 pb-20">
-        <div className="bg-gradient-to-br from-emerald-900/40 to-slate-900 border border-emerald-800/30 rounded-2xl p-6 mb-6">
+        <div className="bg-gradient-to-br from-emerald-900/40 to-border border border-emerald-800/30 rounded-2xl p-6 mb-6">
           <div className="text-emerald-400/80 text-sm font-medium mb-2">Total Net-Worth</div>
           <div className="text-2xl font-bold text-foreground tracking-tight">Rp 0</div>
         </div>

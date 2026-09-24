@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useMemo } from "react";
 import {
   FileCheck2,
@@ -207,7 +208,7 @@ export function ApprovalManagerApp() {
   }, [requests]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       {/* Toast */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-indigo-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-indigo-400 animate-in fade-in slide-in-from-bottom-4">
@@ -217,7 +218,7 @@ export function ApprovalManagerApp() {
       )}
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+      <ShellHeader>
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-gradient-to-tr from-emerald-500 to-teal-600 rounded-xl shadow-lg shadow-teal-500/20">
@@ -235,7 +236,7 @@ export function ApprovalManagerApp() {
                   </span>
                 )}
               </div>
-              <p className="text-xs md:text-sm text-slate-400">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Mesin alur persetujuan bertingkat reusable (sequential & parallel), delegasi wewenang, dan SLA eskalasi.
               </p>
             </div>
@@ -245,7 +246,7 @@ export function ApprovalManagerApp() {
         <div className="flex items-center flex-wrap gap-2.5">
           <button
             onClick={() => setIsNewDelegateOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition"
           >
             <UserCheck className="w-4 h-4 text-sky-400" />
             <span>Delegasi Cuti</span>
@@ -253,7 +254,7 @@ export function ApprovalManagerApp() {
 
           <button
             onClick={() => setIsFlowDesignerOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition"
           >
             <GitBranch className="w-4 h-4 text-purple-400" />
             <span>Flow Designer</span>
@@ -267,17 +268,17 @@ export function ApprovalManagerApp() {
             <span>Ajukan Approval</span>
           </button>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-slate-800/80 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
         <button
           onClick={() => {
             setActiveTab("my_pending");
             setSelectedRequestId(null);
           }}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "my_pending" ? "bg-teal-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "my_pending" ? "bg-teal-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Clock className="w-4 h-4 text-amber-400" />
@@ -290,7 +291,7 @@ export function ApprovalManagerApp() {
             setSelectedRequestId(null);
           }}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "all_requests" ? "bg-teal-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "all_requests" ? "bg-teal-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -303,7 +304,7 @@ export function ApprovalManagerApp() {
             setSelectedRequestId(null);
           }}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "flow_designer" ? "bg-teal-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "flow_designer" ? "bg-teal-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <GitBranch className="w-4 h-4 text-purple-400" />
@@ -316,7 +317,7 @@ export function ApprovalManagerApp() {
             setSelectedRequestId(null);
           }}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "escalated" ? "bg-rose-600 text-white shadow-sm" : "text-slate-400 hover:text-rose-400 hover:bg-slate-800"
+            activeTab === "escalated" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-rose-400 hover:bg-foreground"
           }`}
         >
           <ShieldAlert className="w-4 h-4 text-rose-400" />
@@ -329,7 +330,7 @@ export function ApprovalManagerApp() {
             setSelectedRequestId(null);
           }}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "delegates" ? "bg-teal-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "delegates" ? "bg-teal-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <UserCheck className="w-4 h-4 text-sky-400" />
@@ -342,7 +343,7 @@ export function ApprovalManagerApp() {
             setSelectedRequestId(null);
           }}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-teal-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "stats" ? "bg-teal-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <BarChart2 className="w-4 h-4 text-emerald-400" />
@@ -356,31 +357,31 @@ export function ApprovalManagerApp() {
         {activeTab === "stats" && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Permintaan</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Total Permintaan</div>
                 <div className="text-3xl font-extrabold text-white mt-1">{stats.total}</div>
-                <div className="text-xs text-slate-500 mt-1">Lintas seluruh flow</div>
+                <div className="text-xs text-muted-foreground mt-1">Lintas seluruh flow</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Approval Rate</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Approval Rate</div>
                 <div className="text-3xl font-extrabold text-emerald-400 mt-1">{stats.approvalRate}%</div>
-                <div className="text-xs text-slate-500 mt-1">{stats.approved} permintaan disetujui</div>
+                <div className="text-xs text-muted-foreground mt-1">{stats.approved} permintaan disetujui</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">SLA Breached</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">SLA Breached</div>
                 <div className="text-3xl font-extrabold text-rose-400 mt-1">{stats.slaBreaches}</div>
-                <div className="text-xs text-slate-500 mt-1">Melebihi batas jam respon</div>
+                <div className="text-xs text-muted-foreground mt-1">Melebihi batas jam respon</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Avg Lead Time</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Avg Lead Time</div>
                 <div className="text-3xl font-extrabold text-sky-400 mt-1">18.5 jam</div>
-                <div className="text-xs text-slate-500 mt-1">Waktu rata-rata keputusan</div>
+                <div className="text-xs text-muted-foreground mt-1">Waktu rata-rata keputusan</div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-                <h3 className="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+              <div className="p-5 bg-card/60 border border-border rounded-xl">
+                <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <GitBranch className="w-4 h-4 text-purple-400" />
                   Requests by Approval Flow
                 </h3>
@@ -388,25 +389,25 @@ export function ApprovalManagerApp() {
                   {flows.map((f) => {
                     const count = requests.filter((r) => r.approvalFlowId === f.id).length;
                     return (
-                      <div key={f.id} className="flex items-center justify-between text-sm py-1 border-b border-slate-700/40">
-                        <span className="text-slate-300">{f.name}</span>
-                        <span className="px-2 py-0.5 bg-slate-700 text-slate-300 rounded text-xs font-medium">{count} request</span>
+                      <div key={f.id} className="flex items-center justify-between text-sm py-1 border-b border-border/40">
+                        <span className="text-foreground">{f.name}</span>
+                        <span className="px-2 py-0.5 bg-card text-foreground rounded text-xs font-medium">{count} request</span>
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-                <h3 className="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+              <div className="p-5 bg-card/60 border border-border rounded-xl">
+                <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <UserCheck className="w-4 h-4 text-sky-400" />
                   Delegasi Aktif
                 </h3>
                 <div className="space-y-2">
                   {delegates.map((d) => (
-                    <div key={d.id} className="p-2.5 rounded bg-slate-800/70 border border-slate-700 text-xs">
-                      <div className="font-semibold text-slate-200">{d.fromUserName} → {d.toUserName}</div>
-                      <div className="text-slate-400 mt-0.5">{d.reason} ({d.startDate} s/d {d.endDate})</div>
+                    <div key={d.id} className="p-2.5 rounded bg-card/70 border border-border text-xs">
+                      <div className="font-semibold text-foreground">{d.fromUserName} → {d.toUserName}</div>
+                      <div className="text-muted-foreground mt-0.5">{d.reason} ({d.startDate} s/d {d.endDate})</div>
                     </div>
                   ))}
                 </div>
@@ -421,7 +422,7 @@ export function ApprovalManagerApp() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-bold text-white">Template Alur Persetujuan (Approval Flow)</h2>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Definisi alur bertingkat reusable untuk entitas Deliverables (#20), Dokumen (#13), Expense, dan Kontrak.
                 </p>
               </div>
@@ -436,23 +437,23 @@ export function ApprovalManagerApp() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {flows.map((f) => (
-                <div key={f.id} className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-4">
+                <div key={f.id} className="p-5 bg-card/80 border border-border rounded-xl space-y-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h3 className="font-bold text-base text-white">{f.name}</h3>
-                      {f.description && <p className="text-xs text-slate-400 mt-1">{f.description}</p>}
+                      {f.description && <p className="text-xs text-muted-foreground mt-1">{f.description}</p>}
                     </div>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => duplicateFlow(f.id)}
-                        className="p-1.5 text-slate-400 hover:text-sky-400 rounded"
+                        className="p-1.5 text-muted-foreground hover:text-sky-400 rounded"
                         title="Duplikasi Flow"
                       >
                         <Copy className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => deleteFlow(f.id)}
-                        className="p-1.5 text-slate-400 hover:text-rose-400 rounded"
+                        className="p-1.5 text-muted-foreground hover:text-rose-400 rounded"
                         title="Hapus Flow"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -461,20 +462,20 @@ export function ApprovalManagerApp() {
                   </div>
 
                   {/* Steps List */}
-                  <div className="space-y-2 pt-2 border-t border-slate-700/60">
-                    <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                  <div className="space-y-2 pt-2 border-t border-border/60">
+                    <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
                       Tahapan ({f.steps.length} Steps)
                     </div>
                     {f.steps.map((st, i) => (
-                      <div key={st.id} className="flex items-center gap-2 text-xs p-2 bg-slate-900/60 border border-slate-800 rounded-lg">
+                      <div key={st.id} className="flex items-center gap-2 text-xs p-2 bg-background/60 border border-border rounded-lg">
                         <span className="w-5 h-5 rounded-full bg-teal-500/20 text-teal-400 font-bold flex items-center justify-center shrink-0 text-[10px]">
                           {i + 1}
                         </span>
                         <div className="flex-1 truncate">
-                          <span className="font-semibold text-slate-200">{st.name}</span>
-                          <span className="text-slate-400 ml-1 text-[11px]">({st.approverRefs.join(", ")})</span>
+                          <span className="font-semibold text-foreground">{st.name}</span>
+                          <span className="text-muted-foreground ml-1 text-[11px]">({st.approverRefs.join(", ")})</span>
                         </div>
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 shrink-0">
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-card text-muted-foreground shrink-0">
                           SLA {st.slaHours}j
                         </span>
                       </div>
@@ -492,7 +493,7 @@ export function ApprovalManagerApp() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-bold text-white">Pengalihan Wewenang (Delegation)</h2>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Saat pejabat berwenang cuti atau dinas luar, permintaan persetujuan otomatis diarahkan ke penerima delegasi.
                 </p>
               </div>
@@ -507,14 +508,14 @@ export function ApprovalManagerApp() {
 
             <div className="space-y-3">
               {delegates.map((del) => (
-                <div key={del.id} className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between gap-4">
+                <div key={del.id} className="p-4 bg-card/80 border border-border rounded-xl flex items-center justify-between gap-4">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2 font-semibold text-sm text-slate-200">
+                    <div className="flex items-center gap-2 font-semibold text-sm text-foreground">
                       <span>{del.fromUserName}</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
                       <span className="text-teal-400">{del.toUserName}</span>
                     </div>
-                    <div className="text-xs text-slate-400">
+                    <div className="text-xs text-muted-foreground">
                       Alasan: {del.reason} • Periode: {del.startDate} s/d {del.endDate}
                     </div>
                   </div>
@@ -523,7 +524,7 @@ export function ApprovalManagerApp() {
                       deleteDelegate(del.id);
                       showToast("Delegasi dinonaktifkan.");
                     }}
-                    className="p-1.5 text-slate-400 hover:text-rose-400 rounded"
+                    className="p-1.5 text-muted-foreground hover:text-rose-400 rounded"
                     title="Batalkan Delegasi"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -538,15 +539,15 @@ export function ApprovalManagerApp() {
         {(activeTab === "my_pending" || activeTab === "all_requests" || activeTab === "escalated") && (
           <div className="space-y-4">
             {/* Search and Filters */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700 rounded-xl">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-card/80 border border-border rounded-xl">
               <div className="relative w-full sm:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Cari permohonan, pemohon, flow..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-500"
+                  className="w-full pl-9 pr-3 py-1.5 bg-background border border-border rounded-lg text-xs md:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-teal-500"
                 />
               </div>
 
@@ -554,7 +555,7 @@ export function ApprovalManagerApp() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-teal-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-teal-500"
                 >
                   <option value="all">Semua Status</option>
                   <option value="pending">Pending</option>
@@ -567,10 +568,10 @@ export function ApprovalManagerApp() {
 
             {/* List */}
             {filteredRequests.length === 0 ? (
-              <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
+              <div className="p-12 text-center bg-card/40 border border-border/60 rounded-xl">
                 <CheckCircle2 className="w-10 h-10 text-emerald-500/50 mx-auto mb-3" />
-                <h3 className="text-base font-semibold text-slate-300">Tidak ada permohonan pending</h3>
-                <p className="text-xs text-slate-500 mt-1">Seluruh approval telah diproses atau filter tidak cocok.</p>
+                <h3 className="text-base font-semibold text-foreground">Tidak ada permohonan pending</h3>
+                <p className="text-xs text-muted-foreground mt-1">Seluruh approval telah diproses atau filter tidak cocok.</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -581,12 +582,12 @@ export function ApprovalManagerApp() {
                   return (
                     <div
                       key={req.id}
-                      className="p-5 bg-slate-800/80 border border-slate-700 hover:border-slate-600 rounded-xl transition duration-150 space-y-4"
+                      className="p-5 bg-card/80 border border-border hover:border-border rounded-xl transition duration-150 space-y-4"
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                         <div className="space-y-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-bold text-base text-slate-100">{req.title}</span>
+                            <span className="font-bold text-base text-foreground">{req.title}</span>
                             <span
                               className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                                 req.status === "approved"
@@ -594,23 +595,23 @@ export function ApprovalManagerApp() {
                                   : req.status === "rejected"
                                   ? "bg-rose-500/20 text-rose-400 border border-rose-500/30"
                                   : req.status === "cancelled"
-                                  ? "bg-slate-700 text-slate-400"
+                                  ? "bg-card text-muted-foreground"
                                   : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
                               }`}
                             >
                               {req.status.toUpperCase()}
                             </span>
-                            <span className="text-xs text-slate-400 bg-slate-900/60 px-2 py-0.5 rounded">
+                            <span className="text-xs text-muted-foreground bg-background/60 px-2 py-0.5 rounded">
                               {req.flowName}
                             </span>
                           </div>
 
                           {req.entitySummary && (
-                            <p className="text-xs text-slate-300 leading-relaxed">{req.entitySummary}</p>
+                            <p className="text-xs text-foreground leading-relaxed">{req.entitySummary}</p>
                           )}
 
-                          <div className="text-[11px] text-slate-400 flex items-center gap-3 pt-1">
-                            <span>Diajukan oleh: <strong className="text-slate-200">{req.requestedBy}</strong></span>
+                          <div className="text-[11px] text-muted-foreground flex items-center gap-3 pt-1">
+                            <span>Diajukan oleh: <strong className="text-foreground">{req.requestedBy}</strong></span>
                             <span>•</span>
                             <span>{new Date(req.createdAt).toLocaleDateString()} {new Date(req.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                           </div>
@@ -637,7 +638,7 @@ export function ApprovalManagerApp() {
 
                             <button
                               onClick={() => setSelectedRequestId(req.id)}
-                              className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-700 rounded"
+                              className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-card rounded"
                               title="Lihat Detail Stepper"
                             >
                               <Eye className="w-4 h-4" />
@@ -648,7 +649,7 @@ export function ApprovalManagerApp() {
 
                       {/* Stepper Visualization */}
                       {flow && (
-                        <div className="pt-3 border-t border-slate-700/60">
+                        <div className="pt-3 border-t border-border/60">
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                             {flow.steps.map((st) => {
                               const isCompleted = req.decisions.some(
@@ -670,7 +671,7 @@ export function ApprovalManagerApp() {
                                       ? "bg-emerald-950/20 border-emerald-500/40 text-emerald-300"
                                       : isCurrent
                                       ? "bg-amber-950/20 border-amber-500/40 text-amber-300"
-                                      : "bg-slate-900/40 border-slate-800 text-slate-500"
+                                      : "bg-background/40 border-border text-muted-foreground"
                                   }`}
                                 >
                                   {isCompleted ? (
@@ -680,7 +681,7 @@ export function ApprovalManagerApp() {
                                   ) : isCurrent ? (
                                     <Clock className="w-4 h-4 text-amber-400 shrink-0 animate-pulse" />
                                   ) : (
-                                    <Lock className="w-4 h-4 text-slate-600 shrink-0" />
+                                    <Lock className="w-4 h-4 text-muted-foreground shrink-0" />
                                   )}
 
                                   <div className="truncate flex-1">
@@ -713,14 +714,14 @@ export function ApprovalManagerApp() {
       {/* MODAL: DECISION (APPROVE / REJECT) */}
       {decisionModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">
                 {chosenDecision === "approved" ? "Konfirmasi Persetujuan (Approve)" : "Tolak Permohonan (Reject)"}
               </h3>
               <button
                 onClick={() => setDecisionModalOpen(false)}
-                className="text-slate-400 hover:text-slate-200"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -728,7 +729,7 @@ export function ApprovalManagerApp() {
 
             <form onSubmit={handleExecuteDecision} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Catatan / Komentar Keputusan
                 </label>
                 <textarea
@@ -741,15 +742,15 @@ export function ApprovalManagerApp() {
                   }
                   value={decisionComment}
                   onChange={(e) => setDecisionComment(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-teal-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground placeholder-muted-foreground focus:outline-none focus:border-teal-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-2 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setDecisionModalOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>
@@ -772,12 +773,12 @@ export function ApprovalManagerApp() {
       {/* MODAL: AJUKAN APPROVAL BARU */}
       {isNewRequestOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Ajukan Permintaan Approval Baru</h3>
               <button
                 onClick={() => setIsNewRequestOpen(false)}
-                className="text-slate-400 hover:text-slate-200"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -785,13 +786,13 @@ export function ApprovalManagerApp() {
 
             <form onSubmit={handleCreateRequest} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Pilih Template Alur (Flow)
                 </label>
                 <select
                   value={reqFlowId}
                   onChange={(e) => setReqFlowId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-teal-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-teal-500"
                 >
                   {flows.map((f) => (
                     <option key={f.id} value={f.id}>
@@ -802,7 +803,7 @@ export function ApprovalManagerApp() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Judul Permohonan <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -811,19 +812,19 @@ export function ApprovalManagerApp() {
                   placeholder="mis. Persetujuan Pembelian Server Backup"
                   value={reqTitle}
                   onChange={(e) => setReqTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-teal-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-teal-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-foreground mb-1">
                     Tipe Entitas
                   </label>
                   <select
                     value={reqEntityType}
                     onChange={(e) => setReqEntityType(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-teal-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-teal-500"
                   >
                     <option value="deliverable_submission">Deliverable Submission (#20)</option>
                     <option value="document">Dokumen Formal (#13)</option>
@@ -832,7 +833,7 @@ export function ApprovalManagerApp() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-foreground mb-1">
                     Entity ID
                   </label>
                   <input
@@ -840,13 +841,13 @@ export function ApprovalManagerApp() {
                     placeholder="mis. deliv-99"
                     value={reqEntityId}
                     onChange={(e) => setReqEntityId(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-teal-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-teal-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Ringkasan / Konteks Keputusan
                 </label>
                 <textarea
@@ -854,15 +855,15 @@ export function ApprovalManagerApp() {
                   placeholder="Jelaskan dasar permohonan dan urgensi kebutuhan..."
                   value={reqSummary}
                   onChange={(e) => setReqSummary(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-teal-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-teal-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsNewRequestOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>
@@ -881,15 +882,15 @@ export function ApprovalManagerApp() {
       {/* MODAL: DETAIL STEPPER VIEW */}
       {selectedRequestId && activeDetailRequest && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-xl shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-xl shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <div>
                 <h3 className="font-bold text-base text-white">{activeDetailRequest.title}</h3>
-                <p className="text-xs text-slate-400">Detail Tahapan & Jejak Audit Keputusan</p>
+                <p className="text-xs text-muted-foreground">Detail Tahapan & Jejak Audit Keputusan</p>
               </div>
               <button
                 onClick={() => setSelectedRequestId(null)}
-                className="text-slate-400 hover:text-slate-200"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -900,9 +901,9 @@ export function ApprovalManagerApp() {
               {activeDetailFlow?.steps.map((st) => {
                 const decision = activeDetailRequest.decisions.find((d) => d.stepOrder === st.order);
                 return (
-                  <div key={st.id} className="p-3 bg-slate-800/80 border border-slate-700 rounded-xl space-y-2">
+                  <div key={st.id} className="p-3 bg-card/80 border border-border rounded-xl space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-slate-200">
+                      <span className="font-bold text-foreground">
                         Step {st.order}: {st.name}
                       </span>
                       <span
@@ -911,22 +912,22 @@ export function ApprovalManagerApp() {
                             ? "bg-emerald-500/20 text-emerald-400"
                             : decision?.decision === "rejected"
                             ? "bg-rose-500/20 text-rose-400"
-                            : "bg-slate-700 text-slate-400"
+                            : "bg-card text-muted-foreground"
                         }`}
                       >
                         {decision ? decision.decision.toUpperCase() : "MENUNGGU"}
                       </span>
                     </div>
 
-                    <div className="text-[11px] text-slate-400">
+                    <div className="text-[11px] text-muted-foreground">
                       Approver: {st.approverRefs.join(", ")} • SLA: {st.slaHours} jam
                     </div>
 
                     {decision && (
-                      <div className="p-2 bg-slate-900/60 rounded border border-slate-800 text-xs">
-                        <div className="font-semibold text-slate-300">{decision.approverName}</div>
-                        <div className="text-slate-400 italic mt-0.5">"{decision.comments}"</div>
-                        <div className="text-[10px] text-slate-500 mt-1">
+                      <div className="p-2 bg-background/60 rounded border border-border text-xs">
+                        <div className="font-semibold text-foreground">{decision.approverName}</div>
+                        <div className="text-muted-foreground italic mt-0.5">"{decision.comments}"</div>
+                        <div className="text-[10px] text-muted-foreground mt-1">
                           {new Date(decision.decidedAt).toLocaleString()}
                         </div>
                       </div>
@@ -936,10 +937,10 @@ export function ApprovalManagerApp() {
               })}
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-800">
+            <div className="flex justify-end pt-2 border-t border-border">
               <button
                 onClick={() => setSelectedRequestId(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold"
+                className="px-4 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-semibold"
               >
                 Tutup
               </button>
@@ -951,12 +952,12 @@ export function ApprovalManagerApp() {
       {/* MODAL: DELEGASI BARU */}
       {isNewDelegateOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Delegasi Wewenang</h3>
               <button
                 onClick={() => setIsNewDelegateOpen(false)}
-                className="text-slate-400 hover:text-slate-200"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -964,19 +965,19 @@ export function ApprovalManagerApp() {
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Pemberi Wewenang
                 </label>
                 <input
                   type="text"
                   value={delFrom}
                   onChange={(e) => setDelFrom(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Penerima Delegasi <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -984,37 +985,37 @@ export function ApprovalManagerApp() {
                   placeholder="mis. Hendro Wicaksono (COO)"
                   value={delTo}
                   onChange={(e) => setDelTo(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-teal-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-teal-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-foreground mb-1">
                     Tanggal Mulai
                   </label>
                   <input
                     type="date"
                     value={delStartDate}
                     onChange={(e) => setDelStartDate(e.target.value)}
-                    className="w-full px-2 py-1.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-100"
+                    className="w-full px-2 py-1.5 bg-card border border-border rounded text-xs text-foreground"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-foreground mb-1">
                     Tanggal Selesai
                   </label>
                   <input
                     type="date"
                     value={delEndDate}
                     onChange={(e) => setDelEndDate(e.target.value)}
-                    className="w-full px-2 py-1.5 bg-slate-800 border border-slate-700 rounded text-xs text-slate-100"
+                    className="w-full px-2 py-1.5 bg-card border border-border rounded text-xs text-foreground"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Alasan
                 </label>
                 <input
@@ -1022,16 +1023,16 @@ export function ApprovalManagerApp() {
                   placeholder="mis. Cuti tahunan"
                   value={delReason}
                   onChange={(e) => setDelReason(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+            <div className="flex justify-end gap-2 pt-3 border-t border-border">
               <button
                 type="button"
                 onClick={() => setIsNewDelegateOpen(false)}
-                className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
               >
                 Batal
               </button>

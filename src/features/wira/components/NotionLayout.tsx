@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import { useState, useEffect, useRef, ReactNode } from "react";
 import {
   ChevronRight,
@@ -189,7 +190,7 @@ export function NotionLayout({ children, activeId, onNavigate, onBack }: NotionL
       >
         {/* Resize Handle (Desktop Only) */}
         <div
-          className="hidden md:block absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-gray-300 transition-colors z-50"
+          className="hidden md:block absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-border transition-colors z-50"
           onMouseDown={() => setIsResizing(true)}
         />
 
@@ -236,7 +237,7 @@ export function NotionLayout({ children, activeId, onNavigate, onBack }: NotionL
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 bg-background relative transition-all duration-300 ease-in-out w-full">
         {/* Top Header & Breadcrumb */}
-        <header className="h-12 flex items-center px-4 justify-between sticky top-0 bg-background/80 backdrop-blur-sm z-10">
+        <ShellHeader>
           <div className="flex items-center text-[14px]">
             {!isSidebarOpen && (
               <div
@@ -251,7 +252,7 @@ export function NotionLayout({ children, activeId, onNavigate, onBack }: NotionL
             <div className="flex items-center">
               {breadcrumb.map((item, index) => (
                 <div key={item.id} className="flex items-center">
-                  {index > 0 && <span className="mx-1.5 text-gray-300">/</span>}
+                  {index > 0 && <span className="mx-1.5 text-foreground">/</span>}
                   <div className="flex items-center px-1.5 py-0.5 rounded-sm hover:bg-background-hover cursor-pointer transition-colors text-muted-foreground">
                     {item.icon && <item.icon size={16} className="mr-1.5" />}
                     <span className="truncate max-w-[150px]">{item.title}</span>
@@ -269,7 +270,7 @@ export function NotionLayout({ children, activeId, onNavigate, onBack }: NotionL
               <Settings size={18} />
             </div>
           </div>
-        </header>
+        </ShellHeader>
 
         {/* Canvas Area */}
         <main className={cn("flex-1 overflow-y-auto", activeId === "tasks" ? "flex flex-col" : "")}>

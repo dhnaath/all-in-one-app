@@ -187,7 +187,7 @@ export default function InvestmentTools() {
             <div className="bg-secondary/50 text-white p-8 flex flex-col justify-center relative overflow-hidden">
               <TrendingUp className="absolute -bottom-8 -right-8 w-48 h-48 opacity-5 text-white pointer-events-none" />
               <div className="relative z-10 space-y-6">
-                <div className="space-y-2 text-sm opacity-80 pb-4 border-b border-white/10">
+                <div className="space-y-2 text-sm opacity-80 pb-4 border-b border-border/10">
                   <div className="flex justify-between">
                     <span>Total Modal Disetor</span>
                     <span>{formatIDR(compoundResult.totalInvested)}</span>
@@ -225,7 +225,7 @@ export default function InvestmentTools() {
                         )
                       }
                       disabled={statusCompound !== "idle"}
-                      className="mt-6 w-full flex items-center justify-center gap-2 py-3 px-4 bg-card/10 hover:bg-card/20 text-white text-[10px] font-bold tracking-[0.2em] uppercase transition-colors disabled:opacity-50 border border-white/20"
+                      className="mt-6 w-full flex items-center justify-center gap-2 py-3 px-4 bg-card/10 hover:bg-card/20 text-white text-[10px] font-bold tracking-[0.2em] uppercase transition-colors disabled:opacity-50 border border-border/20"
                     >
                       {statusCompound === "idle" && (
                         <>
@@ -326,7 +326,7 @@ export default function InvestmentTools() {
             <div className="bg-secondary/50 text-white p-8 flex flex-col justify-center relative overflow-hidden">
               <Calculator className="absolute -bottom-8 -right-8 w-48 h-48 opacity-5 text-white pointer-events-none" />
               <div className="relative z-10 space-y-6">
-                <div className="space-y-4 pb-6 border-b border-white/10">
+                <div className="space-y-4 pb-6 border-b border-border/10">
                   <div>
                     <span className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-60 block mb-1">
                       Total Keuntungan / Kerugian
@@ -388,7 +388,7 @@ export default function InvestmentTools() {
                       )
                     }
                     disabled={statusRoi !== "idle"}
-                    className="mt-6 w-full flex items-center justify-center gap-2 py-3 px-4 bg-card/10 hover:bg-card/20 text-white text-[10px] font-bold tracking-[0.2em] uppercase transition-colors disabled:opacity-50 border border-white/20"
+                    className="mt-6 w-full flex items-center justify-center gap-2 py-3 px-4 bg-card/10 hover:bg-card/20 text-white text-[10px] font-bold tracking-[0.2em] uppercase transition-colors disabled:opacity-50 border border-border/20"
                   >
                     {statusRoi === "idle" && (
                       <>

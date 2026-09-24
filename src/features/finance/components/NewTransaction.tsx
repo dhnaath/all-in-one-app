@@ -142,7 +142,7 @@ export function NewTransaction({ onBack }: { onBack: () => void }) {
                     key={k}
                     className="col-span-1 row-span-2 text-lg text-foreground justify-self-center self-end mb-2 mr-2"
                   >
-                    <div className="w-12 h-12 bg-transparent rounded-full flex items-center justify-center text-foreground border border-gray-600">
+                    <div className="w-12 h-12 bg-transparent rounded-full flex items-center justify-center text-foreground border border-border">
                       <Check size={28} />
                     </div>
                   </button>

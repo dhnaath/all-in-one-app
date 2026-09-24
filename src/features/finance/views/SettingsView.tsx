@@ -50,7 +50,7 @@ export function SettingsView({
               </span>
             </div>
             <div className="w-12 h-6 bg-[#2a2a2a] rounded-full flex items-center p-1 cursor-pointer">
-              <div className="w-4 h-4 bg-gray-400 rounded-full"></div>
+              <div className="w-4 h-4 bg-border rounded-full"></div>
             </div>
           </div>
 

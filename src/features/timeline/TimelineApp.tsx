@@ -1,3 +1,5 @@
+import { ShellHeader } from "@/app/shell-header";
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState, useMemo } from "react";
 import {
   CalendarDays,
@@ -57,32 +59,32 @@ export function TimelineApp() {
   const violationCount = dependencyLines.filter((l) => l.isViolated).length;
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-slate-50 text-slate-800">
+    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-muted/40 text-foreground">
       {/* LEFT SIDEBAR: Timeline Controls & Critical Path */}
-      <aside className="w-72 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
+      <ShellSidebar>
         {/* Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-white border-2 border-slate-200 shadow-xs flex items-center justify-center text-slate-800 shrink-0">
-            <CalendarDays className="w-4 h-4 text-slate-800" />
+        <div className="p-4 border-b border-border flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-card border-2 border-border shadow-xs flex items-center justify-center text-foreground shrink-0">
+            <CalendarDays className="w-4 h-4 text-foreground" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <h2 className="text-xs font-bold text-slate-900 tracking-tight">Timeline Manager</h2>
-              <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 font-medium border border-slate-200">
+              <h2 className="text-xs font-bold text-foreground tracking-tight">Timeline Manager</h2>
+              <span className="text-[9px] px-1.5 py-0.2 rounded bg-muted text-muted-foreground font-medium border border-border">
                 Tanda Sementara
               </span>
             </div>
-            <p className="text-[10px] text-slate-400">Gantt Chart & Dependency Engine (#10)</p>
+            <p className="text-[10px] text-muted-foreground">Gantt Chart & Dependency Engine (#10)</p>
           </div>
         </div>
 
         {/* Group By Selector (§3.1) */}
-        <div className="p-4 border-b border-slate-100 space-y-2">
-          <span className="text-[11px] font-semibold text-slate-700">Pengelompokan Baris (Lane)</span>
+        <div className="p-4 border-b border-border space-y-2">
+          <span className="text-[11px] font-semibold text-foreground">Pengelompokan Baris (Lane)</span>
           <select
             value={activeView.groupBy}
             onChange={(e) => updateConfig("groupBy", e.target.value as GroupBy)}
-            className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500 bg-slate-50"
+            className="w-full text-xs p-2 border border-border rounded focus:ring-1 focus:ring-indigo-500 bg-muted/40"
           >
             <option value="phase">Berdasarkan Fase & Proyek</option>
             <option value="assignee">Berdasarkan Penanggung Jawab</option>
@@ -90,9 +92,9 @@ export function TimelineApp() {
         </div>
 
         {/* Options Toggles */}
-        <div className="p-4 border-b border-slate-100 space-y-2">
-          <span className="text-[11px] font-semibold text-slate-700">Opsi Tampilan Jalur</span>
-          <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+        <div className="p-4 border-b border-border space-y-2">
+          <span className="text-[11px] font-semibold text-foreground">Opsi Tampilan Jalur</span>
+          <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
             <input
               type="checkbox"
               checked={activeView.showCriticalPath}
@@ -105,7 +107,7 @@ export function TimelineApp() {
 
         {/* Violations Warning (§5.1) */}
         <div className="p-4 flex-1 overflow-y-auto space-y-3">
-          <span className="text-[11px] font-semibold text-slate-700">Audit Konsistensi Jadwal</span>
+          <span className="text-[11px] font-semibold text-foreground">Audit Konsistensi Jadwal</span>
           {violationCount > 0 ? (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs space-y-1.5">
               <div className="flex items-center gap-1.5 text-red-700 font-bold">
@@ -124,9 +126,9 @@ export function TimelineApp() {
           )}
 
           {/* Baseline Snapshots (§8) */}
-          <div className="pt-3 border-t border-slate-100">
+          <div className="pt-3 border-t border-border">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-semibold text-slate-700">Baseline Tersimpan</span>
+              <span className="text-[11px] font-semibold text-foreground">Baseline Tersimpan</span>
               <button
                 onClick={() => {
                   const name = prompt("Nama Snapshot Baseline:", "Baseline Revisi " + new Date().toLocaleDateString("id-ID"));
@@ -140,12 +142,12 @@ export function TimelineApp() {
 
             <div className="space-y-1.5">
               {state.baselines.length === 0 ? (
-                <p className="text-[10px] text-slate-400 italic">Belum ada snapshot baseline.</p>
+                <p className="text-[10px] text-muted-foreground italic">Belum ada snapshot baseline.</p>
               ) : (
                 state.baselines.map((b) => (
-                  <div key={b.id} className="p-2 bg-slate-50 border border-slate-200 rounded text-xs flex items-center justify-between">
-                    <span className="font-medium text-slate-800 truncate mr-2">{b.name}</span>
-                    <span className="text-[10px] font-mono text-slate-400">
+                  <div key={b.id} className="p-2 bg-muted/40 border border-border rounded text-xs flex items-center justify-between">
+                    <span className="font-medium text-foreground truncate mr-2">{b.name}</span>
+                    <span className="text-[10px] font-mono text-muted-foreground">
                       {new Date(b.snapshotAt).toLocaleDateString("id-ID", { month: "numeric", day: "numeric" })}
                     </span>
                   </div>
@@ -156,25 +158,25 @@ export function TimelineApp() {
         </div>
 
         {/* Footnote */}
-        <div className="p-3 border-t border-slate-100 bg-slate-50 text-[10px] text-slate-500">
-          <p className="font-semibold text-slate-700">Standalone App #10</p>
+        <div className="p-3 border-t border-border bg-muted/40 text-[10px] text-muted-foreground">
+          <p className="font-semibold text-foreground">Standalone App #10</p>
           <p className="mt-0.5">Visualisasi Gantt, deteksi CPM & garis relasi tugas.</p>
         </div>
-      </aside>
+      </ShellSidebar>
 
       {/* MAIN GANTT CHART VIEW */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
         {/* Top Header */}
-        <header className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <ShellHeader>
           <div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight">{activeView.name}</h1>
-            <p className="text-xs text-slate-500">
+            <h1 className="text-base font-bold text-foreground tracking-tight">{activeView.name}</h1>
+            <p className="text-xs text-muted-foreground">
               Rentang waktu horizontal terhubung oleh jalur relasi antar-fase dan milestone.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center border border-slate-200 rounded-md p-0.5 bg-slate-50 text-xs">
+            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
               {[
                 { id: "gantt", label: "Gantt Chart" },
                 { id: "critical_path", label: "Jalur Kritis (CPM)" },
@@ -184,8 +186,8 @@ export function TimelineApp() {
                   onClick={() => setViewMode(v.id as TimelineViewMode)}
                   className={`px-3 py-1 rounded transition-colors ${
                     viewMode === v.id
-                      ? "bg-white text-slate-900 font-semibold shadow-xs"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {v.label}
@@ -193,28 +195,28 @@ export function TimelineApp() {
               ))}
             </div>
           </div>
-        </header>
+        </ShellHeader>
 
         {/* TIMELINE GANTT CANVAS */}
-        <div className="flex-1 overflow-auto p-4 bg-slate-50/50">
-          <div className="min-w-[800px] bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
+        <div className="flex-1 overflow-auto p-4 bg-muted/40/50">
+          <div className="min-w-[800px] bg-card border border-border rounded-xl shadow-xs overflow-hidden">
             {/* Days Header */}
-            <div className="flex border-b border-slate-200 bg-slate-50">
-              <div className="w-56 flex-shrink-0 p-3 text-xs font-bold text-slate-700 border-r border-slate-200">
+            <div className="flex border-b border-border bg-muted/40">
+              <div className="w-56 flex-shrink-0 p-3 text-xs font-bold text-foreground border-r border-border">
                 Lanes & Entitas Kerja
               </div>
-              <div className="flex-1 grid grid-cols-21 divide-x divide-slate-100 text-center text-[10px] font-mono text-slate-500 py-2">
+              <div className="flex-1 grid grid-cols-21 divide-x divide-border text-center text-[10px] font-mono text-muted-foreground py-2">
                 {dayList.map((d) => (
                   <div key={d} className="px-1 truncate">
-                    <span className="font-semibold block text-slate-800">{d.slice(8, 10)}</span>
-                    <span className="text-[9px] text-slate-400">{d.slice(5, 7)}</span>
+                    <span className="font-semibold block text-foreground">{d.slice(8, 10)}</span>
+                    <span className="text-[9px] text-muted-foreground">{d.slice(5, 7)}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Lanes Body */}
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-border">
               {Object.keys(lanes).map((laneName) => {
                 const laneBars = lanes[laneName].filter((b) =>
                   viewMode === "critical_path" ? b.isOnCriticalPath : true
@@ -223,7 +225,7 @@ export function TimelineApp() {
                 return (
                   <div key={laneName} className="flex min-h-[48px] items-stretch">
                     {/* Lane Label */}
-                    <div className="w-56 flex-shrink-0 p-3 border-r border-slate-200 bg-slate-50/40 text-xs font-semibold text-slate-800 flex items-center">
+                    <div className="w-56 flex-shrink-0 p-3 border-r border-border bg-muted/40/40 text-xs font-semibold text-foreground flex items-center">
                       <span className="truncate">{laneName}</span>
                     </div>
 
@@ -246,7 +248,7 @@ export function TimelineApp() {
                                 className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1.5 z-10 cursor-pointer"
                                 title={bar.title}
                               >
-                                <div className="w-4 h-4 rotate-45 bg-amber-500 border-2 border-white shadow-sm" />
+                                <div className="w-4 h-4 rotate-45 bg-amber-500 border-2 border-border shadow-sm" />
                                 <span className="text-[10px] font-bold text-amber-800 whitespace-nowrap bg-amber-50 px-1 py-0.5 rounded border border-amber-200">
                                   {bar.title}
                                 </span>

@@ -83,7 +83,7 @@ export function TaskStatisticsModal({ isOpen, onClose }: TaskStatisticsModalProp
               { label: "High", count: statistics.byPriority.high, color: "bg-amber-500" },
               { label: "Medium", count: statistics.byPriority.medium, color: "bg-blue-500" },
               { label: "Low", count: statistics.byPriority.low, color: "bg-emerald-500" },
-              { label: "None", count: statistics.byPriority.none, color: "bg-slate-400" },
+              { label: "None", count: statistics.byPriority.none, color: "bg-border" },
             ].map((p) => {
               const pct = statistics.total > 0 ? Math.round((p.count / statistics.total) * 100) : 0;
               return (

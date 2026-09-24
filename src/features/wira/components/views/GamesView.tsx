@@ -685,7 +685,7 @@ export function GamesView() {
                             ? "bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-400"
                             : game.status === "Sedang Dimainkan"
                             ? "bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950/60 dark:text-rose-400"
-                            : "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300"
+                            : "bg-muted text-foreground border-border dark:bg-card dark:text-foreground"
                         )}
                       >
                         {game.status}

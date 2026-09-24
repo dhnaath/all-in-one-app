@@ -479,7 +479,7 @@ export const STANDALONE_APPS: Record<string, StandaloneAppConfig> = {
     subCategoryTitle: "Access and Storage",
     icon: Shield,
     badge: "Hak Akses",
-    colorScheme: "from-slate-700 to-zinc-900",
+    colorScheme: "from-border to-border",
     tabs: [
       { id: "all", label: "Semua Akses" },
       { id: "active", label: "Akses Super Admin" },
@@ -933,7 +933,7 @@ export const STANDALONE_APPS: Record<string, StandaloneAppConfig> = {
     subCategoryTitle: "Vehicle Records",
     icon: Car,
     badge: "Logbook Kendaraan",
-    colorScheme: "from-blue-700 to-slate-800",
+    colorScheme: "from-blue-700 to-border",
     tabs: [
       { id: "all", label: "Semua Armada" },
       { id: "active", label: "Log BBM & Odometer" },
@@ -963,7 +963,7 @@ export const STANDALONE_APPS: Record<string, StandaloneAppConfig> = {
     subCategoryTitle: "Vehicle Maintenance",
     icon: Wrench,
     badge: "Service Tracker",
-    colorScheme: "from-amber-700 to-zinc-800",
+    colorScheme: "from-amber-700 to-border",
     tabs: [
       { id: "all", label: "Semua Servis" },
       { id: "active", label: "Servis Berikutnya" },
@@ -1265,7 +1265,7 @@ export const STANDALONE_APPS: Record<string, StandaloneAppConfig> = {
     subCategoryTitle: "Public Information",
     icon: Landmark,
     badge: "Layanan Publik",
-    colorScheme: "from-blue-700 to-slate-700",
+    colorScheme: "from-blue-700 to-border",
     tabs: [
       { id: "all", label: "Semua Fasilitas" },
       { id: "active", label: "Kantor Pelayanan Terdekat" },
@@ -1327,7 +1327,7 @@ export const STANDALONE_APPS: Record<string, StandaloneAppConfig> = {
     subCategoryTitle: "Compliance",
     icon: Scale,
     badge: "Civic Compliance",
-    colorScheme: "from-slate-700 to-indigo-900",
+    colorScheme: "from-border to-indigo-900",
     tabs: [
       { id: "all", label: "Semua Izin Sipil" },
       { id: "active", label: "Sedang Diajukan" },

@@ -1,3 +1,5 @@
+import { ShellHeader } from "@/app/shell-header";
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState, useMemo } from "react";
 import {
   FileText,
@@ -266,21 +268,21 @@ export function NotesApp() {
   }, [currentNote, getBacklinks]);
 
   return (
-    <div className="w-full min-h-[calc(100vh-4rem)] bg-slate-50/60 dark:bg-zinc-950 flex flex-col font-sans">
+    <div className="w-full min-h-[calc(100vh-4rem)] bg-muted/40/60 dark:bg-background flex flex-col font-sans">
       {/* 1. TOP HEADER */}
-      <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-6 py-3.5">
+      <ShellHeader>
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           {/* Brand & Temporary White Marker */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white text-zinc-950 border-2 border-zinc-200 dark:border-white shadow-md flex items-center justify-center shrink-0 ring-2 ring-white/60">
-              <FileText className="size-5 text-zinc-950" strokeWidth={2} />
+            <div className="w-10 h-10 rounded-2xl bg-card text-foreground border-2 border-border dark:border-border shadow-md flex items-center justify-center shrink-0 ring-2 ring-white/60">
+              <FileText className="size-5 text-foreground" strokeWidth={2} />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
                   Notes
                 </h1>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-muted dark:bg-card text-foreground dark:text-foreground border border-border dark:border-border">
                   Tanda Sementara (#12)
                 </span>
               </div>
@@ -320,7 +322,7 @@ export function NotesApp() {
               onClick={() => setIsHistoryDrawerOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
             >
-              <History className="size-3.5 text-slate-500" />
+              <History className="size-3.5 text-muted-foreground" />
               <span className="hidden md:inline">Riwayat</span>
             </button>
 
@@ -336,12 +338,12 @@ export function NotesApp() {
             </button>
           </div>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* 2. MAIN SPLIT INTERFACE */}
       <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col md:flex-row gap-5">
         {/* LEFT COLUMN: Navigation Sidebar & Note List */}
-        <aside className="w-full md:w-80 shrink-0 flex flex-col gap-4">
+        <ShellSidebar>
           {/* Navigation Views Accordion / Tabs */}
           <div className="bg-card border border-border rounded-2xl p-3 space-y-1 shadow-2xs text-xs">
             <button
@@ -360,7 +362,7 @@ export function NotesApp() {
                 <FileText className="size-3.5" />
                 <span>Semua Catatan</span>
               </div>
-              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 dark:bg-white/10">
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 dark:bg-card/10">
                 {statistics.activeCount}
               </span>
             </button>
@@ -377,7 +379,7 @@ export function NotesApp() {
                 <Pin className="size-3.5 text-amber-500" />
                 <span>Dipasangi Pin</span>
               </div>
-              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 dark:bg-white/10">
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 dark:bg-card/10">
                 {notes.filter((n) => n.pinned && !n.isTrashed && !n.isArchived).length}
               </span>
             </button>
@@ -394,7 +396,7 @@ export function NotesApp() {
                 <Star className="size-3.5 text-yellow-500 fill-yellow-500" />
                 <span>Favorit</span>
               </div>
-              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 dark:bg-white/10">
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 dark:bg-card/10">
                 {notes.filter((n) => n.favorited && !n.isTrashed && !n.isArchived).length}
               </span>
             </button>
@@ -523,7 +525,7 @@ export function NotesApp() {
               })
             )}
           </div>
-        </aside>
+        </ShellSidebar>
 
         {/* RIGHT COLUMN: Rich Block-Based Note Editor */}
         <main className="flex-1 bg-card border border-border rounded-3xl p-5 sm:p-7 flex flex-col shadow-xs overflow-hidden">
@@ -779,7 +781,7 @@ export function NotesApp() {
                           />
                         </div>
                       ) : block.type === "code" ? (
-                        <div className="p-3 rounded-xl bg-zinc-900 text-zinc-100 font-mono text-xs">
+                        <div className="p-3 rounded-xl bg-background text-foreground font-mono text-xs">
                           <textarea
                             rows={3}
                             value={block.content}
@@ -950,8 +952,8 @@ export function NotesApp() {
             </div>
 
             {/* Visual SVG Network Simulation */}
-            <div className="h-80 bg-zinc-950 rounded-2xl relative overflow-hidden flex items-center justify-center p-4 border border-zinc-800">
-              <div className="absolute top-3 left-3 text-[10px] text-zinc-400 font-mono">
+            <div className="h-80 bg-background rounded-2xl relative overflow-hidden flex items-center justify-center p-4 border border-border">
+              <div className="absolute top-3 left-3 text-[10px] text-muted-foreground font-mono">
                 {notes.filter((n) => !n.isTrashed).length} Catatan • {links.length} Tautan Aktif
               </div>
 
@@ -966,10 +968,10 @@ export function NotesApp() {
                         setSelectedNoteId(n.id);
                         setIsGraphModalOpen(false);
                       }}
-                      className="p-3 rounded-xl bg-zinc-900 border border-zinc-700/60 hover:border-indigo-500 hover:scale-105 transition-all text-center cursor-pointer space-y-1 shadow-md"
+                      className="p-3 rounded-xl bg-background border border-border/60 hover:border-indigo-500 hover:scale-105 transition-all text-center cursor-pointer space-y-1 shadow-md"
                     >
                       <span className="text-xl block">{n.icon || "📄"}</span>
-                      <span className="text-xs font-semibold text-zinc-200 line-clamp-1 block">
+                      <span className="text-xs font-semibold text-foreground line-clamp-1 block">
                         {n.title}
                       </span>
                       <span className="text-[9px] text-indigo-400 font-mono block">

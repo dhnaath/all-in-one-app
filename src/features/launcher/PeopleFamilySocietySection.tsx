@@ -172,7 +172,7 @@ export function PeopleFamilySocietySection({
         getItems: () => [
           resolveApp("/lainnya?app=interaction-timeline", "Timeline Pertemuan", History),
           resolveApp("/lainnya?app=borrowed-items", "Pinjam Meminjam Barang", ArrowRightLeft),
-          resolveApp("/events", "Riwayat Pertemuan & Acara", Ticket),
+          resolveApp("/kalender", "Riwayat Pertemuan & Acara", Ticket),
           resolveApp("/journal", "Jurnal Interaksi & Relasi", BookOpen),
           resolveApp("/catatan", "Catatan Relasi & Notula", NotebookText),
         ],
@@ -187,7 +187,6 @@ export function PeopleFamilySocietySection({
         getItems: () => [
           resolveApp("/lainnya?app=family-tree", "Silsilah Keluarga (Tree)", GitFork),
           resolveApp("/lainnya?app=family-rules", "Aturan & Kesepakatan Rumah", Scale),
-          resolveApp("/kalender", "Jadwal & Agenda Domestik", CalendarDays),
           resolveApp("/shopping", "Belanja Kebutuhan Domestik", ShoppingCart),
           resolveApp("/proyek", "Proyek & Urusan Keluarga", FolderKanban),
           resolveApp("/task-manager", "Daftar Tugas Domestik", CheckSquare),
@@ -215,7 +214,6 @@ export function PeopleFamilySocietySection({
         getItems: () => [
           resolveApp("/lainnya?app=reunion-planner", "Perencana Reuni & Arisan", PartyPopper),
           resolveApp("/lainnya?app=family-anniversary", "Ulang Tahun & Hari Jadi", CalendarDays),
-          resolveApp("/events", "Acara & Perayaan Keluarga", Ticket),
           resolveApp("/trips", "Liburan & Perjalanan Bersama", Plane),
           resolveApp("/countdown", "Ulang Tahun & Milestones", Timer),
         ],
@@ -230,10 +228,6 @@ export function PeopleFamilySocietySection({
         getItems: () => [
           resolveApp("/lainnya?app=rt-rw-directory", "Buku Warga RT/RW", Users),
           resolveApp("/lainnya?app=community-announcements", "Papan Pengumuman Warga", Megaphone),
-          resolveApp("/events", "Kopdar & Pertemuan Warga", Ticket),
-          resolveApp("/portal", "Portal Forum Komunitas", Building2),
-          resolveApp("/portal.pesan", "Obrolan & Pengumuman Warga", MessagesSquare),
-          resolveApp("/kalender", "Kalender Kegiatan Komunitas", CalendarDays),
         ],
       },
       {
@@ -244,9 +238,6 @@ export function PeopleFamilySocietySection({
         getItems: () => [
           resolveApp("/lainnya?app=membership-card", "KTA & Kartu Anggota", CreditCard),
           resolveApp("/lainnya?app=meeting-resolutions", "Hasil Keputusan Rapat", ScrollText),
-          resolveApp("/portal", "Organisasi & Asosiasi", Building2),
-          resolveApp("/klien", "Direktori Anggota & Pengurus", Users),
-          resolveApp("/proyek", "Program Kerja Organisasi", FolderKanban),
         ],
       },
       {
@@ -257,8 +248,6 @@ export function PeopleFamilySocietySection({
         getItems: () => [
           resolveApp("/lainnya?app=volunteer-log", "Jam Relawan & Bakti Sosial", Heart),
           resolveApp("/lainnya?app=donation-tracker", "Catatan Infaq & Donasi", Coins),
-          resolveApp("/proyek", "Program Bakti & Aksi Sosial", HeartHandshake),
-          resolveApp("/events", "Kegiatan & Partisipasi Sosial", Ticket),
           resolveApp("/portal.dokumen", "Arsip Laporan Kontribusi", FileText),
           resolveApp("/reports", "Laporan Partisipasi Warga", FileCheck),
         ],
@@ -276,7 +265,6 @@ export function PeopleFamilySocietySection({
           resolveApp("/bookmarks", "Portal Informasi Publik & Berita", Globe),
           resolveApp("/weather", "Informasi Cuaca & Lingkungan", CloudSun),
           resolveApp("/reading", "Katalog & Referensi Warga", BookOpen),
-          resolveApp("/reports", "Warta & Informasi Publik", FileText),
         ],
       },
       {
@@ -287,10 +275,7 @@ export function PeopleFamilySocietySection({
         getItems: () => [
           resolveApp("/lainnya?app=disaster-prep", "Tas Siaga & Jalur Evakuasi", ShieldAlert),
           resolveApp("/lainnya?app=emergency-broadcast", "Nomor Darurat 112 & Damkar", PhoneCall),
-          resolveApp("/contacts", "Kontak Darurat & Hotline Publik", Users),
-          resolveApp("/pocket", "Kartu Identitas & Kontak Siaga", Pocket),
           resolveApp("/passwords", "Keamanan Identitas & Akses", Key),
-          resolveApp("/vault", "Berkas Perlindungan Sipil", Vault),
         ],
       },
       {
@@ -301,10 +286,6 @@ export function PeopleFamilySocietySection({
         getItems: () => [
           resolveApp("/lainnya?app=civil-registry", "Administrasi Kependudukan", FileCheck),
           resolveApp("/lainnya?app=tax-civic", "PBB, Retribusi & Iuran Warga", Receipt),
-          resolveApp("/portal.dokumen", "Dokumen Legal & Izin Domestik", FileText),
-          resolveApp("/reading", "Panduan Aturan & Regulasi Warga", BookOpen),
-          resolveApp("/vault", "Arsip Akta & Dokumen Kepatuhan", Vault),
-          resolveApp("/reports", "Laporan Verifikasi Kepatuhan", FileCheck),
         ],
       },
     ];

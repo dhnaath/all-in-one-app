@@ -9,6 +9,7 @@ import {
   PieChart,
   Check,
 } from "lucide-react";
+import { useShellSections } from "@/app/shell-sections";
 
 export function SufficientView() {
   const [monthlyExpense, setMonthlyExpense] = useState(45000000);
@@ -64,10 +65,22 @@ export function SufficientView() {
     );
   };
 
+  const [activeSection, setActiveSection] = useState<string>("ringkasan");
+  const goSection = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(`soc-suf-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  useShellSections([
+    { id: "ringkasan", label: "Ringkasan", active: activeSection === "ringkasan", onSelect: () => goSection("ringkasan") },
+    { id: "metrik", label: "Metrik", active: activeSection === "metrik", onSelect: () => goSection("metrik") },
+    { id: "simulator", label: "Simulator", active: activeSection === "simulator", onSelect: () => goSection("simulator") },
+    { id: "pilar", label: "Pilar", active: activeSection === "pilar", onSelect: () => goSection("pilar") },
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-[20px] bg-card border border-border">
+      <div id="soc-suf-ringkasan" className="scroll-mt-24 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-[20px] bg-card border border-border">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
             <CheckCircle2 className="size-4 text-foreground" />
@@ -89,7 +102,7 @@ export function SufficientView() {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div id="soc-suf-metrik" className="scroll-mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 rounded-[20px] bg-card border border-border flex flex-col justify-between">
           <span className="text-xs font-medium text-muted-foreground">Runway Mandiri</span>
           <div className="mt-3 flex items-baseline justify-between">
@@ -142,7 +155,7 @@ export function SufficientView() {
       {/* Main Interactive Calculator & Pillars */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Simulator Panel (1 col) */}
-        <div className="p-5 rounded-[20px] bg-card border border-border space-y-4">
+        <div id="soc-suf-simulator" className="scroll-mt-24 p-5 rounded-[20px] bg-card border border-border space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-foreground">Simulator Kecukupan</h3>
             <span className="text-xs text-muted-foreground">Real-time kalkulasi</span>
@@ -219,7 +232,7 @@ export function SufficientView() {
         </div>
 
         {/* Pillars of Sufficiency (2 cols) */}
-        <div className="lg:col-span-2 space-y-3">
+        <div id="soc-suf-pilar" className="scroll-mt-24 lg:col-span-2 space-y-3">
           <div className="flex items-center justify-between mb-1">
             <h3 className="text-sm font-semibold text-foreground">
               Empat Pilar Kecukupan (Sufficiency Pillars)

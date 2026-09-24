@@ -49,7 +49,7 @@ export function TaskListView({
   const getStatusBadge = (s: TaskStatus) => {
     switch (s) {
       case "inbox":
-        return <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-500">Inbox</span>;
+        return <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted-foreground/30/10 text-muted-foreground">Inbox</span>;
       case "planned":
         return <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500">Planned</span>;
       case "in_progress":

@@ -96,7 +96,7 @@ const DEFAULT_BOOKS: BookItem[] = [
     totalPages: 614,
     rating: 5,
     notes: "Must-read for distributed systems, replication topologies, and consensus models.",
-    coverColor: "from-purple-600 to-slate-800",
+    coverColor: "from-purple-600 to-border",
   },
   {
     id: "b5",
@@ -130,7 +130,7 @@ const COLOR_OPTIONS = [
   { label: "Ocean Indigo", value: "from-blue-600 to-indigo-800" },
   { label: "Sunset Amber", value: "from-amber-600 to-rose-700" },
   { label: "Emerald Pine", value: "from-emerald-600 to-teal-800" },
-  { label: "Deep Violet", value: "from-purple-600 to-slate-800" },
+  { label: "Deep Violet", value: "from-purple-600 to-border" },
   { label: "Solar Gold", value: "from-orange-500 to-amber-700" },
   { label: "Crimson Velvet", value: "from-rose-600 to-pink-800" },
 ];

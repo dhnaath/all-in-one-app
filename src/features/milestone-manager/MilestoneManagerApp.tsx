@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useMemo } from "react";
 import {
   Flag,
@@ -234,12 +235,12 @@ export function MilestoneManagerApp() {
       case "achieved":
         return <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/30">Achieved</span>;
       case "cancelled":
-        return <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-500/20 text-slate-400 border border-slate-600">Cancelled</span>;
+        return <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-muted-foreground/30/20 text-muted-foreground border border-border">Cancelled</span>;
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       {/* Toast */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-indigo-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-indigo-400 animate-in fade-in slide-in-from-bottom-4">
@@ -249,7 +250,7 @@ export function MilestoneManagerApp() {
       )}
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+      <ShellHeader>
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-gradient-to-tr from-amber-500 to-rose-500 rounded-xl shadow-lg shadow-amber-500/20">
@@ -261,11 +262,11 @@ export function MilestoneManagerApp() {
                 <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
                   App #32
                 </span>
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-muted-foreground">
                   Checkpoint Strategis Lintas-Project & Lintas-Goal
                 </span>
               </div>
-              <p className="text-xs md:text-sm text-slate-400">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Titik konvergensi independen yang mengawasi prasyarat kritis, kesiapan terhitung (ReadinessStatus), dan pelaporan eksekutif.
               </p>
             </div>
@@ -281,14 +282,14 @@ export function MilestoneManagerApp() {
             <span>Rumuskan Milestone Strategis</span>
           </button>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-slate-800/80 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
         <button
           onClick={() => setActiveTab("board")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "board" ? "bg-amber-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "board" ? "bg-amber-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -298,7 +299,7 @@ export function MilestoneManagerApp() {
         <button
           onClick={() => setActiveTab("readiness")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "readiness" ? "bg-amber-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "readiness" ? "bg-amber-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <AlertOctagon className="w-4 h-4 text-rose-400" />
@@ -308,7 +309,7 @@ export function MilestoneManagerApp() {
         <button
           onClick={() => setActiveTab("timeline")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "timeline" ? "bg-amber-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "timeline" ? "bg-amber-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <CalendarDays className="w-4 h-4 text-sky-400" />
@@ -318,7 +319,7 @@ export function MilestoneManagerApp() {
         <button
           onClick={() => setActiveTab("stakeholder")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stakeholder" ? "bg-amber-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "stakeholder" ? "bg-amber-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Users className="w-4 h-4 text-emerald-400" />
@@ -328,7 +329,7 @@ export function MilestoneManagerApp() {
         <button
           onClick={() => setActiveTab("stats")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-amber-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "stats" ? "bg-amber-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <BarChart3 className="w-4 h-4 text-amber-400" />
@@ -342,25 +343,25 @@ export function MilestoneManagerApp() {
         {activeTab === "stats" && (
           <div className="space-y-6 max-w-4xl">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Checkpoint</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Total Checkpoint</div>
                 <div className="text-3xl font-extrabold text-white mt-1">{stats.total}</div>
-                <div className="text-xs text-slate-500 mt-1">Milestone strategis</div>
+                <div className="text-xs text-muted-foreground mt-1">Milestone strategis</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Rasio On-Track</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Rasio On-Track</div>
                 <div className="text-3xl font-extrabold text-emerald-400 mt-1">{stats.onTrackRatio}%</div>
-                <div className="text-xs text-slate-500 mt-1">Dari checkpoint aktif</div>
+                <div className="text-xs text-muted-foreground mt-1">Dari checkpoint aktif</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Rata-rata Prasyarat</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Rata-rata Prasyarat</div>
                 <div className="text-3xl font-extrabold text-amber-400 mt-1">{stats.avgPrereqs}</div>
-                <div className="text-xs text-slate-500 mt-1">Per milestone</div>
+                <div className="text-xs text-muted-foreground mt-1">Per milestone</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Penghambat Kritis</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Penghambat Kritis</div>
                 <div className="text-3xl font-extrabold text-rose-400 mt-1">{stats.blockerCount}</div>
-                <div className="text-xs text-slate-500 mt-1">Prasyarat berisiko tinggi</div>
+                <div className="text-xs text-muted-foreground mt-1">Prasyarat berisiko tinggi</div>
               </div>
             </div>
           </div>
@@ -369,7 +370,7 @@ export function MilestoneManagerApp() {
         {/* READINESS DASHBOARD */}
         {activeTab === "readiness" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400">
+            <div className="p-4 bg-card/40 border border-border/60 rounded-xl text-xs text-muted-foreground">
               Kesiapan (ReadinessStatus) dihitung secara deterministik: jika ada Prasyarat kritis yang tertunda/butuh revisi, status otomatis berubah menjadi <span className="text-rose-400 font-bold">Delayed</span> atau <span className="text-amber-400 font-bold">At Risk</span>.
             </div>
 
@@ -382,16 +383,16 @@ export function MilestoneManagerApp() {
                 const critPct = totalCritical > 0 ? Math.round((completedCritical / totalCritical) * 100) : 100;
 
                 return (
-                  <div key={m.id} className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-3">
+                  <div key={m.id} className="p-5 bg-card/80 border border-border rounded-xl space-y-3">
                     <div className="flex items-start justify-between">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-slate-400">Target: {m.targetDate}</span>
-                          <span className="text-xs text-slate-500">• PJ: {m.ownerName}</span>
+                          <span className="text-xs text-muted-foreground">Target: {m.targetDate}</span>
+                          <span className="text-xs text-muted-foreground">• PJ: {m.ownerName}</span>
                         </div>
                         <h3
                           onClick={() => setSelectedMilestoneId(m.id)}
-                          className="text-base font-bold text-slate-100 hover:text-amber-400 cursor-pointer mt-1"
+                          className="text-base font-bold text-foreground hover:text-amber-400 cursor-pointer mt-1"
                         >
                           {m.title}
                         </h3>
@@ -414,11 +415,11 @@ export function MilestoneManagerApp() {
 
                     {/* Progress Bar of Critical Prerequisites */}
                     <div className="space-y-1">
-                      <div className="flex justify-between text-xs text-slate-400">
+                      <div className="flex justify-between text-xs text-muted-foreground">
                         <span>Prasyarat Kritis Selesai ({completedCritical}/{totalCritical})</span>
                         <span className="font-bold text-white">{critPct}%</span>
                       </div>
-                      <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-card h-2 rounded-full overflow-hidden">
                         <div
                           className={`h-full transition-all duration-300 ${
                             r.overallStatus === "on_track" ? "bg-emerald-500" : "bg-amber-500"
@@ -435,7 +436,7 @@ export function MilestoneManagerApp() {
                           <AlertTriangle className="w-3.5 h-3.5" />
                           Penghambat Kritis Aktif (Critical Blockers):
                         </div>
-                        <ul className="list-disc list-inside space-y-0.5 text-slate-300 pl-1">
+                        <ul className="list-disc list-inside space-y-0.5 text-foreground pl-1">
                           {r.criticalBlockers.map((b, idx) => (
                             <li key={idx}>{b}</li>
                           ))}
@@ -452,29 +453,29 @@ export function MilestoneManagerApp() {
         {/* TIMELINE VIEW */}
         {activeTab === "timeline" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400">
+            <div className="p-4 bg-card/40 border border-border/60 rounded-xl text-xs text-muted-foreground">
               Penanda vertikal kronologis lintas waktu untuk seluruh milestone strategis perusahaan.
             </div>
 
-            <div className="relative border-l-2 border-slate-700 pl-6 ml-4 space-y-8 py-2">
+            <div className="relative border-l-2 border-border pl-6 ml-4 space-y-8 py-2">
               {[...milestones]
                 .sort((a, b) => a.targetDate.localeCompare(b.targetDate))
                 .map((m) => (
                   <div key={m.id} className="relative group">
-                    <div className="absolute -left-[31px] top-1 size-4 rounded-full bg-amber-500 border-4 border-slate-900 shadow" />
-                    <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl space-y-2">
+                    <div className="absolute -left-[31px] top-1 size-4 rounded-full bg-amber-500 border-4 border-border shadow" />
+                    <div className="p-4 bg-card/80 border border-border rounded-xl space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-mono text-amber-400 font-semibold">{m.targetDate}</span>
                         {getStatusBadge(m.status)}
                       </div>
                       <h4
                         onClick={() => setSelectedMilestoneId(m.id)}
-                        className="font-bold text-base text-slate-100 hover:text-amber-400 cursor-pointer"
+                        className="font-bold text-base text-foreground hover:text-amber-400 cursor-pointer"
                       >
                         {m.title}
                       </h4>
-                      {m.description && <p className="text-xs text-slate-400">{m.description}</p>}
-                      <div className="text-[11px] text-slate-500 pt-1">Koordinator: {m.ownerName}</div>
+                      {m.description && <p className="text-xs text-muted-foreground">{m.description}</p>}
+                      <div className="text-[11px] text-muted-foreground pt-1">Koordinator: {m.ownerName}</div>
                     </div>
                   </div>
                 ))}
@@ -485,7 +486,7 @@ export function MilestoneManagerApp() {
         {/* STAKEHOLDER VIEW */}
         {activeTab === "stakeholder" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400">
+            <div className="p-4 bg-card/40 border border-border/60 rounded-xl text-xs text-muted-foreground">
               Perspektif eksekutif dan pelaporan ringkas tanpa perlu membuka detail operasional tiap entitas.
             </div>
 
@@ -495,10 +496,10 @@ export function MilestoneManagerApp() {
                 const mStakeholders = stakeholders.filter((s) => s.strategicMilestoneId === m.id);
 
                 return (
-                  <div key={m.id} className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-4">
+                  <div key={m.id} className="p-5 bg-card/80 border border-border rounded-xl space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-xs font-mono text-slate-400">Tenggat Target: {m.targetDate}</span>
+                        <span className="text-xs font-mono text-muted-foreground">Tenggat Target: {m.targetDate}</span>
                         <h3 className="font-bold text-base text-white mt-0.5">{m.title}</h3>
                       </div>
                       {getStatusBadge(m.status)}
@@ -506,9 +507,9 @@ export function MilestoneManagerApp() {
 
                     {/* Executive Sponsors & Team */}
                     <div className="flex items-center gap-2 flex-wrap text-xs">
-                      <span className="text-slate-400 font-semibold">Stakeholder:</span>
+                      <span className="text-muted-foreground font-semibold">Stakeholder:</span>
                       {mStakeholders.map((s) => (
-                        <span key={s.id} className="px-2 py-0.5 rounded bg-slate-700/80 text-slate-200">
+                        <span key={s.id} className="px-2 py-0.5 rounded bg-card/80 text-foreground">
                           {s.personName} ({s.role.replace("_", " ")})
                         </span>
                       ))}
@@ -516,12 +517,12 @@ export function MilestoneManagerApp() {
 
                     {/* Latest narrative update */}
                     {mUpdates.length > 0 && (
-                      <div className="p-3 bg-slate-900/80 border border-slate-800 rounded-lg text-xs space-y-1">
-                        <div className="flex items-center justify-between text-slate-400">
-                          <span className="font-semibold text-slate-300">Catatan Pembaruan Terkini:</span>
+                      <div className="p-3 bg-background/80 border border-border rounded-lg text-xs space-y-1">
+                        <div className="flex items-center justify-between text-muted-foreground">
+                          <span className="font-semibold text-foreground">Catatan Pembaruan Terkini:</span>
                           <span className="text-[10px]">{new Date(mUpdates[0].createdAt).toLocaleDateString()}</span>
                         </div>
-                        <p className="text-slate-300 italic leading-relaxed">"{mUpdates[0].content}"</p>
+                        <p className="text-foreground italic leading-relaxed">"{mUpdates[0].content}"</p>
                       </div>
                     )}
                   </div>
@@ -535,15 +536,15 @@ export function MilestoneManagerApp() {
         {activeTab === "board" && (
           <div className="space-y-4">
             {/* Filter Bar */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700 rounded-xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-card/80 border border-border rounded-xl">
               <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Cari milestone, pemilik, deskripsi..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                  className="w-full pl-9 pr-3 py-1.5 bg-background border border-border rounded-lg text-xs md:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-amber-500"
                 />
               </div>
 
@@ -551,7 +552,7 @@ export function MilestoneManagerApp() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-amber-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                 >
                   <option value="all">Semua Status</option>
                   <option value="on_track">On Track</option>
@@ -571,11 +572,11 @@ export function MilestoneManagerApp() {
                 return (
                   <div
                     key={m.id}
-                    className="p-5 bg-slate-800/80 border border-slate-700 hover:border-slate-600 rounded-xl flex flex-col justify-between transition space-y-4"
+                    className="p-5 bg-card/80 border border-border hover:border-border rounded-xl flex flex-col justify-between transition space-y-4"
                   >
                     <div className="space-y-2.5">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                        <span className="text-xs font-mono text-muted-foreground flex items-center gap-1.5">
                           <Calendar className="w-3.5 h-3.5 text-amber-400" />
                           {m.targetDate}
                         </span>
@@ -585,25 +586,25 @@ export function MilestoneManagerApp() {
                       <div>
                         <h3
                           onClick={() => setSelectedMilestoneId(m.id)}
-                          className="font-bold text-base text-slate-100 cursor-pointer hover:text-amber-400 transition"
+                          className="font-bold text-base text-foreground cursor-pointer hover:text-amber-400 transition"
                         >
                           {m.title}
                         </h3>
                         {m.description && (
-                          <p className="text-xs text-slate-400 line-clamp-2 mt-1 leading-relaxed">
+                          <p className="text-xs text-muted-foreground line-clamp-2 mt-1 leading-relaxed">
                             {m.description}
                           </p>
                         )}
                       </div>
 
-                      <div className="text-[11px] text-slate-400 pt-1 space-y-1">
-                        <div>Penanggung Jawab: <span className="text-slate-200">{m.ownerName}</span></div>
-                        <div>Total Prasyarat: <span className="text-slate-200">{prereqs.length} entitas</span></div>
+                      <div className="text-[11px] text-muted-foreground pt-1 space-y-1">
+                        <div>Penanggung Jawab: <span className="text-foreground">{m.ownerName}</span></div>
+                        <div>Total Prasyarat: <span className="text-foreground">{prereqs.length} entitas</span></div>
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs">
-                      <span className="text-[11px] text-slate-400">
+                    <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs">
+                      <span className="text-[11px] text-muted-foreground">
                         Readiness: <strong className="text-white capitalize">{r.overallStatus.replace("_", " ")}</strong>
                       </span>
 
@@ -626,16 +627,16 @@ export function MilestoneManagerApp() {
       {/* MODAL: DETAIL MILESTONE & PREREQUISITES */}
       {selectedMilestoneId && activeMilestone && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-3xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-3xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400 font-mono">Target: {activeMilestone.targetDate}</span>
+                  <span className="text-xs text-muted-foreground font-mono">Target: {activeMilestone.targetDate}</span>
                   {getStatusBadge(activeMilestone.status)}
                 </div>
                 <h3 className="font-bold text-lg text-white mt-1">{activeMilestone.title}</h3>
               </div>
-              <button onClick={() => setSelectedMilestoneId(null)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setSelectedMilestoneId(null)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -643,9 +644,9 @@ export function MilestoneManagerApp() {
             <div className="space-y-4">
               {/* Readiness summary */}
               {activeReadiness && (
-                <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between">
+                <div className="p-4 bg-card/80 border border-border rounded-xl flex items-center justify-between">
                   <div>
-                    <div className="text-xs text-slate-400">Computed Readiness Status</div>
+                    <div className="text-xs text-muted-foreground">Computed Readiness Status</div>
                     <div className="text-xl font-bold uppercase tracking-wider text-amber-400 mt-0.5">
                       {activeReadiness.overallStatus.replace("_", " ")}
                     </div>
@@ -673,14 +674,14 @@ export function MilestoneManagerApp() {
               {/* PREREQUISITES LIST */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-sm text-slate-200 flex items-center gap-2">
+                  <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
                     <CheckSquare className="w-4 h-4 text-amber-400" />
                     Prasyarat Lintas-Entitas (Prerequisites)
                   </h4>
                 </div>
 
                 {activePrereqs.length === 0 ? (
-                  <div className="p-3 bg-slate-800/40 border border-slate-700/60 rounded text-xs text-slate-500 italic">
+                  <div className="p-3 bg-card/40 border border-border/60 rounded text-xs text-muted-foreground italic">
                     Belum ada prasyarat. Tambahkan Project, Goal, Task, atau Deliverable di bawah.
                   </div>
                 ) : (
@@ -688,10 +689,10 @@ export function MilestoneManagerApp() {
                     {activePrereqs.map((p) => (
                       <div
                         key={p.id}
-                        className="p-3 bg-slate-800/60 border border-slate-700 rounded-lg flex items-center justify-between text-xs"
+                        className="p-3 bg-card/60 border border-border rounded-lg flex items-center justify-between text-xs"
                       >
                         <div className="space-y-1">
-                          <div className="font-semibold text-slate-200 flex items-center gap-2">
+                          <div className="font-semibold text-foreground flex items-center gap-2">
                             {getSourceIcon(p.sourceType)}
                             <span>{p.title}</span>
                             {p.isCritical && (
@@ -700,7 +701,7 @@ export function MilestoneManagerApp() {
                               </span>
                             )}
                           </div>
-                          <div className="text-[11px] text-slate-400">
+                          <div className="text-[11px] text-muted-foreground">
                             Aplikasi: {p.sourceType} • Status: {p.currentStatus}
                           </div>
                         </div>
@@ -709,7 +710,7 @@ export function MilestoneManagerApp() {
                           <select
                             value={p.currentStatus}
                             onChange={(e) => updatePrerequisiteStatus(p.id, e.target.value as any)}
-                            className="px-2 py-1 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none"
+                            className="px-2 py-1 bg-background border border-border rounded text-xs text-foreground focus:outline-none"
                           >
                             <option value="completed">Completed</option>
                             <option value="on_track">On Track</option>
@@ -723,7 +724,7 @@ export function MilestoneManagerApp() {
                             className={`px-2 py-1 rounded text-[11px] border font-medium ${
                               p.isCritical
                                 ? "bg-rose-500/10 text-rose-300 border-rose-500/30"
-                                : "bg-slate-700 text-slate-300 border-slate-600"
+                                : "bg-card text-foreground border-border"
                             }`}
                           >
                             {p.isCritical ? "Kritis" : "Opsional"}
@@ -731,7 +732,7 @@ export function MilestoneManagerApp() {
 
                           <button
                             onClick={() => removePrerequisite(p.id)}
-                            className="text-slate-500 hover:text-rose-400 p-1"
+                            className="text-muted-foreground hover:text-rose-400 p-1"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -742,20 +743,20 @@ export function MilestoneManagerApp() {
                 )}
 
                 {/* Add Prerequisite Form */}
-                <form onSubmit={handleAddPrerequisite} className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-2">
-                  <div className="text-xs font-semibold text-slate-300">Tautkan Prasyarat Baru:</div>
+                <form onSubmit={handleAddPrerequisite} className="p-3 bg-background border border-border rounded-lg space-y-2">
+                  <div className="text-xs font-semibold text-foreground">Tautkan Prasyarat Baru:</div>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                     <input
                       type="text"
                       placeholder="Nama Project / Deliverable / Task"
                       value={newPreTitle}
                       onChange={(e) => setNewPreTitle(e.target.value)}
-                      className="md:col-span-2 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-amber-500"
+                      className="md:col-span-2 px-2.5 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-amber-500"
                     />
                     <select
                       value={newPreSource}
                       onChange={(e) => setNewPreSource(e.target.value as any)}
-                      className="px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-amber-500"
+                      className="px-2 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-amber-500"
                     >
                       <option value="project">Project Manager (#03)</option>
                       <option value="goal">Goal Manager (#31)</option>
@@ -773,20 +774,20 @@ export function MilestoneManagerApp() {
               </div>
 
               {/* NARRATIVE UPDATES */}
-              <div className="space-y-3 pt-2 border-t border-slate-800">
-                <h4 className="font-bold text-sm text-slate-200 flex items-center gap-2">
+              <div className="space-y-3 pt-2 border-t border-border">
+                <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
                   <MessageSquare className="w-4 h-4 text-sky-400" />
                   Catatan Naratif Mingguan ke Stakeholder
                 </h4>
 
                 <div className="space-y-2 max-h-36 overflow-y-auto">
                   {activeUpdates.map((u) => (
-                    <div key={u.id} className="p-2.5 bg-slate-800/60 border border-slate-700 rounded text-xs space-y-1">
-                      <div className="flex justify-between text-slate-400 text-[10px]">
+                    <div key={u.id} className="p-2.5 bg-card/60 border border-border rounded text-xs space-y-1">
+                      <div className="flex justify-between text-muted-foreground text-[10px]">
                         <span>{u.authorName}</span>
                         <span>{new Date(u.createdAt).toLocaleDateString()}</span>
                       </div>
-                      <p className="text-slate-200 leading-relaxed">"{u.content}"</p>
+                      <p className="text-foreground leading-relaxed">"{u.content}"</p>
                     </div>
                   ))}
                 </div>
@@ -797,7 +798,7 @@ export function MilestoneManagerApp() {
                     placeholder="Tulis update kualitatif mingguan..."
                     value={newNarrative}
                     onChange={(e) => setNewNarrative(e.target.value)}
-                    className="flex-1 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-amber-500"
+                    className="flex-1 px-2.5 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-amber-500"
                   />
                   <button
                     type="submit"
@@ -809,7 +810,7 @@ export function MilestoneManagerApp() {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-3 border-t border-slate-800">
+            <div className="flex justify-between items-center pt-3 border-t border-border">
               <button
                 onClick={() => {
                   deleteMilestone(activeMilestone.id);
@@ -824,7 +825,7 @@ export function MilestoneManagerApp() {
 
               <button
                 onClick={() => setSelectedMilestoneId(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold"
+                className="px-4 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-semibold"
               >
                 Tutup
               </button>
@@ -836,17 +837,17 @@ export function MilestoneManagerApp() {
       {/* MODAL: CREATE MILESTONE */}
       {isNewMilestoneOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Rumuskan Milestone Strategis Baru</h3>
-              <button onClick={() => setIsNewMilestoneOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsNewMilestoneOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateMilestone} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Nama Milestone <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -855,24 +856,24 @@ export function MilestoneManagerApp() {
                   placeholder="mis. Peluncuran Nasional Produk X"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Konteks Strategis</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Konteks Strategis</label>
                 <textarea
                   rows={2}
                   placeholder="Signifikansi checkpoint ini bagi organisasi..."
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-foreground mb-1">
                     Tanggal Target <span className="text-rose-400">*</span>
                   </label>
                   <input
@@ -880,27 +881,27 @@ export function MilestoneManagerApp() {
                     required
                     value={newTargetDate}
                     onChange={(e) => setNewTargetDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Penanggung Jawab</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Penanggung Jawab</label>
                   <input
                     type="text"
                     placeholder="mis. Head of PMO"
                     value={newOwner}
                     onChange={(e) => setNewOwner(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsNewMilestoneOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>

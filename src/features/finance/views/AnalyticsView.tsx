@@ -103,7 +103,7 @@ export function AnalyticsView() {
                   <span className="font-medium text-muted-foreground">0%</span>
                 </div>
                 <div className="w-full bg-background rounded-full h-1.5 border border-border overflow-hidden">
-                  <div className="h-full rounded-full bg-gray-500" style={{ width: "0%" }}></div>
+                  <div className="h-full rounded-full bg-muted-foreground/30" style={{ width: "0%" }}></div>
                 </div>
                 <p className="text-xs text-muted-foreground/70 mt-1">
                   Belum ada data (Target &gt; 20%)
@@ -116,7 +116,7 @@ export function AnalyticsView() {
                   <span className="font-medium text-muted-foreground">0%</span>
                 </div>
                 <div className="w-full bg-background rounded-full h-1.5 border border-border overflow-hidden">
-                  <div className="h-full rounded-full bg-gray-500" style={{ width: "0%" }}></div>
+                  <div className="h-full rounded-full bg-muted-foreground/30" style={{ width: "0%" }}></div>
                 </div>
                 <p className="text-xs text-muted-foreground/70 mt-1">
                   Belum ada data (Target &lt; 30%)

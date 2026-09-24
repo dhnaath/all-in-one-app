@@ -28,6 +28,7 @@ import {
   Compass,
 } from "lucide-react";
 import { useWebClipperStore } from "./store";
+import { useShellSections } from "@/app/shell-sections";
 import { ClipType, ClipStatus, Clip } from "./types";
 
 export function WebClipperApp() {
@@ -145,6 +146,50 @@ export function WebClipperApp() {
     };
   }, [clips, isOldUnprocessed]);
 
+  // Publish this app's collections + folders as shell sections (sidebar + header).
+  useShellSections([
+    {
+      id: "inbox",
+      label: "Inbox (Unprocessed)",
+      icon: Inbox,
+      active: activeView === "inbox",
+      onSelect: () => {
+        setActiveView("inbox");
+        setSelectedFolderId(null);
+      },
+    },
+    {
+      id: "highlights",
+      label: "Highlights Only",
+      icon: Highlighter,
+      active: activeView === "highlights",
+      onSelect: () => {
+        setActiveView("highlights");
+        setSelectedFolderId(null);
+      },
+    },
+    {
+      id: "promoted",
+      label: "Promoted",
+      icon: CheckCircle2,
+      active: activeView === "promoted",
+      onSelect: () => {
+        setActiveView("promoted");
+        setSelectedFolderId(null);
+      },
+    },
+    ...folders.map((fld) => ({
+      id: fld.id,
+      label: fld.name,
+      icon: Folder,
+      active: activeView === "folder" && selectedFolderId === fld.id,
+      onSelect: () => {
+        setActiveView("folder");
+        setSelectedFolderId(fld.id);
+      },
+    })),
+  ]);
+
   const handleCaptureSubmit = () => {
     if (!clipTitle.trim() || !clipUrl.trim()) return;
 
@@ -216,24 +261,24 @@ export function WebClipperApp() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] bg-slate-50 dark:bg-zinc-950 text-slate-800 dark:text-zinc-100 overflow-hidden font-sans">
+    <div className="flex flex-col h-[calc(100vh-4rem)] bg-muted/40 dark:bg-background text-foreground dark:text-foreground overflow-hidden font-sans">
       {/* Top Bar Header */}
-      <div className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 px-4 py-3 shrink-0 flex items-center justify-between shadow-2xs">
+      <div className="bg-card dark:bg-background border-b border-border dark:border-border px-4 py-3 shrink-0 flex items-center justify-between shadow-2xs">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white border border-slate-300 dark:border-zinc-700 shadow-xs flex items-center justify-center text-zinc-900 dark:text-zinc-100 shrink-0 font-bold">
+          <div className="w-9 h-9 rounded-xl bg-card border border-border dark:border-border shadow-xs flex items-center justify-center text-foreground dark:text-foreground shrink-0 font-bold">
             <Scissors className="size-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-base font-bold text-slate-900 dark:text-zinc-100">Web Clipper</h1>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 font-semibold text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
+              <h1 className="text-base font-bold text-foreground dark:text-foreground">Web Clipper</h1>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted dark:bg-card font-semibold text-muted-foreground dark:text-foreground border border-border dark:border-border">
                 #17 Standalone
               </span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 font-semibold border border-teal-200 dark:border-teal-800">
                 Web Capture Layer
               </span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-zinc-400">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
               Titik tangkap konten web cepat: simpan artikel, ekstrak teks & highlight untuk dipromosikan
             </p>
           </div>
@@ -247,14 +292,14 @@ export function WebClipperApp() {
           )}
           <button
             onClick={() => setIsStatsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border dark:border-border text-xs font-medium hover:bg-muted/40 dark:hover:bg-card transition-colors"
           >
-            <BarChart3 className="size-3.5 text-slate-500" />
+            <BarChart3 className="size-3.5 text-muted-foreground" />
             Statistik ({stats.promotionRate} promoted)
           </button>
           <button
             onClick={() => setIsClipModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-semibold hover:opacity-90 shadow-xs transition-opacity"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-foreground dark:bg-card text-background dark:text-foreground text-xs font-semibold hover:opacity-90 shadow-xs transition-opacity"
           >
             <Plus className="size-4" />
             Klip Halaman Web
@@ -265,9 +310,9 @@ export function WebClipperApp() {
       {/* Main Workspace Layout */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar: Navigation & Folders */}
-        <div className="w-60 bg-slate-50 dark:bg-zinc-900/50 border-r border-slate-200 dark:border-zinc-800 flex flex-col shrink-0">
-          <div className="p-3 border-b border-slate-200 dark:border-zinc-800 space-y-1">
-            <span className="text-[11px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider px-2">
+        <div className="w-60 bg-muted/40 dark:bg-background/50 border-r border-border dark:border-border flex flex-col shrink-0">
+          <div className="p-3 border-b border-border dark:border-border space-y-1">
+            <span className="text-[11px] font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider px-2">
               Koleksi & Alur Tangkap
             </span>
             <button
@@ -277,15 +322,15 @@ export function WebClipperApp() {
               }}
               className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 activeView === "inbox"
-                  ? "bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 shadow-2xs font-semibold"
-                  : "text-slate-600 dark:text-zinc-400 hover:bg-slate-100"
+                  ? "bg-card dark:bg-card text-foreground dark:text-foreground shadow-2xs font-semibold"
+                  : "text-muted-foreground dark:text-muted-foreground hover:bg-muted"
               }`}
             >
               <div className="flex items-center gap-2">
                 <Inbox className="size-3.5 text-blue-500" />
                 <span>Inbox (Unprocessed)</span>
               </div>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-zinc-700 text-slate-600">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted dark:bg-card text-muted-foreground">
                 {clips.filter((c) => c.status === "unprocessed").length}
               </span>
             </button>
@@ -297,15 +342,15 @@ export function WebClipperApp() {
               }}
               className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 activeView === "highlights"
-                  ? "bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 shadow-2xs font-semibold"
-                  : "text-slate-600 dark:text-zinc-400 hover:bg-slate-100"
+                  ? "bg-card dark:bg-card text-foreground dark:text-foreground shadow-2xs font-semibold"
+                  : "text-muted-foreground dark:text-muted-foreground hover:bg-muted"
               }`}
             >
               <div className="flex items-center gap-2">
                 <Highlighter className="size-3.5 text-amber-500" />
                 <span>Highlights Only</span>
               </div>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-zinc-700 text-slate-600">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted dark:bg-card text-muted-foreground">
                 {highlights.length}
               </span>
             </button>
@@ -318,7 +363,7 @@ export function WebClipperApp() {
               className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 activeView === "promoted"
                   ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800 font-semibold"
-                  : "text-slate-600 dark:text-zinc-400 hover:bg-slate-100"
+                  : "text-muted-foreground dark:text-muted-foreground hover:bg-muted"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -331,7 +376,7 @@ export function WebClipperApp() {
           {/* Folders (§7) */}
           <div className="flex-1 overflow-y-auto p-3 space-y-1">
             <div className="flex items-center justify-between px-2 py-1">
-              <span className="text-[11px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">
                 Folder / Topik
               </span>
               <button
@@ -355,14 +400,14 @@ export function WebClipperApp() {
                   className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                     isSelected
                       ? "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-semibold border border-blue-200"
-                      : "text-slate-700 dark:text-zinc-300 hover:bg-slate-100"
+                      : "text-foreground dark:text-foreground hover:bg-muted"
                   }`}
                 >
                   <div className="flex items-center gap-2 truncate">
-                    <Folder className="size-3.5 text-slate-400 shrink-0" />
+                    <Folder className="size-3.5 text-muted-foreground shrink-0" />
                     <span className="truncate">{fld.name}</span>
                   </div>
-                  <span className="text-[10px] text-slate-400">{count}</span>
+                  <span className="text-[10px] text-muted-foreground">{count}</span>
                 </button>
               );
             })}
@@ -370,24 +415,24 @@ export function WebClipperApp() {
         </div>
 
         {/* Center Panel: Clips List */}
-        <div className="w-80 bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 flex flex-col shrink-0">
-          <div className="p-3 border-b border-slate-200 dark:border-zinc-800">
+        <div className="w-80 bg-card dark:bg-background border-r border-border dark:border-border flex flex-col shrink-0">
+          <div className="p-3 border-b border-border dark:border-border">
             <div className="relative">
-              <Search className="size-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+              <Search className="size-3.5 absolute left-2.5 top-2.5 text-muted-foreground" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari klip, url, kata kunci..."
-                className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 text-xs outline-none focus:ring-1 focus:ring-teal-500"
+                className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card text-xs outline-none focus:ring-1 focus:ring-teal-500"
               />
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-zinc-800/60">
+          <div className="flex-1 overflow-y-auto divide-y divide-border dark:divide-border/60">
             {activeView === "highlights" ? (
               highlights.length === 0 ? (
-                <div className="p-6 text-center text-slate-400 text-xs">Belum ada highlight.</div>
+                <div className="p-6 text-center text-muted-foreground text-xs">Belum ada highlight.</div>
               ) : (
                 highlights.map((hl) => {
                   const parentClip = clips.find((c) => c.id === hl.clipId);
@@ -395,21 +440,21 @@ export function WebClipperApp() {
                     <div
                       key={hl.id}
                       onClick={() => setSelectedClipId(hl.clipId)}
-                      className="p-3.5 hover:bg-slate-50 cursor-pointer space-y-1 text-xs"
+                      className="p-3.5 hover:bg-muted/40 cursor-pointer space-y-1 text-xs"
                     >
-                      <div className="text-[10px] text-slate-400">
+                      <div className="text-[10px] text-muted-foreground">
                         Dari: {parentClip?.sourcePage.title}
                       </div>
-                      <p className="bg-amber-100/60 dark:bg-amber-950/40 p-2 rounded-lg font-medium text-slate-800 dark:text-zinc-200">
+                      <p className="bg-amber-100/60 dark:bg-amber-950/40 p-2 rounded-lg font-medium text-foreground dark:text-foreground">
                         &ldquo;{hl.text}&rdquo;
                       </p>
-                      {hl.note && <div className="text-[11px] text-slate-500 italic">Catatan: {hl.note}</div>}
+                      {hl.note && <div className="text-[11px] text-muted-foreground italic">Catatan: {hl.note}</div>}
                     </div>
                   );
                 })
               )
             ) : filteredClips.length === 0 ? (
-              <div className="p-6 text-center text-slate-400 text-xs">
+              <div className="p-6 text-center text-muted-foreground text-xs">
                 Tidak ada klip web di tampilan ini.
               </div>
             ) : (
@@ -425,7 +470,7 @@ export function WebClipperApp() {
                     className={`w-full text-left p-3.5 transition-colors ${
                       isSelected
                         ? "bg-teal-50/70 dark:bg-teal-950/30 border-l-3 border-teal-600"
-                        : "hover:bg-slate-50 dark:hover:bg-zinc-800/50"
+                        : "hover:bg-muted/40 dark:hover:bg-card/50"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1 mb-1">
@@ -438,13 +483,13 @@ export function WebClipperApp() {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 line-clamp-2">
+                    <h3 className="text-xs font-bold text-foreground dark:text-foreground line-clamp-2">
                       {c.sourcePage.title}
                     </h3>
-                    <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                    <p className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5">
                       {c.content?.rawContent?.slice(0, 90) || c.note || "(Tanpa ringkasan)"}
                     </p>
-                    <div className="flex items-center gap-3 mt-2 text-[10px] text-slate-400">
+                    <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground">
                       <span>{c.type}</span>
                       {hlCount > 0 && <span>{hlCount} highlights</span>}
                     </div>
@@ -456,13 +501,13 @@ export function WebClipperApp() {
         </div>
 
         {/* Right Panel: Clip Reader & Promotion Engine */}
-        <div className="flex-1 bg-slate-50 dark:bg-zinc-950 overflow-y-auto flex flex-col">
+        <div className="flex-1 bg-muted/40 dark:bg-background overflow-y-auto flex flex-col">
           {selectedClip ? (
             <div className="p-6 space-y-6 max-w-4xl mx-auto w-full">
               {/* Promotion Bar (§8 & §15) */}
-              <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-4 shadow-2xs flex flex-wrap items-center justify-between gap-3">
+              <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-4 shadow-2xs flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
                     Tindak Lanjut Klip:
                   </span>
                   <span
@@ -479,7 +524,7 @@ export function WebClipperApp() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <button
                     onClick={() => handlePromoteAction("notes")}
-                    className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-800 dark:text-zinc-200 text-xs font-semibold hover:bg-slate-200 transition-colors flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-lg bg-muted dark:bg-card text-foreground dark:text-foreground text-xs font-semibold hover:bg-muted transition-colors flex items-center gap-1.5"
                   >
                     <FileText className="size-3.5 text-blue-500" />
                     Promote ke Notes (#12)
@@ -502,11 +547,11 @@ export function WebClipperApp() {
               </div>
 
               {/* Source Header Card */}
-              <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 shadow-2xs space-y-3">
+              <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-6 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Globe className="size-4 text-blue-500" />
-                    <span className="font-semibold text-slate-700 dark:text-zinc-300">
+                    <span className="font-semibold text-foreground dark:text-foreground">
                       {selectedClip.sourcePage.domain}
                     </span>
                     <span>&bull;</span>
@@ -525,49 +570,49 @@ export function WebClipperApp() {
                       href={selectedClip.sourcePage.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs flex items-center gap-1"
+                      className="p-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted text-xs flex items-center gap-1"
                     >
                       <ExternalLink className="size-3.5" />
                     </a>
                     <button
                       onClick={() => deleteClip(selectedClip.id)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600"
+                      className="p-1.5 rounded-lg text-muted-foreground hover:text-rose-600"
                     >
                       <Trash2 className="size-3.5" />
                     </button>
                   </div>
                 </div>
 
-                <h2 className="text-lg font-bold text-slate-900 dark:text-zinc-100">
+                <h2 className="text-lg font-bold text-foreground dark:text-foreground">
                   {selectedClip.sourcePage.title}
                 </h2>
 
                 {selectedClip.note && (
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-zinc-800/60 border border-slate-100 text-xs text-slate-600">
-                    <span className="font-bold text-slate-800 dark:text-zinc-200">Catatan Tangkap: </span>
+                  <div className="p-3 rounded-xl bg-muted/40 dark:bg-card/60 border border-border text-xs text-muted-foreground">
+                    <span className="font-bold text-foreground dark:text-foreground">Catatan Tangkap: </span>
                     {selectedClip.note}
                   </div>
                 )}
               </div>
 
               {/* Reader View Content */}
-              <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 shadow-2xs space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-zinc-800">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-6 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-border dark:border-border">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Konten Asli Tersimpan ({selectedClip.content?.wordCount || 0} kata)
                   </span>
-                  <span className="text-[10px] text-slate-400">Readability Extraction</span>
+                  <span className="text-[10px] text-muted-foreground">Readability Extraction</span>
                 </div>
 
-                <div className="prose prose-slate dark:prose-invert max-w-none text-xs leading-relaxed whitespace-pre-wrap font-sans text-slate-700 dark:text-zinc-300">
+                <div className="prose prose-slate dark:prose-invert max-w-none text-xs leading-relaxed whitespace-pre-wrap font-sans text-foreground dark:text-foreground">
                   {selectedClip.content?.rawContent || "(Tidak ada konten teks tersimpan)"}
                 </div>
               </div>
 
               {/* Highlights Section (§6) */}
               {clipHighlights.length > 0 && (
-                <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 shadow-2xs space-y-3">
-                  <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+                <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-5 shadow-2xs space-y-3">
+                  <h3 className="text-xs font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
                     <Highlighter className="size-4 text-amber-500" />
                     Highlights & Kutipan Kunci ({clipHighlights.length})
                   </h3>
@@ -578,18 +623,18 @@ export function WebClipperApp() {
                         className="p-3 rounded-xl border border-amber-100 bg-amber-50/50 dark:bg-amber-950/20 text-xs space-y-1"
                       >
                         <div className="flex items-center justify-between">
-                          <p className="font-medium text-slate-800 dark:text-zinc-200">
+                          <p className="font-medium text-foreground dark:text-foreground">
                             &ldquo;{hl.text}&rdquo;
                           </p>
                           <button
                             onClick={() => deleteHighlight(hl.id)}
-                            className="text-slate-400 hover:text-rose-600"
+                            className="text-muted-foreground hover:text-rose-600"
                           >
                             <Trash2 className="size-3" />
                           </button>
                         </div>
                         {hl.note && (
-                          <div className="text-[11px] text-slate-500 italic">Catatan: {hl.note}</div>
+                          <div className="text-[11px] text-muted-foreground italic">Catatan: {hl.note}</div>
                         )}
                       </div>
                     ))}
@@ -598,7 +643,7 @@ export function WebClipperApp() {
               )}
             </div>
           ) : (
-            <div className="flex-1 flex items-center justify-center text-slate-400 text-xs">
+            <div className="flex-1 flex items-center justify-center text-muted-foreground text-xs">
               Pilih klip dari daftar atau klip URL baru.
             </div>
           )}
@@ -608,8 +653,8 @@ export function WebClipperApp() {
       {/* Modal: Capture Page Simulator */}
       {isClipModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-lg p-5 space-y-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-lg p-5 space-y-4">
+            <h3 className="text-sm font-bold text-foreground dark:text-foreground flex items-center gap-2">
               <Scissors className="size-4 text-teal-500" />
               Tangkap Konten Web (Web Clipper Engine §3)
             </h3>
@@ -621,7 +666,7 @@ export function WebClipperApp() {
                   value={clipUrl}
                   onChange={(e) => setClipUrl(e.target.value)}
                   placeholder="https://example.com/article"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
 
@@ -632,7 +677,7 @@ export function WebClipperApp() {
                   value={clipTitle}
                   onChange={(e) => setClipTitle(e.target.value)}
                   placeholder="Mis. Panduan Arsitektur Sistem..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
 
@@ -642,7 +687,7 @@ export function WebClipperApp() {
                   <select
                     value={clipType}
                     onChange={(e) => setClipType(e.target.value as ClipType)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                   >
                     <option value="article">Article (Mode Reader)</option>
                     <option value="full_page">Full Page (Halaman Penuh)</option>
@@ -655,7 +700,7 @@ export function WebClipperApp() {
                   <select
                     value={clipFolderId}
                     onChange={(e) => setClipFolderId(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                   >
                     <option value="">(Inbox Tanpa Folder)</option>
                     {folders.map((f) => (
@@ -674,7 +719,7 @@ export function WebClipperApp() {
                   value={clipContent}
                   onChange={(e) => setClipContent(e.target.value)}
                   placeholder="Salin atau ketik konten yang ditangkap dari web..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
 
@@ -685,7 +730,7 @@ export function WebClipperApp() {
                   value={clipNote}
                   onChange={(e) => setClipNote(e.target.value)}
                   placeholder="Tujuan menyimpan klip ini..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
             </div>
@@ -693,7 +738,7 @@ export function WebClipperApp() {
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsClipModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -711,7 +756,7 @@ export function WebClipperApp() {
       {/* Modal: Add Highlight */}
       {isNewHighlightModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-4">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-5 space-y-4">
             <h3 className="text-sm font-bold flex items-center gap-2">
               <Highlighter className="size-4 text-amber-500" />
               Tandai Highlight Teks (§6)
@@ -724,7 +769,7 @@ export function WebClipperApp() {
                   value={highlightText}
                   onChange={(e) => setHighlightText(e.target.value)}
                   placeholder="Kutipan penting dari artikel..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
               <div>
@@ -734,14 +779,14 @@ export function WebClipperApp() {
                   value={highlightNote}
                   onChange={(e) => setHighlightNote(e.target.value)}
                   placeholder="Mengapa kutipan ini penting..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsNewHighlightModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -759,7 +804,7 @@ export function WebClipperApp() {
       {/* Modal: New Folder */}
       {isNewFolderModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-4">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-5 space-y-4">
             <h3 className="text-sm font-bold flex items-center gap-2">
               <FolderPlus className="size-4 text-blue-500" />
               Folder Koleksi Baru
@@ -772,14 +817,14 @@ export function WebClipperApp() {
                   value={newFolderName}
                   onChange={(e) => setNewFolderName(e.target.value)}
                   placeholder="Mis. Riset Keuangan..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsNewFolderModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -803,23 +848,23 @@ export function WebClipperApp() {
       {/* Modal: Statistics (§11) */}
       {isStatsModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-6 space-y-4">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-6 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2">
                 <BarChart3 className="size-4 text-teal-500" />
                 Statistik Web Clipper (§11)
               </h3>
               <button onClick={() => setIsStatsModalOpen(false)}>
-                <X className="size-4 text-slate-400" />
+                <X className="size-4 text-muted-foreground" />
               </button>
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-center">
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700">
-                <div className="text-2xl font-bold text-slate-900 dark:text-zinc-100">
+              <div className="p-4 rounded-xl bg-muted/40 dark:bg-card border border-border dark:border-border">
+                <div className="text-2xl font-bold text-foreground dark:text-foreground">
                   {stats.total}
                 </div>
-                <div className="text-[10px] uppercase text-slate-400 font-semibold mt-1">
+                <div className="text-[10px] uppercase text-muted-foreground font-semibold mt-1">
                   Total Klip Ditangkap
                 </div>
               </div>
@@ -834,16 +879,16 @@ export function WebClipperApp() {
             </div>
 
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-zinc-800">
-                <span className="text-slate-500">Klip Belum Diproses (Inbox):</span>
+              <div className="flex justify-between py-1 border-b border-border dark:border-border">
+                <span className="text-muted-foreground">Klip Belum Diproses (Inbox):</span>
                 <span className="font-bold">{stats.unprocessed} Klip</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-zinc-800">
-                <span className="text-slate-500">Klip Lama (&gt; 14 Hari):</span>
+              <div className="flex justify-between py-1 border-b border-border dark:border-border">
+                <span className="text-muted-foreground">Klip Lama (&gt; 14 Hari):</span>
                 <span className="font-bold text-amber-600">{stats.oldUnprocessed} Klip</span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-slate-500">Domain Paling Sering Di-klip:</span>
+                <span className="text-muted-foreground">Domain Paling Sering Di-klip:</span>
                 <span className="font-bold text-teal-600">{stats.topDomain}</span>
               </div>
             </div>
@@ -851,7 +896,7 @@ export function WebClipperApp() {
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => setIsStatsModalOpen(false)}
-                className="px-4 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold"
+                className="px-4 py-1.5 rounded-lg bg-foreground text-background text-xs font-semibold"
               >
                 Tutup
               </button>

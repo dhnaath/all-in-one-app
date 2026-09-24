@@ -31,6 +31,7 @@ import {
   Task,
 } from "./types";
 import { useTaskManager } from "./store";
+import { useShellSections } from "@/app/shell-sections";
 import { TaskListView } from "./components/TaskListView";
 import { TaskBoardView } from "./components/TaskBoardView";
 import { TaskCalendarView } from "./components/TaskCalendarView";
@@ -58,6 +59,15 @@ export function TaskManagerApp() {
   const [selectedProjectId, setSelectedProjectId] = useState<string>("all");
   const [selectedTagId, setSelectedTagId] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+
+  useShellSections([
+    { id: "list", label: "List", icon: ListTodo, active: viewMode === "list", onSelect: () => setViewMode("list") },
+    { id: "board", label: "Board", icon: Kanban, active: viewMode === "board", onSelect: () => setViewMode("board") },
+    { id: "calendar", label: "Kalender", icon: Calendar, active: viewMode === "calendar", onSelect: () => setViewMode("calendar") },
+    { id: "timeline", label: "Timeline", icon: GitBranch, active: viewMode === "timeline", onSelect: () => setViewMode("timeline") },
+    { id: "table", label: "Tabel", icon: TableIcon, active: viewMode === "table", onSelect: () => setViewMode("table") },
+    { id: "priority", label: "Eisenhower", icon: AlertTriangle, active: viewMode === "priority", onSelect: () => setViewMode("priority") },
+  ]);
 
   // Quick Capture Input state
   const [quickTitle, setQuickTitle] = useState("");

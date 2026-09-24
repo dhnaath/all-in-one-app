@@ -346,7 +346,7 @@ export function TickTickLayout({ onBack }: TickTickLayoutProps = {}) {
                 <div className="flex-1 overflow-y-auto p-6 scrollbar-hide">
                   {/* Title */}
                   <div className="flex items-start mb-6">
-                    <button className="mr-3 mt-1.5 text-gray-300 hover:text-blue-500 transition-colors shrink-0">
+                    <button className="mr-3 mt-1.5 text-foreground hover:text-blue-500 transition-colors shrink-0">
                       <Circle size={22} strokeWidth={2.5} />
                     </button>
                     <textarea
@@ -391,13 +391,13 @@ export function TickTickLayout({ onBack }: TickTickLayoutProps = {}) {
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center text-sm group">
-                        <button className="text-gray-300 hover:text-blue-500 mr-2 shrink-0">
+                        <button className="text-foreground hover:text-blue-500 mr-2 shrink-0">
                           <Circle size={16} strokeWidth={2.5} />
                         </button>
                         <span className="text-card-foreground flex-1">Outline structure</span>
                         <X
                           size={14}
-                          className="text-gray-300 opacity-0 group-hover:opacity-100 cursor-pointer hover:text-rose-500"
+                          className="text-foreground opacity-0 group-hover:opacity-100 cursor-pointer hover:text-rose-500"
                         />
                       </div>
                       <div className="flex items-center text-sm text-blue-500 mt-2 cursor-pointer hover:text-blue-600 font-medium">

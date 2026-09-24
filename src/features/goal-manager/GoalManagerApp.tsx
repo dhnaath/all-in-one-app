@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useMemo } from "react";
 import {
   Target,
@@ -247,12 +248,12 @@ export function GoalManagerApp() {
       case "paused":
         return <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">Paused</span>;
       case "abandoned":
-        return <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-500/20 text-slate-400 border border-slate-600">Abandoned</span>;
+        return <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-muted-foreground/30/20 text-muted-foreground border border-border">Abandoned</span>;
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       {/* Toast */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-emerald-400 animate-in fade-in slide-in-from-bottom-4">
@@ -262,7 +263,7 @@ export function GoalManagerApp() {
       )}
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+      <ShellHeader>
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-gradient-to-tr from-emerald-600 to-teal-600 rounded-xl shadow-lg shadow-teal-500/20">
@@ -274,11 +275,11 @@ export function GoalManagerApp() {
                 <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   App #31
                 </span>
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-muted-foreground">
                   Puncak Hierarki Motivasi • Agregasi Task, Habit, Project & Metrik
                 </span>
               </div>
-              <p className="text-xs md:text-sm text-slate-400">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Menjawab "untuk apa semua itu dilakukan" dengan agregasi progres deterministik dan tinjauan berkala.
               </p>
             </div>
@@ -294,14 +295,14 @@ export function GoalManagerApp() {
             <span>Rumuskan Goal Baru</span>
           </button>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-slate-800/80 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
         <button
           onClick={() => setActiveTab("board")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "board" ? "bg-emerald-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "board" ? "bg-emerald-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -311,7 +312,7 @@ export function GoalManagerApp() {
         <button
           onClick={() => setActiveTab("tree")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "tree" ? "bg-emerald-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "tree" ? "bg-emerald-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <FolderTree className="w-4 h-4 text-teal-400" />
@@ -321,7 +322,7 @@ export function GoalManagerApp() {
         <button
           onClick={() => setActiveTab("progress_trend")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "progress_trend" ? "bg-emerald-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "progress_trend" ? "bg-emerald-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <TrendingUp className="w-4 h-4 text-sky-400" />
@@ -331,7 +332,7 @@ export function GoalManagerApp() {
         <button
           onClick={() => setActiveTab("stats")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-emerald-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "stats" ? "bg-emerald-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <BarChart3 className="w-4 h-4 text-amber-400" />
@@ -345,67 +346,67 @@ export function GoalManagerApp() {
         {activeTab === "stats" && (
           <div className="space-y-6 max-w-4xl">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Goals</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Total Goals</div>
                 <div className="text-3xl font-extrabold text-white mt-1">{stats.total}</div>
-                <div className="text-xs text-slate-500 mt-1">{stats.active} sedang aktif</div>
+                <div className="text-xs text-muted-foreground mt-1">{stats.active} sedang aktif</div>
               </div>
 
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Rasio Tercapai</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Rasio Tercapai</div>
                 <div className="text-3xl font-extrabold text-emerald-400 mt-1">{stats.achievedRatio}%</div>
-                <div className="text-xs text-slate-500 mt-1">{stats.achieved} berhasil dari total final</div>
+                <div className="text-xs text-muted-foreground mt-1">{stats.achieved} berhasil dari total final</div>
               </div>
 
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Rata-Rata Contributor</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Rata-Rata Contributor</div>
                 <div className="text-3xl font-extrabold text-teal-400 mt-1">{stats.avgContributors}</div>
-                <div className="text-xs text-slate-500 mt-1">Per Goal (Task, Habit, Project)</div>
+                <div className="text-xs text-muted-foreground mt-1">Per Goal (Task, Habit, Project)</div>
               </div>
 
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Check-In</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Total Check-In</div>
                 <div className="text-3xl font-extrabold text-sky-400 mt-1">{checkIns.length}</div>
-                <div className="text-xs text-slate-500 mt-1">Evaluasi berkala tercatat</div>
+                <div className="text-xs text-muted-foreground mt-1">Evaluasi berkala tercatat</div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-                <h4 className="font-semibold text-slate-200 mb-3 text-sm flex items-center gap-2">
+              <div className="p-5 bg-card/60 border border-border rounded-xl">
+                <h4 className="font-semibold text-foreground mb-3 text-sm flex items-center gap-2">
                   <Target className="w-4 h-4 text-emerald-400" />
                   Distribusi Kategori
                 </h4>
                 <div className="space-y-2">
                   {Object.entries(stats.catCounts).map(([cat, count]) => (
-                    <div key={cat} className="flex items-center justify-between text-xs py-1 border-b border-slate-700/40">
-                      <span className="text-slate-300">{cat}</span>
-                      <span className="px-2 py-0.5 bg-slate-700 rounded text-slate-300 font-semibold">{count} Goals</span>
+                    <div key={cat} className="flex items-center justify-between text-xs py-1 border-b border-border/40">
+                      <span className="text-foreground">{cat}</span>
+                      <span className="px-2 py-0.5 bg-card rounded text-foreground font-semibold">{count} Goals</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-                <h4 className="font-semibold text-slate-200 mb-3 text-sm flex items-center gap-2">
+              <div className="p-5 bg-card/60 border border-border rounded-xl">
+                <h4 className="font-semibold text-foreground mb-3 text-sm flex items-center gap-2">
                   <Clock className="w-4 h-4 text-amber-400" />
                   Status Siklus Hidup
                 </h4>
                 <div className="space-y-2 text-xs">
-                  <div className="flex justify-between py-1 border-b border-slate-700/40">
+                  <div className="flex justify-between py-1 border-b border-border/40">
                     <span className="text-emerald-400">Aktif Berjalan</span>
                     <span className="font-bold text-white">{stats.active}</span>
                   </div>
-                  <div className="flex justify-between py-1 border-b border-slate-700/40">
+                  <div className="flex justify-between py-1 border-b border-border/40">
                     <span className="text-sky-400">Tercapai (Achieved)</span>
                     <span className="font-bold text-white">{stats.achieved}</span>
                   </div>
-                  <div className="flex justify-between py-1 border-b border-slate-700/40">
+                  <div className="flex justify-between py-1 border-b border-border/40">
                     <span className="text-amber-400">Ditunda (Paused)</span>
                     <span className="font-bold text-white">{stats.paused}</span>
                   </div>
-                  <div className="flex justify-between py-1 border-b border-slate-700/40">
-                    <span className="text-slate-400">Dibatalkan (Abandoned)</span>
+                  <div className="flex justify-between py-1 border-b border-border/40">
+                    <span className="text-muted-foreground">Dibatalkan (Abandoned)</span>
                     <span className="font-bold text-white">{stats.abandoned}</span>
                   </div>
                 </div>
@@ -417,7 +418,7 @@ export function GoalManagerApp() {
         {/* HIERARCHICAL SUB-GOALS VIEW */}
         {activeTab === "tree" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400">
+            <div className="p-4 bg-card/40 border border-border/60 rounded-xl text-xs text-muted-foreground">
               Menampilkan hierarki payung Goal besar dan dekomposisi Sub-goal pendukung.
             </div>
 
@@ -427,29 +428,29 @@ export function GoalManagerApp() {
                 const prog = getGoalProgress(parent.id);
 
                 return (
-                  <div key={parent.id} className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-4">
+                  <div key={parent.id} className="p-5 bg-card/80 border border-border rounded-xl space-y-4">
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="px-2 py-0.5 text-[10px] rounded bg-emerald-500/20 text-emerald-300 font-semibold">
                             {parent.category}
                           </span>
-                          <span className="text-xs text-slate-400">{getStatusBadge(parent.status)}</span>
+                          <span className="text-xs text-muted-foreground">{getStatusBadge(parent.status)}</span>
                         </div>
                         <h3
                           onClick={() => setSelectedGoalId(parent.id)}
-                          className="text-base font-bold text-slate-100 hover:text-emerald-400 cursor-pointer mt-1"
+                          className="text-base font-bold text-foreground hover:text-emerald-400 cursor-pointer mt-1"
                         >
                           {parent.title}
                         </h3>
                         {parent.description && (
-                          <p className="text-xs text-slate-400 mt-1">{parent.description}</p>
+                          <p className="text-xs text-muted-foreground mt-1">{parent.description}</p>
                         )}
                       </div>
 
                       <div className="text-right shrink-0">
                         <span className="text-xl font-extrabold text-emerald-400">{prog}%</span>
-                        <div className="w-24 bg-slate-700 h-2 rounded-full overflow-hidden mt-1">
+                        <div className="w-24 bg-card h-2 rounded-full overflow-hidden mt-1">
                           <div
                             className="bg-emerald-500 h-full transition-all duration-300"
                             style={{ width: `${prog}%` }}
@@ -460,8 +461,8 @@ export function GoalManagerApp() {
 
                     {/* Sub-goals tree branches */}
                     {subgoals.length > 0 && (
-                      <div className="pl-4 border-l-2 border-slate-700 space-y-2.5 mt-3">
-                        <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                      <div className="pl-4 border-l-2 border-border space-y-2.5 mt-3">
+                        <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                           Sub-Goals ({subgoals.length}):
                         </div>
                         {subgoals.map((sub) => {
@@ -470,14 +471,14 @@ export function GoalManagerApp() {
                             <div
                               key={sub.id}
                               onClick={() => setSelectedGoalId(sub.id)}
-                              className="p-3 bg-slate-900/80 border border-slate-700/80 hover:border-slate-600 rounded-lg flex items-center justify-between cursor-pointer transition text-xs"
+                              className="p-3 bg-background/80 border border-border/80 hover:border-border rounded-lg flex items-center justify-between cursor-pointer transition text-xs"
                             >
                               <div className="flex items-center gap-2">
-                                <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
-                                <span className="font-semibold text-slate-200">{sub.title}</span>
+                                <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                                <span className="font-semibold text-foreground">{sub.title}</span>
                               </div>
                               <div className="flex items-center gap-3">
-                                <span className="text-slate-400">{getStatusBadge(sub.status)}</span>
+                                <span className="text-muted-foreground">{getStatusBadge(sub.status)}</span>
                                 <span className="font-bold text-teal-400">{subProg}%</span>
                               </div>
                             </div>
@@ -495,38 +496,38 @@ export function GoalManagerApp() {
         {/* PROGRESS TREND & CHECKINS */}
         {activeTab === "progress_trend" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/60 border border-slate-700 rounded-xl flex items-center justify-between">
+            <div className="p-4 bg-card/60 border border-border rounded-xl flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-white">Log Tinjauan Berkala (Check-In)</h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Riwayat evaluasi manual, progress snapshot, dan refleksi berkala terhadap tujuan.
                 </p>
               </div>
             </div>
 
             {checkIns.length === 0 ? (
-              <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
-                <MessageSquare className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-                <p className="text-xs text-slate-400">Belum ada catatan check-in.</p>
+              <div className="p-12 text-center bg-card/40 border border-border/60 rounded-xl">
+                <MessageSquare className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground">Belum ada catatan check-in.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {checkIns.map((ci) => {
                   const g = goals.find((x) => x.id === ci.goalId);
                   return (
-                    <div key={ci.id} className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl space-y-2">
+                    <div key={ci.id} className="p-4 bg-card/80 border border-border rounded-xl space-y-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-sm text-slate-200">{g?.title || "Goal Terkait"}</span>
+                          <span className="font-bold text-sm text-foreground">{g?.title || "Goal Terkait"}</span>
                           <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/20 text-emerald-400">
                             {ci.progressSnapshot}% Progress
                           </span>
                         </div>
-                        <span className="text-[11px] text-slate-500">
+                        <span className="text-[11px] text-muted-foreground">
                           {new Date(ci.checkedAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-300 leading-relaxed bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                      <p className="text-xs text-foreground leading-relaxed bg-background/60 p-2.5 rounded-lg border border-border">
                         "{ci.note}"
                       </p>
                       {ci.numericValue !== undefined && (
@@ -546,15 +547,15 @@ export function GoalManagerApp() {
         {activeTab === "board" && (
           <div className="space-y-4">
             {/* Filter Bar */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700 rounded-xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-card/80 border border-border rounded-xl">
               <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Cari Goal, motivasi, target..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                  className="w-full pl-9 pr-3 py-1.5 bg-background border border-border rounded-lg text-xs md:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
@@ -562,7 +563,7 @@ export function GoalManagerApp() {
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-emerald-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-emerald-500"
                 >
                   <option value="all">Semua Kategori</option>
                   {categories.map((c) => (
@@ -575,7 +576,7 @@ export function GoalManagerApp() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-emerald-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-emerald-500"
                 >
                   <option value="all">Semua Status</option>
                   <option value="active">Active</option>
@@ -588,10 +589,10 @@ export function GoalManagerApp() {
 
             {/* Grid of Goals */}
             {filteredGoals.length === 0 ? (
-              <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
-                <Target className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                <h3 className="text-base font-semibold text-slate-300">Tidak ada Goal ditemukan</h3>
-                <p className="text-xs text-slate-500 mt-1">Coba sesuaikan filter atau tambahkan Goal baru.</p>
+              <div className="p-12 text-center bg-card/40 border border-border/60 rounded-xl">
+                <Target className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                <h3 className="text-base font-semibold text-foreground">Tidak ada Goal ditemukan</h3>
+                <p className="text-xs text-muted-foreground mt-1">Coba sesuaikan filter atau tambahkan Goal baru.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -603,7 +604,7 @@ export function GoalManagerApp() {
                   return (
                     <div
                       key={g.id}
-                      className="p-5 bg-slate-800/80 border border-slate-700 hover:border-slate-600 rounded-xl flex flex-col justify-between transition space-y-4"
+                      className="p-5 bg-card/80 border border-border hover:border-border rounded-xl flex flex-col justify-between transition space-y-4"
                     >
                       <div className="space-y-2.5">
                         <div className="flex items-center justify-between">
@@ -616,12 +617,12 @@ export function GoalManagerApp() {
                         <div>
                           <h3
                             onClick={() => setSelectedGoalId(g.id)}
-                            className="font-bold text-base text-slate-100 cursor-pointer hover:text-emerald-400 transition"
+                            className="font-bold text-base text-foreground cursor-pointer hover:text-emerald-400 transition"
                           >
                             {g.title}
                           </h3>
                           {g.description && (
-                            <p className="text-xs text-slate-400 line-clamp-2 mt-1 leading-relaxed">
+                            <p className="text-xs text-muted-foreground line-clamp-2 mt-1 leading-relaxed">
                               {g.description}
                             </p>
                           )}
@@ -630,10 +631,10 @@ export function GoalManagerApp() {
                         {/* Progress Bar */}
                         <div className="space-y-1 pt-1">
                           <div className="flex items-center justify-between text-xs">
-                            <span className="text-slate-400">Kemajuan</span>
+                            <span className="text-muted-foreground">Kemajuan</span>
                             <span className="font-extrabold text-emerald-400">{prog}%</span>
                           </div>
-                          <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                          <div className="w-full bg-card h-2 rounded-full overflow-hidden">
                             <div
                               className="bg-emerald-500 h-full transition-all duration-300"
                               style={{ width: `${prog}%` }}
@@ -642,7 +643,7 @@ export function GoalManagerApp() {
                         </div>
 
                         {/* Meta counts */}
-                        <div className="flex items-center gap-3 text-[11px] text-slate-400 pt-1">
+                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground pt-1">
                           <span>{goalCons.length} Kontributor</span>
                           <span>•</span>
                           <span>{goalMils.length} Milestone</span>
@@ -656,13 +657,13 @@ export function GoalManagerApp() {
                       </div>
 
                       {/* Footer Actions */}
-                      <div className="pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs">
+                      <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs">
                         <button
                           onClick={() => {
                             setCheckInGoalId(g.id);
                             setCheckInModalOpen(true);
                           }}
-                          className="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg font-medium flex items-center gap-1.5"
+                          className="px-2.5 py-1 bg-card hover:bg-muted-foreground/30 text-foreground rounded-lg font-medium flex items-center gap-1.5"
                         >
                           <MessageSquare className="w-3.5 h-3.5 text-teal-400" />
                           Check-In
@@ -688,8 +689,8 @@ export function GoalManagerApp() {
       {/* MODAL: DETAIL GOAL & CONTRIBUTORS */}
       {selectedGoalId && activeGoal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-3xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-3xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <div>
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 text-xs rounded bg-emerald-500/20 text-emerald-300 font-semibold">
@@ -699,20 +700,20 @@ export function GoalManagerApp() {
                 </div>
                 <h3 className="font-bold text-lg text-white mt-1">{activeGoal.title}</h3>
               </div>
-              <button onClick={() => setSelectedGoalId(null)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setSelectedGoalId(null)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-4">
               {/* Progress Summary Card */}
-              <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between">
+              <div className="p-4 bg-card/80 border border-border rounded-xl flex items-center justify-between">
                 <div>
-                  <div className="text-xs text-slate-400">Total Progres Terhitung</div>
+                  <div className="text-xs text-muted-foreground">Total Progres Terhitung</div>
                   <div className="text-2xl font-black text-emerald-400">
                     {getGoalProgress(activeGoal.id)}%
                   </div>
-                  <div className="text-[11px] text-slate-500 mt-0.5">
+                  <div className="text-[11px] text-muted-foreground mt-0.5">
                     Metrik: {activeGoal.progressMetric?.type.replace("_", " ")}
                   </div>
                 </div>
@@ -732,7 +733,7 @@ export function GoalManagerApp() {
                       setGoalStatus(activeGoal.id, activeGoal.status === "paused" ? "active" : "paused");
                       showToast(`Status diubah ke ${activeGoal.status === "paused" ? "Active" : "Paused"}`);
                     }}
-                    className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-xs font-semibold"
+                    className="px-3 py-1.5 bg-card hover:bg-muted-foreground/30 text-foreground rounded-lg text-xs font-semibold"
                   >
                     {activeGoal.status === "paused" ? "Resume" : "Pause"}
                   </button>
@@ -742,14 +743,14 @@ export function GoalManagerApp() {
               {/* CONTRIBUTORS SECTION */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-sm text-slate-200 flex items-center gap-2">
+                  <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
                     <Activity className="w-4 h-4 text-emerald-400" />
                     Kontributor Entitas (Task, Project, Habit, Metric)
                   </h4>
                 </div>
 
                 {activeContributors.length === 0 ? (
-                  <div className="p-3 bg-slate-800/40 border border-slate-700/60 rounded text-xs text-slate-500 italic">
+                  <div className="p-3 bg-card/40 border border-border/60 rounded text-xs text-muted-foreground italic">
                     Belum ada kontributor ditautkan. Tambahkan task, habit, atau metrik di bawah.
                   </div>
                 ) : (
@@ -757,16 +758,16 @@ export function GoalManagerApp() {
                     {activeContributors.map((c) => (
                       <div
                         key={c.id}
-                        className="p-3 bg-slate-800/60 border border-slate-700 rounded-lg flex items-center justify-between text-xs"
+                        className="p-3 bg-card/60 border border-border rounded-lg flex items-center justify-between text-xs"
                       >
                         <div className="space-y-1">
-                          <div className="font-semibold text-slate-200 flex items-center gap-2">
-                            <span className="px-1.5 py-0.5 rounded bg-slate-700 text-[10px] uppercase font-mono">
+                          <div className="font-semibold text-foreground flex items-center gap-2">
+                            <span className="px-1.5 py-0.5 rounded bg-card text-[10px] uppercase font-mono">
                               {c.sourceType}
                             </span>
                             {c.title}
                           </div>
-                          <div className="text-[11px] text-slate-400">
+                          <div className="text-[11px] text-muted-foreground">
                             Bobot: {c.weight * 100}% • Progress saat ini: {c.currentProgress}%
                           </div>
                         </div>
@@ -782,7 +783,7 @@ export function GoalManagerApp() {
                           />
                           <button
                             onClick={() => removeContributor(c.id)}
-                            className="text-slate-500 hover:text-rose-400 p-1"
+                            className="text-muted-foreground hover:text-rose-400 p-1"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -793,20 +794,20 @@ export function GoalManagerApp() {
                 )}
 
                 {/* Add Contributor Form */}
-                <form onSubmit={handleAddContributor} className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-2">
-                  <div className="text-xs font-semibold text-slate-300">Tautkan Kontributor Baru:</div>
+                <form onSubmit={handleAddContributor} className="p-3 bg-background border border-border rounded-lg space-y-2">
+                  <div className="text-xs font-semibold text-foreground">Tautkan Kontributor Baru:</div>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                     <input
                       type="text"
                       placeholder="Nama task / habit / metrik"
                       value={newConTitle}
                       onChange={(e) => setNewConTitle(e.target.value)}
-                      className="md:col-span-2 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+                      className="md:col-span-2 px-2.5 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-emerald-500"
                     />
                     <select
                       value={newConType}
                       onChange={(e) => setNewConType(e.target.value as any)}
-                      className="px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+                      className="px-2 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-emerald-500"
                     >
                       <option value="task">Task (#01)</option>
                       <option value="project">Project (#03)</option>
@@ -824,8 +825,8 @@ export function GoalManagerApp() {
               </div>
 
               {/* MILESTONES (GOAL CONTEXT) */}
-              <div className="space-y-3 pt-2 border-t border-slate-800">
-                <h4 className="font-bold text-sm text-slate-200 flex items-center gap-2">
+              <div className="space-y-3 pt-2 border-t border-border">
+                <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
                   <CheckSquare className="w-4 h-4 text-sky-400" />
                   Checkpoint & Milestone
                 </h4>
@@ -835,23 +836,23 @@ export function GoalManagerApp() {
                     <div
                       key={m.id}
                       onClick={() => toggleMilestone(m.id)}
-                      className="p-2.5 bg-slate-800/60 border border-slate-700 rounded flex items-center justify-between cursor-pointer hover:border-slate-500 text-xs"
+                      className="p-2.5 bg-card/60 border border-border rounded flex items-center justify-between cursor-pointer hover:border-border text-xs"
                     >
                       <div className="flex items-center gap-2.5">
                         <div
                           className={`size-4 rounded flex items-center justify-center border ${
                             m.status === "achieved"
-                              ? "bg-emerald-500 border-emerald-400 text-slate-950"
-                              : "border-slate-500"
+                              ? "bg-emerald-500 border-emerald-400 text-foreground"
+                              : "border-border"
                           }`}
                         >
                           {m.status === "achieved" && <Check className="w-3 h-3 stroke-[3]" />}
                         </div>
-                        <span className={m.status === "achieved" ? "line-through text-slate-400" : "text-slate-200 font-medium"}>
+                        <span className={m.status === "achieved" ? "line-through text-muted-foreground" : "text-foreground font-medium"}>
                           {m.title}
                         </span>
                       </div>
-                      <span className="text-[11px] text-slate-500">{m.targetDate}</span>
+                      <span className="text-[11px] text-muted-foreground">{m.targetDate}</span>
                     </div>
                   ))}
                 </div>
@@ -862,13 +863,13 @@ export function GoalManagerApp() {
                     placeholder="Milestone baru..."
                     value={newMsTitle}
                     onChange={(e) => setNewMsTitle(e.target.value)}
-                    className="flex-1 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+                    className="flex-1 px-2.5 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-emerald-500"
                   />
                   <input
                     type="date"
                     value={newMsDate}
                     onChange={(e) => setNewMsDate(e.target.value)}
-                    className="px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+                    className="px-2 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-emerald-500"
                   />
                   <button
                     type="submit"
@@ -880,7 +881,7 @@ export function GoalManagerApp() {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-3 border-t border-slate-800">
+            <div className="flex justify-between items-center pt-3 border-t border-border">
               <button
                 onClick={() => {
                   deleteGoal(activeGoal.id);
@@ -895,7 +896,7 @@ export function GoalManagerApp() {
 
               <button
                 onClick={() => setSelectedGoalId(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold"
+                className="px-4 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-semibold"
               >
                 Tutup
               </button>
@@ -907,17 +908,17 @@ export function GoalManagerApp() {
       {/* MODAL: CHECK-IN */}
       {checkInModalOpen && checkInGoalId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Catat Check-In & Evaluasi</h3>
-              <button onClick={() => setCheckInModalOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setCheckInModalOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleExecuteCheckIn} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Refleksi / Catatan Perkembangan <span className="text-rose-400">*</span>
                 </label>
                 <textarea
@@ -926,12 +927,12 @@ export function GoalManagerApp() {
                   placeholder="Apa yang telah dicapai? Adakah hambatan?"
                   value={checkInNote}
                   onChange={(e) => setCheckInNote(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Nilai Metrik Terkini (Opsional)
                 </label>
                 <input
@@ -939,15 +940,15 @@ export function GoalManagerApp() {
                   placeholder="mis. 72 (kg) atau 18 (klien)"
                   value={checkInNumeric}
                   onChange={(e) => setCheckInNumeric(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setCheckInModalOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>
@@ -966,17 +967,17 @@ export function GoalManagerApp() {
       {/* MODAL: CREATE GOAL */}
       {isNewGoalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Rumuskan Goal Baru</h3>
-              <button onClick={() => setIsNewGoalOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsNewGoalOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateGoal} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Nama Goal / Tujuan Besar <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -985,50 +986,50 @@ export function GoalManagerApp() {
                   placeholder="mis. Turun 5kg dalam 3 bulan"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Konteks & Motivasi</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Konteks & Motivasi</label>
                 <textarea
                   rows={2}
                   placeholder="Mengapa tujuan ini penting untuk dicapai?"
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Kategori</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Kategori</label>
                   <input
                     type="text"
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
                     placeholder="mis. Bisnis, Kesehatan, Finansial"
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-emerald-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Target Tanggal</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Target Tanggal</label>
                   <input
                     type="date"
                     value={newTargetDate}
                     onChange={(e) => setNewTargetDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-emerald-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Parent Goal (Opsional jika Sub-Goal)</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Parent Goal (Opsional jika Sub-Goal)</label>
                 <select
                   value={newParentGoalId}
                   onChange={(e) => setNewParentGoalId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-emerald-500"
                 >
                   <option value="">Tidak ada (Goal Mandiri)</option>
                   {rootGoals.map((rg) => (
@@ -1040,11 +1041,11 @@ export function GoalManagerApp() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Metrik Kemajuan Utama</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Metrik Kemajuan Utama</label>
                 <select
                   value={newMetricType}
                   onChange={(e) => setNewMetricType(e.target.value as any)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-emerald-500"
                 >
                   <option value="task_completion">Task Completion (% selesai)</option>
                   <option value="habit_consistency">Habit Consistency (tingkat kepatuhan)</option>
@@ -1054,34 +1055,34 @@ export function GoalManagerApp() {
               </div>
 
               {newMetricType === "numeric_target" && (
-                <div className="grid grid-cols-2 gap-3 p-3 bg-slate-950 border border-slate-800 rounded-lg">
+                <div className="grid grid-cols-2 gap-3 p-3 bg-background border border-border rounded-lg">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 mb-1">Target Angka</label>
+                    <label className="block text-[11px] font-semibold text-muted-foreground mb-1">Target Angka</label>
                     <input
                       type="number"
                       value={newTargetValue}
                       onChange={(e) => setNewTargetValue(Number(e.target.value))}
-                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-100"
+                      className="w-full px-2.5 py-1.5 bg-background border border-border rounded text-xs text-foreground"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 mb-1">Satuan</label>
+                    <label className="block text-[11px] font-semibold text-muted-foreground mb-1">Satuan</label>
                     <input
                       type="text"
                       value={newUnit}
                       onChange={(e) => setNewUnit(e.target.value)}
                       placeholder="mis. kg, klien, juta"
-                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-100"
+                      className="w-full px-2.5 py-1.5 bg-background border border-border rounded text-xs text-foreground"
                     />
                   </div>
                 </div>
               )}
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsNewGoalOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>

@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useMemo } from "react";
 import {
   Bell,
@@ -242,7 +243,7 @@ export function NotificationCenterApp() {
         return {
           label: "General",
           icon: Bell,
-          color: "text-slate-400 bg-slate-500/10 border-slate-500/30",
+          color: "text-muted-foreground bg-muted-foreground/30/10 border-border/30",
         };
     }
   };
@@ -273,7 +274,7 @@ export function NotificationCenterApp() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       {/* Toast Notification */}
       {notificationToast && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-indigo-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-indigo-400 animate-in fade-in slide-in-from-bottom-4">
@@ -283,7 +284,7 @@ export function NotificationCenterApp() {
       )}
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+      <ShellHeader>
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-gradient-to-tr from-amber-500 to-rose-600 rounded-xl shadow-lg shadow-rose-500/20">
@@ -301,7 +302,7 @@ export function NotificationCenterApp() {
                   </span>
                 )}
               </div>
-              <p className="text-xs md:text-sm text-slate-400">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Inbox terpadu lintas aplikasi untuk reminder, approval request, mention, assignment, dan sistem.
               </p>
             </div>
@@ -314,7 +315,7 @@ export function NotificationCenterApp() {
               markAllAsRead();
               showToast("Seluruh notifikasi telah ditandai sudah dibaca.");
             }}
-            className="flex items-center gap-2 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition"
           >
             <CheckCheck className="w-4 h-4 text-emerald-400" />
             <span>Tandai Semua Dibaca</span>
@@ -328,14 +329,14 @@ export function NotificationCenterApp() {
             <span>Simulasi Event Masuk</span>
           </button>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-slate-800/80 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
         <button
           onClick={() => setActiveTab("inbox")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "inbox" ? "bg-rose-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "inbox" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Inbox className="w-4 h-4" />
@@ -345,7 +346,7 @@ export function NotificationCenterApp() {
         <button
           onClick={() => setActiveTab("unread")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "unread" ? "bg-rose-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "unread" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Bell className="w-4 h-4 text-amber-400" />
@@ -355,7 +356,7 @@ export function NotificationCenterApp() {
         <button
           onClick={() => setActiveTab("by_type")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "by_type" ? "bg-rose-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "by_type" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Filter className="w-4 h-4 text-sky-400" />
@@ -365,7 +366,7 @@ export function NotificationCenterApp() {
         <button
           onClick={() => setActiveTab("by_app")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "by_app" ? "bg-rose-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "by_app" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <PackageCheck className="w-4 h-4 text-emerald-400" />
@@ -375,17 +376,17 @@ export function NotificationCenterApp() {
         <button
           onClick={() => setActiveTab("archived")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "archived" ? "bg-rose-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "archived" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
-          <Archive className="w-4 h-4 text-slate-400" />
+          <Archive className="w-4 h-4 text-muted-foreground" />
           <span>Archived ({stats.archived})</span>
         </button>
 
         <button
           onClick={() => setActiveTab("preferences")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "preferences" ? "bg-rose-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "preferences" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Settings className="w-4 h-4 text-indigo-400" />
@@ -395,7 +396,7 @@ export function NotificationCenterApp() {
         <button
           onClick={() => setActiveTab("stats")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-rose-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "stats" ? "bg-rose-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <BarChart3 className="w-4 h-4 text-purple-400" />
@@ -409,31 +410,31 @@ export function NotificationCenterApp() {
         {activeTab === "stats" && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Notifikasi</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Total Notifikasi</div>
                 <div className="text-3xl font-extrabold text-white mt-1">{stats.total}</div>
-                <div className="text-xs text-slate-500 mt-1">Diterima di seluruh channel</div>
+                <div className="text-xs text-muted-foreground mt-1">Diterima di seluruh channel</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Read Rate</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Read Rate</div>
                 <div className="text-3xl font-extrabold text-emerald-400 mt-1">{stats.readRate}%</div>
-                <div className="text-xs text-slate-500 mt-1">Rasio dibaca & diarsip</div>
+                <div className="text-xs text-muted-foreground mt-1">Rasio dibaca & diarsip</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Quick Action Rate</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Quick Action Rate</div>
                 <div className="text-3xl font-extrabold text-sky-400 mt-1">{stats.actionUsageRate}%</div>
-                <div className="text-xs text-slate-500 mt-1">{performedActionCount} aksi cepat dieksekusi</div>
+                <div className="text-xs text-muted-foreground mt-1">{performedActionCount} aksi cepat dieksekusi</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Avg Time to Read</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Avg Time to Read</div>
                 <div className="text-3xl font-extrabold text-purple-400 mt-1">12 mnt</div>
-                <div className="text-xs text-slate-500 mt-1">Kecepatan respons pengguna</div>
+                <div className="text-xs text-muted-foreground mt-1">Kecepatan respons pengguna</div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-                <h3 className="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+              <div className="p-5 bg-card/60 border border-border rounded-xl">
+                <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <Filter className="w-4 h-4 text-rose-400" />
                   Notifications by Type
                 </h3>
@@ -441,25 +442,25 @@ export function NotificationCenterApp() {
                   {Object.entries(stats.typeBreakdown).map(([t, count]) => {
                     const meta = getTypeMeta(t as any);
                     return (
-                      <div key={t} className="flex items-center justify-between text-sm py-1 border-b border-slate-700/40">
-                        <span className="capitalize text-slate-300">{meta.label}</span>
-                        <span className="px-2 py-0.5 bg-slate-700 text-slate-300 rounded text-xs font-medium">{count} pesan</span>
+                      <div key={t} className="flex items-center justify-between text-sm py-1 border-b border-border/40">
+                        <span className="capitalize text-foreground">{meta.label}</span>
+                        <span className="px-2 py-0.5 bg-card text-foreground rounded text-xs font-medium">{count} pesan</span>
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="p-5 bg-slate-800/60 border border-slate-700 rounded-xl">
-                <h3 className="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+              <div className="p-5 bg-card/60 border border-border rounded-xl">
+                <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <PackageCheck className="w-4 h-4 text-amber-400" />
                   Notifications by Source App
                 </h3>
                 <div className="space-y-2">
                   {Object.entries(stats.appBreakdown).map(([app, count]) => (
-                    <div key={app} className="flex items-center justify-between text-sm py-1 border-b border-slate-700/40">
-                      <span className="text-slate-300">{getSourceAppLabel(app)}</span>
-                      <span className="px-2 py-0.5 bg-slate-700 text-slate-300 rounded text-xs font-medium">{count} event</span>
+                    <div key={app} className="flex items-center justify-between text-sm py-1 border-b border-border/40">
+                      <span className="text-foreground">{getSourceAppLabel(app)}</span>
+                      <span className="px-2 py-0.5 bg-card text-foreground rounded text-xs font-medium">{count} event</span>
                     </div>
                   ))}
                 </div>
@@ -471,9 +472,9 @@ export function NotificationCenterApp() {
         {/* PREFERENCES VIEW */}
         {activeTab === "preferences" && (
           <div className="max-w-3xl space-y-6">
-            <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
+            <div className="p-5 bg-card/80 border border-border rounded-xl">
               <h2 className="text-lg font-bold text-white mb-1">Pengaturan Channel & Mute Notifikasi</h2>
-              <p className="text-xs text-slate-400 mb-4">
+              <p className="text-xs text-muted-foreground mb-4">
                 Atur jalur pengiriman untuk setiap tipe notifikasi (In-App, Push Browser, atau Email), atau bisukan tipe tertentu.
               </p>
 
@@ -501,8 +502,8 @@ export function NotificationCenterApp() {
                       key={pref.type}
                       className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                         pref.isMuted
-                          ? "bg-slate-900/60 border-slate-800 opacity-60"
-                          : "bg-slate-800 border-slate-700"
+                          ? "bg-background/60 border-border opacity-60"
+                          : "bg-card border-border"
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -510,8 +511,8 @@ export function NotificationCenterApp() {
                           <Icon className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="font-semibold text-sm text-slate-200">{meta.label}</div>
-                          <div className="text-[11px] text-slate-400">
+                          <div className="font-semibold text-sm text-foreground">{meta.label}</div>
+                          <div className="text-[11px] text-muted-foreground">
                             {pref.isMuted ? "Dibisukan (Tidak ada alert)" : "Alert aktif sesuai channel pilihan"}
                           </div>
                         </div>
@@ -524,7 +525,7 @@ export function NotificationCenterApp() {
                           className={`px-2.5 py-1 rounded text-xs font-medium border transition flex items-center gap-1 ${
                             pref.channels.includes("in_app")
                               ? "bg-indigo-600/30 text-indigo-300 border-indigo-500/50"
-                              : "bg-slate-700/40 text-slate-500 border-slate-700"
+                              : "bg-card/40 text-muted-foreground border-border"
                           }`}
                         >
                           <Inbox className="w-3 h-3" />
@@ -537,7 +538,7 @@ export function NotificationCenterApp() {
                           className={`px-2.5 py-1 rounded text-xs font-medium border transition flex items-center gap-1 ${
                             pref.channels.includes("push")
                               ? "bg-sky-600/30 text-sky-300 border-sky-500/50"
-                              : "bg-slate-700/40 text-slate-500 border-slate-700"
+                              : "bg-card/40 text-muted-foreground border-border"
                           }`}
                         >
                           <Smartphone className="w-3 h-3" />
@@ -550,7 +551,7 @@ export function NotificationCenterApp() {
                           className={`px-2.5 py-1 rounded text-xs font-medium border transition flex items-center gap-1 ${
                             pref.channels.includes("email")
                               ? "bg-amber-600/30 text-amber-300 border-amber-500/50"
-                              : "bg-slate-700/40 text-slate-500 border-slate-700"
+                              : "bg-card/40 text-muted-foreground border-border"
                           }`}
                         >
                           <Mail className="w-3 h-3" />
@@ -561,7 +562,7 @@ export function NotificationCenterApp() {
                         <button
                           onClick={toggleMute}
                           className={`p-1.5 rounded transition ${
-                            pref.isMuted ? "text-rose-400 bg-rose-500/20" : "text-slate-400 hover:text-slate-200"
+                            pref.isMuted ? "text-rose-400 bg-rose-500/20" : "text-muted-foreground hover:text-foreground"
                           }`}
                           title={pref.isMuted ? "Bunyikan Kembali" : "Bisukan Tipe Ini"}
                         >
@@ -580,20 +581,20 @@ export function NotificationCenterApp() {
         {activeTab !== "stats" && activeTab !== "preferences" && (
           <div className="space-y-4">
             {/* Search & Subfilters */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700 rounded-xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-card/80 border border-border rounded-xl">
               <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Cari notifikasi, pengirim, aplikasi..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-rose-500"
+                  className="w-full pl-9 pr-3 py-1.5 bg-background border border-border rounded-lg text-xs md:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-rose-500"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-2.5 top-2.5 text-slate-500 hover:text-slate-300"
+                    className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -608,7 +609,7 @@ export function NotificationCenterApp() {
                       key={cat}
                       onClick={() => setSelectedCategory(cat)}
                       className={`px-2.5 py-1 rounded text-xs font-medium capitalize shrink-0 ${
-                        selectedCategory === cat ? "bg-rose-600 text-white font-bold" : "bg-slate-700/60 text-slate-300 hover:bg-slate-700"
+                        selectedCategory === cat ? "bg-rose-600 text-background font-bold" : "bg-foreground/60 text-foreground hover:bg-foreground"
                       }`}
                     >
                       {cat.replace("_", " ")}
@@ -622,7 +623,7 @@ export function NotificationCenterApp() {
                 <select
                   value={selectedSourceApp}
                   onChange={(e) => setSelectedSourceApp(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-rose-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                 >
                   <option value="all">Semua Aplikasi</option>
                   <option value="task_manager">Task Manager (#01)</option>
@@ -638,19 +639,19 @@ export function NotificationCenterApp() {
               <div className="flex items-center gap-1.5 shrink-0 self-end md:self-center">
                 <button
                   onClick={() => setTimeFilter("all")}
-                  className={`px-2.5 py-1 text-xs rounded font-medium ${timeFilter === "all" ? "bg-slate-700 text-white" : "text-slate-400 hover:text-slate-200"}`}
+                  className={`px-2.5 py-1 text-xs rounded font-medium ${timeFilter === "all" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   Semua
                 </button>
                 <button
                   onClick={() => setTimeFilter("today")}
-                  className={`px-2.5 py-1 text-xs rounded font-medium ${timeFilter === "today" ? "bg-slate-700 text-white" : "text-slate-400 hover:text-slate-200"}`}
+                  className={`px-2.5 py-1 text-xs rounded font-medium ${timeFilter === "today" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   Hari Ini
                 </button>
                 <button
                   onClick={() => setTimeFilter("week")}
-                  className={`px-2.5 py-1 text-xs rounded font-medium ${timeFilter === "week" ? "bg-slate-700 text-white" : "text-slate-400 hover:text-slate-200"}`}
+                  className={`px-2.5 py-1 text-xs rounded font-medium ${timeFilter === "week" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   Minggu Ini
                 </button>
@@ -659,10 +660,10 @@ export function NotificationCenterApp() {
 
             {/* Notification Cards */}
             {filteredNotifications.length === 0 ? (
-              <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
-                <Inbox className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                <h3 className="text-base font-semibold text-slate-300">Tidak ada notifikasi</h3>
-                <p className="text-xs text-slate-500 mt-1">Inbox Anda bersih atau filter tidak menemukan hasil.</p>
+              <div className="p-12 text-center bg-card/40 border border-border/60 rounded-xl">
+                <Inbox className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                <h3 className="text-base font-semibold text-foreground">Tidak ada notifikasi</h3>
+                <p className="text-xs text-muted-foreground mt-1">Inbox Anda bersih atau filter tidak menemukan hasil.</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -676,8 +677,8 @@ export function NotificationCenterApp() {
                       key={notif.id}
                       className={`p-4 rounded-xl border transition duration-150 flex flex-col md:flex-row md:items-center justify-between gap-4 ${
                         isUnread
-                          ? "bg-slate-800/95 border-rose-500/40 shadow-sm"
-                          : "bg-slate-800/60 border-slate-700/70 opacity-90"
+                          ? "bg-card/95 border-rose-500/40 shadow-sm"
+                          : "bg-card/60 border-border/70 opacity-90"
                       }`}
                     >
                       <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -688,22 +689,22 @@ export function NotificationCenterApp() {
 
                         <div className="space-y-1 min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-semibold text-sm text-slate-100">{notif.title}</span>
+                            <span className="font-semibold text-sm text-foreground">{notif.title}</span>
                             {isUnread && (
                               <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
                             )}
-                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-700/70 text-slate-300 font-medium">
+                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-card/70 text-foreground font-medium">
                               {getSourceAppLabel(notif.sourceApp)}
                             </span>
                           </div>
 
                           {notif.body && (
-                            <p className="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                            <p className="text-xs text-foreground leading-relaxed line-clamp-2">
                               {notif.body}
                             </p>
                           )}
 
-                          <div className="text-[11px] text-slate-500 pt-0.5">
+                          <div className="text-[11px] text-muted-foreground pt-0.5">
                             {new Date(notif.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} •{" "}
                             {new Date(notif.createdAt).toLocaleDateString()}
                           </div>
@@ -749,7 +750,7 @@ export function NotificationCenterApp() {
                               markAsRead(notif.id);
                               showToast("Ditandai sudah dibaca.");
                             }}
-                            className="p-1.5 text-slate-400 hover:text-emerald-400 hover:bg-slate-700/60 rounded"
+                            className="p-1.5 text-muted-foreground hover:text-emerald-400 hover:bg-card/60 rounded"
                             title="Tandai Sudah Dibaca"
                           >
                             <Check className="w-4 h-4" />
@@ -760,7 +761,7 @@ export function NotificationCenterApp() {
                               markAsUnread(notif.id);
                               showToast("Ditandai belum dibaca.");
                             }}
-                            className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-700/60 rounded"
+                            className="p-1.5 text-muted-foreground hover:text-rose-400 hover:bg-card/60 rounded"
                             title="Tandai Belum Dibaca"
                           >
                             <RotateCcw className="w-3.5 h-3.5" />
@@ -773,7 +774,7 @@ export function NotificationCenterApp() {
                               unarchiveNotification(notif.id);
                               showToast("Notifikasi dipindahkan kembali ke Inbox.");
                             }}
-                            className="p-1.5 text-slate-400 hover:text-sky-400 hover:bg-slate-700/60 rounded"
+                            className="p-1.5 text-muted-foreground hover:text-sky-400 hover:bg-card/60 rounded"
                             title="Batal Arsip (Kembalikan ke Inbox)"
                           >
                             <Inbox className="w-4 h-4" />
@@ -784,7 +785,7 @@ export function NotificationCenterApp() {
                               archiveNotification(notif.id);
                               showToast("Notifikasi diarsipkan.");
                             }}
-                            className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-slate-700/60 rounded"
+                            className="p-1.5 text-muted-foreground hover:text-amber-400 hover:bg-card/60 rounded"
                             title="Arsipkan"
                           >
                             <Archive className="w-4 h-4" />
@@ -796,7 +797,7 @@ export function NotificationCenterApp() {
                             deleteNotification(notif.id);
                             showToast("Notifikasi dihapus permanen.");
                           }}
-                          className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-700/60 rounded"
+                          className="p-1.5 text-muted-foreground hover:text-rose-400 hover:bg-card/60 rounded"
                           title="Hapus"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -814,15 +815,15 @@ export function NotificationCenterApp() {
       {/* MODAL: SIMULASI EVENT NOTIFIKASI MASUK */}
       {isSimulateOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-amber-400" />
                 Simulasi Inbound Notification
               </h3>
               <button
                 onClick={() => setIsSimulateOpen(false)}
-                className="text-slate-400 hover:text-slate-200"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -830,13 +831,13 @@ export function NotificationCenterApp() {
 
             <form onSubmit={handleSimulateSubmit} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Aplikasi Pengirim
                 </label>
                 <select
                   value={simApp}
                   onChange={(e) => setSimApp(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                 >
                   <option value="deliverable_manager">Deliverable Manager (#20)</option>
                   <option value="reminder_manager">Reminder Manager (#05)</option>
@@ -848,13 +849,13 @@ export function NotificationCenterApp() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Tipe Notifikasi
                 </label>
                 <select
                   value={simType}
                   onChange={(e) => setSimType(e.target.value as any)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                 >
                   <option value="approval_request">Approval Request (dengan QuickAction)</option>
                   <option value="reminder">Reminder Trigger (dengan Complete Action)</option>
@@ -866,7 +867,7 @@ export function NotificationCenterApp() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Judul Notifikasi <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -875,12 +876,12 @@ export function NotificationCenterApp() {
                   placeholder="mis. Permintaan Approval Proposal Biaya"
                   value={simTitle}
                   onChange={(e) => setSimTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-rose-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Pesan / Detail
                 </label>
                 <textarea
@@ -888,15 +889,15 @@ export function NotificationCenterApp() {
                   placeholder="Detail isi notifikasi..."
                   value={simBody}
                   onChange={(e) => setSimBody(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-rose-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsSimulateOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>

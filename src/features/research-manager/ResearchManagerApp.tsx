@@ -26,6 +26,7 @@ import {
   Table as TableIcon,
 } from "lucide-react";
 import { useResearchManagerStore } from "./store";
+import { useShellSections } from "@/app/shell-sections";
 import {
   QuestionStatus,
   ResearchSourceType,
@@ -153,6 +154,18 @@ export function ResearchManagerApp() {
     };
   }, [questions, sources, evidences, conclusions]);
 
+  // Publish this app's research questions as shell sections → they appear in
+  // the left sidebar ("Di aplikasi ini") and as interactive header buttons.
+  useShellSections(
+    questions.map((q) => ({
+      id: q.id,
+      label: q.question,
+      icon: HelpCircle,
+      active: q.id === selectedQuestionId,
+      onSelect: () => setSelectedQuestionId(q.id),
+    })),
+  );
+
   const handleCreateQuestion = () => {
     if (!newQTitle.trim()) return;
     const created = addQuestion({
@@ -229,26 +242,26 @@ export function ResearchManagerApp() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] bg-slate-50 dark:bg-zinc-950 text-slate-800 dark:text-zinc-100 overflow-hidden font-sans">
+    <div className="flex flex-col h-[calc(100vh-4rem)] bg-muted/40 dark:bg-background text-foreground dark:text-foreground overflow-hidden font-sans">
       {/* Top Bar Header */}
-      <div className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 px-4 py-3 shrink-0 flex items-center justify-between shadow-2xs">
+      <div className="bg-card dark:bg-background border-b border-border dark:border-border px-4 py-3 shrink-0 flex items-center justify-between shadow-2xs">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white border border-slate-300 dark:border-zinc-700 shadow-xs flex items-center justify-center text-zinc-900 dark:text-zinc-100 shrink-0 font-bold">
+          <div className="w-9 h-9 rounded-xl bg-card border border-border dark:border-border shadow-xs flex items-center justify-center text-foreground dark:text-foreground shrink-0 font-bold">
             <Compass className="size-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-base font-bold text-slate-900 dark:text-zinc-100">
+              <h1 className="text-base font-bold text-foreground dark:text-foreground">
                 Research Manager
               </h1>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 font-semibold text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted dark:bg-card font-semibold text-muted-foreground dark:text-foreground border border-border dark:border-border">
                 #16 Standalone
               </span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">
                 Question → Evidence → Conclusion
               </span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-zinc-400">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
               Proses investigasi terstruktur dari pertanyaan awal hingga kesimpulan berbobot bukti kredibel
             </p>
           </div>
@@ -262,14 +275,14 @@ export function ResearchManagerApp() {
           )}
           <button
             onClick={() => setIsStatsModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border dark:border-border text-xs font-medium hover:bg-muted/40 dark:hover:bg-card transition-colors"
           >
-            <BarChart3 className="size-3.5 text-slate-500" />
+            <BarChart3 className="size-3.5 text-muted-foreground" />
             Statistik ({stats.answeredRatio} terjawab)
           </button>
           <button
             onClick={() => setIsNewQuestionModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-semibold hover:opacity-90 shadow-xs transition-opacity"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-foreground dark:bg-card text-background dark:text-foreground text-xs font-semibold hover:opacity-90 shadow-xs transition-opacity"
           >
             <Plus className="size-4" />
             Pertanyaan Riset Baru
@@ -280,24 +293,24 @@ export function ResearchManagerApp() {
       {/* Main Workspace Layout */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Panel: Questions List */}
-        <div className="w-80 bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 flex flex-col shrink-0">
-          <div className="p-3 border-b border-slate-200 dark:border-zinc-800 space-y-2">
+        <div className="w-80 bg-card dark:bg-background border-r border-border dark:border-border flex flex-col shrink-0">
+          <div className="p-3 border-b border-border dark:border-border space-y-2">
             <div className="relative">
-              <Search className="size-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+              <Search className="size-3.5 absolute left-2.5 top-2.5 text-muted-foreground" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari pertanyaan riset..."
-                className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 text-xs outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card text-xs outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-400 font-medium">Status Riset:</span>
+              <span className="text-muted-foreground font-medium">Status Riset:</span>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="text-xs bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-md px-2 py-0.5 outline-none"
+                className="text-xs bg-muted/40 dark:bg-card border border-border dark:border-border rounded-md px-2 py-0.5 outline-none"
               >
                 <option value="all">Semua Status</option>
                 <option value="open">Open (Belum Dimulai)</option>
@@ -308,7 +321,7 @@ export function ResearchManagerApp() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-zinc-800/60">
+          <div className="flex-1 overflow-y-auto divide-y divide-border dark:divide-border/60">
             {questions
               .filter((q) => {
                 if (statusFilter !== "all" && q.status !== statusFilter) return false;
@@ -332,7 +345,7 @@ export function ResearchManagerApp() {
                     className={`w-full text-left p-3.5 transition-colors ${
                       isSelected
                         ? "bg-indigo-50/70 dark:bg-indigo-950/30 border-l-3 border-indigo-600"
-                        : "hover:bg-slate-50 dark:hover:bg-zinc-800/50"
+                        : "hover:bg-muted/40 dark:hover:bg-card/50"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1 mb-1">
@@ -342,7 +355,7 @@ export function ResearchManagerApp() {
                             ? "bg-emerald-100 text-emerald-800"
                             : q.status === "in_progress"
                             ? "bg-blue-100 text-blue-800"
-                            : "bg-slate-100 text-slate-700"
+                            : "bg-muted text-foreground"
                         }`}
                       >
                         {q.status}
@@ -353,11 +366,11 @@ export function ResearchManagerApp() {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 line-clamp-2">
+                    <h3 className="text-xs font-bold text-foreground dark:text-foreground line-clamp-2">
                       {q.question}
                     </h3>
                     {q.context && (
-                      <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">{q.context}</p>
+                      <p className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5">{q.context}</p>
                     )}
                   </button>
                 );
@@ -366,11 +379,11 @@ export function ResearchManagerApp() {
         </div>
 
         {/* Right Panel: Investigation Workspace */}
-        <div className="flex-1 bg-slate-50 dark:bg-zinc-950 overflow-y-auto flex flex-col">
+        <div className="flex-1 bg-muted/40 dark:bg-background overflow-y-auto flex flex-col">
           {selectedQuestion ? (
             <div className="p-6 space-y-6 max-w-5xl mx-auto w-full">
               {/* Question Header Banner */}
-              <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 shadow-2xs space-y-3">
+              <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-5 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
                   <span
                     className={`text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${
@@ -394,7 +407,7 @@ export function ResearchManagerApp() {
                     )}
                     <button
                       onClick={() => deleteQuestion(selectedQuestion.id)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600"
+                      className="p-1.5 rounded-lg text-muted-foreground hover:text-rose-600"
                       title="Hapus Riset"
                     >
                       <Trash2 className="size-4" />
@@ -403,11 +416,11 @@ export function ResearchManagerApp() {
                 </div>
 
                 <div>
-                  <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-zinc-100">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground dark:text-foreground">
                     {selectedQuestion.question}
                   </h2>
                   {selectedQuestion.context && (
-                    <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                    <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1 leading-relaxed">
                       {selectedQuestion.context}
                     </p>
                   )}
@@ -415,8 +428,8 @@ export function ResearchManagerApp() {
 
                 {/* Sub-questions breakdown (§8) */}
                 {subQuestions.length > 0 && (
-                  <div className="pt-3 border-t border-slate-100 dark:border-zinc-800">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                  <div className="pt-3 border-t border-border dark:border-border">
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 flex items-center gap-1">
                       <Split className="size-3" /> Sub-pertanyaan Turunan ({subQuestions.length})
                     </div>
                     <div className="space-y-1">
@@ -424,12 +437,12 @@ export function ResearchManagerApp() {
                         <div
                           key={sq.id}
                           onClick={() => setSelectedQuestionId(sq.id)}
-                          className="text-xs p-2 rounded-lg bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 cursor-pointer flex items-center justify-between"
+                          className="text-xs p-2 rounded-lg bg-muted/40 dark:bg-card hover:bg-muted cursor-pointer flex items-center justify-between"
                         >
-                          <span className="font-medium text-slate-700 dark:text-zinc-300">
+                          <span className="font-medium text-foreground dark:text-foreground">
                             {sq.question}
                           </span>
-                          <span className="text-[10px] text-slate-400">{sq.status}</span>
+                          <span className="text-[10px] text-muted-foreground">{sq.status}</span>
                         </div>
                       ))}
                     </div>
@@ -440,9 +453,9 @@ export function ResearchManagerApp() {
               {/* Grid 2 Columns: Sources & Evidences */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Sources List (§4) */}
-                <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 shadow-2xs space-y-3">
+                <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-5 shadow-2xs space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+                    <h3 className="text-xs font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
                       <BookOpen className="size-4 text-blue-500" />
                       Sumber Investigasi ({qSources.length})
                     </h3>
@@ -456,14 +469,14 @@ export function ResearchManagerApp() {
 
                   <div className="space-y-2 max-h-72 overflow-y-auto">
                     {qSources.length === 0 ? (
-                      <p className="text-xs text-slate-400 italic">
+                      <p className="text-xs text-muted-foreground italic">
                         Belum ada sumber rujukan yang dianalisis.
                       </p>
                     ) : (
                       qSources.map((src) => (
                         <div
                           key={src.id}
-                          className="p-3 rounded-xl border border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/40 text-xs space-y-1"
+                          className="p-3 rounded-xl border border-border dark:border-border bg-muted/40/50 dark:bg-card/40 text-xs space-y-1"
                         >
                           <div className="flex items-center justify-between">
                             <span
@@ -477,16 +490,16 @@ export function ResearchManagerApp() {
                             </span>
                             <button
                               onClick={() => deleteSource(src.id)}
-                              className="text-slate-400 hover:text-rose-600"
+                              className="text-muted-foreground hover:text-rose-600"
                             >
                               <Trash2 className="size-3" />
                             </button>
                           </div>
-                          <div className="font-semibold text-slate-800 dark:text-zinc-200">
+                          <div className="font-semibold text-foreground dark:text-foreground">
                             {src.title}
                           </div>
                           {src.author && (
-                            <div className="text-[10px] text-slate-500">Penulis: {src.author}</div>
+                            <div className="text-[10px] text-muted-foreground">Penulis: {src.author}</div>
                           )}
                           {src.url && (
                             <a
@@ -505,9 +518,9 @@ export function ResearchManagerApp() {
                 </div>
 
                 {/* Evidence List (§5 Fakta & Pernyataan Kunci) */}
-                <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 shadow-2xs space-y-3">
+                <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-5 shadow-2xs space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+                    <h3 className="text-xs font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
                       <ShieldCheck className="size-4 text-emerald-500" />
                       Evidence & Bukti Fakta ({qEvidences.length})
                     </h3>
@@ -521,7 +534,7 @@ export function ResearchManagerApp() {
 
                   <div className="space-y-2 max-h-72 overflow-y-auto">
                     {qEvidences.length === 0 ? (
-                      <p className="text-xs text-slate-400 italic">
+                      <p className="text-xs text-muted-foreground italic">
                         Belum ada evidence yang diekstrak dari sumber.
                       </p>
                     ) : (
@@ -530,7 +543,7 @@ export function ResearchManagerApp() {
                         return (
                           <div
                             key={ev.id}
-                            className="p-3 rounded-xl border border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/40 text-xs space-y-1.5"
+                            className="p-3 rounded-xl border border-border dark:border-border bg-muted/40/50 dark:bg-card/40 text-xs space-y-1.5"
                           >
                             <div className="flex items-center justify-between">
                               <span
@@ -539,22 +552,22 @@ export function ResearchManagerApp() {
                                     ? "bg-emerald-100 text-emerald-800"
                                     : ev.supportType === "contradicts"
                                     ? "bg-rose-100 text-rose-800"
-                                    : "bg-slate-200 text-slate-700"
+                                    : "bg-muted text-foreground"
                                 }`}
                               >
                                 {ev.supportType} ({ev.strength})
                               </span>
                               <button
                                 onClick={() => deleteEvidence(ev.id)}
-                                className="text-slate-400 hover:text-rose-600"
+                                className="text-muted-foreground hover:text-rose-600"
                               >
                                 <Trash2 className="size-3" />
                               </button>
                             </div>
-                            <p className="text-slate-800 dark:text-zinc-200 font-medium">
+                            <p className="text-foreground dark:text-foreground font-medium">
                               &ldquo;{ev.statement}&rdquo;
                             </p>
-                            <div className="text-[10px] text-slate-400">
+                            <div className="text-[10px] text-muted-foreground">
                               Sumber: {src?.title || "Unknown Source"}
                             </div>
                           </div>
@@ -566,9 +579,9 @@ export function ResearchManagerApp() {
               </div>
 
               {/* Analysis Narrative (§6 Ruang Penalaran) */}
-              <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 shadow-2xs space-y-3">
+              <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-5 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+                  <h3 className="text-xs font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
                     <FileText className="size-4 text-purple-500" />
                     Penalaran & Analisis Naratif (§6)
                   </h3>
@@ -584,14 +597,14 @@ export function ResearchManagerApp() {
                   value={analysisText}
                   onChange={(e) => setAnalysisText(e.target.value)}
                   placeholder="Tulis sintesis penimbangan antar evidence: mis. Evidence A mendukung, namun Evidence B mengindikasikan batas throughput..."
-                  className="w-full text-xs p-3 rounded-xl border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 leading-relaxed outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full text-xs p-3 rounded-xl border border-border dark:border-border bg-muted/40 dark:bg-card leading-relaxed outline-none focus:ring-1 focus:ring-purple-500"
                 />
               </div>
 
               {/* Conclusion & Traceability (§7) */}
-              <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 shadow-2xs space-y-3">
+              <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl p-5 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+                  <h3 className="text-xs font-bold text-foreground dark:text-foreground flex items-center gap-1.5">
                     <TrendingUp className="size-4 text-emerald-500" />
                     Kesimpulan Akhir & Traceability Bukti (§7)
                   </h3>
@@ -626,7 +639,7 @@ export function ResearchManagerApp() {
                         {new Date(qConclusion.concludedAt).toLocaleDateString()}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-900 dark:text-zinc-100 font-semibold leading-relaxed">
+                    <p className="text-xs text-foreground dark:text-foreground font-semibold leading-relaxed">
                       {qConclusion.statement}
                     </p>
 
@@ -640,7 +653,7 @@ export function ResearchManagerApp() {
                           return (
                             <div
                               key={eid}
-                              className="text-[11px] text-slate-600 dark:text-zinc-300 flex items-center gap-1.5"
+                              className="text-[11px] text-muted-foreground dark:text-foreground flex items-center gap-1.5"
                             >
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                               {ev?.statement || "Evidence terverifikasi"}
@@ -651,14 +664,14 @@ export function ResearchManagerApp() {
                     </div>
                   </div>
                 ) : (
-                  <div className="p-6 text-center text-xs text-slate-400 border border-dashed rounded-xl">
+                  <div className="p-6 text-center text-xs text-muted-foreground border border-dashed rounded-xl">
                     Belum ada kesimpulan ditarik untuk pertanyaan ini.
                   </div>
                 )}
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex items-center justify-center text-slate-400 text-xs">
+            <div className="flex-1 flex items-center justify-center text-muted-foreground text-xs">
               Pilih pertanyaan riset dari daftar sebelah kiri.
             </div>
           )}
@@ -668,8 +681,8 @@ export function ResearchManagerApp() {
       {/* Modal: New Question */}
       {isNewQuestionModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-5 space-y-4">
+            <h3 className="text-sm font-bold text-foreground dark:text-foreground flex items-center gap-2">
               <Compass className="size-4 text-indigo-500" />
               Pertanyaan Riset Baru (§3)
             </h3>
@@ -681,7 +694,7 @@ export function ResearchManagerApp() {
                   value={newQTitle}
                   onChange={(e) => setNewQTitle(e.target.value)}
                   placeholder="Mis. Apakah RAG lebih hemat daripada fine-tuning?"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
               <div>
@@ -691,7 +704,7 @@ export function ResearchManagerApp() {
                   value={newQContext}
                   onChange={(e) => setNewQContext(e.target.value)}
                   placeholder="Mengapa pertanyaan ini krusial untuk dipelajari..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
               <div>
@@ -701,7 +714,7 @@ export function ResearchManagerApp() {
                 <select
                   value={newQParentId}
                   onChange={(e) => setNewQParentId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 >
                   <option value="">(Sebagai Riset Utama)</option>
                   {questions
@@ -720,14 +733,14 @@ export function ResearchManagerApp() {
                   value={newQTags}
                   onChange={(e) => setNewQTags(e.target.value)}
                   placeholder="RAG, LLM, Cost"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsNewQuestionModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -745,7 +758,7 @@ export function ResearchManagerApp() {
       {/* Modal: New Source */}
       {isNewSourceModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-4">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-5 space-y-4">
             <h3 className="text-sm font-bold flex items-center gap-2">
               <BookOpen className="size-4 text-blue-500" />
               Tambah Sumber Bahan Riset (§4)
@@ -758,7 +771,7 @@ export function ResearchManagerApp() {
                   value={newSrcTitle}
                   onChange={(e) => setNewSrcTitle(e.target.value)}
                   placeholder="Judul paper, artikel, atau buku..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -769,7 +782,7 @@ export function ResearchManagerApp() {
                     value={newSrcAuthor}
                     onChange={(e) => setNewSrcAuthor(e.target.value)}
                     placeholder="Nama institusi / peneliti"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                   />
                 </div>
                 <div>
@@ -777,7 +790,7 @@ export function ResearchManagerApp() {
                   <select
                     value={newSrcCred}
                     onChange={(e) => setNewSrcCred(e.target.value as CredibilityLevel)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                   >
                     <option value="high">High (Academic/Resmi)</option>
                     <option value="medium">Medium (Blog Industri)</option>
@@ -792,14 +805,14 @@ export function ResearchManagerApp() {
                   value={newSrcUrl}
                   onChange={(e) => setNewSrcUrl(e.target.value)}
                   placeholder="https://..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsNewSourceModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -817,7 +830,7 @@ export function ResearchManagerApp() {
       {/* Modal: New Evidence */}
       {isNewEvidenceModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-5 space-y-4">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-5 space-y-4">
             <h3 className="text-sm font-bold flex items-center gap-2">
               <ShieldCheck className="size-4 text-emerald-500" />
               Ekstrak Evidence / Fakta Kunci (§5)
@@ -828,7 +841,7 @@ export function ResearchManagerApp() {
                 <select
                   value={newEvSourceId}
                   onChange={(e) => setNewEvSourceId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 >
                   <option value="">-- Pilih Sumber --</option>
                   {qSources.map((s) => (
@@ -846,7 +859,7 @@ export function ResearchManagerApp() {
                   value={newEvStatement}
                   onChange={(e) => setNewEvStatement(e.target.value)}
                   placeholder="Potongan temuan spesifik dari sumber ini..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
 
@@ -856,7 +869,7 @@ export function ResearchManagerApp() {
                   <select
                     value={newEvSupportType}
                     onChange={(e) => setNewEvSupportType(e.target.value as SupportType)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                   >
                     <option value="supports">Supports (Mendukung hipotesis)</option>
                     <option value="contradicts">Contradicts (Menentang)</option>
@@ -868,7 +881,7 @@ export function ResearchManagerApp() {
                   <select
                     value={newEvStrength}
                     onChange={(e) => setNewEvStrength(e.target.value as EvidenceStrength)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                    className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                   >
                     <option value="strong">Strong (Kuat)</option>
                     <option value="moderate">Moderate</option>
@@ -880,7 +893,7 @@ export function ResearchManagerApp() {
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsNewEvidenceModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -898,12 +911,12 @@ export function ResearchManagerApp() {
       {/* Modal: Draft Conclusion */}
       {isConclusionModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-lg p-5 space-y-4">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-lg p-5 space-y-4">
             <h3 className="text-sm font-bold flex items-center gap-2">
               <TrendingUp className="size-4 text-emerald-500" />
               Tarik Kesimpulan Riset & Traceability (§7)
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-muted-foreground">
               Setiap kesimpulan WAJIB didasari minimal 1 Evidence terverifikasi agar dapat
               dipertanggungjawabkan secara saintifik.
             </p>
@@ -916,7 +929,7 @@ export function ResearchManagerApp() {
                   value={concStatement}
                   onChange={(e) => setConcStatement(e.target.value)}
                   placeholder="Jawaban komprehensif atas pertanyaan riset..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 />
               </div>
 
@@ -925,7 +938,7 @@ export function ResearchManagerApp() {
                 <select
                   value={concConfidence}
                   onChange={(e) => setConcConfidence(e.target.value as ConfidenceLevel)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800"
+                  className="w-full px-3 py-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card"
                 >
                   <option value="high">High (Bukti Konvergen & Kuat)</option>
                   <option value="medium">Medium (Sebagian Bukti Campuran)</option>
@@ -937,13 +950,13 @@ export function ResearchManagerApp() {
                 <label className="block font-semibold mb-1">
                   Evidence Pendukung Wajib (Traceability) *
                 </label>
-                <div className="max-h-36 overflow-y-auto space-y-1.5 p-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800">
+                <div className="max-h-36 overflow-y-auto space-y-1.5 p-2 rounded-lg border border-border dark:border-border bg-muted/40 dark:bg-card">
                   {qEvidences.map((ev) => {
                     const isChecked = concEvidenceIds.includes(ev.id);
                     return (
                       <label
                         key={ev.id}
-                        className="flex items-center gap-2 p-1 rounded hover:bg-slate-100 dark:hover:bg-zinc-700 cursor-pointer"
+                        className="flex items-center gap-2 p-1 rounded hover:bg-muted dark:hover:bg-card cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -968,7 +981,7 @@ export function ResearchManagerApp() {
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setIsConclusionModalOpen(false)}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs"
+                className="px-3 py-1.5 rounded-lg border border-border text-xs"
               >
                 Batal
               </button>
@@ -986,23 +999,23 @@ export function ResearchManagerApp() {
       {/* Modal: Statistics (§11) */}
       {isStatsModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-6 space-y-4">
+          <div className="bg-card dark:bg-background border border-border dark:border-border rounded-2xl w-full max-w-md p-6 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2">
                 <BarChart3 className="size-4 text-indigo-500" />
                 Statistik & Metrik Riset (§11)
               </h3>
               <button onClick={() => setIsStatsModalOpen(false)}>
-                <X className="size-4 text-slate-400" />
+                <X className="size-4 text-muted-foreground" />
               </button>
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-center">
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700">
-                <div className="text-2xl font-bold text-slate-900 dark:text-zinc-100">
+              <div className="p-4 rounded-xl bg-muted/40 dark:bg-card border border-border dark:border-border">
+                <div className="text-2xl font-bold text-foreground dark:text-foreground">
                   {stats.total}
                 </div>
-                <div className="text-[10px] uppercase text-slate-400 font-semibold mt-1">
+                <div className="text-[10px] uppercase text-muted-foreground font-semibold mt-1">
                   Total Pertanyaan
                 </div>
               </div>
@@ -1017,16 +1030,16 @@ export function ResearchManagerApp() {
             </div>
 
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-zinc-800">
-                <span className="text-slate-500">Rata-rata Sumber per Pertanyaan:</span>
+              <div className="flex justify-between py-1 border-b border-border dark:border-border">
+                <span className="text-muted-foreground">Rata-rata Sumber per Pertanyaan:</span>
                 <span className="font-bold">{stats.avgSources} Sumber</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-zinc-800">
-                <span className="text-slate-500">Rata-rata Evidence per Kesimpulan:</span>
+              <div className="flex justify-between py-1 border-b border-border dark:border-border">
+                <span className="text-muted-foreground">Rata-rata Evidence per Kesimpulan:</span>
                 <span className="font-bold">{stats.avgEvidence} Evidence</span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-slate-500">Status In Progress:</span>
+                <span className="text-muted-foreground">Status In Progress:</span>
                 <span className="font-bold">{stats.inProgress} Riset Aktif</span>
               </div>
             </div>
@@ -1034,7 +1047,7 @@ export function ResearchManagerApp() {
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => setIsStatsModalOpen(false)}
-                className="px-4 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold"
+                className="px-4 py-1.5 rounded-lg bg-foreground text-background text-xs font-semibold"
               >
                 Tutup
               </button>

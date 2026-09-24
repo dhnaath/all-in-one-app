@@ -552,7 +552,7 @@ export function CustomSlashEditor() {
                   blockClass = "text-xl font-bold mt-3 mb-1 text-card-foreground";
                 else if (block.type === "quote")
                   blockClass =
-                    "text-lg italic border-l-4 border-slate-800 pl-4 py-2 my-2 text-card-foreground";
+                    "text-lg italic border-l-4 border-border pl-4 py-2 my-2 text-card-foreground";
                 else if (block.type === "callout")
                   blockClass = "text-[15px] bg-blue-50 p-4 rounded-lg my-2 flex-1";
 
@@ -736,7 +736,7 @@ export function CustomSlashEditor() {
                           onInput={(e) => handleInput(e, i)}
                           onKeyDown={(e) => handleKeyDown(e, i)}
                           className={cn(
-                            "flex-1 outline-none empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300",
+                            "flex-1 outline-none empty:before:content-[attr(data-placeholder)] empty:before:text-foreground",
                             blockClass,
                             block.completed &&
                               block.type === "todo" &&

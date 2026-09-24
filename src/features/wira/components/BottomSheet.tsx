@@ -43,7 +43,7 @@ export function BottomSheet({
               <h2 className="text-xl font-bold text-foreground mx-auto">{title}</h2>
               <button
                 onClick={onClose}
-                className="absolute right-6 w-8 h-8 flex items-center justify-center bg-accent hover:bg-gray-300 rounded-full text-muted-foreground transition-colors"
+                className="absolute right-6 w-8 h-8 flex items-center justify-center bg-accent hover:bg-border rounded-full text-muted-foreground transition-colors"
               >
                 <X size={18} />
               </button>

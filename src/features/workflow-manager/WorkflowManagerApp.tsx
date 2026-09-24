@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useWorkflowStore } from "./store";
 import { Stage, Transition, WorkflowInstanceStatus } from "./types";
+import { useShellSections } from "@/app/shell-sections";
 
 type ViewTab = "designer" | "instances" | "instance_detail" | "sla_breach" | "stats";
 
@@ -114,6 +115,14 @@ export function WorkflowManagerApp() {
     };
   }, [definitions, instances, breachedInstances]);
 
+  useShellSections([
+    { id: "designer", label: "Workflow Designer", icon: Workflow, active: activeTab === "designer", onSelect: () => setActiveTab("designer") },
+    { id: "instances", label: `Active Pipelines (${stats.activeInstances})`, icon: Activity, active: activeTab === "instances", onSelect: () => setActiveTab("instances") },
+    { id: "instance_detail", label: "Audit Trail", icon: ListTree, active: activeTab === "instance_detail", onSelect: () => setActiveTab("instance_detail") },
+    { id: "sla_breach", label: `SLA Breach (${stats.breachedCount})`, icon: ShieldAlert, active: activeTab === "sla_breach", onSelect: () => setActiveTab("sla_breach") },
+    { id: "stats", label: "Process Analytics", icon: BarChart3, active: activeTab === "stats", onSelect: () => setActiveTab("stats") },
+  ]);
+
   const handleCreateDefinition = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newDefName.trim()) return;
@@ -145,15 +154,15 @@ export function WorkflowManagerApp() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 text-slate-100">
+    <div className="flex flex-col h-full bg-background text-foreground">
       {/* Top Header */}
-      <div className="border-b border-slate-800 bg-slate-900/70 backdrop-blur px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="border-b border-border bg-background/70 backdrop-blur px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 text-xs font-semibold rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
               #21 Workflow Manager
             </span>
-            <span className="text-xs text-slate-400">Formal Process Engine • Stages, Transitions, Rules & SLA Audits</span>
+            <span className="text-xs text-muted-foreground">Formal Process Engine • Stages, Transitions, Rules & SLA Audits</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white mt-1 flex items-center gap-3">
             Workflow Engine
@@ -166,11 +175,11 @@ export function WorkflowManagerApp() {
         </div>
 
         {/* View Tabs */}
-        <div className="flex items-center gap-1.5 bg-slate-800/80 p-1 rounded-lg border border-slate-700/60 text-sm">
+        <div className="flex items-center gap-1.5 bg-card/80 p-1 rounded-lg border border-border/60 text-sm">
           <button
             onClick={() => setActiveTab("designer")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "designer" ? "bg-cyan-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "designer" ? "bg-cyan-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Workflow Designer
@@ -178,7 +187,7 @@ export function WorkflowManagerApp() {
           <button
             onClick={() => setActiveTab("instances")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "instances" ? "bg-cyan-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "instances" ? "bg-cyan-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Active Pipelines ({stats.activeInstances})
@@ -186,7 +195,7 @@ export function WorkflowManagerApp() {
           <button
             onClick={() => setActiveTab("instance_detail")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "instance_detail" ? "bg-cyan-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "instance_detail" ? "bg-cyan-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Audit Trail
@@ -194,7 +203,7 @@ export function WorkflowManagerApp() {
           <button
             onClick={() => setActiveTab("sla_breach")}
             className={`px-3 py-1.5 rounded-md font-medium transition flex items-center gap-1.5 ${
-              activeTab === "sla_breach" ? "bg-rose-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "sla_breach" ? "bg-rose-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
@@ -203,7 +212,7 @@ export function WorkflowManagerApp() {
           <button
             onClick={() => setActiveTab("stats")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "stats" ? "bg-cyan-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "stats" ? "bg-cyan-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Process Analytics
@@ -225,13 +234,13 @@ export function WorkflowManagerApp() {
         {activeTab === "designer" && currentDef && (
           <div className="space-y-6">
             {/* Definition Switcher Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-900 p-4 rounded-xl border border-slate-800">
+            <div className="flex flex-wrap items-center justify-between gap-4 bg-background p-4 rounded-xl border border-border">
               <div className="flex items-center gap-3">
-                <span className="text-xs text-slate-400 font-semibold uppercase">Blueprint:</span>
+                <span className="text-xs text-muted-foreground font-semibold uppercase">Blueprint:</span>
                 <select
                   value={currentDef.id}
                   onChange={(e) => setSelectedDefinitionId(e.target.value)}
-                  className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-semibold"
+                  className="bg-foreground border border-border rounded-lg px-3 py-1.5 text-xs text-background font-semibold"
                 >
                   {definitions.map((d) => (
                     <option key={d.id} value={d.id}>
@@ -241,7 +250,7 @@ export function WorkflowManagerApp() {
                 </select>
               </div>
 
-              <div className="text-xs text-slate-400">
+              <div className="text-xs text-muted-foreground">
                 Applicable to:{" "}
                 <span className="font-mono text-cyan-300">
                   {currentDef.applicableEntityTypes.join(", ")}
@@ -250,14 +259,14 @@ export function WorkflowManagerApp() {
             </div>
 
             {/* Visual Canvas (Stages & Transitions) */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
+            <div className="bg-background border border-border rounded-2xl p-6 shadow-sm space-y-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-bold text-white text-base flex items-center gap-2">
                     <Workflow className="w-5 h-5 text-cyan-400" />
                     Visual Stage Flow Diagram
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1">{currentDef.description}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{currentDef.description}</p>
                 </div>
               </div>
 
@@ -275,16 +284,16 @@ export function WorkflowManagerApp() {
                             ? "bg-emerald-950/20 border-emerald-500/40"
                             : stage.id === currentDef.initialStageId
                             ? "bg-cyan-950/20 border-cyan-500/40"
-                            : "bg-slate-800/40 border-slate-700/60"
+                            : "bg-card/40 border-border/60"
                         }`}>
                           <div className="flex items-center justify-between">
-                            <span className="font-mono text-[10px] font-bold text-slate-400">STAGE #{stage.order}</span>
+                            <span className="font-mono text-[10px] font-bold text-muted-foreground">STAGE #{stage.order}</span>
                             <span className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
                               stage.isTerminal
                                 ? "bg-emerald-500/20 text-emerald-400"
                                 : stage.id === currentDef.initialStageId
                                 ? "bg-cyan-500/20 text-cyan-400"
-                                : "bg-slate-800 text-slate-400"
+                                : "bg-card text-muted-foreground"
                             }`}>
                               {stage.isTerminal ? "Terminal" : stage.id === currentDef.initialStageId ? "Initial" : "In-Flight"}
                             </span>
@@ -292,7 +301,7 @@ export function WorkflowManagerApp() {
 
                           <div className="font-bold text-white text-sm">{stage.name}</div>
 
-                          <div className="text-[11px] text-slate-400 flex items-center justify-between pt-2 border-t border-slate-800">
+                          <div className="text-[11px] text-muted-foreground flex items-center justify-between pt-2 border-t border-border">
                             <span className="flex items-center gap-1">
                               <Clock className="w-3.5 h-3.5 text-cyan-400" />
                               SLA: {stage.slaHours ? `${stage.slaHours}h` : "None"}
@@ -303,7 +312,7 @@ export function WorkflowManagerApp() {
 
                         {/* Transition Connector Arrow */}
                         {idx < currentDef.stages.length - 1 && (
-                          <div className="flex flex-col items-center justify-center gap-1 text-slate-500">
+                          <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground">
                             <ArrowRight className="w-6 h-6 text-cyan-500/70" />
                             <span className="text-[9px] uppercase font-mono text-cyan-400/80">Valid Flow</span>
                           </div>
@@ -314,7 +323,7 @@ export function WorkflowManagerApp() {
               </div>
 
               {/* Transition Rules Matrix */}
-              <div className="pt-6 border-t border-slate-800 space-y-3">
+              <div className="pt-6 border-t border-border space-y-3">
                 <h4 className="font-bold text-white text-sm">Defined Transitions & Guard Rules</h4>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
@@ -322,10 +331,10 @@ export function WorkflowManagerApp() {
                     const fromStage = currentDef.stages.find((s) => s.id === t.fromStageId);
                     const toStage = currentDef.stages.find((s) => s.id === t.toStageId);
                     return (
-                      <div key={t.id} className="p-3.5 rounded-xl bg-slate-800/50 border border-slate-700/60 space-y-2">
+                      <div key={t.id} className="p-3.5 rounded-xl bg-card/50 border border-border/60 space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-cyan-300">{t.label}</span>
-                          <span className="text-[10px] text-slate-400 font-mono">
+                          <span className="text-[10px] text-muted-foreground font-mono">
                             {fromStage?.name} → {toStage?.name}
                           </span>
                         </div>
@@ -333,14 +342,14 @@ export function WorkflowManagerApp() {
                         {t.rules.length > 0 ? (
                           <div className="space-y-1">
                             {t.rules.map((r) => (
-                              <div key={r.id} className="text-[11px] bg-slate-900 p-2 rounded text-slate-300 flex items-center gap-1.5">
+                              <div key={r.id} className="text-[11px] bg-background p-2 rounded text-foreground flex items-center gap-1.5">
                                 <span className="text-amber-400">🛡 Rule:</span>
                                 <span>{r.errorMessage}</span>
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <div className="text-[11px] text-slate-500 italic">No restrictive validation rules.</div>
+                          <div className="text-[11px] text-muted-foreground italic">No restrictive validation rules.</div>
                         )}
                       </div>
                     );
@@ -354,9 +363,9 @@ export function WorkflowManagerApp() {
         {/* TAB 2: ACTIVE PIPELINES */}
         {activeTab === "instances" && currentDef && (
           <div className="space-y-6">
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+            <div className="bg-background border border-border rounded-xl p-6 space-y-4">
               <h2 className="text-lg font-bold text-white">Active Pipelines by Stage</h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-muted-foreground">
                 Real-time instances following formal workflow blueprints. Transitions advance state deterministically.
               </p>
 
@@ -369,7 +378,7 @@ export function WorkflowManagerApp() {
                   return (
                     <div
                       key={inst.id}
-                      className="bg-slate-950 border border-slate-800 hover:border-cyan-500/50 rounded-xl p-5 space-y-3 text-xs flex flex-col justify-between"
+                      className="bg-background border border-border hover:border-cyan-500/50 rounded-xl p-5 space-y-3 text-xs flex flex-col justify-between"
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
@@ -384,18 +393,18 @@ export function WorkflowManagerApp() {
                         </div>
 
                         <h4 className="font-bold text-sm text-white">{inst.entityTitle}</h4>
-                        <div className="text-slate-400">Workflow: {inst.workflowName}</div>
+                        <div className="text-muted-foreground">Workflow: {inst.workflowName}</div>
 
-                        <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between">
-                          <span className="text-slate-400">Current Stage:</span>
+                        <div className="bg-background p-2.5 rounded-lg border border-border flex items-center justify-between">
+                          <span className="text-muted-foreground">Current Stage:</span>
                           <span className="font-bold text-cyan-300">{currentStage?.name}</span>
                         </div>
                       </div>
 
                       {/* Advance Transitions Buttons */}
                       {inst.status === "active" && availableTransitions.length > 0 && (
-                        <div className="pt-3 border-t border-slate-800 space-y-2">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Advance Workflow:</span>
+                        <div className="pt-3 border-t border-border space-y-2">
+                          <span className="text-[10px] uppercase font-bold text-muted-foreground block">Advance Workflow:</span>
                           <div className="flex flex-col gap-1.5">
                             {availableTransitions.map((tr) => (
                               <button
@@ -444,14 +453,14 @@ export function WorkflowManagerApp() {
 
         {/* TAB 3: AUDIT TRAIL / INSTANCE DETAIL */}
         {activeTab === "instance_detail" && currentInstance && (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
+          <div className="bg-background border border-border rounded-xl p-6 space-y-6">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-xs text-cyan-400 font-mono uppercase">
                   {currentInstance.entityType} #{currentInstance.entityId}
                 </span>
                 <h2 className="text-xl font-bold text-white mt-1">{currentInstance.entityTitle}</h2>
-                <p className="text-xs text-slate-400 mt-1">Workflow: {currentInstance.workflowName}</p>
+                <p className="text-xs text-muted-foreground mt-1">Workflow: {currentInstance.workflowName}</p>
               </div>
 
               <span className={`text-xs px-3 py-1 rounded-full font-bold uppercase ${
@@ -469,19 +478,19 @@ export function WorkflowManagerApp() {
 
               <div className="space-y-3 relative pl-6 border-l-2 border-cyan-500/30">
                 {currentInstance.history.length === 0 ? (
-                  <div className="text-xs text-slate-500 italic">No transitions recorded yet. In initial stage.</div>
+                  <div className="text-xs text-muted-foreground italic">No transitions recorded yet. In initial stage.</div>
                 ) : (
                   currentInstance.history.map((h) => (
-                    <div key={h.id} className="relative text-xs bg-slate-800/40 p-3.5 rounded-xl border border-slate-700/60 space-y-1">
-                      <span className="absolute -left-[31px] top-4 w-3 h-3 rounded-full bg-cyan-400 border-2 border-slate-900" />
+                    <div key={h.id} className="relative text-xs bg-card/40 p-3.5 rounded-xl border border-border/60 space-y-1">
+                      <span className="absolute -left-[31px] top-4 w-3 h-3 rounded-full bg-cyan-400 border-2 border-border" />
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-white">{h.transitionLabel}</span>
-                        <span className="text-[11px] text-slate-400">{new Date(h.performedAt).toLocaleString()}</span>
+                        <span className="text-[11px] text-muted-foreground">{new Date(h.performedAt).toLocaleString()}</span>
                       </div>
-                      <div className="text-slate-300">
+                      <div className="text-foreground">
                         Executed by: <strong className="text-cyan-300">{h.performedBy || "System Trigger"}</strong>
                       </div>
-                      {h.note && <div className="text-slate-400 italic text-[11px]">Note: "{h.note}"</div>}
+                      {h.note && <div className="text-muted-foreground italic text-[11px]">Note: "{h.note}"</div>}
                     </div>
                   ))
                 )}
@@ -492,12 +501,12 @@ export function WorkflowManagerApp() {
 
         {/* TAB 4: SLA BREACH */}
         {activeTab === "sla_breach" && (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+          <div className="bg-background border border-border rounded-xl p-6 space-y-4">
             <div className="flex items-center gap-3">
               <ShieldAlert className="w-6 h-6 text-rose-400" />
               <div>
                 <h2 className="text-lg font-bold text-white">SLA Breached Instances</h2>
-                <p className="text-xs text-slate-400">Pipelines that exceeded maximum allowed hours on current stage.</p>
+                <p className="text-xs text-muted-foreground">Pipelines that exceeded maximum allowed hours on current stage.</p>
               </div>
             </div>
 
@@ -512,7 +521,7 @@ export function WorkflowManagerApp() {
                     <div className="space-y-1">
                       <div className="font-bold text-white text-sm">{inst.entityTitle}</div>
                       <div className="text-rose-300">Stage: {inst.currentStageId} • Workflow: {inst.workflowName}</div>
-                      <div className="text-slate-400">Started: {new Date(inst.startedAt).toLocaleString()}</div>
+                      <div className="text-muted-foreground">Started: {new Date(inst.startedAt).toLocaleString()}</div>
                     </div>
 
                     <button
@@ -535,32 +544,32 @@ export function WorkflowManagerApp() {
         {activeTab === "stats" && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Active Pipelines</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Active Pipelines</span>
                 <div className="text-2xl font-bold text-cyan-400 mt-1">{stats.activeInstances}</div>
-                <div className="text-[11px] text-slate-400 mt-1">{stats.completedInstances} completed</div>
+                <div className="text-[11px] text-muted-foreground mt-1">{stats.completedInstances} completed</div>
               </div>
 
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">SLA Compliance</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">SLA Compliance</span>
                 <div className="text-2xl font-bold text-emerald-400 mt-1">{stats.complianceRate}%</div>
                 <div className="text-[11px] text-rose-400 mt-1">{stats.breachedCount} breached SLA</div>
               </div>
 
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Blueprints</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Blueprints</span>
                 <div className="text-2xl font-bold text-white mt-1">{stats.totalDefs}</div>
-                <div className="text-[11px] text-slate-400 mt-1">Standardized processes</div>
+                <div className="text-[11px] text-muted-foreground mt-1">Standardized processes</div>
               </div>
 
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Total Instances</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Total Instances</span>
                 <div className="text-2xl font-bold text-purple-400 mt-1">{stats.totalInstances}</div>
-                <div className="text-[11px] text-slate-400 mt-1">Cross-app tracked runs</div>
+                <div className="text-[11px] text-muted-foreground mt-1">Cross-app tracked runs</div>
               </div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-xs text-slate-400 space-y-2">
+            <div className="bg-background border border-border rounded-xl p-6 text-xs text-muted-foreground space-y-2">
               <h3 className="font-bold text-white text-base">Generic Process Engine Architecture</h3>
               <p className="leading-relaxed">
                 Workflow Manager (#21) does not own domain data. Instead, it serves as the central rule engine
@@ -575,38 +584,38 @@ export function WorkflowManagerApp() {
       {/* New Definition Modal */}
       {isNewDefModalOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
+          <div className="bg-background border border-border rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
             <h3 className="text-lg font-bold text-white">Create New Workflow Blueprint</h3>
 
             <form onSubmit={handleCreateDefinition} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-300 mb-1 font-medium">Blueprint Name</label>
+                <label className="block text-foreground mb-1 font-medium">Blueprint Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Multi-tier Approval Pipeline"
                   value={newDefName}
                   onChange={(e) => setNewDefName(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                  className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1 font-medium">Description</label>
+                <label className="block text-foreground mb-1 font-medium">Description</label>
                 <textarea
                   rows={3}
                   placeholder="Purpose, target deliverables, or compliance requirements..."
                   value={newDefDesc}
                   onChange={(e) => setNewDefDesc(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white"
+                  className="w-full bg-foreground border border-border rounded-lg p-2.5 text-background"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-4 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-4 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsNewDefModalOpen(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold"
+                  className="px-4 py-2 rounded-lg bg-card hover:bg-card text-foreground font-semibold"
                 >
                   Cancel
                 </button>

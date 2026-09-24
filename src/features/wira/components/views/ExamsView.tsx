@@ -409,7 +409,7 @@ export function ExamsView() {
                   className={cn(
                     "text-[10px] px-2 py-0.5 rounded-full font-mono font-bold",
                     isSelected
-                      ? "bg-white/20 text-white"
+                      ? "bg-card/20 text-white"
                       : dLeft < 7
                       ? "bg-rose-500/15 text-rose-600"
                       : dLeft < 30

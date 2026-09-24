@@ -1,3 +1,4 @@
+import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useMemo } from "react";
 import {
   Users,
@@ -276,7 +277,7 @@ export function PeopleManagerApp() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       {/* Toast */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-emerald-400 animate-in fade-in slide-in-from-bottom-4">
@@ -286,7 +287,7 @@ export function PeopleManagerApp() {
       )}
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+      <ShellHeader>
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-xl shadow-lg shadow-indigo-500/20">
@@ -298,11 +299,11 @@ export function PeopleManagerApp() {
                 <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                   App #35
                 </span>
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-muted-foreground">
                   Identity Layer • Rujukan Identitas Tunggal Seluruh Ekosistem
                 </span>
               </div>
-              <p className="text-xs md:text-sm text-slate-400">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Penyimpanan terpusat profil individu (Internal/External), organisasi, metode kontak, relasi multi-arah, dan deduplikasi.
               </p>
             </div>
@@ -312,9 +313,9 @@ export function PeopleManagerApp() {
         <div className="flex items-center flex-wrap gap-2.5">
           <button
             onClick={() => setIsNewOrgOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition"
+            className="flex items-center gap-1.5 px-3 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-xs font-semibold transition"
           >
-            <Building2 className="w-3.5 h-3.5 text-slate-400" />
+            <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
             <span>Tambah Organisasi</span>
           </button>
 
@@ -326,14 +327,14 @@ export function PeopleManagerApp() {
             <span>Tambah Orang Baru</span>
           </button>
         </div>
-      </header>
+      </ShellHeader>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-slate-800/80 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">
         <button
           onClick={() => setActiveTab("all")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "all" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "all" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Users className="w-4 h-4" />
@@ -343,7 +344,7 @@ export function PeopleManagerApp() {
         <button
           onClick={() => setActiveTab("by_organization")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "by_organization" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "by_organization" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Building2 className="w-4 h-4 text-cyan-400" />
@@ -353,7 +354,7 @@ export function PeopleManagerApp() {
         <button
           onClick={() => setActiveTab("relationships")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "relationships" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "relationships" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <Network className="w-4 h-4 text-purple-400" />
@@ -363,7 +364,7 @@ export function PeopleManagerApp() {
         <button
           onClick={() => setActiveTab("duplicates")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "duplicates" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "duplicates" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <GitMerge className="w-4 h-4 text-amber-400" />
@@ -373,7 +374,7 @@ export function PeopleManagerApp() {
         <button
           onClick={() => setActiveTab("stats")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
-            activeTab === "stats" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            activeTab === "stats" ? "bg-indigo-600 text-background shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-foreground"
           }`}
         >
           <BarChart3 className="w-4 h-4 text-emerald-400" />
@@ -387,25 +388,25 @@ export function PeopleManagerApp() {
         {activeTab === "stats" && (
           <div className="space-y-6 max-w-4xl">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Individu</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Total Individu</div>
                 <div className="text-3xl font-extrabold text-white mt-1">{stats.total}</div>
-                <div className="text-xs text-slate-500 mt-1">Identitas terdaftar</div>
+                <div className="text-xs text-muted-foreground mt-1">Identitas terdaftar</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Tim Internal</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Tim Internal</div>
                 <div className="text-3xl font-extrabold text-emerald-400 mt-1">{stats.internal}</div>
-                <div className="text-xs text-slate-500 mt-1">Akun internal konsultan</div>
+                <div className="text-xs text-muted-foreground mt-1">Akun internal konsultan</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Kontak Eksternal</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Kontak Eksternal</div>
                 <div className="text-3xl font-extrabold text-cyan-400 mt-1">{stats.external}</div>
-                <div className="text-xs text-slate-500 mt-1">Klien, Vendor & Mitra</div>
+                <div className="text-xs text-muted-foreground mt-1">Klien, Vendor & Mitra</div>
               </div>
-              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
-                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Jaringan Relasi</div>
+              <div className="p-5 bg-card/80 border border-border rounded-xl">
+                <div className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Jaringan Relasi</div>
                 <div className="text-3xl font-extrabold text-purple-400 mt-1">{stats.relsCount}</div>
-                <div className="text-xs text-slate-500 mt-1">Koneksi antar-orang</div>
+                <div className="text-xs text-muted-foreground mt-1">Koneksi antar-orang</div>
               </div>
             </div>
           </div>
@@ -414,20 +415,20 @@ export function PeopleManagerApp() {
         {/* DUPLICATE CANDIDATES VIEW */}
         {activeTab === "duplicates" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400 leading-relaxed">
+            <div className="p-4 bg-card/40 border border-border/60 rounded-xl text-xs text-muted-foreground leading-relaxed">
               Deteksi heuristik berbasis kemiripan nama dan kecocokan email persis. Penggabungan (*merge*) memindahkan semua metode kontak, tag, dan relasi ke record utama tanpa menghapus referensi historis.
             </div>
 
             {duplicateCandidates.length === 0 ? (
-              <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
+              <div className="p-12 text-center bg-card/40 border border-border/60 rounded-xl">
                 <ShieldCheck className="w-10 h-10 text-emerald-400 mx-auto mb-2" />
-                <h3 className="font-semibold text-slate-200">Tidak ada duplikat terdeteksi</h3>
-                <p className="text-xs text-slate-400 mt-1">Database identitas bersih dan unik.</p>
+                <h3 className="font-semibold text-foreground">Tidak ada duplikat terdeteksi</h3>
+                <p className="text-xs text-muted-foreground mt-1">Database identitas bersih dan unik.</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {duplicateCandidates.map((cand, idx) => (
-                  <div key={idx} className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-4">
+                  <div key={idx} className="p-5 bg-card/80 border border-border rounded-xl space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="px-2.5 py-0.5 rounded text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                         {cand.reason}
@@ -435,20 +436,20 @@ export function PeopleManagerApp() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="p-3 bg-slate-900/80 border border-slate-700 rounded-lg space-y-1">
-                        <div className="text-xs text-slate-400">Record A (Dipertahankan):</div>
-                        <div className="font-bold text-slate-100">{cand.personA.fullName}</div>
-                        <div className="text-xs text-slate-400">{cand.personA.jobTitle || "Tanpa Jabatan"}</div>
+                      <div className="p-3 bg-background/80 border border-border rounded-lg space-y-1">
+                        <div className="text-xs text-muted-foreground">Record A (Dipertahankan):</div>
+                        <div className="font-bold text-foreground">{cand.personA.fullName}</div>
+                        <div className="text-xs text-muted-foreground">{cand.personA.jobTitle || "Tanpa Jabatan"}</div>
                       </div>
 
-                      <div className="p-3 bg-slate-900/80 border border-slate-700 rounded-lg space-y-1">
-                        <div className="text-xs text-slate-400">Record B (Akan Digabung):</div>
-                        <div className="font-bold text-slate-100">{cand.personB.fullName}</div>
-                        <div className="text-xs text-slate-400">{cand.personB.jobTitle || "Tanpa Jabatan"}</div>
+                      <div className="p-3 bg-background/80 border border-border rounded-lg space-y-1">
+                        <div className="text-xs text-muted-foreground">Record B (Akan Digabung):</div>
+                        <div className="font-bold text-foreground">{cand.personB.fullName}</div>
+                        <div className="text-xs text-muted-foreground">{cand.personB.jobTitle || "Tanpa Jabatan"}</div>
                       </div>
                     </div>
 
-                    <div className="flex justify-end gap-2 pt-2 border-t border-slate-700/60">
+                    <div className="flex justify-end gap-2 pt-2 border-t border-border/60">
                       <button
                         onClick={() => {
                           mergePersons(cand.personA.id, cand.personB.id);
@@ -470,7 +471,7 @@ export function PeopleManagerApp() {
         {/* RELATIONSHIPS VIEW */}
         {activeTab === "relationships" && (
           <div className="space-y-4 max-w-4xl">
-            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400">
+            <div className="p-4 bg-card/40 border border-border/60 rounded-xl text-xs text-muted-foreground">
               Jaringan koneksi antar individu (atasan-bawahan, relasi klien, mitra kerja) secara multi-arah.
             </div>
 
@@ -481,22 +482,22 @@ export function PeopleManagerApp() {
                 const oTo = organizations.find((o) => o.id === r.toOrganizationId);
 
                 return (
-                  <div key={r.id} className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between text-xs">
+                  <div key={r.id} className="p-4 bg-card/80 border border-border rounded-xl flex items-center justify-between text-xs">
                     <div className="flex items-center gap-3">
-                      <span className="font-bold text-slate-200">{pFrom?.fullName || "Person"}</span>
+                      <span className="font-bold text-foreground">{pFrom?.fullName || "Person"}</span>
                       <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono text-[11px] uppercase">
                         {r.type.replace("_", " ")}
                       </span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
-                      <span className="font-bold text-slate-200">
+                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
+                      <span className="font-bold text-foreground">
                         {pTo?.fullName || oTo?.name || "Entitas Terkait"}
                       </span>
-                      {r.note && <span className="text-slate-400 italic">({r.note})</span>}
+                      {r.note && <span className="text-muted-foreground italic">({r.note})</span>}
                     </div>
 
                     <button
                       onClick={() => removeRelationship(r.id)}
-                      className="text-slate-500 hover:text-rose-400 p-1"
+                      className="text-muted-foreground hover:text-rose-400 p-1"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -515,13 +516,13 @@ export function PeopleManagerApp() {
                 const members = people.filter((p) => p.organizationId === org.id);
 
                 return (
-                  <div key={org.id} className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-3">
+                  <div key={org.id} className="p-5 bg-card/80 border border-border rounded-xl space-y-3">
                     <div className="flex items-start justify-between">
                       <div>
                         <h3 className="font-bold text-base text-white">{org.name}</h3>
-                        <div className="text-xs text-slate-400">{org.industry || "Industri Umum"}</div>
+                        <div className="text-xs text-muted-foreground">{org.industry || "Industri Umum"}</div>
                       </div>
-                      <span className="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs font-semibold">
+                      <span className="px-2 py-0.5 rounded bg-card text-foreground text-xs font-semibold">
                         {members.length} Orang
                       </span>
                     </div>
@@ -533,16 +534,16 @@ export function PeopleManagerApp() {
                       </div>
                     )}
 
-                    <div className="pt-2 border-t border-slate-700/60 space-y-1.5">
-                      <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Anggota Terdaftar:</div>
+                    <div className="pt-2 border-t border-border/60 space-y-1.5">
+                      <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Anggota Terdaftar:</div>
                       {members.map((m) => (
                         <div
                           key={m.id}
                           onClick={() => setSelectedPersonId(m.id)}
-                          className="p-2 bg-slate-900/60 rounded flex items-center justify-between text-xs cursor-pointer hover:border-slate-500 transition"
+                          className="p-2 bg-background/60 rounded flex items-center justify-between text-xs cursor-pointer hover:border-border transition"
                         >
-                          <span className="text-slate-200 font-medium">{m.fullName}</span>
-                          <span className="text-slate-400 text-[11px]">{m.jobTitle}</span>
+                          <span className="text-foreground font-medium">{m.fullName}</span>
+                          <span className="text-muted-foreground text-[11px]">{m.jobTitle}</span>
                         </div>
                       ))}
                     </div>
@@ -557,15 +558,15 @@ export function PeopleManagerApp() {
         {activeTab === "all" && (
           <div className="space-y-4">
             {/* Filter Bar */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700 rounded-xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-card/80 border border-border rounded-xl">
               <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Cari nama, jabatan, email, tag..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full pl-9 pr-3 py-1.5 bg-background border border-border rounded-lg text-xs md:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
@@ -573,7 +574,7 @@ export function PeopleManagerApp() {
                 <select
                   value={typeFilter}
                   onChange={(e) => setTypeFilter(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                 >
                   <option value="all">Semua Tipe</option>
                   <option value="internal">Internal (Tim)</option>
@@ -583,7 +584,7 @@ export function PeopleManagerApp() {
                 <select
                   value={orgFilter}
                   onChange={(e) => setOrgFilter(e.target.value)}
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                  className="px-2.5 py-1.5 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                 >
                   <option value="all">Semua Organisasi</option>
                   {organizations.map((o) => (
@@ -609,7 +610,7 @@ export function PeopleManagerApp() {
                 return (
                   <div
                     key={person.id}
-                    className="p-5 bg-slate-800/80 border border-slate-700 hover:border-slate-600 rounded-xl flex flex-col justify-between transition space-y-4"
+                    className="p-5 bg-card/80 border border-border hover:border-border rounded-xl flex flex-col justify-between transition space-y-4"
                   >
                     <div className="space-y-2.5">
                       <div className="flex items-center justify-between">
@@ -625,7 +626,7 @@ export function PeopleManagerApp() {
 
                         <div className="flex items-center gap-1">
                           {person.tags.map((t, idx) => (
-                            <span key={idx} className="px-1.5 py-0.5 rounded bg-slate-700 text-slate-300 text-[10px]">
+                            <span key={idx} className="px-1.5 py-0.5 rounded bg-card text-foreground text-[10px]">
                               {t}
                             </span>
                           ))}
@@ -635,25 +636,25 @@ export function PeopleManagerApp() {
                       <div>
                         <h3
                           onClick={() => setSelectedPersonId(person.id)}
-                          className="font-bold text-base text-slate-100 cursor-pointer hover:text-indigo-400 transition"
+                          className="font-bold text-base text-foreground cursor-pointer hover:text-indigo-400 transition"
                         >
                           {person.fullName}
                         </h3>
-                        <div className="text-xs text-slate-400 mt-0.5">
+                        <div className="text-xs text-muted-foreground mt-0.5">
                           {person.jobTitle || "Peran Belum Ditetapkan"} • {org?.name || "Independen"}
                         </div>
                       </div>
 
                       {/* Contact Preview */}
-                      <div className="space-y-1 pt-1 text-xs text-slate-300">
+                      <div className="space-y-1 pt-1 text-xs text-foreground">
                         {primaryEmail && (
-                          <div className="flex items-center gap-2 text-slate-400 truncate">
+                          <div className="flex items-center gap-2 text-muted-foreground truncate">
                             <Mail className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
                             <span className="truncate">{primaryEmail.value}</span>
                           </div>
                         )}
                         {primaryPhone && (
-                          <div className="flex items-center gap-2 text-slate-400">
+                          <div className="flex items-center gap-2 text-muted-foreground">
                             <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                             <span>{primaryPhone.value}</span>
                           </div>
@@ -661,7 +662,7 @@ export function PeopleManagerApp() {
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs">
+                    <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs">
                       <button
                         onClick={() => setSelectedPersonId(person.id)}
                         className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold flex items-center gap-1 shadow-sm"
@@ -681,21 +682,21 @@ export function PeopleManagerApp() {
       {/* MODAL: DETAIL PERSON & CONTACT METHODS */}
       {selectedPersonId && activePerson && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <div>
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 text-xs rounded bg-indigo-500/20 text-indigo-300 font-semibold">
                     {activePerson.personType}
                   </span>
-                  <span className="text-xs text-slate-400">{activePerson.status}</span>
+                  <span className="text-xs text-muted-foreground">{activePerson.status}</span>
                 </div>
                 <h3 className="font-bold text-lg text-white mt-1">{activePerson.fullName}</h3>
-                <div className="text-xs text-slate-400">
+                <div className="text-xs text-muted-foreground">
                   {activePerson.jobTitle} • {organizations.find((o) => o.id === activePerson.organizationId)?.name}
                 </div>
               </div>
-              <button onClick={() => setSelectedPersonId(null)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setSelectedPersonId(null)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -703,7 +704,7 @@ export function PeopleManagerApp() {
             <div className="space-y-4">
               {/* CONTACT METHODS LIST */}
               <div className="space-y-3">
-                <h4 className="font-bold text-sm text-slate-200 flex items-center gap-2">
+                <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
                   <Mail className="w-4 h-4 text-indigo-400" />
                   Metode Kontak (Contact Methods)
                 </h4>
@@ -712,7 +713,7 @@ export function PeopleManagerApp() {
                   {activeContacts.map((cm) => (
                     <div
                       key={cm.id}
-                      className="p-3 bg-slate-800/60 border border-slate-700 rounded-lg flex items-center justify-between text-xs"
+                      className="p-3 bg-card/60 border border-border rounded-lg flex items-center justify-between text-xs"
                     >
                       <div className="flex items-center gap-2.5">
                         {cm.type === "email" ? (
@@ -721,8 +722,8 @@ export function PeopleManagerApp() {
                           <Phone className="w-4 h-4 text-emerald-400" />
                         )}
                         <div>
-                          <div className="font-semibold text-slate-200">{cm.value}</div>
-                          <div className="text-[10px] text-slate-400">{cm.label}</div>
+                          <div className="font-semibold text-foreground">{cm.value}</div>
+                          <div className="text-[10px] text-muted-foreground">{cm.label}</div>
                         </div>
                         {cm.isPrimary && (
                           <span className="px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 text-[10px] font-bold">
@@ -742,7 +743,7 @@ export function PeopleManagerApp() {
                         )}
                         <button
                           onClick={() => removeContactMethod(cm.id)}
-                          className="text-slate-500 hover:text-rose-400 p-1"
+                          className="text-muted-foreground hover:text-rose-400 p-1"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -752,13 +753,13 @@ export function PeopleManagerApp() {
                 </div>
 
                 {/* Add Contact Form */}
-                <form onSubmit={handleAddContactInline} className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-2">
-                  <div className="text-xs font-semibold text-slate-300">Tambah Metode Kontak:</div>
+                <form onSubmit={handleAddContactInline} className="p-3 bg-background border border-border rounded-lg space-y-2">
+                  <div className="text-xs font-semibold text-foreground">Tambah Metode Kontak:</div>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                     <select
                       value={newCmType}
                       onChange={(e) => setNewCmType(e.target.value as any)}
-                      className="px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                      className="px-2 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-indigo-500"
                     >
                       <option value="email">Email</option>
                       <option value="phone">Phone / WA</option>
@@ -770,7 +771,7 @@ export function PeopleManagerApp() {
                       placeholder="Nilai (email / no hp)"
                       value={newCmVal}
                       onChange={(e) => setNewCmVal(e.target.value)}
-                      className="md:col-span-2 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                      className="md:col-span-2 px-2.5 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-indigo-500"
                     />
 
                     <button
@@ -784,8 +785,8 @@ export function PeopleManagerApp() {
               </div>
 
               {/* RELATIONSHIPS LIST */}
-              <div className="space-y-3 pt-2 border-t border-slate-800">
-                <h4 className="font-bold text-sm text-slate-200 flex items-center gap-2">
+              <div className="space-y-3 pt-2 border-t border-border">
+                <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
                   <Network className="w-4 h-4 text-purple-400" />
                   Hubungan & Relasi (Relationships)
                 </h4>
@@ -799,17 +800,17 @@ export function PeopleManagerApp() {
                     return (
                       <div
                         key={r.id}
-                        className="p-2.5 bg-slate-800/60 border border-slate-700 rounded text-xs flex items-center justify-between"
+                        className="p-2.5 bg-card/60 border border-border rounded text-xs flex items-center justify-between"
                       >
                         <div>
-                          <span className="font-semibold text-slate-200">{otherPerson?.fullName}</span>
-                          <span className="text-slate-400 text-[11px] ml-2 font-mono">
+                          <span className="font-semibold text-foreground">{otherPerson?.fullName}</span>
+                          <span className="text-muted-foreground text-[11px] ml-2 font-mono">
                             ({r.type.replace("_", " ")})
                           </span>
                         </div>
                         <button
                           onClick={() => removeRelationship(r.id)}
-                          className="text-slate-500 hover:text-rose-400 p-1"
+                          className="text-muted-foreground hover:text-rose-400 p-1"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -819,13 +820,13 @@ export function PeopleManagerApp() {
                 </div>
 
                 {/* Add Rel Form */}
-                <form onSubmit={handleAddRelationshipInline} className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-2">
-                  <div className="text-xs font-semibold text-slate-300">Tautkan Relasi:</div>
+                <form onSubmit={handleAddRelationshipInline} className="p-3 bg-background border border-border rounded-lg space-y-2">
+                  <div className="text-xs font-semibold text-foreground">Tautkan Relasi:</div>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                     <select
                       value={newRelToPerson}
                       onChange={(e) => setNewRelToPerson(e.target.value)}
-                      className="md:col-span-2 px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                      className="md:col-span-2 px-2 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-indigo-500"
                     >
                       <option value="">Pilih Orang...</option>
                       {people
@@ -840,7 +841,7 @@ export function PeopleManagerApp() {
                     <select
                       value={newRelType}
                       onChange={(e) => setNewRelType(e.target.value as any)}
-                      className="px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                      className="px-2 py-1.5 bg-background border border-border rounded text-xs text-foreground focus:outline-none focus:border-indigo-500"
                     >
                       <option value="colleague">Kolega</option>
                       <option value="reports_to">Lapor Ke (Bawahan)</option>
@@ -860,7 +861,7 @@ export function PeopleManagerApp() {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-3 border-t border-slate-800">
+            <div className="flex justify-between items-center pt-3 border-t border-border">
               <button
                 onClick={() => {
                   deletePerson(activePerson.id);
@@ -875,7 +876,7 @@ export function PeopleManagerApp() {
 
               <button
                 onClick={() => setSelectedPersonId(null)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold"
+                className="px-4 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-semibold"
               >
                 Tutup
               </button>
@@ -887,17 +888,17 @@ export function PeopleManagerApp() {
       {/* MODAL: CREATE PERSON */}
       {isNewPersonOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Tambah Individu (Identity Layer)</h3>
-              <button onClick={() => setIsNewPersonOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsNewPersonOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreatePerson} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Nama Lengkap <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -906,17 +907,17 @@ export function PeopleManagerApp() {
                   placeholder="mis. Bambang Pamungkas, S.T."
                   value={newFullName}
                   onChange={(e) => setNewFullName(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Tipe Individu</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Tipe Individu</label>
                   <select
                     value={newType}
                     onChange={(e) => setNewType(e.target.value as any)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                   >
                     <option value="external">External (Klien/Mitra)</option>
                     <option value="internal">Internal (Tim Konsultan)</option>
@@ -924,11 +925,11 @@ export function PeopleManagerApp() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Organisasi / Perusahaan</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Organisasi / Perusahaan</label>
                   <select
                     value={newOrgId}
                     onChange={(e) => setNewOrgId(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                   >
                     <option value="">Independen / Bebas</option>
                     {organizations.map((org) => (
@@ -941,45 +942,45 @@ export function PeopleManagerApp() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Jabatan / Peran</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Jabatan / Peran</label>
                 <input
                   type="text"
                   placeholder="mis. VP Technology, Account Executive"
                   value={newJobTitle}
                   onChange={(e) => setNewJobTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Email Utama</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Email Utama</label>
                   <input
                     type="email"
                     placeholder="nama@perusahaan.co.id"
                     value={newContactEmail}
                     onChange={(e) => setNewContactEmail(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Nomor WhatsApp / HP</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Nomor WhatsApp / HP</label>
                   <input
                     type="text"
                     placeholder="+62 811..."
                     value={newContactPhone}
                     onChange={(e) => setNewContactPhone(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsNewPersonOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>
@@ -998,17 +999,17 @@ export function PeopleManagerApp() {
       {/* MODAL: CREATE ORG */}
       {isNewOrgOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <h3 className="font-bold text-base text-white">Tambah Organisasi Baru</h3>
-              <button onClick={() => setIsNewOrgOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsNewOrgOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateOrganization} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-foreground mb-1">
                   Nama Organisasi <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -1017,37 +1018,37 @@ export function PeopleManagerApp() {
                   placeholder="mis. PT Bank Central Makmur"
                   value={newOrgName}
                   onChange={(e) => setNewOrgName(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Sektor / Industri</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Sektor / Industri</label>
                 <input
                   type="text"
                   placeholder="mis. Financial Services, Telekomunikasi"
                   value={newOrgIndustry}
                   onChange={(e) => setNewOrgIndustry(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Website</label>
+                <label className="block text-xs font-semibold text-foreground mb-1">Website</label>
                 <input
                   type="url"
                   placeholder="https://perusahaan.co.id"
                   value={newOrgWebsite}
                   onChange={(e) => setNewOrgWebsite(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsNewOrgOpen(false)}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                  className="px-3.5 py-1.5 bg-card hover:bg-card text-foreground rounded-lg text-xs font-medium"
                 >
                   Batal
                 </button>

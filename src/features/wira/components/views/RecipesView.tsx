@@ -559,12 +559,12 @@ export function RecipesView() {
 
                 {/* Top badges */}
                 <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                  <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-black/60 text-white backdrop-blur-md border border-white/15">
+                  <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-black/60 text-white backdrop-blur-md border border-border/15">
                     {recipe.category}
                   </span>
                   <button
                     onClick={(e) => toggleFavorite(recipe.id, e)}
-                    className="w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:text-red-400 transition-colors"
+                    className="w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-border/15 flex items-center justify-center text-white hover:text-red-400 transition-colors"
                     title={recipe.isFavorite ? "Hapus dari favorit" : "Simpan ke favorit"}
                   >
                     <Heart
@@ -645,7 +645,7 @@ export function RecipesView() {
 
               <button
                 onClick={() => setSelectedRecipe(null)}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md text-white hover:bg-black/80 flex items-center justify-center transition-colors border border-white/20"
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md text-white hover:bg-black/80 flex items-center justify-center transition-colors border border-border/20"
               >
                 <X size={18} />
               </button>
@@ -654,7 +654,7 @@ export function RecipesView() {
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-600 text-white shadow-sm">
                   {selectedRecipe.category}
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-black/60 text-white backdrop-blur-md border border-white/20">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-black/60 text-white backdrop-blur-md border border-border/20">
                   {selectedRecipe.difficulty}
                 </span>
               </div>

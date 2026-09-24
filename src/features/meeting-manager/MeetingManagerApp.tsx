@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { useMeetingStore } from "./store";
 import { MeetingStatus, ActionItemStatus, AgendaStatus, ParticipantRole } from "./types";
+import { useShellSections } from "@/app/shell-sections";
 
 type ViewTab = "detail" | "upcoming" | "actions" | "decisions" | "series" | "stats";
 
@@ -132,6 +133,15 @@ export function MeetingManagerApp() {
     };
   }, [meetings]);
 
+  useShellSections([
+    { id: "detail", label: "Meeting Workspace", icon: FileText, active: activeTab === "detail", onSelect: () => setActiveTab("detail") },
+    { id: "upcoming", label: `All Meetings (${meetings.length})`, icon: Calendar, active: activeTab === "upcoming", onSelect: () => setActiveTab("upcoming") },
+    { id: "actions", label: `Action Items (${stats.totalActions})`, icon: ListTodo, active: activeTab === "actions", onSelect: () => setActiveTab("actions") },
+    { id: "decisions", label: "Decision Log", icon: BookmarkCheck, active: activeTab === "decisions", onSelect: () => setActiveTab("decisions") },
+    { id: "series", label: "Series", icon: Layers, active: activeTab === "series", onSelect: () => setActiveTab("series") },
+    { id: "stats", label: "Analytics", icon: BarChart3, active: activeTab === "stats", onSelect: () => setActiveTab("stats") },
+  ]);
+
   const handleCreateMeeting = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle.trim()) return;
@@ -160,15 +170,15 @@ export function MeetingManagerApp() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 text-slate-100">
+    <div className="flex flex-col h-full bg-background text-foreground">
       {/* Top Header Bar */}
-      <div className="border-b border-slate-800 bg-slate-900/70 backdrop-blur px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="border-b border-border bg-background/70 backdrop-blur px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 text-xs font-semibold rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
               #19 Meeting Manager
             </span>
-            <span className="text-xs text-slate-400">Structured Meeting Lifecycle • Before, During & After</span>
+            <span className="text-xs text-muted-foreground">Structured Meeting Lifecycle • Before, During & After</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white mt-1 flex items-center gap-3">
             Meeting Manager
@@ -187,11 +197,11 @@ export function MeetingManagerApp() {
         </div>
 
         {/* View Tabs */}
-        <div className="flex items-center gap-1.5 bg-slate-800/80 p-1 rounded-lg border border-slate-700/60 text-sm">
+        <div className="flex items-center gap-1.5 bg-card/80 p-1 rounded-lg border border-border/60 text-sm">
           <button
             onClick={() => setActiveTab("detail")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "detail" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "detail" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Meeting Workspace
@@ -199,7 +209,7 @@ export function MeetingManagerApp() {
           <button
             onClick={() => setActiveTab("upcoming")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "upcoming" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "upcoming" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             All Meetings ({meetings.length})
@@ -207,7 +217,7 @@ export function MeetingManagerApp() {
           <button
             onClick={() => setActiveTab("actions")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "actions" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "actions" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Action Items ({stats.totalActions})
@@ -215,7 +225,7 @@ export function MeetingManagerApp() {
           <button
             onClick={() => setActiveTab("decisions")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "decisions" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "decisions" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Decision Log
@@ -223,7 +233,7 @@ export function MeetingManagerApp() {
           <button
             onClick={() => setActiveTab("series")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "series" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "series" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Series
@@ -231,7 +241,7 @@ export function MeetingManagerApp() {
           <button
             onClick={() => setActiveTab("stats")}
             className={`px-3 py-1.5 rounded-md font-medium transition ${
-              activeTab === "stats" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-300 hover:text-white"
+              activeTab === "stats" ? "bg-indigo-600 text-white shadow-sm" : "text-foreground hover:text-white"
             }`}
           >
             Analytics
@@ -255,9 +265,9 @@ export function MeetingManagerApp() {
             {/* Left Column: Meeting Info, Agenda, Participants */}
             <div className="lg:col-span-4 space-y-6">
               {/* Meeting Selector / Summary Card */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
+              <div className="bg-background border border-border rounded-xl p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs uppercase font-bold tracking-wider text-slate-400">Current Session</span>
+                  <span className="text-xs uppercase font-bold tracking-wider text-muted-foreground">Current Session</span>
                   <div className="flex items-center gap-2">
                     {currentMeeting.status !== "in_progress" && currentMeeting.status !== "completed" && (
                       <button
@@ -280,7 +290,7 @@ export function MeetingManagerApp() {
 
                 <h2 className="text-lg font-bold text-white mb-2">{currentMeeting.title}</h2>
 
-                <div className="space-y-2 text-xs text-slate-300">
+                <div className="space-y-2 text-xs text-foreground">
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-indigo-400" />
                     <span>
@@ -303,12 +313,12 @@ export function MeetingManagerApp() {
                 </div>
 
                 {/* Switch meeting quick dropdown */}
-                <div className="mt-4 pt-4 border-t border-slate-800">
-                  <label className="text-xs text-slate-400 block mb-1">Switch Active Meeting:</label>
+                <div className="mt-4 pt-4 border-t border-border">
+                  <label className="text-xs text-muted-foreground block mb-1">Switch Active Meeting:</label>
                   <select
                     value={currentMeeting.id}
                     onChange={(e) => setSelectedMeetingId(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 text-xs rounded-lg px-2.5 py-1.5 text-white"
+                    className="w-full bg-foreground border border-border text-xs rounded-lg px-2.5 py-1.5 text-background"
                   >
                     {meetings.map((m) => (
                       <option key={m.id} value={m.id}>
@@ -320,28 +330,28 @@ export function MeetingManagerApp() {
               </div>
 
               {/* Agenda (Before Phase) */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
+              <div className="bg-background border border-border rounded-xl p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-blue-400" />
                     <h3 className="font-semibold text-sm text-white">1. Agenda (Before)</h3>
                   </div>
-                  <span className="text-xs text-slate-400">{currentMeeting.agendaItems.length} topics</span>
+                  <span className="text-xs text-muted-foreground">{currentMeeting.agendaItems.length} topics</span>
                 </div>
 
                 <div className="space-y-2 mb-4">
                   {currentMeeting.agendaItems.map((item, idx) => (
                     <div
                       key={item.id}
-                      className="p-3 bg-slate-800/60 border border-slate-700/50 rounded-lg flex items-start justify-between gap-3 text-xs"
+                      className="p-3 bg-card/60 border border-border/50 rounded-lg flex items-start justify-between gap-3 text-xs"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-indigo-400 font-bold">#{idx + 1}</span>
-                          <span className="font-medium text-slate-200">{item.topic}</span>
+                          <span className="font-medium text-foreground">{item.topic}</span>
                         </div>
                         {item.ownerName && (
-                          <div className="text-slate-400 text-[11px]">Led by: {item.ownerName} ({item.estimatedMinutes || 15}m)</div>
+                          <div className="text-muted-foreground text-[11px]">Led by: {item.ownerName} ({item.estimatedMinutes || 15}m)</div>
                         )}
                       </div>
                       <select
@@ -351,7 +361,7 @@ export function MeetingManagerApp() {
                           item.status === "discussed"
                             ? "bg-emerald-950/60 border-emerald-700 text-emerald-300"
                             : item.status === "skipped"
-                            ? "bg-slate-800 border-slate-700 text-slate-400"
+                            ? "bg-card border-border text-muted-foreground"
                             : "bg-blue-950/60 border-blue-700 text-blue-300"
                         }`}
                       >
@@ -371,13 +381,13 @@ export function MeetingManagerApp() {
                     placeholder="New agenda topic..."
                     value={newAgendaTopic}
                     onChange={(e) => setNewAgendaTopic(e.target.value)}
-                    className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"
+                    className="flex-1 bg-foreground border border-border rounded-lg px-2.5 py-1.5 text-xs text-background"
                   />
                   <input
                     type="number"
                     value={newAgendaMins}
                     onChange={(e) => setNewAgendaMins(Number(e.target.value))}
-                    className="w-14 bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-center text-white"
+                    className="w-14 bg-foreground border border-border rounded-lg px-2 py-1.5 text-xs text-center text-background"
                     title="Estimated minutes"
                   />
                   <button
@@ -399,7 +409,7 @@ export function MeetingManagerApp() {
               </div>
 
               {/* Participants */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
+              <div className="bg-background border border-border rounded-xl p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold text-sm text-white flex items-center gap-2">
                     <Users className="w-4 h-4 text-indigo-400" />
@@ -415,23 +425,23 @@ export function MeetingManagerApp() {
                     <div
                       key={p.id}
                       onClick={() => toggleParticipantAttendance(currentMeeting.id, p.personId)}
-                      className="flex items-center justify-between p-2.5 rounded-lg bg-slate-800/60 hover:bg-slate-800 cursor-pointer border border-slate-700/50 transition text-xs"
+                      className="flex items-center justify-between p-2.5 rounded-lg bg-card/60 hover:bg-card cursor-pointer border border-border/50 transition text-xs"
                     >
                       <div className="flex items-center gap-2">
                         {p.attended ? (
                           <UserCheck className="w-4 h-4 text-emerald-400" />
                         ) : (
-                          <UserX className="w-4 h-4 text-slate-500" />
+                          <UserX className="w-4 h-4 text-muted-foreground" />
                         )}
                         <div>
-                          <div className={`font-medium ${p.attended ? "text-white" : "text-slate-400 line-through"}`}>
+                          <div className={`font-medium ${p.attended ? "text-white" : "text-muted-foreground line-through"}`}>
                             {p.name}
                           </div>
-                          <div className="text-[10px] text-slate-400 uppercase tracking-wider">{p.role}</div>
+                          <div className="text-[10px] text-muted-foreground uppercase tracking-wider">{p.role}</div>
                         </div>
                       </div>
                       <span className={`text-[10px] px-2 py-0.5 rounded font-semibold ${
-                        p.attended ? "bg-emerald-500/20 text-emerald-300" : "bg-slate-800 text-slate-500"
+                        p.attended ? "bg-emerald-500/20 text-emerald-300" : "bg-card text-muted-foreground"
                       }`}>
                         {p.attended ? "Attended" : "Absent"}
                       </span>
@@ -446,12 +456,12 @@ export function MeetingManagerApp() {
                     placeholder="Participant name..."
                     value={newParticipantName}
                     onChange={(e) => setNewParticipantName(e.target.value)}
-                    className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"
+                    className="flex-1 bg-foreground border border-border rounded-lg px-2.5 py-1.5 text-xs text-background"
                   />
                   <select
                     value={newParticipantRole}
                     onChange={(e) => setNewParticipantRole(e.target.value as ParticipantRole)}
-                    className="bg-slate-800 border border-slate-700 text-xs rounded-lg px-2 py-1.5 text-white"
+                    className="bg-foreground border border-border text-xs rounded-lg px-2 py-1.5 text-background"
                   >
                     <option value="required">Required</option>
                     <option value="optional">Optional</option>
@@ -468,7 +478,7 @@ export function MeetingManagerApp() {
                       });
                       setNewParticipantName("");
                     }}
-                    className="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs"
+                    className="bg-foreground hover:bg-muted-foreground/30 text-background px-3 py-1.5 rounded-lg text-xs"
                   >
                     Invite
                   </button>
@@ -479,7 +489,7 @@ export function MeetingManagerApp() {
             {/* Right Column: Live Notes (During), Decisions, Action Items (After) */}
             <div className="lg:col-span-8 space-y-6">
               {/* During: Real-Time Notes & Discussions */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
+              <div className="bg-background border border-border rounded-xl p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-amber-400" />
@@ -488,7 +498,7 @@ export function MeetingManagerApp() {
                       2. Live Meeting Notes (During)
                     </h3>
                   </div>
-                  <span className="text-xs text-slate-400">{currentMeeting.notes.length} note entries</span>
+                  <span className="text-xs text-muted-foreground">{currentMeeting.notes.length} note entries</span>
                 </div>
 
                 <div className="flex gap-2 mb-4">
@@ -497,7 +507,7 @@ export function MeetingManagerApp() {
                     placeholder="Type live notes, discussions, points raised during meeting..."
                     value={newNoteText}
                     onChange={(e) => setNewNoteText(e.target.value)}
-                    className="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                    className="flex-1 bg-foreground border border-border rounded-lg p-2.5 text-xs text-background placeholder-muted-foreground focus:outline-none focus:border-indigo-500"
                   />
                   <button
                     onClick={() => {
@@ -517,18 +527,18 @@ export function MeetingManagerApp() {
 
                 <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                   {currentMeeting.notes.length === 0 ? (
-                    <div className="text-center py-6 text-slate-500 text-xs italic">
+                    <div className="text-center py-6 text-muted-foreground text-xs italic">
                       No live notes taken yet. Use the box above during the meeting.
                     </div>
                   ) : (
                     currentMeeting.notes.map((note) => (
                       <div
                         key={note.id}
-                        className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/60 flex items-start justify-between gap-3 text-xs"
+                        className="p-3 rounded-lg bg-card/50 border border-border/60 flex items-start justify-between gap-3 text-xs"
                       >
                         <div>
-                          <div className="text-slate-200 whitespace-pre-wrap">{note.content}</div>
-                          <div className="flex items-center gap-2 mt-1.5 text-[11px] text-slate-400">
+                          <div className="text-foreground whitespace-pre-wrap">{note.content}</div>
+                          <div className="flex items-center gap-2 mt-1.5 text-[11px] text-muted-foreground">
                             <span className="font-medium text-amber-400">{note.authorName}</span>
                             <span>•</span>
                             <span>{note.timestamp}</span>
@@ -536,7 +546,7 @@ export function MeetingManagerApp() {
                         </div>
                         <button
                           onClick={() => deleteNote(currentMeeting.id, note.id)}
-                          className="text-slate-500 hover:text-rose-400 p-1"
+                          className="text-muted-foreground hover:text-rose-400 p-1"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -547,7 +557,7 @@ export function MeetingManagerApp() {
               </div>
 
               {/* During: Explicit Decisions Log */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
+              <div className="bg-background border border-border rounded-xl p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -566,7 +576,7 @@ export function MeetingManagerApp() {
                       placeholder="Decision statement (e.g. Approved architecture choice)..."
                       value={newDecisionText}
                       onChange={(e) => setNewDecisionText(e.target.value)}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
+                      className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-xs text-background"
                     />
                   </div>
                   <div className="md:col-span-4">
@@ -575,7 +585,7 @@ export function MeetingManagerApp() {
                       placeholder="Rationale / reason..."
                       value={newDecisionRationale}
                       onChange={(e) => setNewDecisionRationale(e.target.value)}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
+                      className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-xs text-background"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -609,15 +619,15 @@ export function MeetingManagerApp() {
                           {dec.statement}
                         </div>
                         {dec.rationale && (
-                          <div className="text-slate-300 text-[11px] italic pl-5">Rationale: {dec.rationale}</div>
+                          <div className="text-foreground text-[11px] italic pl-5">Rationale: {dec.rationale}</div>
                         )}
-                        <div className="text-[11px] text-slate-400 pl-5">
-                          Decided by: <span className="text-slate-200">{dec.decidedBy}</span>
+                        <div className="text-[11px] text-muted-foreground pl-5">
+                          Decided by: <span className="text-foreground">{dec.decidedBy}</span>
                         </div>
                       </div>
                       <button
                         onClick={() => deleteDecision(currentMeeting.id, dec.id)}
-                        className="text-slate-500 hover:text-rose-400 p-1"
+                        className="text-muted-foreground hover:text-rose-400 p-1"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -627,7 +637,7 @@ export function MeetingManagerApp() {
               </div>
 
               {/* After: Action Items & Task Manager Conversion */}
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
+              <div className="bg-background border border-border rounded-xl p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-400" />
@@ -648,7 +658,7 @@ export function MeetingManagerApp() {
                       placeholder="Follow-up action item description..."
                       value={newActionText}
                       onChange={(e) => setNewActionText(e.target.value)}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
+                      className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-xs text-background"
                     />
                   </div>
                   <div className="md:col-span-3">
@@ -657,7 +667,7 @@ export function MeetingManagerApp() {
                       placeholder="Assignee (e.g. Andi Pratama)..."
                       value={newActionAssignee}
                       onChange={(e) => setNewActionAssignee(e.target.value)}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
+                      className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-xs text-background"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -665,7 +675,7 @@ export function MeetingManagerApp() {
                       type="date"
                       value={newActionDueDate}
                       onChange={(e) => setNewActionDueDate(e.target.value)}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-2 text-xs text-white"
+                      className="w-full bg-foreground border border-border rounded-lg px-2 py-2 text-xs text-background"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -690,24 +700,24 @@ export function MeetingManagerApp() {
 
                 <div className="space-y-2">
                   {currentMeeting.actionItems.length === 0 ? (
-                    <div className="text-center py-6 text-slate-500 text-xs italic">
+                    <div className="text-center py-6 text-muted-foreground text-xs italic">
                       No action items created yet. Add deliverables or follow-ups for post-meeting execution.
                     </div>
                   ) : (
                     currentMeeting.actionItems.map((act) => (
                       <div
                         key={act.id}
-                        className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/60 flex flex-wrap items-center justify-between gap-3 text-xs"
+                        className="p-3 rounded-lg bg-card/60 border border-border/60 flex flex-wrap items-center justify-between gap-3 text-xs"
                       >
                         <div className="space-y-1">
-                          <div className="font-medium text-slate-200 flex items-center gap-2">
+                          <div className="font-medium text-foreground flex items-center gap-2">
                             <span className={`w-2 h-2 rounded-full ${
                               act.status === "done" ? "bg-emerald-400" : act.status === "in_progress" ? "bg-amber-400" : "bg-purple-400"
                             }`} />
                             {act.description}
                           </div>
-                          <div className="flex items-center gap-3 text-[11px] text-slate-400">
-                            <span>Assignee: <strong className="text-slate-300">{act.assigneeName || "Unassigned"}</strong></span>
+                          <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                            <span>Assignee: <strong className="text-foreground">{act.assigneeName || "Unassigned"}</strong></span>
                             {act.dueDate && <span>Due: {act.dueDate}</span>}
                             {act.linkedTaskId && (
                               <span className="text-indigo-400 font-mono bg-indigo-500/10 px-1.5 py-0.5 rounded border border-indigo-500/30">
@@ -721,7 +731,7 @@ export function MeetingManagerApp() {
                           <select
                             value={act.status}
                             onChange={(e) => updateActionItemStatus(currentMeeting.id, act.id, e.target.value as ActionItemStatus)}
-                            className="bg-slate-800 border border-slate-700 text-xs rounded px-2 py-1 text-slate-300"
+                            className="bg-card border border-border text-xs rounded px-2 py-1 text-foreground"
                           >
                             <option value="open">Open</option>
                             <option value="in_progress">In Progress</option>
@@ -752,24 +762,24 @@ export function MeetingManagerApp() {
         {/* TAB 2: ALL MEETINGS */}
         {activeTab === "upcoming" && (
           <div className="space-y-6">
-            <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-900 p-4 rounded-xl border border-slate-800">
+            <div className="flex flex-wrap items-center justify-between gap-4 bg-background p-4 rounded-xl border border-border">
               <div className="flex items-center gap-2 flex-1 max-w-md">
-                <Search className="w-4 h-4 text-slate-400" />
+                <Search className="w-4 h-4 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Search meetings by title, notes, decisions..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white w-full"
+                  className="bg-foreground border border-border rounded-lg px-3 py-1.5 text-xs text-background w-full"
                 />
               </div>
 
               <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-slate-400" />
+                <Filter className="w-4 h-4 text-muted-foreground" />
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white"
+                  className="bg-foreground border border-border rounded-lg px-3 py-1.5 text-xs text-background"
                 >
                   <option value="all">All Statuses</option>
                   <option value="scheduled">Scheduled</option>
@@ -788,7 +798,7 @@ export function MeetingManagerApp() {
                     setSelectedMeetingId(m.id);
                     setActiveTab("detail");
                   }}
-                  className="bg-slate-900 border border-slate-800 hover:border-indigo-500/50 rounded-xl p-5 cursor-pointer transition shadow-sm space-y-4 group"
+                  className="bg-background border border-border hover:border-indigo-500/50 rounded-xl p-5 cursor-pointer transition shadow-sm space-y-4 group"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded border ${
@@ -800,14 +810,14 @@ export function MeetingManagerApp() {
                     }`}>
                       {m.status}
                     </span>
-                    <span className="text-xs text-slate-400 font-mono">
+                    <span className="text-xs text-muted-foreground font-mono">
                       {new Date(m.scheduledStartTime).toLocaleDateString([], { month: "short", day: "numeric" })}
                     </span>
                   </div>
 
                   <h3 className="font-semibold text-white group-hover:text-indigo-400 transition">{m.title}</h3>
 
-                  <div className="text-xs text-slate-400 space-y-1">
+                  <div className="text-xs text-muted-foreground space-y-1">
                     <div className="flex items-center gap-2">
                       <Clock className="w-3.5 h-3.5 text-indigo-400" />
                       <span>{new Date(m.scheduledStartTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
@@ -815,7 +825,7 @@ export function MeetingManagerApp() {
                     {m.location && <div className="truncate">📍 {m.location}</div>}
                   </div>
 
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-800 text-xs text-slate-400">
+                  <div className="flex items-center justify-between pt-3 border-t border-border text-xs text-muted-foreground">
                     <span>{m.participants.length} attendees</span>
                     <span>{m.actionItems.length} action items</span>
                     <span>{m.decisions.length} decisions</span>
@@ -829,9 +839,9 @@ export function MeetingManagerApp() {
         {/* TAB 3: ACTION ITEMS BOARD */}
         {activeTab === "actions" && (
           <div className="space-y-6">
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <div className="bg-background border border-border rounded-xl p-5">
               <h2 className="text-lg font-bold text-white mb-1">Cross-Meeting Action Items Board</h2>
-              <p className="text-xs text-slate-400 mb-4">
+              <p className="text-xs text-muted-foreground mb-4">
                 Every action item serves as a bridge to execution. Convert actions to formal Tasks in Task Manager (#01).
               </p>
 
@@ -843,9 +853,9 @@ export function MeetingManagerApp() {
                       .map((act) => ({ ...act, meetingTitle: m.title, meetingId: m.id }))
                   );
                   return (
-                    <div key={colStatus} className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex flex-col">
-                      <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
-                        <span className="font-bold text-xs uppercase tracking-wider text-slate-300">
+                    <div key={colStatus} className="bg-background/60 border border-border rounded-xl p-4 flex flex-col">
+                      <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
+                        <span className="font-bold text-xs uppercase tracking-wider text-foreground">
                           {colStatus.replace("_", " ")} ({items.length})
                         </span>
                         <span className={`w-2.5 h-2.5 rounded-full ${
@@ -855,17 +865,17 @@ export function MeetingManagerApp() {
 
                       <div className="space-y-3 flex-1 overflow-y-auto">
                         {items.length === 0 ? (
-                          <div className="text-xs text-slate-500 italic text-center py-8">No items</div>
+                          <div className="text-xs text-muted-foreground italic text-center py-8">No items</div>
                         ) : (
                           items.map((act) => (
                             <div
                               key={act.id}
-                              className="bg-slate-900 border border-slate-800 hover:border-slate-700 p-3.5 rounded-lg space-y-2 text-xs"
+                              className="bg-background border border-border hover:border-border p-3.5 rounded-lg space-y-2 text-xs"
                             >
-                              <div className="font-medium text-slate-200">{act.description}</div>
-                              <div className="text-[11px] text-slate-400">From: {act.meetingTitle}</div>
-                              <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[11px]">
-                                <span className="text-slate-300">👤 {act.assigneeName}</span>
+                              <div className="font-medium text-foreground">{act.description}</div>
+                              <div className="text-[11px] text-muted-foreground">From: {act.meetingTitle}</div>
+                              <div className="flex items-center justify-between pt-2 border-t border-border/80 text-[11px]">
+                                <span className="text-foreground">👤 {act.assigneeName}</span>
                                 {act.dueDate && <span className="text-indigo-400">📅 {act.dueDate}</span>}
                               </div>
 
@@ -888,7 +898,7 @@ export function MeetingManagerApp() {
                                   onChange={(e) =>
                                     updateActionItemStatus(act.meetingId, act.id, e.target.value as ActionItemStatus)
                                   }
-                                  className="text-[10px] bg-slate-800 border border-slate-700 text-slate-300 rounded px-1.5 py-0.5"
+                                  className="text-[10px] bg-card border border-border text-foreground rounded px-1.5 py-0.5"
                                 >
                                   <option value="open">Open</option>
                                   <option value="in_progress">In Progress</option>
@@ -909,10 +919,10 @@ export function MeetingManagerApp() {
 
         {/* TAB 4: DECISION LOG */}
         {activeTab === "decisions" && (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+          <div className="bg-background border border-border rounded-xl p-6 space-y-4">
             <div>
               <h2 className="text-lg font-bold text-white">Consolidated Decision Log</h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-muted-foreground">
                 Audit trail of explicit decisions agreed upon in meetings. Can be referenced into Decision Journal (#84).
               </p>
             </div>
@@ -921,14 +931,14 @@ export function MeetingManagerApp() {
               {meetings.flatMap((m) =>
                 m.decisions.map((dec) => ({ ...dec, meetingTitle: m.title, meetingId: m.id }))
               ).length === 0 ? (
-                <div className="text-xs text-slate-500 italic py-8 text-center">No decisions recorded yet.</div>
+                <div className="text-xs text-muted-foreground italic py-8 text-center">No decisions recorded yet.</div>
               ) : (
                 meetings
                   .flatMap((m) => m.decisions.map((dec) => ({ ...dec, meetingTitle: m.title, meetingId: m.id })))
                   .map((dec) => (
                     <div
                       key={dec.id}
-                      className="p-4 rounded-xl bg-slate-800/40 border border-slate-700/60 flex flex-wrap items-start justify-between gap-4 text-xs"
+                      className="p-4 rounded-xl bg-card/40 border border-border/60 flex flex-wrap items-start justify-between gap-4 text-xs"
                     >
                       <div className="space-y-1.5 flex-1">
                         <div className="font-semibold text-sm text-emerald-400 flex items-center gap-2">
@@ -936,11 +946,11 @@ export function MeetingManagerApp() {
                           {dec.statement}
                         </div>
                         {dec.rationale && (
-                          <div className="text-slate-300 pl-6 italic">Rationale: {dec.rationale}</div>
+                          <div className="text-foreground pl-6 italic">Rationale: {dec.rationale}</div>
                         )}
-                        <div className="flex items-center gap-4 pl-6 text-[11px] text-slate-400 pt-1">
-                          <span>Session: <strong className="text-slate-300">{dec.meetingTitle}</strong></span>
-                          <span>Decided by: <strong className="text-slate-300">{dec.decidedBy}</strong></span>
+                        <div className="flex items-center gap-4 pl-6 text-[11px] text-muted-foreground pt-1">
+                          <span>Session: <strong className="text-foreground">{dec.meetingTitle}</strong></span>
+                          <span>Decided by: <strong className="text-foreground">{dec.decidedBy}</strong></span>
                           <span>Timestamp: {new Date(dec.decidedAt).toLocaleString()}</span>
                         </div>
                       </div>
@@ -957,11 +967,11 @@ export function MeetingManagerApp() {
 
         {/* TAB 5: MEETING SERIES */}
         {activeTab === "series" && (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
+          <div className="bg-background border border-border rounded-xl p-6 space-y-6">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-bold text-white">Recurring Meeting Series</h2>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Standardized cadences with pre-configured agenda templates and longitudinal action item tracking.
                 </p>
               </div>
@@ -969,21 +979,21 @@ export function MeetingManagerApp() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {series.map((s) => (
-                <div key={s.id} className="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4">
+                <div key={s.id} className="bg-background border border-border rounded-xl p-5 space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
                       {s.recurrence}
                     </span>
-                    <span className="text-xs text-slate-400">{s.meetingIds.length} sessions tracked</span>
+                    <span className="text-xs text-muted-foreground">{s.meetingIds.length} sessions tracked</span>
                   </div>
 
                   <h3 className="font-bold text-white text-base">{s.title}</h3>
 
                   <div>
-                    <span className="text-xs text-slate-400 font-semibold block mb-2">Default Agenda Template:</span>
+                    <span className="text-xs text-muted-foreground font-semibold block mb-2">Default Agenda Template:</span>
                     <ul className="space-y-1.5">
                       {s.defaultAgendaTemplate?.map((tmpl, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-xs text-slate-300 bg-slate-900 p-2 rounded border border-slate-800">
+                        <li key={idx} className="flex items-center gap-2 text-xs text-foreground bg-background p-2 rounded border border-border">
                           <span className="font-mono text-indigo-400 font-bold">#{idx + 1}</span>
                           <span>{tmpl}</span>
                         </li>
@@ -1000,34 +1010,34 @@ export function MeetingManagerApp() {
         {activeTab === "stats" && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Total Meetings</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Total Meetings</span>
                 <div className="text-2xl font-bold text-white mt-1">{stats.totalMeetings}</div>
                 <div className="text-[11px] text-emerald-400 mt-1">{stats.completed} sessions completed</div>
               </div>
 
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Action Completion</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Action Completion</span>
                 <div className="text-2xl font-bold text-purple-400 mt-1">{stats.actionCompletionRate}%</div>
-                <div className="text-[11px] text-slate-400 mt-1">{stats.doneActions} of {stats.totalActions} done</div>
+                <div className="text-[11px] text-muted-foreground mt-1">{stats.doneActions} of {stats.totalActions} done</div>
               </div>
 
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Decisions / Meeting</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Decisions / Meeting</span>
                 <div className="text-2xl font-bold text-emerald-400 mt-1">{stats.avgDecisions}</div>
-                <div className="text-[11px] text-slate-400 mt-1">{stats.totalDecisions} total decisions</div>
+                <div className="text-[11px] text-muted-foreground mt-1">{stats.totalDecisions} total decisions</div>
               </div>
 
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                <span className="text-xs text-slate-400 uppercase font-semibold">Attendance Rate</span>
+              <div className="bg-background border border-border p-4 rounded-xl">
+                <span className="text-xs text-muted-foreground uppercase font-semibold">Attendance Rate</span>
                 <div className="text-2xl font-bold text-blue-400 mt-1">{stats.attendanceRate}%</div>
                 <div className="text-[11px] text-amber-400 mt-1">{stats.overdueActions} overdue actions</div>
               </div>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <div className="bg-background border border-border rounded-xl p-6">
               <h3 className="font-bold text-white text-base mb-2">Meeting Ecosystem Integration Architecture</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Meeting Manager (#19) maintains clear boundaries: Calendar (#02) owns scheduling and invitations;
                 Task Manager (#01) executes converted Action Items; People Manager (#35) manages attendee contact profiles;
                 and Decision Journal (#84) stores strategic long-term decisions.
@@ -1040,60 +1050,60 @@ export function MeetingManagerApp() {
       {/* Schedule Meeting Modal */}
       {isNewMeetingOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
+          <div className="bg-background border border-border rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
             <h3 className="text-lg font-bold text-white">Schedule New Structured Meeting</h3>
 
             <form onSubmit={handleCreateMeeting} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-300 mb-1 font-medium">Meeting Title</label>
+                <label className="block text-foreground mb-1 font-medium">Meeting Title</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Q4 Strategy Review"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                  className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 mb-1 font-medium">Start Time</label>
+                  <label className="block text-foreground mb-1 font-medium">Start Time</label>
                   <input
                     type="datetime-local"
                     value={newStartTime}
                     onChange={(e) => setNewStartTime(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                    className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 mb-1 font-medium">End Time</label>
+                  <label className="block text-foreground mb-1 font-medium">End Time</label>
                   <input
                     type="datetime-local"
                     value={newEndTime}
                     onChange={(e) => setNewEndTime(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                    className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1 font-medium">Location / Link</label>
+                <label className="block text-foreground mb-1 font-medium">Location / Link</label>
                 <input
                   type="text"
                   placeholder="e.g. Meeting Room 2 / Google Meet"
                   value={newLocation}
                   onChange={(e) => setNewLocation(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                  className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1 font-medium">Recurring Series (Optional)</label>
+                <label className="block text-foreground mb-1 font-medium">Recurring Series (Optional)</label>
                 <select
                   value={newSeriesId}
                   onChange={(e) => setNewSeriesId(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                  className="w-full bg-foreground border border-border rounded-lg px-3 py-2 text-background"
                 >
                   <option value="">None (One-off Meeting)</option>
                   {series.map((s) => (
@@ -1104,11 +1114,11 @@ export function MeetingManagerApp() {
                 </select>
               </div>
 
-              <div className="flex justify-end gap-2 pt-4 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-4 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setIsNewMeetingOpen(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold"
+                  className="px-4 py-2 rounded-lg bg-card hover:bg-card text-foreground font-semibold"
                 >
                   Cancel
                 </button>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Item, QuadrantId } from "../matriks/types";
 import { Quadrant } from "../matriks/components/Quadrant";
+import { useMatrixQuadrantFocus } from "./useMatrixQuadrantFocus";
 
 const assetFramework = {
   id: "asset",
@@ -42,6 +43,10 @@ export function AssetMatrix() {
     bl: [],
     br: [],
   });
+  const { focusedQuadrant, quadrantId } = useMatrixQuadrantFocus(
+    "asset",
+    assetFramework.quadrants
+  );
 
   const handleAddItem = (quadrantId: QuadrantId, text: string) => {
     const newItem: Item = { id: crypto.randomUUID(), text };
@@ -72,24 +77,32 @@ export function AssetMatrix() {
           items={items.tl}
           onAddItem={(text) => handleAddItem("tl", text)}
           onRemoveItem={(id) => handleRemoveItem("tl", id)}
+          id={quadrantId("tl")}
+          focused={focusedQuadrant === "tl"}
         />
         <Quadrant
           data={assetFramework.quadrants.tr as any}
           items={items.tr}
           onAddItem={(text) => handleAddItem("tr", text)}
           onRemoveItem={(id) => handleRemoveItem("tr", id)}
+          id={quadrantId("tr")}
+          focused={focusedQuadrant === "tr"}
         />
         <Quadrant
           data={assetFramework.quadrants.bl as any}
           items={items.bl}
           onAddItem={(text) => handleAddItem("bl", text)}
           onRemoveItem={(id) => handleRemoveItem("bl", id)}
+          id={quadrantId("bl")}
+          focused={focusedQuadrant === "bl"}
         />
         <Quadrant
           data={assetFramework.quadrants.br as any}
           items={items.br}
           onAddItem={(text) => handleAddItem("br", text)}
           onRemoveItem={(id) => handleRemoveItem("br", id)}
+          id={quadrantId("br")}
+          focused={focusedQuadrant === "br"}
         />
       </div>
     </div>

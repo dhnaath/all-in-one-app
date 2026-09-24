@@ -571,7 +571,7 @@ export function GoalsView() {
                             ? "bg-rose-500/10 text-rose-600 dark:text-rose-400"
                             : goal.priority === "Sedang"
                             ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                            : "bg-slate-500/10 text-slate-600"
+                            : "bg-muted-foreground/30/10 text-muted-foreground"
                         }`}
                       >
                         Prioritas {goal.priority}

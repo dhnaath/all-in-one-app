@@ -9,6 +9,7 @@ import {
   Calendar,
   ChevronRight,
 } from "lucide-react";
+import { useShellSections } from "@/app/shell-sections";
 
 interface Milestone {
   id: string;
@@ -69,10 +70,21 @@ export function DevelopmentView() {
     },
   ]);
 
+  const [activeSection, setActiveSection] = useState<string>("ringkasan");
+  const goSection = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(`soc-dev-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  useShellSections([
+    { id: "ringkasan", label: "Ringkasan", active: activeSection === "ringkasan", onSelect: () => goSection("ringkasan") },
+    { id: "metrik", label: "Metrik", active: activeSection === "metrik", onSelect: () => goSection("metrik") },
+    { id: "roadmap", label: "Peta Jalan", active: activeSection === "roadmap", onSelect: () => goSection("roadmap") },
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-[20px] bg-card border border-border">
+      <div id="soc-dev-ringkasan" className="scroll-mt-24 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-[20px] bg-card border border-border">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
             <Sparkles className="size-4 text-foreground" />
@@ -94,7 +106,7 @@ export function DevelopmentView() {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div id="soc-dev-metrik" className="scroll-mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 rounded-[20px] bg-card border border-border flex flex-col justify-between">
           <span className="text-xs font-medium text-muted-foreground">Milestone Tercapai</span>
           <div className="mt-3 flex items-baseline justify-between">
@@ -143,7 +155,7 @@ export function DevelopmentView() {
       </div>
 
       {/* Development Roadmap */}
-      <div className="p-6 rounded-[20px] bg-card border border-border space-y-4">
+      <div id="soc-dev-roadmap" className="scroll-mt-24 p-6 rounded-[20px] bg-card border border-border space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-sm font-semibold text-foreground">Peta Jalan Pengembangan (Horizon Roadmap)</h3>

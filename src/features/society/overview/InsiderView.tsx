@@ -11,6 +11,7 @@ import {
   Activity,
   AlertCircle,
 } from "lucide-react";
+import { useShellSections } from "@/app/shell-sections";
 
 interface InsiderReport {
   id: string;
@@ -77,10 +78,21 @@ export function InsiderView() {
       ? reports
       : reports.filter((r) => r.category === activeCategory);
 
+  const [activeSection, setActiveSection] = useState<string>("ringkasan");
+  const goSection = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(`soc-ins-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  useShellSections([
+    { id: "ringkasan", label: "Ringkasan", active: activeSection === "ringkasan", onSelect: () => goSection("ringkasan") },
+    { id: "metrik", label: "Metrik", active: activeSection === "metrik", onSelect: () => goSection("metrik") },
+    { id: "laporan", label: "Laporan", active: activeSection === "laporan", onSelect: () => goSection("laporan") },
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-[20px] bg-card border border-border">
+      <div id="soc-ins-ringkasan" className="scroll-mt-24 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-[20px] bg-card border border-border">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
             <Eye className="size-4 text-foreground" />

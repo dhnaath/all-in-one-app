@@ -60,7 +60,7 @@ export function TransactionsView({
           <input
             type="text"
             placeholder="Cari"
-            className="bg-transparent border-none outline-none text-foreground w-full placeholder-gray-500 text-sm"
+            className="bg-transparent border-none outline-none text-foreground w-full placeholder-muted-foreground text-sm"
           />
           <button onClick={onUnavailable}>
             <LayoutGrid

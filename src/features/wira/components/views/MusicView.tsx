@@ -368,10 +368,10 @@ export function MusicView() {
 
       {/* Featured Vinyl / Player Hero Section */}
       {activeTrack && (
-        <div className="bg-gradient-to-r from-teal-950 via-slate-900 to-slate-950 text-white rounded-3xl p-6 sm:p-8 border border-teal-900/50 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-teal-950 via-border to-border text-white rounded-3xl p-6 sm:p-8 border border-teal-900/50 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
           <div className="flex flex-col sm:flex-row items-center gap-6 z-10">
             {/* Spinning Disc Effect when Playing */}
-            <div className="relative w-36 h-36 shrink-0 rounded-2xl overflow-hidden shadow-2xl group border border-white/10">
+            <div className="relative w-36 h-36 shrink-0 rounded-2xl overflow-hidden shadow-2xl group border border-border/10">
               <img
                 src={activeTrack.coverUrl}
                 alt={activeTrack.title}
@@ -384,7 +384,7 @@ export function MusicView() {
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="w-14 h-14 rounded-full bg-teal-500 hover:bg-teal-400 text-slate-950 flex items-center justify-center shadow-lg transition-transform active:scale-95"
+                  className="w-14 h-14 rounded-full bg-teal-500 hover:bg-teal-400 text-foreground flex items-center justify-center shadow-lg transition-transform active:scale-95"
                 >
                   {isPlaying ? <Pause size={22} className="fill-current" /> : <Play size={22} className="ml-1 fill-current" />}
                 </button>
@@ -432,7 +432,7 @@ export function MusicView() {
           <div className="flex items-center gap-3 z-10">
             <button
               onClick={(e) => toggleLike(activeTrack.id, e)}
-              className="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+              className="p-3 rounded-full bg-card/10 hover:bg-card/20 text-white transition-colors"
               title="Sukai Trek Ini"
             >
               <Heart

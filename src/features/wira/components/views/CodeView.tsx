@@ -504,7 +504,7 @@ export function CodeView() {
       case "bash":
         return "bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-400 border-purple-200 dark:border-purple-900";
       case "json":
-        return "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700";
+        return "bg-muted text-foreground dark:bg-card dark:text-foreground border-border dark:border-border";
       default:
         return "bg-muted text-muted-foreground border-border";
     }
@@ -767,10 +767,10 @@ export function CodeView() {
               </div>
 
               {/* Code Container with Line Numbers */}
-              <div className="relative bg-slate-950 text-slate-100 p-4 sm:p-5 overflow-x-auto font-mono text-xs sm:text-sm leading-relaxed max-h-[580px] overflow-y-auto">
+              <div className="relative bg-background text-foreground p-4 sm:p-5 overflow-x-auto font-mono text-xs sm:text-sm leading-relaxed max-h-[580px] overflow-y-auto">
                 <div className="flex">
                   {/* Line Number Column */}
-                  <div className="select-none text-slate-600 pr-4 text-right border-r border-slate-800 shrink-0 font-mono text-xs">
+                  <div className="select-none text-muted-foreground pr-4 text-right border-r border-border shrink-0 font-mono text-xs">
                     {activeSnippet.code.split("\n").map((_, i) => (
                       <div key={i} className="leading-6">
                         {i + 1}
@@ -793,7 +793,7 @@ export function CodeView() {
                         // Comments highlight
                         if (line.trim().startsWith("--") || line.trim().startsWith("#") || line.trim().startsWith("//")) {
                           return (
-                            <div key={i} className="text-slate-500 italic">
+                            <div key={i} className="text-muted-foreground italic">
                               {line}
                             </div>
                           );
@@ -943,7 +943,7 @@ export function CodeView() {
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
                   placeholder="Tempel atau ketik kode di sini..."
-                  className="w-full p-3 font-mono text-xs rounded-xl bg-slate-950 text-slate-100 border border-slate-800 outline-hidden focus:border-indigo-500 leading-relaxed resize-none"
+                  className="w-full p-3 font-mono text-xs rounded-xl bg-background text-foreground border border-border outline-hidden focus:border-indigo-500 leading-relaxed resize-none"
                 />
               </div>
 

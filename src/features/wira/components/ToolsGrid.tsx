@@ -73,7 +73,7 @@ export function ToolsGrid({ onToolClick }: ToolsGridProps) {
           key={tool.id}
           onClick={() => onToolClick(tool.id)}
           className={cn(
-            "relative flex flex-col items-start justify-between p-5 h-44 rounded-3xl overflow-hidden text-left group transition-transform active:scale-95 shadow-sm border border-white/50",
+            "relative flex flex-col items-start justify-between p-5 h-44 rounded-3xl overflow-hidden text-left group transition-transform active:scale-95 shadow-sm border border-border/50",
             tool.bgClass,
           )}
         >

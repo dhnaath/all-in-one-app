@@ -10,6 +10,7 @@ import {
   BarChart3,
   Sliders,
 } from "lucide-react";
+import { useShellSections } from "@/app/shell-sections";
 
 interface Initiative {
   id: string;
@@ -76,10 +77,21 @@ export function ImprovementView() {
       ? initiatives
       : initiatives.filter((i) => i.area === filterArea);
 
+  const [activeSection, setActiveSection] = useState<string>("ringkasan");
+  const goSection = (id: string) => {
+    setActiveSection(id);
+    document.getElementById(`soc-imp-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  useShellSections([
+    { id: "ringkasan", label: "Ringkasan", active: activeSection === "ringkasan", onSelect: () => goSection("ringkasan") },
+    { id: "metrik", label: "Metrik", active: activeSection === "metrik", onSelect: () => goSection("metrik") },
+    { id: "inisiatif", label: "Inisiatif", active: activeSection === "inisiatif", onSelect: () => goSection("inisiatif") },
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-[20px] bg-card border border-border">
+      <div id="soc-imp-ringkasan" className="scroll-mt-24 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-[20px] bg-card border border-border">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
             <TrendingUp className="size-4 text-foreground" />
@@ -101,7 +113,7 @@ export function ImprovementView() {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div id="soc-imp-metrik" className="scroll-mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 rounded-[20px] bg-card border border-border flex flex-col justify-between">
           <span className="text-xs font-medium text-muted-foreground">Inisiatif Aktif</span>
           <div className="mt-3 flex items-baseline justify-between">
@@ -148,7 +160,7 @@ export function ImprovementView() {
       </div>
 
       {/* Main Backlog & Prioritization */}
-      <div className="space-y-4">
+      <div id="soc-imp-inisiatif" className="scroll-mt-24 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Filter className="size-4 text-muted-foreground" />

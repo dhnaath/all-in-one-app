@@ -151,7 +151,6 @@ export function ProductivitySection({
           resolveApp("/reminder-manager", "Reminder Manager", Clock),
           resolveApp("/pomodoro", "Focus Timer", Timer),
           resolveApp("/eisenhower", "Eisenhower Matrix", Grid2X2),
-          resolveApp("/events", "Events & Agenda", Ticket),
           resolveApp("/countdown", "Countdown", Timer),
         ],
       },
@@ -175,7 +174,7 @@ export function ProductivitySection({
         group: "personal-productivity",
         icon: Target,
         getItems: () => [
-          resolveApp("/goals", "Goals & Target", Target),
+          resolveApp("/goal-manager", "Goals & Target", Target),
           resolveApp("/habits", "Habit Tracker", Activity),
           resolveApp("/lainnya?app=retro", "Review & Retrospective", RefreshCw),
           resolveApp("/journal", "Journal Harian", BookOpen),
@@ -228,12 +227,7 @@ export function ProductivitySection({
         icon: FolderKanban,
         getItems: () => [
           resolveApp("/lainnya?app=workload", "Workload & Capacity", Gauge),
-          resolveApp("/proyek", "Proyek & Operasional", FolderKanban),
-          resolveApp("/task-manager", "Task Manager", CheckSquare),
           resolveApp("/tugas", "Manajemen Tugas", CheckCircle2),
-          resolveApp("/kalender", "Jadwal & Timeline", CalendarDays),
-          resolveApp("/events", "Agenda Kerja", Ticket),
-          resolveApp("/eisenhower", "Prioritas Kerja", Grid2X2),
         ],
       },
       {
@@ -247,8 +241,6 @@ export function ProductivitySection({
           resolveApp("/forms", "Forms", FileText),
           resolveApp("/statistics", "Statistics", LineChart),
           resolveApp("/lainnya?app=sop", "SOP & Prosedur Baku", ShieldCheck),
-          resolveApp("/pomodoro", "Focus Pomodoro", Timer),
-          resolveApp("/countdown", "Tenggat Waktu", Timer),
           resolveApp("/portal.progres", "Progres & Tahapan", Workflow),
           resolveApp("/reports", "Laporan Kerja", NotebookText),
           resolveApp("/terminal", "Terminal Eksekusi", Binary),
@@ -264,9 +256,6 @@ export function ProductivitySection({
           resolveApp("/lainnya?app=templates", "Template Dokumen Kerja", FileText),
           resolveApp("/code", "Code & Dev Tools", Code),
           resolveApp("/design", "Design & Sketsa", PenTool),
-          resolveApp("/reading", "Referensi Kerja", Book),
-          resolveApp("/incoterms", "Panduan Incoterms", Navigation),
-          resolveApp("/courses", "Courses & Pelatihan", GraduationCap),
           resolveApp("/exams", "Uji Kompetensi", FileText),
         ],
       },
@@ -296,7 +285,6 @@ export function ProductivitySection({
           resolveApp("/lainnya?app=services-ratecard", "Daftar Tarif & Jasa", ScrollText),
           resolveApp("/inventory", "Inventory & Stok", Archive),
           resolveApp("/portal.dokumen", "Spesifikasi Produk", FileText),
-          resolveApp("/ideas", "Inovasi & Ide Produk", Lightbulb),
         ],
       },
       {
@@ -310,9 +298,7 @@ export function ProductivitySection({
           resolveApp("/search-manager", "Search Manager", Compass),
           resolveApp("/lainnya?app=mailroom", "Agenda Surat & Ekspedisi", Mail),
           resolveApp("/lainnya?app=minutes", "Risalah Rapat (Minutes)", ScrollText),
-          resolveApp("/reports", "Laporan Operasional", NotebookText),
           resolveApp("/kalkulator", "Kalkulator Bisnis", Calculator),
-          resolveApp("/portal.dokumen", "Dokumen Legal Perusahaan", FileCheck),
           resolveApp("/profil", "Profil Bisnis & Identitas", Building),
         ],
       },
@@ -340,8 +326,6 @@ export function ProductivitySection({
           resolveApp("/lainnya?app=access-matrix", "Access & Key Directory", Shield),
           resolveApp("/passwords", "Passwords & Kredensial", Key),
           resolveApp("/vault", "Vault Enkripsi", Vault),
-          resolveApp("/bookmarks", "Brankas Tautan Aman", Bookmark),
-          resolveApp("/notes", "Catatan Rahasia", Lock),
         ],
       },
     ];
@@ -711,14 +695,14 @@ export function ProductivitySection({
                     <div
                       className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-[1.25rem] flex items-center justify-center shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 relative ${
                         isRevised
-                          ? "bg-white text-zinc-900 border-2 border-zinc-200 dark:border-white shadow-md ring-2 ring-white/60"
+                          ? "bg-card text-foreground border-2 border-border dark:border-border shadow-md ring-2 ring-white/60"
                           : `${gradient} text-white`
                       }`}
                     >
                       <item.icon
                         className={`size-5 sm:size-6 ${
                           isRevised
-                            ? "text-zinc-900 drop-shadow-none"
+                            ? "text-foreground drop-shadow-none"
                             : "opacity-90 drop-shadow-sm text-white"
                         }`}
                         strokeWidth={isRevised ? 2 : 1.5}
@@ -727,7 +711,7 @@ export function ProductivitySection({
                       {/* Tanda Sementara badge */}
                       {isRevised && (
                         <span
-                          className="absolute -top-1 -left-1 size-2.5 rounded-full bg-white border border-zinc-400 shadow-xs"
+                          className="absolute -top-1 -left-1 size-2.5 rounded-full bg-card border border-border shadow-xs"
                           title="Tanda Sementara"
                         />
                       )}

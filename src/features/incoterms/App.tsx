@@ -1,3 +1,4 @@
+import { ShellSidebar } from "@/app/shell-sidebar";
 import React, { useState } from "react";
 import { Search, Navigation } from "lucide-react";
 import { incotermData } from "./data";
@@ -47,7 +48,7 @@ export default function IncotermsApp() {
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar: Groupings */}
-        <aside className="w-64 bg-transparent border-r border-border/40 p-6 hidden lg:flex flex-col space-y-4 overflow-y-auto shrink-0">
+        <ShellSidebar>
           <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
             Kategori
           </h2>
@@ -98,7 +99,7 @@ export default function IncotermsApp() {
               </div>
             </div>
           </div>
-        </aside>
+        </ShellSidebar>
 
         {/* Main Grid */}
         <main className="flex-1 p-6 sm:p-8 overflow-y-auto bg-secondary/10">
