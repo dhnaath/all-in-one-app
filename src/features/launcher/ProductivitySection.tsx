@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
+import { isNewlyRevisedApp } from "@/utils/revisedAppsMarker";
 import {
   Star,
   Layers,
@@ -62,6 +63,8 @@ import {
   Compass,
   Truck,
   Mail,
+  Database,
+  Scissors,
   type LucideIcon,
 } from "lucide-react";
 import { navKonsultan, type NavItem } from "@/config/nav";
@@ -143,12 +146,13 @@ export function ProductivitySection({
         group: "personal-productivity",
         icon: CalendarDays,
         getItems: () => [
-          resolveApp("/kalender", "Kalender & Timeline", CalendarDays),
-          resolveApp("/events", "Events & Agenda", Ticket),
-          resolveApp("/lainnya?app=daily-planner", "Daily Planner", Clock),
-          resolveApp("/pomodoro", "Focus Pomodoro", Timer),
-          resolveApp("/countdown", "Countdown Timer", Timer),
+          resolveApp("/kalender", "Calendar", CalendarDays),
+          resolveApp("/planner", "Planner", Clock),
+          resolveApp("/reminder-manager", "Reminder Manager", Clock),
+          resolveApp("/pomodoro", "Focus Timer", Timer),
           resolveApp("/eisenhower", "Eisenhower Matrix", Grid2X2),
+          resolveApp("/events", "Events & Agenda", Ticket),
+          resolveApp("/countdown", "Countdown", Timer),
         ],
       },
       {
@@ -158,8 +162,10 @@ export function ProductivitySection({
         icon: CheckSquare,
         getItems: () => [
           resolveApp("/task-manager", "Task Manager", CheckSquare),
+          resolveApp("/kanban", "Kanban Board", LayoutGrid),
+          resolveApp("/timeline", "Timeline Manager", Compass),
+          resolveApp("/proyek", "Project Manager", CheckCircle2),
           resolveApp("/proyek-personal", "Personal Projects", FolderKanban),
-          resolveApp("/proyek", "Proyek & Tugas", CheckCircle2),
           resolveApp("/lainnya?app=roadmap", "Milestone & Roadmap", Compass),
         ],
       },
@@ -170,7 +176,7 @@ export function ProductivitySection({
         icon: Target,
         getItems: () => [
           resolveApp("/goals", "Goals & Target", Target),
-          resolveApp("/habits", "Habits & Rutinitas", Activity),
+          resolveApp("/habits", "Habit Tracker", Activity),
           resolveApp("/lainnya?app=retro", "Review & Retrospective", RefreshCw),
           resolveApp("/journal", "Journal Harian", BookOpen),
           resolveApp("/health", "Health & Vitalitas", HeartPulse),
@@ -186,10 +192,12 @@ export function ProductivitySection({
         group: "knowledge-information",
         icon: NotebookText,
         getItems: () => [
+          resolveApp("/notes", "Notes", FileText),
+          resolveApp("/documents", "Documents", FileCheck),
+          resolveApp("/database", "Database", Database),
           resolveApp("/catatan", "Catatan Cepat", NotebookText),
-          resolveApp("/notes", "Notes & Docs", FileText),
-          resolveApp("/lainnya?app=canvas", "Whiteboard & Canvas", LayoutGrid),
           resolveApp("/ideas", "Ideas & Gagasan", Lightbulb),
+          resolveApp("/lainnya?app=canvas", "Whiteboard & Canvas", LayoutGrid),
           resolveApp("/writing", "Writing & Drafts", PenTool),
         ],
       },
@@ -199,7 +207,10 @@ export function ProductivitySection({
         group: "knowledge-information",
         icon: BookOpen,
         getItems: () => [
-          resolveApp("/lainnya?app=wiki", "Knowledge Base (Wiki)", BookOpen),
+          resolveApp("/wiki", "Wiki Engine", BookOpen),
+          resolveApp("/knowledge-base", "Knowledge Base", BookOpen),
+          resolveApp("/research-manager", "Research Manager", Compass),
+          resolveApp("/web-clipper", "Web Clipper", Scissors),
           resolveApp("/reading", "Reading List", Book),
           resolveApp("/bookmarks", "Bookmarks & Tautan", Bookmark),
           resolveApp("/incoterms", "Panduan Incoterms", Navigation),
@@ -231,6 +242,10 @@ export function ProductivitySection({
         group: "work-operations",
         icon: Workflow,
         getItems: () => [
+          resolveApp("/workflow-manager", "Workflow Manager", Workflow),
+          resolveApp("/deliverable-manager", "Deliverable Manager", FileCheck),
+          resolveApp("/forms", "Forms", FileText),
+          resolveApp("/statistics", "Statistics", LineChart),
           resolveApp("/lainnya?app=sop", "SOP & Prosedur Baku", ShieldCheck),
           resolveApp("/pomodoro", "Focus Pomodoro", Timer),
           resolveApp("/countdown", "Tenggat Waktu", Timer),
@@ -290,6 +305,9 @@ export function ProductivitySection({
         group: "business-operations",
         icon: Building,
         getItems: () => [
+          resolveApp("/meeting-manager", "Meeting Manager", Users),
+          resolveApp("/collaboration", "Collaboration", ShieldCheck),
+          resolveApp("/search-manager", "Search Manager", Compass),
           resolveApp("/lainnya?app=mailroom", "Agenda Surat & Ekspedisi", Mail),
           resolveApp("/lainnya?app=minutes", "Risalah Rapat (Minutes)", ScrollText),
           resolveApp("/reports", "Laporan Operasional", NotebookText),
@@ -674,7 +692,8 @@ export function ProductivitySection({
                 }
 
                 const item = entry.item;
-                const gradient = getGradient(item.label);
+                const isRevised = isNewlyRevisedApp(item.to, item.label);
+                const gradient = isRevised ? "" : getGradient(item.label);
                 const isFav = favorites.includes(item.to);
                 const itemPath = item.to.split("?")[0];
                 const itemSearch = item.to.includes("?")
@@ -687,14 +706,31 @@ export function ProductivitySection({
                     to={itemPath}
                     search={itemSearch as any}
                     className="flex flex-col items-center gap-2 group w-full outline-none relative"
+                    title={isRevised ? `${item.label} (Tanda Sementara: Modul Baru Direvisi)` : item.label}
                   >
                     <div
-                      className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-2xl flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
+                      className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-[1.25rem] flex items-center justify-center shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 relative ${
+                        isRevised
+                          ? "bg-white text-zinc-900 border-2 border-zinc-200 dark:border-white shadow-md ring-2 ring-white/60"
+                          : `${gradient} text-white`
+                      }`}
                     >
                       <item.icon
-                        className="size-5 sm:size-6 opacity-90 drop-shadow-sm"
-                        strokeWidth={1.5}
+                        className={`size-5 sm:size-6 ${
+                          isRevised
+                            ? "text-zinc-900 drop-shadow-none"
+                            : "opacity-90 drop-shadow-sm text-white"
+                        }`}
+                        strokeWidth={isRevised ? 2 : 1.5}
                       />
+
+                      {/* Tanda Sementara badge */}
+                      {isRevised && (
+                        <span
+                          className="absolute -top-1 -left-1 size-2.5 rounded-full bg-white border border-zinc-400 shadow-xs"
+                          title="Tanda Sementara"
+                        />
+                      )}
 
                       <button
                         onClick={(e) => {

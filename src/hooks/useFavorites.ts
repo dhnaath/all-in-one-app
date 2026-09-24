@@ -1,33 +1,47 @@
 import { useState, useEffect, useCallback } from "react";
 
-const STORAGE_KEY = "aio_favorites";
+const FAVORITES_KEY = "aio_favorites";
 
 export function useFavorites() {
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
+      const stored = localStorage.getItem(FAVORITES_KEY);
+      return stored ? JSON.parse(stored) : [];
     } catch {
       return [];
     }
   });
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
-    } catch (e) {
-      console.error("Failed to save favorites", e);
-    }
-  }, [favorites]);
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === FAVORITES_KEY && e.newValue) {
+        try {
+          setFavorites(JSON.parse(e.newValue));
+        } catch {
+          // ignore
+        }
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
 
-  const toggleFavorite = useCallback((id: string) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+  const toggleFavorite = useCallback((path: string) => {
+    setFavorites((prev) => {
+      const next = prev.includes(path)
+        ? prev.filter((p) => p !== path)
+        : [...prev, path];
+      try {
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
   }, []);
 
   const isFavorite = useCallback(
-    (id: string) => favorites.includes(id),
+    (path: string) => favorites.includes(path),
     [favorites]
   );
 

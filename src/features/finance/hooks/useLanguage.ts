@@ -2,21 +2,27 @@ import { useState, useEffect } from "react";
 
 export type Language = "id" | "en" | "ms" | "zh";
 
-export function useLanguage() {
-  const [lang, setLang] = useState<Language>("id");
+export function useLanguage(): Language {
+  const [lang, setLang] = useState<Language>(() => {
+    return (localStorage.getItem("appLanguage") as Language) || "id";
+  });
 
   useEffect(() => {
-    // Set initial language from localStorage on mount
-    const savedLang = (localStorage.getItem("appLanguage") as Language) || "id";
-    setLang(savedLang);
+    const stored = (localStorage.getItem("appLanguage") as Language) || "id";
+    setLang(stored);
 
-    const handleLanguageChange = () => {
+    const onLanguageChange = () => {
       setLang((localStorage.getItem("appLanguage") as Language) || "id");
     };
 
-    window.addEventListener("languageChange", handleLanguageChange);
-    return () => window.removeEventListener("languageChange", handleLanguageChange);
+    window.addEventListener("languageChange", onLanguageChange);
+    return () => window.removeEventListener("languageChange", onLanguageChange);
   }, []);
 
   return lang;
+}
+
+export function setLanguage(lang: Language) {
+  localStorage.setItem("appLanguage", lang);
+  window.dispatchEvent(new Event("languageChange"));
 }

@@ -21,6 +21,8 @@ import {
   Banknote,
   ArrowRightLeft,
   Activity,
+  TrendingDown,
+  Users,
 } from "lucide-react";
 import { EmiCalculatorView } from "../components/EmiCalculatorView";
 import { HomeView } from "./HomeView";
@@ -30,6 +32,10 @@ import { DebtManagerView } from "./DebtManagerView";
 import { SubscriptionManagerView } from "./SubscriptionManagerView";
 import { SavingsPlanView } from "./SavingsPlanView";
 import { TaxPlannerView } from "./TaxPlannerView";
+import { TransactionsView } from "./TransactionsView";
+import { DebtSnowballAvalancheView, CashflowForecastView } from "./Phase2Views";
+import { TaxLossHarvestingView } from "./Phase3Views";
+import { SplitBillView } from "./Phase4Views";
 import {
   EmergencyFundView,
   ExpenseCategoryView,
@@ -137,6 +143,12 @@ export function FlowView({
             desc={translations.flow.tabs[0].desc[lang]}
           />
           <MenuListItem
+            onClick={() => onSelectTab?.("snowball")}
+            icon={TrendingDown}
+            title="Simulator Snowball vs Avalanche"
+            desc="Strategi pelunasan utang tercepat & hemat bunga."
+          />
+          <MenuListItem
             onClick={() => onSelectTab?.("monthly_burden")}
             icon={Calculator}
             title="Estimasi Beban Bulanan"
@@ -179,10 +191,22 @@ export function FlowView({
           className="flex-1 overflow-y-auto p-6 pb-20 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:auto-rows-max md:content-start"
         >
           <MenuListItem
+            onClick={() => onSelectTab?.("transactions")}
+            icon={BookOpen}
+            title="Ledger Transaksi Detail"
+            desc="Buku kas, mutasi pengeluaran dan pemasukan rinci."
+          />
+          <MenuListItem
             onClick={() => onSelectTab?.("cashflow")}
             icon={RefreshCw}
             title="Arus Kas"
             desc={translations.flow.tabs[1].desc[lang]}
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("cashflow_forecast")}
+            icon={CalendarClock}
+            title="Cash Flow Forecasting (6 Bulan)"
+            desc="Proyeksi saldo kas dan surplus likuiditas masa depan."
           />
           <MenuListItem
             onClick={() => onSelectTab?.("budget")}
@@ -195,6 +219,12 @@ export function FlowView({
             icon={Tags}
             title="Kategori Pengeluaran"
             desc="Pengelompokan sistematis setiap pos biaya."
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("split_bill")}
+            icon={Users}
+            title="Split Bill & Patungan"
+            desc="Kalkulator pembagian tagihan rombongan dan keluarga."
           />
         </ScrollContainer>
       </div>
@@ -265,6 +295,12 @@ export function FlowView({
             icon={AlertCircle}
             title="Dana Darurat"
             desc="Pantauan ketahanan kas darurat likuid."
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("tax_harvesting")}
+            icon={Receipt}
+            title="Tax-Loss Harvesting Simulator"
+            desc="Optimalisasi beban pajak portofolio investasi."
           />
         </ScrollContainer>
       </div>
@@ -348,6 +384,16 @@ export function FlowView({
   if (currentTab === "savings")
     return <SavingsPlanView onBack={() => onSelectTab?.("cat_otomatisasi")} />;
   if (currentTab === "tax") return <TaxPlannerView onBack={() => onSelectTab?.("cat_pajak")} />;
+  if (currentTab === "transactions")
+    return <TransactionsView onBack={() => onSelectTab?.("cat_pengeluaran")} onNewTransaction={() => onNavigate("new_tx")} onUnavailable={onUnavailable} />;
+  if (currentTab === "snowball")
+    return <DebtSnowballAvalancheView onBack={() => onSelectTab?.("cat_liabilitas")} />;
+  if (currentTab === "cashflow_forecast")
+    return <CashflowForecastView onBack={() => onSelectTab?.("cat_pengeluaran")} />;
+  if (currentTab === "split_bill")
+    return <SplitBillView onBack={() => onSelectTab?.("cat_pengeluaran")} />;
+  if (currentTab === "tax_harvesting")
+    return <TaxLossHarvestingView onBack={() => onSelectTab?.("cat_pajak")} />;
 
   if (currentTab === "emergency")
     return <EmergencyFundView onBack={() => onSelectTab?.("cat_pajak")} />;

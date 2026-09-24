@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ArrowLeft,
   Search,
   LayoutGrid,
   CalendarDays,
@@ -19,9 +20,11 @@ import { useScrollRestore } from "../hooks/useScrollRestore";
 export function TransactionsView({
   onNewTransaction,
   onUnavailable,
+  onBack,
 }: {
-  onNewTransaction: () => void;
+  onNewTransaction?: () => void;
   onUnavailable?: () => void;
+  onBack?: () => void;
 }) {
   const { ref, onScroll } = useScrollRestore("transactions_scroll");
   const { deletedIds, markDeleted } = useDeletedItems("deleted_transactions");
@@ -43,6 +46,14 @@ export function TransactionsView({
   return (
     <div className="flex flex-col min-h-screen bg-background relative overflow-hidden">
       <div className="p-4 pb-2 shrink-0 z-10 bg-background">
+        {onBack && (
+          <div className="flex items-center gap-3 mb-4 pt-2">
+            <button onClick={onBack} className="p-1 hover:bg-accent rounded-lg text-foreground transition-colors">
+              <ArrowLeft size={22} />
+            </button>
+            <h1 className="text-lg font-bold text-foreground">Buku Kas & Transaksi</h1>
+          </div>
+        )}
         {/* Search Bar */}
         <div className="bg-card rounded-full px-4 py-2.5 flex items-center gap-3 mb-6">
           <Search size={20} className="text-muted-foreground shrink-0" />

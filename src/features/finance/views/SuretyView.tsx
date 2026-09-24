@@ -31,6 +31,9 @@ import { LegalView } from "./LegalView";
 import { ProtectionView } from "./ProtectionView";
 import { AccountSecurityView } from "./AccountSecurityView";
 import { HealthRecordView } from "./HealthRecordView";
+import { RetirementPlannerView } from "./RetirementPlannerView";
+import { InsuranceGapAnalysisView } from "./Phase2Views";
+import { DocumentVaultView, VehiclePropertyInsuranceTrackerView, SinkingFundView } from "./Phase3Views";
 import {
   InsuranceCalculatorView,
   ClaimsHistoryView,
@@ -143,6 +146,12 @@ export function SuretyView({
             title="Legalitas & Kepatuhan"
             desc={translations.surety.tabs[0].desc[lang]}
           />
+          <MenuListItem
+            onClick={() => onSelectTab?.("doc_vault")}
+            icon={Lock}
+            title="Document Vault & Kepatuhan"
+            desc="Arsip berkas identitas, akta, dan reminder masa berlaku polis."
+          />
         </div>
       </div>
     );
@@ -178,6 +187,12 @@ export function SuretyView({
             icon={FileText}
             title="Riwayat Klaim"
             desc="Log status pengajuan klaim asuransi."
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("vehicle_property")}
+            icon={Car}
+            title="Asuransi Kendaraan & Properti"
+            desc="Pelacak polis perlindungan kendaraan dan properti."
           />
         </div>
       </div>
@@ -215,6 +230,42 @@ export function SuretyView({
             title="Penyakit Kritis"
             desc="Proteksi risiko penyakit kritis & kronis."
           />
+          <MenuListItem
+            onClick={() => onSelectTab?.("calc_insurance")}
+            icon={Calculator}
+            title="Kalkulator Kebutuhan Asuransi (HLV)"
+            desc="Hitung uang pertanggungan berbasis Human Life Value."
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("insurance_gap")}
+            icon={Shield}
+            title="Insurance Gap Analysis"
+            desc="Dashboard analisis kesenjangan proteksi jiwa & kesehatan."
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("unit_link")}
+            icon={Repeat}
+            title="Perbandingan Unit Link vs Murni"
+            desc="Simulasi biaya dan efisiensi premi unit link vs term."
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("term_life")}
+            icon={Clock}
+            title="Term Life (Asuransi Jiwa Berjangka)"
+            desc="Proteksi jiwa murni efisien biaya."
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("endowment")}
+            icon={GraduationCap}
+            title="Asuransi Dwiguna (Endowment)"
+            desc="Perlindungan dengan nilai tunai terjadwal."
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("health_risk")}
+            icon={HeartPulse}
+            title="Health Risk Assessment"
+            desc="Evaluasi profil gaya hidup dan risiko kesehatan."
+          />
         </div>
       </div>
     );
@@ -244,6 +295,18 @@ export function SuretyView({
             icon={LifeBuoy}
             title="Dana Darurat"
             desc={translations.surety.tabs[3].desc[lang]}
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("retirement")}
+            icon={Clock}
+            title="Perencanaan & Simulasi Pensiun"
+            desc="Kalkulator kecukupan dana pensiun dan target tabungan."
+          />
+          <MenuListItem
+            onClick={() => onSelectTab?.("sinking_fund")}
+            icon={Vault}
+            title="Sinking Fund (Dana Terjadwal)"
+            desc="Pengalokasian pos dana pengeluaran besar berkala."
           />
         </div>
       </div>
@@ -281,6 +344,12 @@ export function SuretyView({
             title="Keamanan Akun"
             desc="Keamanan akun"
           />
+          <MenuListItem
+            onClick={() => onSelectTab?.("beneficiary")}
+            icon={Users}
+            title="Beneficiary Manager (Ahli Waris Polis)"
+            desc="Pengelolaan penerima manfaat polis asuransi."
+          />
         </div>
       </div>
     );
@@ -316,6 +385,16 @@ export function SuretyView({
     return <EndowmentView onBack={() => onSelectTab?.("cat_asuransi")} />;
   if (currentTab === "term_life")
     return <TermLifeView onBack={() => onSelectTab?.("cat_asuransi")} />;
+  if (currentTab === "retirement")
+    return <RetirementPlannerView onBack={() => onSelectTab?.("cat_dana")} />;
+  if (currentTab === "insurance_gap")
+    return <InsuranceGapAnalysisView onBack={() => onSelectTab?.("cat_asuransi")} />;
+  if (currentTab === "doc_vault")
+    return <DocumentVaultView onBack={() => onSelectTab?.("cat_kepatuhan")} />;
+  if (currentTab === "vehicle_property")
+    return <VehiclePropertyInsuranceTrackerView onBack={() => onSelectTab?.("cat_publik")} />;
+  if (currentTab === "sinking_fund")
+    return <SinkingFundView onBack={() => onSelectTab?.("cat_dana")} />;
 
   return null;
 }

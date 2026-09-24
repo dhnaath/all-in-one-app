@@ -1,0 +1,1067 @@
+import React, { useState, useMemo } from "react";
+import {
+  Users,
+  UserPlus,
+  Building2,
+  Mail,
+  Phone,
+  Tag,
+  Network,
+  Copy,
+  BarChart3,
+  Search,
+  Filter,
+  X,
+  CheckCircle2,
+  AlertCircle,
+  ExternalLink,
+  ChevronRight,
+  Trash2,
+  Archive,
+  ArrowRight,
+  GitMerge,
+  ShieldCheck,
+  UserCheck,
+  Briefcase,
+  Star,
+  Globe,
+  Plus,
+  MessageSquare,
+} from "lucide-react";
+import { usePeopleStore } from "./store";
+import {
+  Person,
+  PersonType,
+  PeopleViewMode,
+  ContactMethodType,
+  RelationshipType,
+} from "./types";
+
+export function PeopleManagerApp() {
+  const {
+    people,
+    organizations,
+    contactMethods,
+    relationships,
+    tags,
+    selectedPersonId,
+    createPerson,
+    updatePerson,
+    deletePerson,
+    archivePerson,
+    mergePersons,
+    addContactMethod,
+    removeContactMethod,
+    setPrimaryContactMethod,
+    addRelationship,
+    removeRelationship,
+    createOrganization,
+    createTag,
+    setSelectedPersonId,
+  } = usePeopleStore();
+
+  const [activeTab, setActiveTab] = useState<PeopleViewMode>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [tagFilter, setTagFilter] = useState<string>("all");
+  const [orgFilter, setOrgFilter] = useState<string>("all");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // New Person Modal
+  const [isNewPersonOpen, setIsNewPersonOpen] = useState(false);
+  const [newFullName, setNewFullName] = useState("");
+  const [newDisplayName, setNewDisplayName] = useState("");
+  const [newType, setNewType] = useState<PersonType>("external");
+  const [newJobTitle, setNewJobTitle] = useState("");
+  const [newOrgId, setNewOrgId] = useState("");
+  const [newContactEmail, setNewContactEmail] = useState("");
+  const [newContactPhone, setNewContactPhone] = useState("");
+  const [newNotes, setNewNotes] = useState("");
+  const [newSelectedTags, setNewSelectedTags] = useState<string[]>(["Klien"]);
+
+  // New Organization Modal
+  const [isNewOrgOpen, setIsNewOrgOpen] = useState(false);
+  const [newOrgName, setNewOrgName] = useState("");
+  const [newOrgIndustry, setNewOrgIndustry] = useState("");
+  const [newOrgWebsite, setNewOrgWebsite] = useState("");
+
+  // Inline Contact Method Modal
+  const [newCmType, setNewCmType] = useState<ContactMethodType>("email");
+  const [newCmVal, setNewCmVal] = useState("");
+  const [newCmLabel, setNewCmLabel] = useState("Kerja");
+
+  // Inline Relationship Modal
+  const [newRelToPerson, setNewRelToPerson] = useState("");
+  const [newRelType, setNewRelType] = useState<RelationshipType>("colleague");
+  const [newRelNote, setNewRelNote] = useState("");
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const activePerson = useMemo(() => {
+    if (!selectedPersonId) return null;
+    return people.find((p) => p.id === selectedPersonId) || null;
+  }, [people, selectedPersonId]);
+
+  const activeContacts = useMemo(() => {
+    if (!activePerson) return [];
+    return contactMethods.filter((c) => c.personId === activePerson.id);
+  }, [contactMethods, activePerson]);
+
+  const activeRelationships = useMemo(() => {
+    if (!activePerson) return [];
+    return relationships.filter(
+      (r) => r.fromPersonId === activePerson.id || r.toPersonId === activePerson.id
+    );
+  }, [relationships, activePerson]);
+
+  // Heuristic Duplicate Candidates
+  const duplicateCandidates = useMemo(() => {
+    const list: { personA: Person; personB: Person; reason: string }[] = [];
+    for (let i = 0; i < people.length; i++) {
+      for (let j = i + 1; j < people.length; j++) {
+        const a = people[i];
+        const b = people[j];
+
+        // 1. Check identical email
+        const emailsA = contactMethods
+          .filter((c) => c.personId === a.id && c.type === "email")
+          .map((c) => c.value.toLowerCase().trim());
+        const emailsB = contactMethods
+          .filter((c) => c.personId === b.id && c.type === "email")
+          .map((c) => c.value.toLowerCase().trim());
+
+        const commonEmail = emailsA.find((e) => emailsB.includes(e));
+        if (commonEmail) {
+          list.push({ personA: a, personB: b, reason: `Email persis: ${commonEmail}` });
+          continue;
+        }
+
+        // 2. Check similar name
+        const cleanA = a.fullName.toLowerCase().replace(/[^a-z]/g, "");
+        const cleanB = b.fullName.toLowerCase().replace(/[^a-z]/g, "");
+        if (cleanA.includes(cleanB) || cleanB.includes(cleanA)) {
+          list.push({ personA: a, personB: b, reason: "Kemiripan nama yang sangat tinggi" });
+        }
+      }
+    }
+    return list;
+  }, [people, contactMethods]);
+
+  // Filtered People
+  const filteredPeople = useMemo(() => {
+    return people.filter((p) => {
+      if (typeFilter !== "all" && p.personType !== typeFilter) return false;
+      if (orgFilter !== "all" && p.organizationId !== orgFilter) return false;
+      if (tagFilter !== "all" && !p.tags.includes(tagFilter)) return false;
+
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const matchName = p.fullName.toLowerCase().includes(q);
+        const matchTitle = (p.jobTitle || "").toLowerCase().includes(q);
+        const matchNotes = (p.notes || "").toLowerCase().includes(q);
+
+        const personEmails = contactMethods
+          .filter((c) => c.personId === p.id)
+          .map((c) => c.value.toLowerCase());
+        const matchEmail = personEmails.some((e) => e.includes(q));
+
+        if (!matchName && !matchTitle && !matchNotes && !matchEmail) return false;
+      }
+      return true;
+    });
+  }, [people, typeFilter, orgFilter, tagFilter, searchQuery, contactMethods]);
+
+  // Statistics
+  const stats = useMemo(() => {
+    const total = people.length;
+    const internal = people.filter((p) => p.personType === "internal").length;
+    const external = people.filter((p) => p.personType === "external").length;
+    const archived = people.filter((p) => p.status === "archived").length;
+    const orgsCount = organizations.length;
+    const relsCount = relationships.length;
+
+    return { total, internal, external, archived, orgsCount, relsCount };
+  }, [people, organizations, relationships]);
+
+  const handleCreatePerson = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newFullName.trim()) return;
+
+    const id = createPerson(
+      {
+        fullName: newFullName.trim(),
+        displayName: newDisplayName.trim() || undefined,
+        personType: newType,
+        jobTitle: newJobTitle.trim() || undefined,
+        organizationId: newOrgId || undefined,
+        notes: newNotes.trim() || undefined,
+        tags: newSelectedTags,
+      },
+      newContactEmail.trim()
+        ? { type: "email", value: newContactEmail.trim(), label: "Email Kerja" }
+        : undefined
+    );
+
+    if (newContactPhone.trim()) {
+      addContactMethod({
+        personId: id,
+        type: "phone",
+        value: newContactPhone.trim(),
+        label: "WhatsApp / Mobile",
+        isPrimary: false,
+      });
+    }
+
+    showToast(`Person "${newFullName}" berhasil disimpan sebagai identitas tunggal!`);
+    setIsNewPersonOpen(false);
+    setNewFullName("");
+    setNewDisplayName("");
+    setNewJobTitle("");
+    setNewContactEmail("");
+    setNewContactPhone("");
+    setNewNotes("");
+  };
+
+  const handleCreateOrganization = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newOrgName.trim()) return;
+
+    createOrganization({
+      name: newOrgName.trim(),
+      industry: newOrgIndustry.trim() || undefined,
+      website: newOrgWebsite.trim() || undefined,
+    });
+
+    showToast(`Organisasi "${newOrgName}" berhasil dibuat!`);
+    setIsNewOrgOpen(false);
+    setNewOrgName("");
+    setNewOrgIndustry("");
+    setNewOrgWebsite("");
+  };
+
+  const handleAddContactInline = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!activePerson || !newCmVal.trim()) return;
+
+    addContactMethod({
+      personId: activePerson.id,
+      type: newCmType,
+      value: newCmVal.trim(),
+      label: newCmLabel.trim(),
+      isPrimary: activeContacts.length === 0,
+    });
+
+    setNewCmVal("");
+    showToast("Metode kontak berhasil ditambahkan!");
+  };
+
+  const handleAddRelationshipInline = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!activePerson || !newRelToPerson) return;
+
+    addRelationship({
+      fromPersonId: activePerson.id,
+      toPersonId: newRelToPerson,
+      type: newRelType,
+      note: newRelNote.trim() || undefined,
+      startedAt: new Date().toISOString().split("T")[0],
+    });
+
+    setNewRelToPerson("");
+    setNewRelNote("");
+    showToast("Hubungan / Relasi berhasil dicatat!");
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 p-4 md:p-6 lg:p-8">
+      {/* Toast */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-emerald-400 animate-in fade-in slide-in-from-bottom-4">
+          <CheckCircle2 className="w-5 h-5 text-white" />
+          <span className="text-sm font-medium">{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Header */}
+      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-800">
+        <div>
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-xl shadow-lg shadow-indigo-500/20">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold tracking-tight text-white">People Manager</h1>
+                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                  App #35
+                </span>
+                <span className="text-xs text-slate-400">
+                  Identity Layer • Rujukan Identitas Tunggal Seluruh Ekosistem
+                </span>
+              </div>
+              <p className="text-xs md:text-sm text-slate-400">
+                Penyimpanan terpusat profil individu (Internal/External), organisasi, metode kontak, relasi multi-arah, dan deduplikasi.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center flex-wrap gap-2.5">
+          <button
+            onClick={() => setIsNewOrgOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition"
+          >
+            <Building2 className="w-3.5 h-3.5 text-slate-400" />
+            <span>Tambah Organisasi</span>
+          </button>
+
+          <button
+            onClick={() => setIsNewPersonOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-lg text-sm font-semibold shadow-md shadow-indigo-500/25 transition"
+          >
+            <UserPlus className="w-4 h-4" />
+            <span>Tambah Orang Baru</span>
+          </button>
+        </div>
+      </header>
+
+      {/* Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-slate-800/80 scrollbar-none">
+        <button
+          onClick={() => setActiveTab("all")}
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
+            activeTab === "all" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          <span>Semua Orang ({people.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("by_organization")}
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
+            activeTab === "by_organization" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+          }`}
+        >
+          <Building2 className="w-4 h-4 text-cyan-400" />
+          <span>Per Organisasi ({organizations.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("relationships")}
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
+            activeTab === "relationships" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+          }`}
+        >
+          <Network className="w-4 h-4 text-purple-400" />
+          <span>Graf & Jaringan Relasi ({relationships.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("duplicates")}
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
+            activeTab === "duplicates" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+          }`}
+        >
+          <GitMerge className="w-4 h-4 text-amber-400" />
+          <span>Tinjau Duplikat ({duplicateCandidates.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("stats")}
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ${
+            activeTab === "stats" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+          }`}
+        >
+          <BarChart3 className="w-4 h-4 text-emerald-400" />
+          <span>Statistik Identitas</span>
+        </button>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 mt-4">
+        {/* STATS VIEW */}
+        {activeTab === "stats" && (
+          <div className="space-y-6 max-w-4xl">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
+                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Individu</div>
+                <div className="text-3xl font-extrabold text-white mt-1">{stats.total}</div>
+                <div className="text-xs text-slate-500 mt-1">Identitas terdaftar</div>
+              </div>
+              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
+                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Tim Internal</div>
+                <div className="text-3xl font-extrabold text-emerald-400 mt-1">{stats.internal}</div>
+                <div className="text-xs text-slate-500 mt-1">Akun internal konsultan</div>
+              </div>
+              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
+                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Kontak Eksternal</div>
+                <div className="text-3xl font-extrabold text-cyan-400 mt-1">{stats.external}</div>
+                <div className="text-xs text-slate-500 mt-1">Klien, Vendor & Mitra</div>
+              </div>
+              <div className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl">
+                <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Jaringan Relasi</div>
+                <div className="text-3xl font-extrabold text-purple-400 mt-1">{stats.relsCount}</div>
+                <div className="text-xs text-slate-500 mt-1">Koneksi antar-orang</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* DUPLICATE CANDIDATES VIEW */}
+        {activeTab === "duplicates" && (
+          <div className="space-y-4 max-w-4xl">
+            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400 leading-relaxed">
+              Deteksi heuristik berbasis kemiripan nama dan kecocokan email persis. Penggabungan (*merge*) memindahkan semua metode kontak, tag, dan relasi ke record utama tanpa menghapus referensi historis.
+            </div>
+
+            {duplicateCandidates.length === 0 ? (
+              <div className="p-12 text-center bg-slate-800/40 border border-slate-700/60 rounded-xl">
+                <ShieldCheck className="w-10 h-10 text-emerald-400 mx-auto mb-2" />
+                <h3 className="font-semibold text-slate-200">Tidak ada duplikat terdeteksi</h3>
+                <p className="text-xs text-slate-400 mt-1">Database identitas bersih dan unik.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {duplicateCandidates.map((cand, idx) => (
+                  <div key={idx} className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-0.5 rounded text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        {cand.reason}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-3 bg-slate-900/80 border border-slate-700 rounded-lg space-y-1">
+                        <div className="text-xs text-slate-400">Record A (Dipertahankan):</div>
+                        <div className="font-bold text-slate-100">{cand.personA.fullName}</div>
+                        <div className="text-xs text-slate-400">{cand.personA.jobTitle || "Tanpa Jabatan"}</div>
+                      </div>
+
+                      <div className="p-3 bg-slate-900/80 border border-slate-700 rounded-lg space-y-1">
+                        <div className="text-xs text-slate-400">Record B (Akan Digabung):</div>
+                        <div className="font-bold text-slate-100">{cand.personB.fullName}</div>
+                        <div className="text-xs text-slate-400">{cand.personB.jobTitle || "Tanpa Jabatan"}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end gap-2 pt-2 border-t border-slate-700/60">
+                      <button
+                        onClick={() => {
+                          mergePersons(cand.personA.id, cand.personB.id);
+                          showToast(`Record ${cand.personB.fullName} berhasil digabung ke ${cand.personA.fullName}!`);
+                        }}
+                        className="px-4 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-600/30"
+                      >
+                        <GitMerge className="w-3.5 h-3.5" />
+                        Gabungkan Data (Merge)
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* RELATIONSHIPS VIEW */}
+        {activeTab === "relationships" && (
+          <div className="space-y-4 max-w-4xl">
+            <div className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-xl text-xs text-slate-400">
+              Jaringan koneksi antar individu (atasan-bawahan, relasi klien, mitra kerja) secara multi-arah.
+            </div>
+
+            <div className="space-y-3">
+              {relationships.map((r) => {
+                const pFrom = people.find((p) => p.id === r.fromPersonId);
+                const pTo = people.find((p) => p.id === r.toPersonId);
+                const oTo = organizations.find((o) => o.id === r.toOrganizationId);
+
+                return (
+                  <div key={r.id} className="p-4 bg-slate-800/80 border border-slate-700 rounded-xl flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3">
+                      <span className="font-bold text-slate-200">{pFrom?.fullName || "Person"}</span>
+                      <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono text-[11px] uppercase">
+                        {r.type.replace("_", " ")}
+                      </span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="font-bold text-slate-200">
+                        {pTo?.fullName || oTo?.name || "Entitas Terkait"}
+                      </span>
+                      {r.note && <span className="text-slate-400 italic">({r.note})</span>}
+                    </div>
+
+                    <button
+                      onClick={() => removeRelationship(r.id)}
+                      className="text-slate-500 hover:text-rose-400 p-1"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* BY ORGANIZATION VIEW */}
+        {activeTab === "by_organization" && (
+          <div className="space-y-6 max-w-4xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {organizations.map((org) => {
+                const members = people.filter((p) => p.organizationId === org.id);
+
+                return (
+                  <div key={org.id} className="p-5 bg-slate-800/80 border border-slate-700 rounded-xl space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-bold text-base text-white">{org.name}</h3>
+                        <div className="text-xs text-slate-400">{org.industry || "Industri Umum"}</div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs font-semibold">
+                        {members.length} Orang
+                      </span>
+                    </div>
+
+                    {org.website && (
+                      <div className="text-xs text-cyan-400 flex items-center gap-1">
+                        <Globe className="w-3.5 h-3.5" />
+                        <span>{org.website}</span>
+                      </div>
+                    )}
+
+                    <div className="pt-2 border-t border-slate-700/60 space-y-1.5">
+                      <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Anggota Terdaftar:</div>
+                      {members.map((m) => (
+                        <div
+                          key={m.id}
+                          onClick={() => setSelectedPersonId(m.id)}
+                          className="p-2 bg-slate-900/60 rounded flex items-center justify-between text-xs cursor-pointer hover:border-slate-500 transition"
+                        >
+                          <span className="text-slate-200 font-medium">{m.fullName}</span>
+                          <span className="text-slate-400 text-[11px]">{m.jobTitle}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ALL PEOPLE VIEW */}
+        {activeTab === "all" && (
+          <div className="space-y-4">
+            {/* Filter Bar */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-slate-800/80 border border-slate-700 rounded-xl">
+              <div className="relative w-full md:w-80">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  placeholder="Cari nama, jabatan, email, tag..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+                <select
+                  value={typeFilter}
+                  onChange={(e) => setTypeFilter(e.target.value)}
+                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                >
+                  <option value="all">Semua Tipe</option>
+                  <option value="internal">Internal (Tim)</option>
+                  <option value="external">External (Klien/Mitra)</option>
+                </select>
+
+                <select
+                  value={orgFilter}
+                  onChange={(e) => setOrgFilter(e.target.value)}
+                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                >
+                  <option value="all">Semua Organisasi</option>
+                  {organizations.map((o) => (
+                    <option key={o.id} value={o.id}>
+                      {o.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* People Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredPeople.map((person) => {
+                const org = organizations.find((o) => o.id === person.organizationId);
+                const primaryEmail = contactMethods.find(
+                  (c) => c.personId === person.id && c.type === "email" && c.isPrimary
+                );
+                const primaryPhone = contactMethods.find(
+                  (c) => c.personId === person.id && c.type === "phone"
+                );
+
+                return (
+                  <div
+                    key={person.id}
+                    className="p-5 bg-slate-800/80 border border-slate-700 hover:border-slate-600 rounded-xl flex flex-col justify-between transition space-y-4"
+                  >
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`px-2 py-0.5 rounded text-[11px] font-bold ${
+                            person.personType === "internal"
+                              ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                              : "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+                          }`}
+                        >
+                          {person.personType === "internal" ? "Internal Team" : "External Contact"}
+                        </span>
+
+                        <div className="flex items-center gap-1">
+                          {person.tags.map((t, idx) => (
+                            <span key={idx} className="px-1.5 py-0.5 rounded bg-slate-700 text-slate-300 text-[10px]">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3
+                          onClick={() => setSelectedPersonId(person.id)}
+                          className="font-bold text-base text-slate-100 cursor-pointer hover:text-indigo-400 transition"
+                        >
+                          {person.fullName}
+                        </h3>
+                        <div className="text-xs text-slate-400 mt-0.5">
+                          {person.jobTitle || "Peran Belum Ditetapkan"} • {org?.name || "Independen"}
+                        </div>
+                      </div>
+
+                      {/* Contact Preview */}
+                      <div className="space-y-1 pt-1 text-xs text-slate-300">
+                        {primaryEmail && (
+                          <div className="flex items-center gap-2 text-slate-400 truncate">
+                            <Mail className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                            <span className="truncate">{primaryEmail.value}</span>
+                          </div>
+                        )}
+                        {primaryPhone && (
+                          <div className="flex items-center gap-2 text-slate-400">
+                            <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span>{primaryPhone.value}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs">
+                      <button
+                        onClick={() => setSelectedPersonId(person.id)}
+                        className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold flex items-center gap-1 shadow-sm"
+                      >
+                        Detail & Kontak
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* MODAL: DETAIL PERSON & CONTACT METHODS */}
+      {selectedPersonId && activePerson && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 text-xs rounded bg-indigo-500/20 text-indigo-300 font-semibold">
+                    {activePerson.personType}
+                  </span>
+                  <span className="text-xs text-slate-400">{activePerson.status}</span>
+                </div>
+                <h3 className="font-bold text-lg text-white mt-1">{activePerson.fullName}</h3>
+                <div className="text-xs text-slate-400">
+                  {activePerson.jobTitle} • {organizations.find((o) => o.id === activePerson.organizationId)?.name}
+                </div>
+              </div>
+              <button onClick={() => setSelectedPersonId(null)} className="text-slate-400 hover:text-slate-200">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {/* CONTACT METHODS LIST */}
+              <div className="space-y-3">
+                <h4 className="font-bold text-sm text-slate-200 flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-indigo-400" />
+                  Metode Kontak (Contact Methods)
+                </h4>
+
+                <div className="space-y-2">
+                  {activeContacts.map((cm) => (
+                    <div
+                      key={cm.id}
+                      className="p-3 bg-slate-800/60 border border-slate-700 rounded-lg flex items-center justify-between text-xs"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        {cm.type === "email" ? (
+                          <Mail className="w-4 h-4 text-cyan-400" />
+                        ) : (
+                          <Phone className="w-4 h-4 text-emerald-400" />
+                        )}
+                        <div>
+                          <div className="font-semibold text-slate-200">{cm.value}</div>
+                          <div className="text-[10px] text-slate-400">{cm.label}</div>
+                        </div>
+                        {cm.isPrimary && (
+                          <span className="px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 text-[10px] font-bold">
+                            UTAMA
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {!cm.isPrimary && (
+                          <button
+                            onClick={() => setPrimaryContactMethod(activePerson.id, cm.id)}
+                            className="text-[11px] text-indigo-400 hover:underline"
+                          >
+                            Set Utama
+                          </button>
+                        )}
+                        <button
+                          onClick={() => removeContactMethod(cm.id)}
+                          className="text-slate-500 hover:text-rose-400 p-1"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Add Contact Form */}
+                <form onSubmit={handleAddContactInline} className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-2">
+                  <div className="text-xs font-semibold text-slate-300">Tambah Metode Kontak:</div>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                    <select
+                      value={newCmType}
+                      onChange={(e) => setNewCmType(e.target.value as any)}
+                      className="px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                    >
+                      <option value="email">Email</option>
+                      <option value="phone">Phone / WA</option>
+                      <option value="social_media">Social / LinkedIn</option>
+                    </select>
+
+                    <input
+                      type="text"
+                      placeholder="Nilai (email / no hp)"
+                      value={newCmVal}
+                      onChange={(e) => setNewCmVal(e.target.value)}
+                      className="md:col-span-2 px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                    />
+
+                    <button
+                      type="submit"
+                      className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-bold"
+                    >
+                      + Tambah
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* RELATIONSHIPS LIST */}
+              <div className="space-y-3 pt-2 border-t border-slate-800">
+                <h4 className="font-bold text-sm text-slate-200 flex items-center gap-2">
+                  <Network className="w-4 h-4 text-purple-400" />
+                  Hubungan & Relasi (Relationships)
+                </h4>
+
+                <div className="space-y-2">
+                  {activeRelationships.map((r) => {
+                    const otherPerson = people.find(
+                      (p) => p.id === (r.fromPersonId === activePerson.id ? r.toPersonId : r.fromPersonId)
+                    );
+
+                    return (
+                      <div
+                        key={r.id}
+                        className="p-2.5 bg-slate-800/60 border border-slate-700 rounded text-xs flex items-center justify-between"
+                      >
+                        <div>
+                          <span className="font-semibold text-slate-200">{otherPerson?.fullName}</span>
+                          <span className="text-slate-400 text-[11px] ml-2 font-mono">
+                            ({r.type.replace("_", " ")})
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => removeRelationship(r.id)}
+                          className="text-slate-500 hover:text-rose-400 p-1"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Add Rel Form */}
+                <form onSubmit={handleAddRelationshipInline} className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-2">
+                  <div className="text-xs font-semibold text-slate-300">Tautkan Relasi:</div>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                    <select
+                      value={newRelToPerson}
+                      onChange={(e) => setNewRelToPerson(e.target.value)}
+                      className="md:col-span-2 px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                    >
+                      <option value="">Pilih Orang...</option>
+                      {people
+                        .filter((p) => p.id !== activePerson.id)
+                        .map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.fullName} ({p.jobTitle || "Independen"})
+                          </option>
+                        ))}
+                    </select>
+
+                    <select
+                      value={newRelType}
+                      onChange={(e) => setNewRelType(e.target.value as any)}
+                      className="px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                    >
+                      <option value="colleague">Kolega</option>
+                      <option value="reports_to">Lapor Ke (Bawahan)</option>
+                      <option value="manager_of">Atasan Dari</option>
+                      <option value="client_of">Klien Dari</option>
+                      <option value="vendor_of">Vendor Dari</option>
+                    </select>
+
+                    <button
+                      type="submit"
+                      className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold"
+                    >
+                      + Simpan Relasi
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center pt-3 border-t border-slate-800">
+              <button
+                onClick={() => {
+                  deletePerson(activePerson.id);
+                  showToast("Data orang dihapus.");
+                  setSelectedPersonId(null);
+                }}
+                className="px-3 py-1.5 text-rose-400 hover:bg-rose-500/10 rounded-lg text-xs font-semibold flex items-center gap-1"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                Hapus
+              </button>
+
+              <button
+                onClick={() => setSelectedPersonId(null)}
+                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: CREATE PERSON */}
+      {isNewPersonOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h3 className="font-bold text-base text-white">Tambah Individu (Identity Layer)</h3>
+              <button onClick={() => setIsNewPersonOpen(false)} className="text-slate-400 hover:text-slate-200">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreatePerson} className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  Nama Lengkap <span className="text-rose-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="mis. Bambang Pamungkas, S.T."
+                  value={newFullName}
+                  onChange={(e) => setNewFullName(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">Tipe Individu</label>
+                  <select
+                    value={newType}
+                    onChange={(e) => setNewType(e.target.value as any)}
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  >
+                    <option value="external">External (Klien/Mitra)</option>
+                    <option value="internal">Internal (Tim Konsultan)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">Organisasi / Perusahaan</label>
+                  <select
+                    value={newOrgId}
+                    onChange={(e) => setNewOrgId(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  >
+                    <option value="">Independen / Bebas</option>
+                    {organizations.map((org) => (
+                      <option key={org.id} value={org.id}>
+                        {org.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Jabatan / Peran</label>
+                <input
+                  type="text"
+                  placeholder="mis. VP Technology, Account Executive"
+                  value={newJobTitle}
+                  onChange={(e) => setNewJobTitle(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">Email Utama</label>
+                  <input
+                    type="email"
+                    placeholder="nama@perusahaan.co.id"
+                    value={newContactEmail}
+                    onChange={(e) => setNewContactEmail(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">Nomor WhatsApp / HP</label>
+                  <input
+                    type="text"
+                    placeholder="+62 811..."
+                    value={newContactPhone}
+                    onChange={(e) => setNewContactPhone(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setIsNewPersonOpen(false)}
+                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold"
+                >
+                  Simpan Identitas
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: CREATE ORG */}
+      {isNewOrgOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h3 className="font-bold text-base text-white">Tambah Organisasi Baru</h3>
+              <button onClick={() => setIsNewOrgOpen(false)} className="text-slate-400 hover:text-slate-200">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateOrganization} className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  Nama Organisasi <span className="text-rose-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="mis. PT Bank Central Makmur"
+                  value={newOrgName}
+                  onChange={(e) => setNewOrgName(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Sektor / Industri</label>
+                <input
+                  type="text"
+                  placeholder="mis. Financial Services, Telekomunikasi"
+                  value={newOrgIndustry}
+                  onChange={(e) => setNewOrgIndustry(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Website</label>
+                <input
+                  type="url"
+                  placeholder="https://perusahaan.co.id"
+                  value={newOrgWebsite}
+                  onChange={(e) => setNewOrgWebsite(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setIsNewOrgOpen(false)}
+                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold"
+                >
+                  Simpan Organisasi
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

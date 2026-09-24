@@ -1,40 +1,20 @@
-# All in One
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+</div>
 
-Frontend workspace all-in-one — klien, proyek, tugas, keuangan, dan alat produktivitas dalam satu aplikasi.
+# Run and deploy your AI Studio app
 
-## Struktur Proyek
+This contains everything you need to run your app locally.
 
-```
-src/
-  app/         Shell aplikasi inti (app-shell, dock, command palette, modal global)
-  features/    Modul per fitur (finance, credit, syariah, zakat, tax, wira, dst.)
-  components/ui  Komponen UI dasar (shadcn/ui)
-  config/      Konfigurasi navigasi
-  routes/      Definisi route (file-based routing via TanStack Router)
-  lib/         Utilities & helper bersama
-  hooks/       Custom React hooks bersama
-```
+View your app in AI Studio: https://ai.studio/apps/8d6d5caf-85ca-4a83-8f03-219e8279e2cb
 
-## Menjalankan Secara Lokal
+## Run Locally
 
-**Prasyarat:** Node.js, pnpm
+**Prerequisites:**  Node.js
+
 
 1. Install dependencies:
-   ```
-   pnpm install
-   ```
-2. Jalankan development server:
-   ```
-   pnpm run dev
-   ```
-3. Build untuk produksi:
-   ```
-   pnpm run build
-   ```
-
-## Stack
-
-- React + Vite
-- TanStack Router
-- Tailwind CSS
-- TypeScript
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`

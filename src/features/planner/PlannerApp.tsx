@@ -1,0 +1,661 @@
+import React, { useState, useMemo } from "react";
+import {
+  Clock,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Play,
+  CheckCircle2,
+  AlertTriangle,
+  ArrowRight,
+  Sparkles,
+  Lock,
+  RotateCcw,
+  Zap,
+  Layers,
+  Flame,
+  Check,
+  X,
+  Trash2,
+  MoveRight,
+  ShieldAlert,
+  Sliders,
+} from "lucide-react";
+import { usePlanner } from "./store";
+import { TimeBlock, PlannerViewMode, TimeBlockStatus } from "./types";
+
+export function PlannerApp() {
+  const {
+    state,
+    workQueue,
+    getCapacityForDate,
+    createTimeBlock,
+    updateTimeBlock,
+    deleteTimeBlock,
+    carryoverTimeBlock,
+    commitDailyPlan,
+    runAutoPlanning,
+  } = usePlanner();
+
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const [viewMode, setViewMode] = useState<PlannerViewMode>("daily");
+  const [showAddBlockModal, setShowAddBlockModal] = useState<boolean>(false);
+  const [selectedBlock, setSelectedBlock] = useState<TimeBlock | null>(null);
+
+  const dateStr = currentDate.toISOString().slice(0, 10);
+  const tomorrowStr = new Date(currentDate.getTime() + 86400000).toISOString().slice(0, 10);
+
+  // Capacity calculation for selected date
+  const capacity = useMemo(() => getCapacityForDate(dateStr), [getCapacityForDate, dateStr]);
+
+  const isOverallocated = capacity.allocatedMinutes > capacity.availableMinutes;
+  const overallocatedMinutes = Math.max(0, capacity.allocatedMinutes - capacity.availableMinutes);
+
+  // TimeBlocks for selected date
+  const dailyBlocks = useMemo(() => {
+    return state.timeBlocks
+      .filter((tb) => tb.startAt.slice(0, 10) === dateStr)
+      .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
+  }, [state.timeBlocks, dateStr]);
+
+  // Hourly slots (08:00 - 18:00)
+  const hours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+
+  // Weekly days
+  const weekDays = useMemo(() => {
+    const curr = new Date(currentDate);
+    const day = curr.getDay();
+    const diff = curr.getDate() - day + (day === 0 ? -6 : 1);
+    const monday = new Date(curr.setDate(diff));
+
+    const list: Date[] = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      list.push(d);
+    }
+    return list;
+  }, [currentDate]);
+
+  const handlePrevDay = () => {
+    setCurrentDate(new Date(currentDate.getTime() - 86400000));
+  };
+
+  const handleNextDay = () => {
+    setCurrentDate(new Date(currentDate.getTime() + 86400000));
+  };
+
+  const currentPlan = state.dailyPlans[dateStr];
+  const isCommitted = currentPlan?.status === "committed";
+
+  return (
+    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-slate-50 text-slate-800">
+      {/* LEFT SIDEBAR: WorkQueue (§5) */}
+      <aside className="w-80 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
+        {/* WorkQueue Header */}
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Zap className="w-4 h-4 text-amber-500" />
+            <div>
+              <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">WorkQueue (§5)</h2>
+              <p className="text-[10px] text-slate-400">Tugas belum terjadwal dari Task Manager</p>
+            </div>
+          </div>
+          <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+            {workQueue.length}
+          </span>
+        </div>
+
+        {/* Auto-Planning Trigger Banner (§10) */}
+        <div className="p-3 border-b border-slate-100 bg-indigo-50/60">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-semibold text-indigo-900 flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+              Auto-Planning (Rule-Based)
+            </span>
+            <span className="text-[10px] text-indigo-600 font-mono">§10</span>
+          </div>
+          <p className="text-[11px] text-indigo-700 leading-snug mb-2">
+            Tempatkan ritual tetap & urutkan tugas teratas ke slot kosong hari ini secara deterministik.
+          </p>
+          <button
+            onClick={() => {
+              const count = runAutoPlanning(dateStr);
+              alert(`${count} TimeBlock berhasil dialokasikan secara otomatis ke jadwal hari ini!`);
+            }}
+            className="w-full py-1.5 px-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs font-medium transition-colors shadow-2xs flex items-center justify-center gap-1.5"
+          >
+            <Zap className="w-3.5 h-3.5" />
+            Jadwalkan Otomatis Hari Ini
+          </button>
+        </div>
+
+        {/* WorkQueue Items List */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          {workQueue.length === 0 ? (
+            <div className="text-center py-8 text-xs text-slate-400">
+              Semua tugas aktif telah dialokasikan atau selesai.
+            </div>
+          ) : (
+            workQueue.map((item) => (
+              <div
+                key={item.sourceId}
+                className="p-3 bg-white border border-slate-200 rounded-lg hover:border-indigo-400 transition-all shadow-2xs space-y-2"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <h4 className="text-xs font-semibold text-slate-800 line-clamp-2">{item.title}</h4>
+                  <span
+                    className={`text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded flex-shrink-0 ${
+                      item.priority === "urgent"
+                        ? "text-red-700 bg-red-50"
+                        : item.priority === "high"
+                        ? "text-orange-700 bg-orange-50"
+                        : "text-slate-600 bg-slate-100"
+                    }`}
+                  >
+                    {item.priority}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] text-slate-400">
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {item.estimatedDuration} mnt
+                  </span>
+                  {item.dueAt && (
+                    <span>Deadline: {new Date(item.dueAt).toLocaleDateString("id-ID", { day: "numeric", month: "short" })}</span>
+                  )}
+                </div>
+
+                {/* Quick Allocate Button */}
+                <button
+                  onClick={() => {
+                    const startH = 14;
+                    const startIso = `${dateStr}T${String(startH).padStart(2, "0")}:00:00`;
+                    const endIso = `${dateStr}T${String(startH + 1).padStart(2, "0")}:00:00`;
+                    createTimeBlock({
+                      sourceType: "task",
+                      sourceId: item.sourceId,
+                      title: item.title,
+                      startAt: startIso,
+                      endAt: endIso,
+                      syncCompletion: true,
+                    });
+                  }}
+                  className="w-full py-1 text-[11px] font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded transition-colors flex items-center justify-center gap-1"
+                >
+                  <Plus className="w-3 h-3" />
+                  Alokasikan ke Hari Ini
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Footnote */}
+        <div className="p-3 border-t border-slate-100 bg-slate-50 text-[10px] text-slate-500">
+          <p className="font-semibold text-slate-700">Standalone App Ecosystem #04</p>
+          <p className="mt-0.5">Time-first allocation layer. Mengorkestrasi Task & Calendar tanpa salinan data.</p>
+        </div>
+      </aside>
+
+      {/* MAIN PLANNER CONTENT */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+        {/* Top Header */}
+        <header className="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCurrentDate(new Date())}
+              className="px-2.5 py-1 text-xs font-medium border border-slate-200 text-slate-700 rounded hover:bg-slate-50 transition-colors"
+            >
+              Hari Ini
+            </button>
+            <div className="flex items-center border border-slate-200 rounded">
+              <button
+                onClick={handlePrevDay}
+                className="p-1 hover:bg-slate-50 text-slate-600 rounded-l"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleNextDay}
+                className="p-1 hover:bg-slate-50 text-slate-600 rounded-r"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+            <h1 className="text-base font-bold text-slate-900 tracking-tight ml-2">
+              {currentDate.toLocaleDateString("id-ID", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </h1>
+            {isCommitted && (
+              <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded flex items-center gap-1">
+                <Lock className="w-3 h-3" />
+                Rencana Dikunci (Committed)
+              </span>
+            )}
+          </div>
+
+          {/* Right Controls */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center border border-slate-200 rounded-md p-0.5 bg-slate-50 text-xs">
+              {[
+                { id: "daily", label: "Daily Plan" },
+                { id: "weekly", label: "Weekly Plan" },
+                { id: "rituals", label: "Rituals (§6)" },
+                { id: "carryover", label: "Carryover (§8)" },
+              ].map((v) => (
+                <button
+                  key={v.id}
+                  onClick={() => setViewMode(v.id as PlannerViewMode)}
+                  className={`px-3 py-1 rounded transition-colors ${
+                    viewMode === v.id
+                      ? "bg-white text-slate-900 font-semibold shadow-xs"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  {v.label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => commitDailyPlan(dateStr)}
+              className="px-3 py-1.5 text-xs font-medium border border-slate-300 rounded hover:bg-slate-50 text-slate-700 flex items-center gap-1.5"
+            >
+              <Lock className="w-3.5 h-3.5" />
+              Kunci Rencana
+            </button>
+
+            <button
+              onClick={() => setShowAddBlockModal(true)}
+              className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded hover:bg-indigo-700 transition-colors shadow-xs flex items-center gap-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Tambah Blok Waktu
+            </button>
+          </div>
+        </header>
+
+        {/* CAPACITY BAR & OVERALLOCATION WARNING (§4) */}
+        <div className="p-4 border-b border-slate-200 bg-slate-50/70">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-700 mb-1.5">
+            <span>Kapasitas Kerja Hari Ini (§4)</span>
+            <span>
+              {capacity.allocatedMinutes} mnt teralokasi / {capacity.availableMinutes} mnt tersedia
+              {capacity.remainingMinutes >= 0 ? ` (sisa ${capacity.remainingMinutes} mnt)` : ""}
+            </span>
+          </div>
+
+          <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden flex">
+            <div
+              className={`h-full transition-all ${
+                isOverallocated ? "bg-red-500" : "bg-indigo-600"
+              }`}
+              style={{
+                width: `${Math.min(100, Math.round((capacity.allocatedMinutes / capacity.availableMinutes) * 100))}%`,
+              }}
+            />
+          </div>
+
+          {/* Overallocation Warning Alert */}
+          {isOverallocated && (
+            <div className="mt-2 p-2.5 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 flex-shrink-0 text-red-600" />
+              <p className="font-medium">
+                Peringatan Kapasitas: Rencana hari ini melebihi kapasitas oleh {overallocatedMinutes} menit. Pertimbangkan carryover ke hari berikutnya.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* VIEW 1: DAILY PLAN */}
+        {viewMode === "daily" && (
+          <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
+            <div className="space-y-3">
+              {dailyBlocks.length === 0 ? (
+                <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-xl bg-white p-6 space-y-3">
+                  <Clock className="w-10 h-10 text-slate-300 mx-auto" />
+                  <p className="text-xs font-medium text-slate-600">Belum ada blok waktu yang dialokasikan untuk tanggal ini.</p>
+                  <p className="text-[11px] text-slate-400">
+                    Gunakan Auto-Planning di panel kiri atau buat TimeBlock secara manual.
+                  </p>
+                </div>
+              ) : (
+                dailyBlocks.map((block) => {
+                  const isDone = block.status === "done";
+                  const isSkipped = block.status === "skipped";
+                  const isCarriedOver = block.status === "carried_over";
+
+                  return (
+                    <div
+                      key={block.id}
+                      className={`p-4 rounded-lg border transition-all shadow-xs flex items-start justify-between gap-4 ${
+                        isDone
+                          ? "bg-emerald-50/40 border-emerald-200"
+                          : isSkipped
+                          ? "bg-slate-100 border-slate-200 opacity-60"
+                          : isCarriedOver
+                          ? "bg-amber-50/40 border-amber-200"
+                          : "bg-white border-slate-200 hover:border-indigo-300"
+                      }`}
+                    >
+                      <div className="space-y-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`w-2.5 h-2.5 rounded-full ${
+                              block.sourceType === "ritual"
+                                ? "bg-amber-500"
+                                : block.sourceType === "task"
+                                ? "bg-indigo-600"
+                                : "bg-emerald-500"
+                            }`}
+                          />
+                          <h3
+                            className={`text-xs font-bold text-slate-900 truncate ${
+                              isDone ? "line-through text-slate-500" : ""
+                            }`}
+                          >
+                            {block.title}
+                          </h3>
+                          <span className="text-[10px] uppercase font-semibold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+                            {block.sourceType}
+                          </span>
+                        </div>
+
+                        {block.notes && (
+                          <p className="text-xs text-slate-500 italic">{block.notes}</p>
+                        )}
+
+                        <div className="flex items-center gap-3 text-[11px] text-slate-500">
+                          <span className="font-mono">
+                            {new Date(block.startAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })} -{" "}
+                            {new Date(block.endAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                          <span>
+                            (
+                            {Math.round(
+                              (new Date(block.endAt).getTime() - new Date(block.startAt).getTime()) / 60000
+                            )}{" "}
+                            mnt)
+                          </span>
+                          {block.syncCompletion && (
+                            <span className="text-[10px] text-indigo-600">Sync: Task Manager</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Action Buttons (§3.2) */}
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        {!isDone && (
+                          <button
+                            onClick={() => updateTimeBlock(block.id, { status: "done" })}
+                            title="Tandai Selesai"
+                            className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded"
+                          >
+                            <CheckCircle2 className="w-4 h-4" />
+                          </button>
+                        )}
+                        {isDone && (
+                          <button
+                            onClick={() => updateTimeBlock(block.id, { status: "planned" })}
+                            title="Batal Selesai"
+                            className="p-1.5 text-slate-400 hover:bg-slate-100 rounded"
+                          >
+                            <RotateCcw className="w-4 h-4" />
+                          </button>
+                        )}
+
+                        {/* Carryover (§8) */}
+                        <button
+                          onClick={() => carryoverTimeBlock(block, tomorrowStr, "deprioritized")}
+                          title="Pindahkan ke Besok (Carryover §8)"
+                          className="p-1.5 text-amber-600 hover:bg-amber-100 rounded"
+                        >
+                          <MoveRight className="w-4 h-4" />
+                        </button>
+
+                        {/* Skip */}
+                        <button
+                          onClick={() => updateTimeBlock(block.id, { status: "skipped" })}
+                          title="Lewati Hari Ini"
+                          className="p-1.5 text-slate-400 hover:bg-slate-100 rounded"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+
+                        {/* Delete */}
+                        <button
+                          onClick={() => deleteTimeBlock(block.id)}
+                          title="Hapus TimeBlock"
+                          className="p-1.5 text-red-400 hover:text-red-600 rounded"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* VIEW 2: WEEKLY PLAN */}
+        {viewMode === "weekly" && (
+          <div className="flex-1 overflow-x-auto p-6 flex gap-4">
+            {weekDays.map((d, i) => {
+              const dKey = d.toISOString().slice(0, 10);
+              const dayBlocks = state.timeBlocks.filter((tb) => tb.startAt.slice(0, 10) === dKey);
+              const isToday = d.toDateString() === new Date().toDateString();
+
+              return (
+                <div
+                  key={dKey}
+                  className="w-72 flex-shrink-0 bg-white border border-slate-200 rounded-lg flex flex-col max-h-[calc(100vh-250px)]"
+                >
+                  <div className="p-3 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                    <div>
+                      <span className={`text-xs font-semibold ${isToday ? "text-indigo-600" : "text-slate-800"}`}>
+                        {["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"][i]}
+                      </span>
+                      <p className="text-[10px] text-slate-400">{d.getDate()} {d.toLocaleString("id-ID", { month: "short" })}</p>
+                    </div>
+                    <span className="text-[10px] font-mono bg-slate-200 px-1.5 py-0.5 rounded text-slate-600">
+                      {dayBlocks.length} blok
+                    </span>
+                  </div>
+
+                  <div className="p-2 space-y-2 flex-1 overflow-y-auto">
+                    {dayBlocks.length === 0 ? (
+                      <p className="text-[11px] text-slate-300 text-center py-6">Kosong</p>
+                    ) : (
+                      dayBlocks.map((b) => (
+                        <div
+                          key={b.id}
+                          className="p-2 bg-slate-50 border border-slate-200 rounded text-xs space-y-1"
+                        >
+                          <p className="font-semibold text-slate-800 line-clamp-1">{b.title}</p>
+                          <p className="text-[10px] text-slate-400 font-mono">
+                            {new Date(b.startAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
+                          </p>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* VIEW 3: RITUALS (§6) */}
+        {viewMode === "rituals" && (
+          <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
+            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-slate-900">Ritual Tetap Berulang (§6)</h3>
+              <p className="text-xs text-slate-500">
+                Blok waktu tetap yang mengisi jadwal terlebih dahulu sebelum pekerjaan lain dialokasikan.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              {state.rituals.map((r) => (
+                <div
+                  key={r.id}
+                  className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs flex items-center justify-between"
+                >
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-bold text-slate-900">{r.title}</h4>
+                    <p className="text-[11px] text-slate-500">
+                      Pukul {r.preferredStartTime} · Durasi {r.duration} menit · Pola: {r.recurrence.type}
+                    </p>
+                  </div>
+                  <span
+                    className={`text-[10px] font-semibold px-2 py-0.5 rounded ${
+                      r.isFixed ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-slate-100 text-slate-600"
+                    }`}
+                  >
+                    {r.isFixed ? "Fixed (Tidak Boleh Digeser)" : "Flexible"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* VIEW 4: CARRYOVER AUDIT (§8) */}
+        {viewMode === "carryover" && (
+          <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full space-y-4">
+            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs">
+              <h3 className="text-sm font-semibold text-slate-900">Riwayat Carryover Pekerjaan (§8)</h3>
+              <p className="text-xs text-slate-500">
+                Item yang belum selesai di akhir hari dan dialihkan ke tanggal berikutnya.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              {state.carryovers.length === 0 ? (
+                <div className="p-6 text-center text-xs text-slate-400 bg-white border border-slate-200 rounded-lg">
+                  Belum ada carryover yang tercatat.
+                </div>
+              ) : (
+                state.carryovers.map((c) => (
+                  <div
+                    key={c.id}
+                    className="p-4 bg-white border border-slate-200 rounded-lg shadow-xs flex items-center justify-between"
+                  >
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900">{c.title}</h4>
+                      <p className="text-[11px] text-slate-500">
+                        Dari tanggal {c.fromDate} ke {c.toDate} · Alasan: {c.reason}
+                      </p>
+                    </div>
+                    <span className="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium">
+                      Carried Over
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* MODAL: ADD TIMEBLOCK */}
+      {showAddBlockModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-white rounded-lg shadow-xl border border-slate-200 p-6 space-y-4">
+            <h3 className="text-sm font-semibold text-slate-900">Tambah Blok Waktu Manual</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const title = formData.get("title") as string;
+                const startTime = formData.get("startTime") as string;
+                const endTime = formData.get("endTime") as string;
+                const notes = formData.get("notes") as string;
+
+                createTimeBlock({
+                  sourceType: "custom",
+                  title,
+                  startAt: `${dateStr}T${startTime}:00`,
+                  endAt: `${dateStr}T${endTime}:00`,
+                  notes,
+                });
+
+                setShowAddBlockModal(false);
+              }}
+              className="space-y-3"
+            >
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Judul Pekerjaan *</label>
+                <input
+                  name="title"
+                  type="text"
+                  required
+                  placeholder="mis. Review Kontrak Hukum"
+                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Mulai</label>
+                  <input
+                    name="startTime"
+                    type="time"
+                    defaultValue="10:00"
+                    required
+                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Selesai</label>
+                  <input
+                    name="endTime"
+                    type="time"
+                    defaultValue="11:30"
+                    required
+                    className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Catatan Konteks</label>
+                <textarea
+                  name="notes"
+                  rows={2}
+                  placeholder="Catatan pengerjaan..."
+                  className="w-full text-xs p-2 border border-slate-200 rounded focus:ring-1 focus:ring-indigo-500"
+                />
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddBlockModal(false)}
+                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-3 py-1.5 text-xs font-medium bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  Simpan Blok
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

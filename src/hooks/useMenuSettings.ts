@@ -31,5 +31,9 @@ export function useMenuSettings() {
     setEnabledMenus({});
   }, []);
 
-  return { enabledMenus, toggleMenu, resetMenus };
+  return {
+    enabledMenus,
+    toggleMenu,
+    resetMenus,
+  };
 }

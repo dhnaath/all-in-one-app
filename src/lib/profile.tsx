@@ -1,47 +1,78 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import type { ReactNode } from "react";
+import React, { createContext, useContext, useState, type ReactNode } from "react";
 
-const KUNCI = "clientos-profil";
-const KLIEN_BAWAAN = "c1";
+export interface UserProfile {
+  id: string;
+  name: string;
+  role: string;
+  team: string;
+  avatar?: string;
+  email?: string;
+}
 
-type Profil = {
-  clientId: string;
-  siap: boolean;
+const defaultProfile: UserProfile = {
+  id: "user-1",
+  name: "Dhia Najmi",
+  role: "Konsultan",
+  team: "Tim Praktik",
+  email: "dhia.najmi@example.com",
 };
 
-const KonteksProfil = createContext<Profil | null>(null);
+interface ProfileContextType {
+  profile: UserProfile;
+  setProfile: (profile: UserProfile) => void;
+  updateProfile: (updates: Partial<UserProfile>) => void;
+  clientId: string;
+  setClientId?: (id: string) => void;
+  siap?: boolean;
+}
+
+const ProfileContext = createContext<ProfileContextType>({
+  profile: defaultProfile,
+  setProfile: () => {},
+  updateProfile: () => {},
+  clientId: "11111111-1111-1111-1111-111111111111",
+  siap: true,
+});
 
 export function PenyediaProfil({ children }: { children: ReactNode }) {
-  const [clientId, setClientId] = useState<string>(KLIEN_BAWAAN);
-  const [siap, setSiap] = useState(false);
-
-  useEffect(() => {
+  const [profile, setProfileState] = useState<UserProfile>(() => {
     try {
-      const mentah = window.localStorage.getItem(KUNCI);
-      if (mentah) {
-        const tersimpan = JSON.parse(mentah) as Partial<{ clientId: string }>;
-        if (typeof tersimpan.clientId === "string" && tersimpan.clientId && tersimpan.clientId !== "11111111-1111-1111-1111-111111111111") {
-          setClientId(tersimpan.clientId);
-        } else {
-          setClientId(KLIEN_BAWAAN);
-        }
-      }
+      const saved = localStorage.getItem("aio_user_profile");
+      if (saved) return JSON.parse(saved);
     } catch {
-      /* abaikan penyimpanan yang rusak */
+      // ignore storage error
     }
-    setSiap(true);
-  }, []);
+    return defaultProfile;
+  });
 
-  const nilai = useMemo(
-    () => ({ clientId, siap }),
-    [clientId, siap],
+  const setProfile = (newProfile: UserProfile) => {
+    setProfileState(newProfile);
+    try {
+      localStorage.setItem("aio_user_profile", JSON.stringify(newProfile));
+    } catch {
+      // ignore storage error
+    }
+  };
+
+  const updateProfile = (updates: Partial<UserProfile>) => {
+    setProfileState((prev) => {
+      const next = { ...prev, ...updates };
+      try {
+        localStorage.setItem("aio_user_profile", JSON.stringify(next));
+      } catch {
+        // ignore storage error
+      }
+      return next;
+    });
+  };
+
+  return (
+    <ProfileContext.Provider value={{ profile, setProfile, updateProfile, clientId: "11111111-1111-1111-1111-111111111111", siap: true }}>
+      {children}
+    </ProfileContext.Provider>
   );
-
-  return <KonteksProfil.Provider value={nilai}>{children}</KonteksProfil.Provider>;
 }
 
 export function useProfil() {
-  const konteks = useContext(KonteksProfil);
-  if (!konteks) throw new Error("useProfil harus dipakai di dalam PenyediaProfil");
-  return konteks;
+  return useContext(ProfileContext);
 }

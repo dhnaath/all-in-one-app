@@ -669,7 +669,10 @@ export function Tools100Section({
       {/* Title & Description */}
       <div className="text-center mb-[calc(1.5rem+10pt)]">
         <h3 className="text-2xl sm:text-3xl font-bold text-foreground/90 tracking-tight flex items-center justify-center gap-2">
-          <span><span className="font-normal">mini</span> M.B.A.</span>
+          <span>
+            <span className="font-normal">mini</span>{" "}
+            M<span className="font-normal">.</span>B<span className="font-normal">.</span>A<span className="font-normal">.</span>
+          </span>
         </h3>
         <p className="text-xs sm:text-sm text-muted-foreground mt-[calc(0.25rem+10pt)] max-w-xl mx-auto">
           Small Package. Bigger Perspective.
@@ -1074,7 +1077,7 @@ export function Tools100Section({
                     className="flex flex-col items-center gap-2 group w-full outline-none relative"
                   >
                     <div
-                      className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-2xl flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
+                      className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
                     >
                       <item.icon
                         className="size-5 sm:size-6 opacity-90 drop-shadow-sm"

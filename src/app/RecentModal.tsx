@@ -15,6 +15,7 @@ import {
 import { useRecentApps, type RecentAppItem } from "@/hooks/useRecentApps";
 import { useFavorites } from "@/hooks/useFavorites";
 import { navKonsultan, type NavItem } from "@/config/nav";
+import { isNewlyRevisedApp } from "@/utils/revisedAppsMarker";
 
 interface RecentModalProps {
   isOpen: boolean;
@@ -216,9 +217,20 @@ export function RecentModal({ isOpen, onClose }: RecentModalProps) {
                   className="group relative flex items-center justify-between p-2 rounded-xl hover:bg-accent/70 border border-transparent hover:border-border/50 transition-all cursor-pointer text-left"
                 >
                   <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                    <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 transition-transform group-hover:scale-105">
-                      <AppIcon className="size-4" />
-                    </div>
+                    {(() => {
+                      const isRevised = isNewlyRevisedApp(app.to, app.label);
+                      return (
+                        <div
+                          className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${
+                            isRevised
+                              ? "bg-white text-zinc-950 border border-zinc-300 dark:border-white shadow-2xs"
+                              : "bg-primary/10 text-primary"
+                          }`}
+                        >
+                          <AppIcon className={`size-4 ${isRevised ? "text-zinc-950" : ""}`} />
+                        </div>
+                      );
+                    })()}
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className="text-xs font-semibold text-foreground truncate block">

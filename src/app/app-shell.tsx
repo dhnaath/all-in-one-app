@@ -1,4 +1,6 @@
 import { AppDock } from "./shell/app-dock";
+import { TypewriterSearchText } from "./shell/TypewriterSearchText";
+import { AnimatedSearchIcon } from "./shell/AnimatedSearchIcon";
 import { useState, useEffect } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
@@ -241,9 +243,9 @@ export const APP_MODES: ModeItem[] = [
     badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
     links: [
       { to: "/proyek-personal", label: "Personal Projects", icon: FolderKanban },
-      { to: "/proyek", label: "Proyek & Tugas", icon: Briefcase },
+      { to: "/proyek", label: "Project Manager", icon: Briefcase },
       { to: "/task-manager", label: "Task Manager", icon: CheckSquare },
-      { to: "/kalender", label: "Kalender & Timeline", icon: CalendarDays },
+      { to: "/kalender", label: "Calendar", icon: CalendarDays },
       { to: "/pomodoro", label: "Focus Timer", icon: Timer },
     ],
   },
@@ -572,6 +574,10 @@ export function AppShell({
       setIsExpandOpen(false);
     };
 
+    const handleOpenSearch = () => {
+      setIsCommandPaletteOpen(true);
+    };
+
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("aio_open_quick_capture", handleOpenQuickCapture);
     window.addEventListener("aio_open_shortcut", handleOpenShortcut);
@@ -579,6 +585,7 @@ export function AppShell({
     window.addEventListener("aio_open_expand", handleOpenExpand);
     window.addEventListener("aio_open_recent", handleOpenRecent);
     window.addEventListener("aio_open_taskbar", handleOpenTaskbar);
+    window.addEventListener("aio_open_search", handleOpenSearch);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("aio_open_quick_capture", handleOpenQuickCapture);
@@ -587,6 +594,7 @@ export function AppShell({
       window.removeEventListener("aio_open_expand", handleOpenExpand);
       window.removeEventListener("aio_open_recent", handleOpenRecent);
       window.removeEventListener("aio_open_taskbar", handleOpenTaskbar);
+      window.removeEventListener("aio_open_search", handleOpenSearch);
     };
   }, []);
 
@@ -983,6 +991,20 @@ export function AppShell({
           </div>
         </header>
         <div className="flex-1 overflow-y-auto no-scrollbar px-4 pt-16 pb-[90px] sm:px-6 sm:pt-20 sm:pb-[90px] relative z-10">{children}</div>
+        {/* iOS-Style Floating Search Pill above Dock (Active when not in Launcher) */}
+        {pathname !== "/" && (
+          <div className="fixed bottom-[calc(5rem+10pt)] left-0 right-0 flex justify-center pb-1 pointer-events-none z-30 animate-in fade-in duration-200">
+            <button
+              type="button"
+              onClick={() => setIsCommandPaletteOpen(true)}
+              className="pointer-events-auto flex items-center justify-center h-[28.5px] min-w-[88px] gap-1.5 px-4 rounded-full bg-card/75 dark:bg-card/60 backdrop-blur-xl border border-border/80 shadow-lg text-xs font-medium text-foreground/85 hover:bg-accent/80 hover:text-foreground hover:border-border active:scale-95 transition-all duration-150 cursor-pointer group"
+              aria-label="Pencarian Global (Search)"
+            >
+              <AnimatedSearchIcon active={true} className="size-[13px] text-muted-foreground group-hover:text-foreground transition-colors shrink-0" strokeWidth={2.4} />
+              <TypewriterSearchText active={true} speed={50} startDelay={100} />
+            </button>
+          </div>
+        )}
         <AppDock
           onQuickCapture={() => {
             setIsQuickCaptureOpen((prev) => !prev);

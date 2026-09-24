@@ -31,7 +31,7 @@ import { MacExpandStack } from "./mac-expand-stack";
 const CURSOR_RADIUS = 70;
 
 // Ukuran ikon: [normal, saat pas di tengah kursor, normal lagi]
-const ICON_SIZE_RANGE = [40, 70, 40];
+const ICON_SIZE_RANGE = [42, 70, 42];
 
 interface DockItemConfig {
   id: string;
@@ -74,8 +74,8 @@ function DockIcon({
       </div>
       <motion.div
         ref={ref}
-        style={{ width, height: width }}
-        className={`flex items-center justify-center rounded-2xl cursor-pointer ${
+        style={{ width, height: width, borderRadius: "24%" }}
+        className={`flex items-center justify-center cursor-pointer ${
           isActive 
             ? "bg-primary text-primary-foreground shadow-md border-primary/40" 
             : "bg-card/90 text-muted-foreground shadow-xs hover:bg-accent hover:text-foreground border-border"
@@ -237,7 +237,7 @@ export function AppDock({
         { id: "/events", label: "Pertemuan Kerabat", icon: CalendarDays },
       ],
       employment: [
-        { id: "/proyek", label: "Proyek & Tugas", icon: Briefcase },
+        { id: "/proyek", label: "Project Manager", icon: Briefcase },
         { id: "/task-manager", label: "Task Manager", icon: CheckSquare },
       ],
       owner: [

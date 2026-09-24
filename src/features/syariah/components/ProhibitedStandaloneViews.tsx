@@ -301,8 +301,7 @@ export function StandaloneProhibitedApp({
               <ArrowLeft size={18} />
             </button>
           ) : (
-            <Link
-              to="/syariah/terlarang"
+            <Link to="/"
               className="p-2 rounded-xl bg-card border border-border/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all cursor-pointer shadow-xs"
               title="Kembali ke Semua Larangan"
             >

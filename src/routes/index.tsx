@@ -1,7 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { AppShell } from "@/app/app-shell";
 import { navKonsultan, type NavItem } from "../config/nav";
-import { useState, useRef, useEffect, useMemo } from "react";
+import { isNewlyRevisedApp } from "@/utils/revisedAppsMarker";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Search, Star, X, ShieldCheck, Coins, Building, Sprout, BookOpen, Users } from "lucide-react";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Tools100Section } from "@/features/launcher/Tools100Section";
@@ -12,15 +13,13 @@ import { PersonalEssentialsSection } from "@/features/launcher/PersonalEssential
 import { PeopleFamilySocietySection } from "@/features/launcher/PeopleFamilySocietySection";
 import { useLanguage } from "@/features/finance/hooks/useLanguage";
 import { translations } from "@/features/finance/translations";
+import { TypewriterSearchText } from "@/app/shell/TypewriterSearchText";
+import { AnimatedSearchIcon } from "@/app/shell/AnimatedSearchIcon";
 import {
   getLastLauncherPage,
   setLastLauncherPage,
   recordActiveApp,
 } from "@/utils/launcherCategoryMapper";
-
-export const Route = createFileRoute("/")({
-  component: Launcher,
-});
 
 const gradients = [
   "bg-gradient-to-br from-blue-400 to-blue-600",
@@ -132,17 +131,22 @@ function FolderTile({
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-2 group w-full outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-2xl cursor-pointer"
+      className="flex flex-col items-center gap-2 group w-full outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-[1.25rem] cursor-pointer"
     >
-      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl sm:rounded-[1.25rem] bg-slate-800/85 dark:bg-zinc-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-sm p-1.5 sm:p-2 grid grid-cols-3 gap-1 place-items-center transition-transform duration-200 group-hover:scale-110 group-active:scale-95 relative">
+      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] bg-slate-800/85 dark:bg-zinc-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-sm p-1.5 sm:p-2 grid grid-cols-3 gap-1 place-items-center transition-transform duration-200 group-hover:scale-110 group-active:scale-95 relative">
         {previewItems.map((item) => {
-          const grad = getGradient(item.label);
+          const isRevised = isNewlyRevisedApp(item.to, item.label);
+          const grad = isRevised ? "" : getGradient(item.label);
           return (
             <div
               key={item.to}
-              className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[3px] sm:rounded-[4px] flex items-center justify-center text-white shadow-xs ${grad}`}
+              className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[3px] sm:rounded-[4px] flex items-center justify-center shadow-xs ${
+                isRevised
+                  ? "bg-white text-zinc-900 border border-zinc-300 dark:border-white shadow-2xs"
+                  : `${grad} text-white`
+              }`}
             >
-              <item.icon className="size-1.5 sm:size-2 opacity-95" strokeWidth={2.2} />
+              <item.icon className={`size-1.5 sm:size-2 ${isRevised ? "opacity-100 text-zinc-900" : "opacity-95 text-white"}`} strokeWidth={2.2} />
             </div>
           );
         })}
@@ -159,13 +163,37 @@ function FolderTile({
   );
 }
 
-function Launcher() {
+export function Launcher() {
   const lang = useLanguage();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [activeSubCategories, setActiveSubCategories] = useState<Record<string, string>>({});
   const [activeFolder, setActiveFolder] = useState<{ id: string; title: string; items: NavItem[] } | null>(null);
   const { favorites, toggleFavorite } = useFavorites();
+
+  // iOS Page Indicator <-> Search Pill transition state (2s idle timer)
+  const [showSearch, setShowSearch] = useState(false);
+  const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const resetIdleTimer = () => {
+    setShowSearch(false);
+    if (idleTimerRef.current) {
+      clearTimeout(idleTimerRef.current);
+    }
+    idleTimerRef.current = setTimeout(() => {
+      setShowSearch(true);
+    }, 2000);
+  };
+
+  // Initially start in dots mode, then transition to Search after 2 seconds idle
+  useEffect(() => {
+    resetIdleTimer();
+    return () => {
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+      }
+    };
+  }, []);
 
   const pillarFolderInfo = useMemo(() => {
     if (!activeFolder) return null;
@@ -338,6 +366,7 @@ function Launcher() {
   useEffect(() => {
     let timeoutId: any = null;
     const handleScroll = () => {
+      resetIdleTimer();
       if (scrollRef.current) {
         const { scrollLeft, clientWidth } = scrollRef.current;
         if (clientWidth > 0) {
@@ -355,14 +384,23 @@ function Launcher() {
     const el = scrollRef.current;
     if (el) {
       el.addEventListener("scroll", handleScroll, { passive: true });
+      el.addEventListener("touchmove", resetIdleTimer, { passive: true });
+      el.addEventListener("pointerdown", resetIdleTimer, { passive: true });
+      el.addEventListener("wheel", resetIdleTimer, { passive: true });
     }
     return () => {
-      if (el) el.removeEventListener("scroll", handleScroll);
+      if (el) {
+        el.removeEventListener("scroll", handleScroll);
+        el.removeEventListener("touchmove", resetIdleTimer);
+        el.removeEventListener("pointerdown", resetIdleTimer);
+        el.removeEventListener("wheel", resetIdleTimer);
+      }
       if (timeoutId) clearTimeout(timeoutId);
     };
   }, [pages.length]);
 
   const scrollToPage = (pageIndex: number) => {
+    resetIdleTimer();
     if (scrollRef.current && pageIndex >= 0 && pageIndex < pages.length) {
       scrollRef.current.scrollTo({
         left: pageIndex * scrollRef.current.clientWidth,
@@ -763,7 +801,8 @@ function Launcher() {
                         }
 
                         const item = entry.item;
-                        const gradient = getGradient(item.label);
+                        const isRevised = isNewlyRevisedApp(item.to, item.label);
+                        const gradient = isRevised ? "" : getGradient(item.label);
                         const isFav = favorites.includes(item.to);
                         const itemPath = item.to.split("?")[0];
                         const itemSearch = item.to.includes("?")
@@ -779,12 +818,32 @@ function Launcher() {
                               recordActiveApp(item.to, pageIdx);
                             }}
                             className="flex flex-col items-center gap-3 group w-full outline-none relative"
+                            title={isRevised ? `${item.label} (Tanda Sementara: Modul Baru Direvisi)` : item.label}
                           >
                             <div 
-                              className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl sm:rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
+                              className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 relative ${
+                                isRevised
+                                  ? "bg-white text-zinc-900 border-2 border-zinc-200 dark:border-white shadow-md ring-2 ring-white/60"
+                                  : `${gradient} text-white`
+                              }`}
                             >
-                              <item.icon className="size-7 sm:size-8 opacity-90 drop-shadow-sm" strokeWidth={1.5} />
+                              <item.icon
+                                className={`size-7 sm:size-8 ${
+                                  isRevised
+                                    ? "text-zinc-900 drop-shadow-none"
+                                    : "opacity-90 drop-shadow-sm text-white"
+                                }`}
+                                strokeWidth={isRevised ? 2 : 1.5}
+                              />
                               
+                              {/* Tanda Sementara dot indicator */}
+                              {isRevised && (
+                                <span
+                                  className="absolute -top-1 -left-1 size-3 rounded-full bg-white border border-zinc-400 shadow-xs"
+                                  title="Tanda Sementara"
+                                />
+                              )}
+
                               <button
                                 onClick={(e) => {
                                   e.preventDefault();
@@ -821,19 +880,60 @@ function Launcher() {
           )}
         </div>
 
-        {/* Pagination Dots */}
-        {pages.length > 1 && (
-          <div className="fixed bottom-[calc(5rem+10pt)] left-0 right-0 flex justify-center gap-2 pb-1 pointer-events-none z-30">
-            {pages.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => scrollToPage(idx)}
-                className={`size-2 rounded-full transition-all duration-300 pointer-events-auto ${
-                  currentPage === idx ? "bg-primary w-3 shadow-md" : "bg-primary/30 hover:bg-primary/50 shadow-sm"
+        {/* iOS-Style Floating Page Indicator / Search Pill above Dock */}
+        {pages.length > 0 && (
+          <div className="fixed bottom-[calc(5rem+10pt)] left-0 right-0 flex justify-center pb-1 pointer-events-none z-30">
+            <div
+              className={`pointer-events-auto relative group flex items-center justify-center rounded-full bg-card/75 dark:bg-card/60 backdrop-blur-xl border border-border/80 shadow-lg select-none transition-all duration-300 ease-out h-[28.5px] ${
+                showSearch
+                  ? "px-4 min-w-[88px] cursor-pointer hover:bg-accent/80 hover:border-border active:scale-95"
+                  : "px-3.5 min-w-[74px] cursor-default"
+              }`}
+              onClick={() => {
+                if (showSearch) {
+                  window.dispatchEvent(new CustomEvent("aio_open_search"));
+                }
+              }}
+              title={showSearch ? "Cari Cepat (Search)" : undefined}
+            >
+              {/* Layer 1: Search View (Morphs / crossfades in when idle for 2s) */}
+              <div
+                className={`flex items-center gap-1.5 transition-all duration-300 ease-out ${
+                  showSearch
+                    ? "opacity-100 scale-100 translate-y-0"
+                    : "opacity-0 scale-90 translate-y-0.5 absolute pointer-events-none"
                 }`}
-                aria-label={`Ke halaman ${idx + 1}`}
-              />
-            ))}
+              >
+                <AnimatedSearchIcon active={showSearch} className="size-[13px] text-muted-foreground group-hover:text-foreground transition-colors shrink-0" strokeWidth={2.4} />
+                <TypewriterSearchText active={showSearch} speed={50} startDelay={70} />
+              </div>
+
+              {/* Layer 2: Dots View (Active initially & when scrolling/swiping) */}
+              <div
+                className={`flex items-center gap-1.5 transition-all duration-300 ease-out ${
+                  !showSearch
+                    ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+                    : "opacity-0 scale-90 -translate-y-0.5 absolute pointer-events-none"
+                }`}
+              >
+                {pages.map((_, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      scrollToPage(idx);
+                    }}
+                    className={`rounded-full transition-all duration-300 cursor-pointer ${
+                      currentPage === idx
+                        ? "bg-primary w-3 h-2 shadow-xs"
+                        : "bg-muted-foreground/35 hover:bg-muted-foreground/60 size-2"
+                    }`}
+                    aria-label={`Ke halaman ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
@@ -939,7 +1039,8 @@ function Launcher() {
                 className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-6 place-items-center max-h-[60vh] overflow-y-auto py-2 px-1 [&::-webkit-scrollbar]:hidden"
               >
                 {activeFolder.items.map((item) => {
-                  const gradient = getGradient(item.label);
+                  const isRevised = isNewlyRevisedApp(item.to, item.label);
+                  const gradient = isRevised ? "" : getGradient(item.label);
                   const isFav = favorites.includes(item.to);
                   const itemPath = item.to.split("?")[0];
                   const itemSearch = item.to.includes("?")
@@ -955,12 +1056,32 @@ function Launcher() {
                         recordActiveApp(item.to, currentPage);
                       }}
                       className="flex flex-col items-center gap-2.5 group w-full outline-none relative"
+                      title={isRevised ? `${item.label} (Tanda Sementara: Modul Baru Direvisi)` : item.label}
                     >
                       <div
-                        className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl sm:rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
+                        className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 relative ${
+                          isRevised
+                            ? "bg-white text-zinc-900 border-2 border-zinc-200 dark:border-white shadow-md ring-2 ring-white/60"
+                            : `${gradient} text-white`
+                        }`}
                       >
-                        <item.icon className="size-7 sm:size-8 opacity-90 drop-shadow-sm" strokeWidth={1.5} />
+                        <item.icon
+                          className={`size-7 sm:size-8 ${
+                            isRevised
+                              ? "text-zinc-900 drop-shadow-none"
+                              : "opacity-90 drop-shadow-sm text-white"
+                          }`}
+                          strokeWidth={isRevised ? 2 : 1.5}
+                        />
                         
+                        {/* Tanda Sementara dot indicator */}
+                        {isRevised && (
+                          <span
+                            className="absolute -top-1 -left-1 size-3 rounded-full bg-white border border-zinc-400 shadow-xs"
+                            title="Tanda Sementara"
+                          />
+                        )}
+
                         <button
                           onClick={(e) => {
                             e.preventDefault();

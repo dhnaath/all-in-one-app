@@ -162,7 +162,7 @@ export function PersonalEssentialsSection({
         icon: Target,
         getItems: () => [
           resolveApp("/goals", "Goals & Target", Target),
-          resolveApp("/habits", "Habits & Rutinitas", Activity),
+          resolveApp("/habits", "Habit Tracker", Activity),
           resolveApp("/lainnya?app=vision-board", "Vision Board & Impian", Compass),
           resolveApp("/lainnya?app=bucket-list", "Bucket List & Cita-Cita", CheckSquare),
           resolveApp("/kalender", "Kalender Personal", CalendarDays),
@@ -811,7 +811,7 @@ export function PersonalEssentialsSection({
                     className="flex flex-col items-center gap-2 group w-full outline-none relative"
                   >
                     <div
-                      className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-2xl flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
+                      className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
                     >
                       <item.icon
                         className="size-5 sm:size-6 opacity-90 drop-shadow-sm"

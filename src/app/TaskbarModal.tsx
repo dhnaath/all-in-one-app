@@ -20,6 +20,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { navKonsultan } from "@/config/nav";
+import { isNewlyRevisedApp } from "@/utils/revisedAppsMarker";
 
 interface TaskbarModalProps {
   isOpen: boolean;
@@ -289,15 +290,22 @@ export function TaskbarModal({ isOpen, onClose }: TaskbarModalProps) {
                     }`}
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <div
-                        className={`w-7 h-7 rounded-lg flex items-center justify-center ${
-                          isCurrent
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-background text-muted-foreground group-hover:text-foreground border border-border/60"
-                        }`}
-                      >
-                        <Icon className="size-3.5" />
-                      </div>
+                      {(() => {
+                        const isRevised = isNewlyRevisedApp(win.to, win.title);
+                        return (
+                          <div
+                            className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                              isRevised
+                                ? "bg-white text-zinc-950 border border-zinc-300 dark:border-white shadow-2xs"
+                                : isCurrent
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-background text-muted-foreground group-hover:text-foreground border border-border/60"
+                            }`}
+                          >
+                            <Icon className={`size-3.5 ${isRevised ? "text-zinc-950" : ""}`} />
+                          </div>
+                        );
+                      })()}
                       {isCurrent ? (
                         <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-primary text-primary-foreground">
                           Aktif

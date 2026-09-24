@@ -15,6 +15,7 @@ import {
   Binary,
   Lightbulb,
   TrendingUp,
+  LineChart,
   HeartPulse,
   Wallet,
   Calculator,
@@ -115,6 +116,12 @@ export function MoneyTrackerSection({
   const shariaItems = useMemo(() => {
     return (
       navKonsultan.find((g) => g.title === "Syariah & Muamalah")?.items.filter((i) => i.to !== "/") || []
+    );
+  }, []);
+
+  const commodityItems = useMemo(() => {
+    return (
+      navKonsultan.find((g) => g.title === "Commodity Index")?.items.filter((i) => i.to !== "/") || []
     );
   }, []);
 
@@ -252,6 +259,26 @@ export function MoneyTrackerSection({
 
       // Sharia Finance Group (Merged into Larangan Muamalah & Akad Syariah)
       {
+        id: "sha-indeks",
+        title: "Indeks Sharia",
+        group: "sharia",
+        icon: LineChart,
+        getItems: () => {
+          const item = commodityItems.find((i) => i.to === "/syariah/indeks");
+          return item ? [{ type: "app", item }] : [];
+        },
+      },
+      {
+        id: "sha-muamalah",
+        title: "Pasar Muamalah",
+        group: "sharia",
+        icon: HeartHandshake,
+        getItems: () => {
+          const item = commodityItems.find((i) => i.to === "/syariah");
+          return item ? [{ type: "app", item }] : [];
+        },
+      },
+      {
         id: "sha-larangan",
         title: "Larangan Muamalah",
         group: "sharia",
@@ -283,6 +310,7 @@ export function MoneyTrackerSection({
     laranganItems,
     akadItems,
     zakatItems,
+    commodityItems,
   ]);
 
   // Default items when activeSpecific === "all"
@@ -310,7 +338,10 @@ export function MoneyTrackerSection({
     });
 
     // Sharia default
-    const shaDefault: LauncherItem[] = shariaItems.map((item) => ({ type: "app", item }));
+    const shaDefault: LauncherItem[] = [
+      ...shariaItems.map((item) => ({ type: "app" as const, item })),
+      ...commodityItems.filter((i) => i.to.startsWith("/syariah")).map((item) => ({ type: "app" as const, item })),
+    ];
 
     return {
       asset_earning: assetEarningDefault,
@@ -606,7 +637,7 @@ export function MoneyTrackerSection({
                     className="flex flex-col items-center gap-2 group w-full outline-none relative"
                   >
                     <div
-                      className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-2xl flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
+                      className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
                     >
                       <item.icon
                         className="size-5 sm:size-6 opacity-90 drop-shadow-sm"
