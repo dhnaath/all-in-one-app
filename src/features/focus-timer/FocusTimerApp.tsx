@@ -185,36 +185,27 @@ export function FocusTimerApp() {
 
       {/* MAIN CONTENT */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
-        {/* Top Header */}
+        {/* Top Header Controls Portaled to Main Header */}
         <ShellHeader>
-          <div>
-            <h1 className="text-base font-bold text-foreground tracking-tight">Sesi Kerja Fokus</h1>
-            <p className="text-xs text-muted-foreground">
-              Kelola ritme kerja bebas distraksi dengan pencatatan interupsi real-time.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
-              {[
-                { id: "timer", label: "Timer Aktif" },
-                { id: "history", label: "Riwayat Sesi" },
-                { id: "by_linked", label: "Per Task" },
-                { id: "interruptions", label: "Log Interupsi" },
-              ].map((v) => (
-                <button
-                  key={v.id}
-                  onClick={() => setViewMode(v.id as FocusTimerViewMode)}
-                  className={`px-3 py-1 rounded transition-colors ${
-                    viewMode === v.id
-                      ? "bg-card text-foreground font-semibold shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {v.label}
-                </button>
-              ))}
-            </div>
+          <div className="flex items-center border border-border rounded-lg p-0.5 bg-muted/60 text-xs">
+            {[
+              { id: "timer", label: "Timer Aktif" },
+              { id: "history", label: "Riwayat Sesi" },
+              { id: "by_linked", label: "Per Task" },
+              { id: "interruptions", label: "Log Interupsi" },
+            ].map((v) => (
+              <button
+                key={v.id}
+                onClick={() => setViewMode(v.id as FocusTimerViewMode)}
+                className={`px-2.5 py-1 rounded-md transition-colors ${
+                  viewMode === v.id
+                    ? "bg-card text-foreground font-semibold shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {v.label}
+              </button>
+            ))}
           </div>
         </ShellHeader>
 

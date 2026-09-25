@@ -245,51 +245,32 @@ export function BookmarkManagerApp() {
         </div>
       )}
 
-      {/* Header */}
+      {/* Header Actions Portaled to Main Header */}
       <ShellHeader>
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-tr from-sky-500 to-indigo-600 rounded-xl shadow-lg shadow-indigo-500/20">
-              <BookmarkIcon className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold tracking-tight text-white">Bookmark Manager</h1>
-                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30">
-                  App #26
-                </span>
-              </div>
-              <p className="text-xs md:text-sm text-muted-foreground">
-                Penyimpanan tautan terstruktur dengan folder hierarkis, tag, deteksi link rot, dan koleksi kurasi.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center flex-wrap gap-2.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <button
             onClick={handleRunCheckAll}
             disabled={isCheckingLinks}
-            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition disabled:opacity-50"
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition disabled:opacity-50"
             title="Pindai apakah seluruh tautan masih aktif"
           >
-            <RefreshCw className={`w-4 h-4 ${isCheckingLinks ? "animate-spin text-sky-400" : ""}`} />
-            <span>{isCheckingLinks ? "Memeriksa Link..." : "Scan Link Rot"}</span>
+            <RefreshCw className={`w-3.5 h-3.5 ${isCheckingLinks ? "animate-spin text-sky-400" : ""}`} />
+            <span className="hidden sm:inline">{isCheckingLinks ? "Memeriksa..." : "Scan Link Rot"}</span>
           </button>
 
           <button
             onClick={() => setIsNewFolderOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition"
           >
-            <FolderPlus className="w-4 h-4 text-amber-400" />
-            <span>Folder Baru</span>
+            <FolderPlus className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline">Folder Baru</span>
           </button>
 
           <button
             onClick={handleOpenAddModal}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white rounded-lg text-sm font-semibold shadow-md shadow-indigo-500/25 transition"
+            className="flex items-center gap-1.5 px-3 py-1 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>Simpan Bookmark</span>
           </button>
         </div>

@@ -269,74 +269,51 @@ export function NotesApp() {
 
   return (
     <div className="w-full min-h-[calc(100vh-4rem)] bg-muted/40/60 dark:bg-background flex flex-col font-sans">
-      {/* 1. TOP HEADER */}
+      {/* 1. TOP HEADER Portaled to Main Header */}
       <ShellHeader>
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-          {/* Brand & Temporary White Marker */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-card text-foreground border-2 border-border dark:border-border shadow-md flex items-center justify-center shrink-0 ring-2 ring-white/60">
-              <FileText className="size-5 text-foreground" strokeWidth={2} />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
-                  Notes
-                </h1>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-muted dark:bg-card text-foreground dark:text-foreground border border-border dark:border-border">
-                  Tanda Sementara (#12)
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground hidden sm:block">
-                Single Source of Truth untuk Catatan Bebas, Block-Based & Jaringan Pengetahuan
-              </p>
-            </div>
-          </div>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <button
+            onClick={() => setIsTemplateModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+          >
+            <Sparkles className="size-3.5 text-amber-500" />
+            <span className="hidden sm:inline">Template</span>
+          </button>
 
-          {/* Action Toolbar */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <button
-              onClick={() => setIsTemplateModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
-            >
-              <Sparkles className="size-3.5 text-amber-500" />
-              <span>Template</span>
-            </button>
+          <button
+            onClick={() => setIsGraphModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+          >
+            <Network className="size-3.5 text-indigo-500" />
+            <span className="hidden sm:inline">Graph View</span>
+          </button>
 
-            <button
-              onClick={() => setIsGraphModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
-            >
-              <Network className="size-3.5 text-indigo-500" />
-              <span className="hidden sm:inline">Graph View</span>
-            </button>
+          <button
+            onClick={() => setIsStatsModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+          >
+            <BarChart3 className="size-3.5 text-purple-500" />
+            <span className="hidden sm:inline">Statistik</span>
+          </button>
 
-            <button
-              onClick={() => setIsStatsModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
-            >
-              <BarChart3 className="size-3.5 text-purple-500" />
-              <span className="hidden sm:inline">Statistik</span>
-            </button>
+          <button
+            onClick={() => setIsHistoryDrawerOpen(true)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+          >
+            <History className="size-3.5 text-muted-foreground" />
+            <span className="hidden md:inline">Riwayat</span>
+          </button>
 
-            <button
-              onClick={() => setIsHistoryDrawerOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
-            >
-              <History className="size-3.5 text-muted-foreground" />
-              <span className="hidden md:inline">Riwayat</span>
-            </button>
-
-            <button
-              onClick={() => {
-                const n = addNote();
-                setSelectedNoteId(n.id);
-              }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold shadow-sm hover:opacity-95 transition-opacity cursor-pointer"
-            >
-              <Plus className="size-4" strokeWidth={2.5} />
-              <span>Catatan Baru</span>
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              const n = addNote();
+              setSelectedNoteId(n.id);
+            }}
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            <Plus className="size-3.5" strokeWidth={2.5} />
+            <span>Catatan Baru</span>
+          </button>
         </div>
       </ShellHeader>
 

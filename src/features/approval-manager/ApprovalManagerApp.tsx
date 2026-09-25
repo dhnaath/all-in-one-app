@@ -217,54 +217,30 @@ export function ApprovalManagerApp() {
         </div>
       )}
 
-      {/* Header */}
+      {/* Header Actions Portaled to Main Header */}
       <ShellHeader>
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-tr from-emerald-500 to-teal-600 rounded-xl shadow-lg shadow-teal-500/20">
-              <FileCheck2 className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold tracking-tight text-white">Approval Manager</h1>
-                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  App #28
-                </span>
-                {stats.pending > 0 && (
-                  <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                    {stats.pending} pending
-                  </span>
-                )}
-              </div>
-              <p className="text-xs md:text-sm text-muted-foreground">
-                Mesin alur persetujuan bertingkat reusable (sequential & parallel), delegasi wewenang, dan SLA eskalasi.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center flex-wrap gap-2.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <button
             onClick={() => setIsNewDelegateOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition"
           >
-            <UserCheck className="w-4 h-4 text-sky-400" />
-            <span>Delegasi Cuti</span>
+            <UserCheck className="w-3.5 h-3.5 text-sky-400" />
+            <span className="hidden sm:inline">Delegasi Cuti</span>
           </button>
 
           <button
             onClick={() => setIsFlowDesignerOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition"
           >
-            <GitBranch className="w-4 h-4 text-purple-400" />
-            <span>Flow Designer</span>
+            <GitBranch className="w-3.5 h-3.5 text-purple-400" />
+            <span className="hidden sm:inline">Flow Designer</span>
           </button>
 
           <button
             onClick={() => setIsNewRequestOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white rounded-lg text-sm font-semibold shadow-md shadow-teal-500/25 transition"
+            className="flex items-center gap-1.5 px-3 py-1 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>Ajukan Approval</span>
           </button>
         </div>

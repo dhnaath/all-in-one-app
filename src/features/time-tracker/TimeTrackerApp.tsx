@@ -235,43 +235,21 @@ export function TimeTrackerApp() {
         </div>
       )}
 
-      {/* Header */}
+      {/* Header Actions Portaled to Main Header */}
       <ShellHeader>
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-xl shadow-lg shadow-cyan-500/20">
-              <Timer className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold tracking-tight text-white">Time Tracker</h1>
-                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                  App #33
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  Catatan Waktu Resmi/Legal-Grade • Timesheet & Billing
-                </span>
-              </div>
-              <p className="text-xs md:text-sm text-muted-foreground">
-                Pencatatan waktu kerja aktual per task/project, diferensiasi billable, persetujuan atasan, dan konversi rate card.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center flex-wrap gap-2.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <button
             onClick={() => setFocusModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-card hover:bg-card text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold transition"
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-cyan-500 border border-border rounded-lg text-xs font-semibold transition"
             title="Tarik sesi selesai dari Focus Timer #07"
           >
             <Zap className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Impor Sesi Focus Timer</span>
+            <span className="hidden sm:inline">Impor Sesi Focus Timer</span>
           </button>
 
           <button
             onClick={() => setManualModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-card hover:bg-card text-foreground border border-border rounded-lg text-xs font-semibold transition"
+            className="flex items-center gap-1.5 px-3 py-1 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Log Waktu Manual</span>

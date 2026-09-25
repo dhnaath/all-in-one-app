@@ -1,4 +1,3 @@
-import { ShellHeader } from "@/app/shell-header";
 import { useState, useEffect, useRef, ReactNode } from "react";
 import {
   ChevronRight,
@@ -236,42 +235,6 @@ export function NotionLayout({ children, activeId, onNavigate, onBack }: NotionL
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 bg-background relative transition-all duration-300 ease-in-out w-full">
-        {/* Top Header & Breadcrumb */}
-        <ShellHeader>
-          <div className="flex items-center text-[14px]">
-            {!isSidebarOpen && (
-              <div
-                className="w-8 h-8 flex items-center justify-center mr-2 rounded-sm cursor-pointer hover:bg-background-hover text-muted-foreground"
-                onClick={() => setIsSidebarOpen(true)}
-              >
-                <Menu size={18} />
-              </div>
-            )}
-
-            {/* Breadcrumb */}
-            <div className="flex items-center">
-              {breadcrumb.map((item, index) => (
-                <div key={item.id} className="flex items-center">
-                  {index > 0 && <span className="mx-1.5 text-foreground">/</span>}
-                  <div className="flex items-center px-1.5 py-0.5 rounded-sm hover:bg-background-hover cursor-pointer transition-colors text-muted-foreground">
-                    {item.icon && <item.icon size={16} className="mr-1.5" />}
-                    <span className="truncate max-w-[150px]">{item.title}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center text-muted-foreground gap-2">
-            <div className="text-[14px] px-2 py-1 rounded-sm cursor-pointer hover:bg-background-hover transition-colors">
-              Share
-            </div>
-            <div className="p-1 rounded-sm cursor-pointer hover:bg-background-hover transition-colors">
-              <Settings size={18} />
-            </div>
-          </div>
-        </ShellHeader>
-
         {/* Canvas Area */}
         <main className={cn("flex-1 overflow-y-auto", activeId === "tasks" ? "flex flex-col" : "")}>
           {activeId === "tasks" ? (

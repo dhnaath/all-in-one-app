@@ -283,50 +283,26 @@ export function NotificationCenterApp() {
         </div>
       )}
 
-      {/* Header */}
+      {/* Header Actions Portaled to Main Header */}
       <ShellHeader>
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-tr from-amber-500 to-rose-600 rounded-xl shadow-lg shadow-rose-500/20">
-              <BellRing className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold tracking-tight text-white">Notification Center</h1>
-                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30">
-                  App #27
-                </span>
-                {stats.unread > 0 && (
-                  <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-rose-600 text-white">
-                    {stats.unread} baru
-                  </span>
-                )}
-              </div>
-              <p className="text-xs md:text-sm text-muted-foreground">
-                Inbox terpadu lintas aplikasi untuk reminder, approval request, mention, assignment, dan sistem.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center flex-wrap gap-2.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <button
             onClick={() => {
               markAllAsRead();
               showToast("Seluruh notifikasi telah ditandai sudah dibaca.");
             }}
-            className="flex items-center gap-2 px-3.5 py-2 bg-card hover:bg-card text-foreground border border-border rounded-lg text-sm font-medium transition"
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-card hover:bg-accent text-foreground border border-border rounded-lg text-xs font-medium transition"
           >
-            <CheckCheck className="w-4 h-4 text-emerald-400" />
+            <CheckCheck className="w-3.5 h-3.5 text-emerald-400" />
             <span>Tandai Semua Dibaca</span>
           </button>
 
           <button
             onClick={() => setIsSimulateOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white rounded-lg text-sm font-semibold shadow-md shadow-rose-500/25 transition"
+            className="flex items-center gap-1.5 px-3 py-1 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition"
           >
-            <Sparkles className="w-4 h-4" />
-            <span>Simulasi Event Masuk</span>
+            <Sparkles className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Simulasi Event Masuk</span>
           </button>
         </div>
       </ShellHeader>

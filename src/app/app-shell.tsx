@@ -718,7 +718,7 @@ export function AppShell({
 
       <aside
         id="sidenavLeft"
-        className={`fixed inset-y-0 left-0 z-50 flex w-[275px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-300 ease-in-out ${openDrawer === "left" ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-[300px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-300 ease-in-out ${openDrawer === "left" ? "translate-x-0" : "-translate-x-full"}`}
       >
         {/* Brand header (gaya remake) */}
         <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border px-4 shrink-0">
@@ -1015,7 +1015,7 @@ export function AppShell({
         </div>
       </aside>
 
-      <aside id="sidenavRight" className={`fixed inset-y-0 right-0 z-50 flex w-[275px] flex-col border-l border-border bg-background transition-transform duration-500 ease-in-out ${openDrawer === "right" ? "translate-x-0" : "translate-x-full"}`}>
+      <aside id="sidenavRight" className={`fixed inset-y-0 right-0 z-50 flex w-[300px] flex-col border-l border-border bg-background transition-transform duration-500 ease-in-out ${openDrawer === "right" ? "translate-x-0" : "translate-x-full"}`}>
         {/* Control Center header */}
         <div className="flex items-center justify-between gap-3 px-4 h-14 border-b border-border shrink-0 sm:px-6">
           <span className="text-sm font-semibold text-foreground truncate">Control Center</span>
@@ -1230,25 +1230,25 @@ export function AppShell({
           </div>
         </div>
       </aside>
-      <main id="mainContent" className={`relative flex flex-1 flex-col overflow-hidden transition-[margin] duration-300 ease-in-out ${openDrawer === "left" ? "lg:ml-[275px]" : "ml-0"} ${openDrawer === "right" ? "lg:mr-[275px]" : "mr-0"}`}>
+      <main id="mainContent" className={`relative flex flex-1 flex-col overflow-hidden transition-[margin] duration-300 ease-in-out ${openDrawer === "left" ? "lg:ml-[300px]" : "ml-0"} ${openDrawer === "right" ? "lg:mr-[300px]" : "mr-0"}`}>
         {openDrawer && (
           <div className="absolute inset-0 z-40 bg-black/40 transition-opacity duration-500 lg:hidden" onClick={() => setOpenDrawer(null)} />
         )}
         <header ref={headerRef as any} className="absolute top-0 inset-x-0 z-20 border-b border-border bg-background/80 backdrop-blur-xl shadow-xs">
-          <div className="flex items-center justify-between gap-2 px-3 py-2.5 sm:px-6 sm:py-3">
+          <div className="flex items-center justify-between gap-2 px-3 py-2 sm:px-5 sm:py-2 min-h-[50px]">
             {/* Bagian Kiri Header: Nav Toggle (semua ukuran) + Breadcrumb kontekstual */}
-            <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 flex-1 basis-0 justify-start">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 shrink-0 max-w-[45%] md:max-w-[38%] justify-start">
               <button
                 type="button"
-                className={`p-2 -ml-1 sm:-ml-2 rounded-lg shrink-0 transition-colors ${openDrawer === "left" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`}
+                className={`p-1.5 sm:p-2 -ml-1 sm:-ml-1.5 rounded-lg shrink-0 transition-colors ${openDrawer === "left" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`}
                 onClick={() => setOpenDrawer(openDrawer === "left" ? null : "left")}
                 title={openDrawer === "left" ? "Sembunyikan Navigasi" : "Tampilkan Navigasi"}
                 aria-label="Toggle sidebar kiri"
               >
-                <PanelLeft size={20} />
+                <PanelLeft size={19} />
               </button>
 
-              <div className="min-w-0 flex-1 overflow-hidden">
+              <div className="min-w-0 truncate">
                 <HeaderBreadcrumb
                   className="text-xs"
                   segments={
@@ -1273,93 +1273,27 @@ export function AppShell({
               </div>
             </div>
 
-            {/* Bagian Kanan Header: toggle panel kanan (pill & actions pindah ke band header app) */}
-            <div className="flex items-center justify-end gap-1.5 sm:gap-2.5 min-w-0 shrink-0">
+            {/* Bagian Kanan Header: Aksi Khusus Menu (jika ada) + Portal Target + Toggle Control Center */}
+            <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0">
+              {actions && (
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {actions}
+                </div>
+              )}
+              <div
+                id="app-header-actions-portal"
+                className="flex items-center gap-1 sm:gap-1.5 shrink-0 empty:hidden max-w-[50vw] sm:max-w-[65vw] overflow-x-auto no-scrollbar py-0.5"
+              />
               <button
                 type="button"
-                className={`p-2 -mr-1 sm:-mr-2 rounded-lg shrink-0 transition-colors ${openDrawer === "right" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`}
+                className={`p-1.5 sm:p-2 -mr-1 sm:-mr-1.5 rounded-lg shrink-0 transition-colors ${openDrawer === "right" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`}
                 onClick={() => setOpenDrawer(openDrawer === "right" ? null : "right")}
                 title={openDrawer === "right" ? "Sembunyikan Control Center" : "Tampilkan Control Center"}
                 aria-label="Toggle sidebar kanan"
               >
-                <PanelRight size={20} />
+                <PanelRight size={19} />
               </button>
             </div>
-          </div>
-
-          {/* Band header app (kontekstual): milik app via ShellHeader, atau generated */}
-          <div className="border-t border-border/60 px-3 py-2.5 sm:px-6 sm:py-3">
-            <div
-              id="shellHeaderSlot"
-              className={hasAppHeader ? "flex flex-col" : "hidden"}
-            />
-            {!hasAppHeader && (
-              <div className="flex flex-col gap-2.5">
-                <div className="flex flex-wrap items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary/10 text-primary shrink-0">
-                  {(() => {
-                    const HIcon =
-                      contextMatch?.item.icon || ContextCategoryIcon || Grid2X2;
-                    return <HIcon className="h-5 w-5" />;
-                  })()}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <h1 className="truncate text-base sm:text-lg font-bold tracking-tight text-foreground">
-                      {displayTitle}
-                    </h1>
-                    {standaloneConfig && (
-                      <span className="hidden sm:inline-flex shrink-0 items-center rounded-full border border-border bg-muted/50 px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
-                        {standaloneConfig.badge}
-                      </span>
-                    )}
-                  </div>
-                  {(subtitle || (contextMatch && contextMatch.group.title)) && (
-                    <p className="truncate text-xs text-muted-foreground">
-                      {subtitle || contextMatch?.group.title}
-                    </p>
-                  )}
-                </div>
-                {contextCategory && ContextCategoryIcon && (
-                  <span className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/50 px-3 py-1 text-[11px] font-semibold text-muted-foreground shrink-0">
-                    <ContextCategoryIcon className={`h-3.5 w-3.5 ${CATEGORY_META[contextCategory]?.accent || ""}`} />
-                    {contextCategory}
-                  </span>
-                )}
-                {actions && (
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    {actions}
-                  </div>
-                )}
-                </div>
-
-                {/* Interactive section buttons — elaboration of the sidebar's
-                    "Di aplikasi ini" list (max 5). Clicking switches the app's
-                    own section/tab. Only for shell-generated headers. */}
-                {headerSections.length > 0 && (
-                  <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-0.5 px-0.5 pb-0.5">
-                    {headerSections.map((sec) => {
-                      const SecIcon = sec.icon;
-                      return (
-                        <button
-                          key={sec.id}
-                          type="button"
-                          onClick={() => sec.onSelect()}
-                          className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-colors ${
-                            sec.active
-                              ? "border-primary/40 bg-primary text-primary-foreground shadow-xs"
-                              : "border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground"
-                          }`}
-                        >
-                          {SecIcon && <SecIcon className="h-3.5 w-3.5 shrink-0" />}
-                          <span className="truncate max-w-[160px]">{sec.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </header>
         <div className="flex-1 overflow-y-auto no-scrollbar px-4 pb-[90px] sm:px-6 sm:pb-[90px] relative z-10" style={{ paddingTop: headerHeight }}>{children}</div>

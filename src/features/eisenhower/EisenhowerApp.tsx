@@ -155,38 +155,29 @@ export function EisenhowerApp() {
 
       {/* MAIN CONTENT */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
-        {/* Top Header */}
+        {/* Top Header View Switcher Portaled to Main Header */}
         <ShellHeader>
-          <div>
-            <h1 className="text-base font-bold text-foreground tracking-tight">Matriks Prioritas Eisenhower</h1>
-            <p className="text-xs text-muted-foreground">
-              Klasifikasi keputusan 4 kuadran: Do First, Schedule, Delegate, Eliminate.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`px-3 py-1 rounded transition-colors ${
-                  viewMode === "grid"
-                    ? "bg-card text-foreground font-semibold shadow-xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                2x2 Grid View
-              </button>
-              <button
-                onClick={() => setViewMode("detail")}
-                className={`px-3 py-1 rounded transition-colors ${
-                  viewMode === "detail"
-                    ? "bg-card text-foreground font-semibold shadow-xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Detail Kuadran
-              </button>
-            </div>
+          <div className="flex items-center border border-border rounded-lg p-0.5 bg-muted/60 text-xs">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`px-2.5 py-1 rounded-md transition-colors ${
+                viewMode === "grid"
+                  ? "bg-card text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              2x2 Grid View
+            </button>
+            <button
+              onClick={() => setViewMode("detail")}
+              className={`px-2.5 py-1 rounded-md transition-colors ${
+                viewMode === "detail"
+                  ? "bg-card text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Detail Kuadran
+            </button>
           </div>
         </ShellHeader>
 

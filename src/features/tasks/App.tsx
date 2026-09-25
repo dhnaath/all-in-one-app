@@ -108,13 +108,8 @@ export default function App({ onBack }: TickTickLayoutProps = {}) {
 
   return (
     <div className="w-full h-full bg-transparent text-foreground font-sans flex flex-col">
-      {/* Header that blends perfectly */}
-      <div className="px-6 sm:px-8 pt-8 pb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-border/40">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Task Manager</h1>
-          <p className="text-muted-foreground mt-2">Kelola tugas harian dan to-do list Anda</p>
-        </div>
-
+      {/* Tab controls */}
+      <div className="px-6 sm:px-8 pt-4 pb-4 flex items-center justify-end border-b border-border/40">
         <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-lg overflow-x-auto hide-scrollbar">
           <button
             onClick={() => {

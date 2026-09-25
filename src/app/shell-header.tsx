@@ -7,19 +7,6 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
-/**
- * ShellHeader — lets any feature app render its OWN header (icon, title, badge,
- * action buttons) into the global top header band of AppShell
- * (slot: #shellHeaderSlot).
- *
- * Usage inside a feature app:
- *   <ShellHeader>
- *     ...app-specific header content...
- *   </ShellHeader>
- *
- * Apps that do not register a header get a shell-generated contextual header
- * (icon + title + subtitle + category), so every app menu has its own header.
- */
 type ShellHeaderCtxValue = {
   setHasAppHeader: (has: boolean) => void;
 };
@@ -28,22 +15,42 @@ const ShellHeaderCtx = createContext<ShellHeaderCtxValue | null>(null);
 
 export const ShellHeaderProvider = ShellHeaderCtx.Provider;
 
+/**
+ * ShellHeader — Portals interactive actions, view switchers, tabs, and toolbars
+ * directly into the main application header (in AppShell), completely removing
+ * any duplicate headers or toolbars from the app body.
+ */
 export function ShellHeader({ children }: { children: ReactNode }) {
   const ctx = useContext(ShellHeaderCtx);
-  const [slot, setSlot] = useState<HTMLElement | null>(null);
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    setSlot(document.getElementById("shellHeaderSlot"));
     ctx?.setHasAppHeader(true);
+
+    const checkTarget = () => {
+      const target = document.getElementById("app-header-actions-portal");
+      if (target) {
+        setPortalTarget(target);
+      }
+    };
+
+    checkTarget();
+    const timer = setTimeout(checkTarget, 50);
+
     return () => {
+      clearTimeout(timer);
       ctx?.setHasAppHeader(false);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ctx]);
 
-  if (!slot) return null;
+  if (!portalTarget) {
+    return null;
+  }
+
   return createPortal(
-    <div className="flex w-full flex-col">{children}</div>,
-    slot,
+    <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 shell-header-portal-actions">
+      {children}
+    </div>,
+    portalTarget
   );
 }

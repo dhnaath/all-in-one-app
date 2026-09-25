@@ -33,6 +33,8 @@
     "node_modules",
     "src/features/finance/components",
     "src/features/finance/App.tsx",
-    "src/repo-routes"
+    "src/repo-routes",
+    "src/routeTree.gen.ts",
+    "src/routes/**"
   ]
 }

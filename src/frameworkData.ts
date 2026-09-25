@@ -1353,6 +1353,7 @@ export function slugify(str: string): string {
 }
 
 export const slugToFrameworkMap: Record<string, string> = {};
+export const SLUG_TO_FRAMEWORK_NAME = slugToFrameworkMap;
 for (const name of Object.keys(allFrameworks)) {
   slugToFrameworkMap[slugify(name)] = name;
 }

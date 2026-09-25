@@ -323,67 +323,44 @@ export function CountdownApp() {
 
   return (
     <div className="w-full min-h-[calc(100vh-4rem)] bg-muted/40/60 dark:bg-background flex flex-col font-sans">
-      {/* 1. TOP HEADER - Standalone Ecosystem #11 */}
+      {/* 1. TOP HEADER - Standalone Ecosystem #11 Portaled to Main Header */}
       <ShellHeader>
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-          {/* Brand & Temporary White Marker */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-card text-foreground border-2 border-border dark:border-border shadow-md flex items-center justify-center shrink-0 ring-2 ring-white/60">
-              <Timer className="size-5 text-foreground" strokeWidth={2} />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
-                  Countdown
-                </h1>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-muted dark:bg-card text-foreground dark:text-foreground border border-border dark:border-border">
-                  Tanda Sementara (#11)
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground hidden sm:block">
-                Source of Truth Utama untuk Hitung Mundur, Milestone & Target Waktu
-              </p>
-            </div>
-          </div>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <button
+            onClick={() => setIsTemplateModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            title="Gunakan template siap pakai"
+          >
+            <Sparkles className="size-3.5 text-amber-500" />
+            <span className="hidden sm:inline">Template Siap Pakai</span>
+            <span className="sm:hidden">Template</span>
+          </button>
 
-          {/* Action Toolbar */}
-          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
-            <button
-              onClick={() => setIsTemplateModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
-              title="Gunakan template siap pakai"
-            >
-              <Sparkles className="size-3.5 text-amber-500" />
-              <span className="hidden sm:inline">Template Siap Pakai</span>
-              <span className="sm:hidden">Template</span>
-            </button>
+          <button
+            onClick={() => setIsStatsModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            title="Metrik & Statistik Ecosystem"
+          >
+            <BarChart3 className="size-3.5 text-indigo-500" />
+            <span className="hidden sm:inline">Statistik</span>
+          </button>
 
-            <button
-              onClick={() => setIsStatsModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
-              title="Metrik & Statistik Ecosystem"
-            >
-              <BarChart3 className="size-3.5 text-indigo-500" />
-              <span className="hidden sm:inline">Statistik</span>
-            </button>
+          <button
+            onClick={() => setIsHistoryDrawerOpen(true)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
+            title="Audit trail & histori perubahan"
+          >
+            <History className="size-3.5 text-muted-foreground" />
+            <span className="hidden md:inline">Audit Trail</span>
+          </button>
 
-            <button
-              onClick={() => setIsHistoryDrawerOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-background hover:bg-accent text-xs font-medium text-foreground transition-colors cursor-pointer"
-              title="Audit trail & histori perubahan"
-            >
-              <History className="size-3.5 text-muted-foreground" />
-              <span className="hidden md:inline">Audit Trail</span>
-            </button>
-
-            <button
-              onClick={handleOpenCreate}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold shadow-sm hover:opacity-95 transition-opacity cursor-pointer"
-            >
-              <Plus className="size-4" strokeWidth={2.5} />
-              <span>Countdown Baru</span>
-            </button>
-          </div>
+          <button
+            onClick={handleOpenCreate}
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            <Plus className="size-3.5" strokeWidth={2.5} />
+            <span>Countdown Baru</span>
+          </button>
         </div>
       </ShellHeader>
 

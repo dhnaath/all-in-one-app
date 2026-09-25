@@ -7,15 +7,8 @@ export default function App_Component() {
 
   return (
     <div className="w-full bg-transparent text-foreground font-sans">
-      {/* Header that blends perfectly */}
-      <div className="px-6 sm:px-8 pt-8 pb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-border/40">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Valuasi MAPPI</h1>
-          <p className="text-muted-foreground mt-2">
-            Penilaian & Analisis Standar Properti dan Bisnis
-          </p>
-        </div>
-
+      {/* Tab controls */}
+      <div className="px-6 sm:px-8 pt-4 pb-4 flex items-center justify-end border-b border-border/40">
         <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-lg">
           <button
             onClick={() => setActiveTab("property")}

@@ -222,36 +222,14 @@ export function TemplateManagerApp() {
         </div>
       )}
 
-      {/* Header */}
+      {/* Header Actions Portaled to Main Header */}
       <ShellHeader>
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-tr from-violet-600 to-indigo-600 rounded-xl shadow-lg shadow-indigo-500/20">
-              <FileCode2 className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold tracking-tight text-white">Template Manager</h1>
-                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">
-                  App #30
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {templates.length} Struktur Tersimpan • {applicationRecords.length}x Diterapkan
-                </span>
-              </div>
-              <p className="text-xs md:text-sm text-muted-foreground">
-                Penyimpanan terpusat untuk struktur reusable (Task, Project, Wiki, Form, Database) dengan variabel relatif.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center flex-wrap gap-2.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <button
             onClick={() => setIsNewTemplateOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-lg text-sm font-semibold shadow-md shadow-indigo-500/25 transition"
+            className="flex items-center gap-1.5 px-3 py-1 bg-primary text-primary-foreground hover:opacity-90 rounded-lg text-xs font-semibold shadow-xs transition"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>Simpan Template Baru</span>
           </button>
         </div>

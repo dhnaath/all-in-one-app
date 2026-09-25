@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { ShellHeader } from "@/app/shell-header";
 import {
   ListTodo,
   Plus,
@@ -184,95 +185,77 @@ export function TaskManagerApp() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      {/* Top Banner / Breadcrumb */}
-      <div className="border-b border-border/60 bg-card/60 backdrop-blur sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold shadow-sm">
-            <ListTodo className="size-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg sm:text-xl font-bold text-foreground">Task Manager</h1>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
-                Ecosystem #01 • Source of Truth
-              </span>
-            </div>
-            <p className="text-xs text-muted-foreground hidden sm:block">
-              Siklus penuh pengelolaan tugas: Capture → Organize → Prioritize → Schedule → Execute → Review
-            </p>
-          </div>
-        </div>
-
-        {/* View Switcher Tabs (Section 11) */}
-        <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-xl border border-border/50 overflow-x-auto text-xs font-semibold">
+      {/* View Switcher Tabs portaled to Main Header */}
+      <ShellHeader>
+        <div className="flex items-center gap-1 bg-muted/70 p-0.5 rounded-lg border border-border/60 overflow-x-auto text-xs font-semibold">
           <button
             onClick={() => setViewMode("list")}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
               viewMode === "list"
-                ? "bg-background text-primary shadow-sm"
+                ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <ListTodo className="size-3.5" />
-            <span>List</span>
+            <span className="hidden sm:inline">List</span>
           </button>
           <button
             onClick={() => setViewMode("board")}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
               viewMode === "board"
-                ? "bg-background text-primary shadow-sm"
+                ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Kanban className="size-3.5" />
-            <span>Board</span>
+            <span className="hidden sm:inline">Board</span>
           </button>
           <button
             onClick={() => setViewMode("calendar")}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
               viewMode === "calendar"
-                ? "bg-background text-primary shadow-sm"
+                ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Calendar className="size-3.5" />
-            <span>Kalender</span>
+            <span className="hidden sm:inline">Kalender</span>
           </button>
           <button
             onClick={() => setViewMode("timeline")}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
               viewMode === "timeline"
-                ? "bg-background text-primary shadow-sm"
+                ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <GitBranch className="size-3.5" />
-            <span>Timeline</span>
+            <span className="hidden sm:inline">Timeline</span>
           </button>
           <button
             onClick={() => setViewMode("table")}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
               viewMode === "table"
-                ? "bg-background text-primary shadow-sm"
+                ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <TableIcon className="size-3.5" />
-            <span>Tabel</span>
+            <span className="hidden sm:inline">Tabel</span>
           </button>
           <button
             onClick={() => setViewMode("priority")}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 text-xs ${
               viewMode === "priority"
-                ? "bg-background text-primary shadow-sm"
+                ? "bg-background text-primary shadow-xs font-bold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <AlertTriangle className="size-3.5" />
-            <span>Eisenhower</span>
+            <span className="hidden sm:inline">Eisenhower</span>
           </button>
         </div>
-      </div>
+      </ShellHeader>
 
       {/* Main Content Area */}
       <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-8 space-y-6">

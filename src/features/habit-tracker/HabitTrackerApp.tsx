@@ -200,28 +200,20 @@ export function HabitTrackerApp() {
 
       {/* MAIN VIEW CONTENT */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
-        {/* Top Header */}
+        {/* Top Header Controls Portaled to Main Header */}
         <ShellHeader>
-          <div>
-            <h1 className="text-base font-bold text-foreground tracking-tight">Kebiasaan & Rutinitas Konsisten</h1>
-            <p className="text-xs text-muted-foreground">
-              Pelacakan harian dengan toleransi cuti terencana (skip tanpa putus streak).
-            </p>
-          </div>
-
-          {/* View Modes */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <div className="flex items-center border border-border rounded-lg p-0.5 bg-muted/60 text-xs">
               {[
                 { id: "today", label: "Hari Ini" },
-                { id: "heatmap", label: "Heatmap (§9)" },
-                { id: "streak_board", label: "Peringkat Streak" },
+                { id: "heatmap", label: "Heatmap" },
+                { id: "streak_board", label: "Peringkat" },
                 { id: "summary", label: "Ringkasan" },
               ].map((v) => (
                 <button
                   key={v.id}
                   onClick={() => setViewMode(v.id as HabitViewMode)}
-                  className={`px-3 py-1 rounded transition-colors ${
+                  className={`px-2.5 py-1 rounded-md transition-colors ${
                     viewMode === v.id
                       ? "bg-card text-foreground font-semibold shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
@@ -234,10 +226,10 @@ export function HabitTrackerApp() {
 
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded hover:bg-indigo-700 transition-colors shadow-xs flex items-center gap-1.5"
+              className="px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5"
             >
               <Plus className="w-3.5 h-3.5" />
-              Kebiasaan Baru
+              <span>Kebiasaan Baru</span>
             </button>
           </div>
         </ShellHeader>
