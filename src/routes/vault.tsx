@@ -1,15 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/app/app-shell";
+import { VaultAppView } from "@/features/wira/components/views/VaultAppView";
 
 export const Route = createFileRoute("/vault")({
+  head: () => ({
+    meta: [
+      { title: "Vault & Identitas Resmi — All in One" },
+      { name: "description", content: "Brankas terenkripsi untuk KTP, Paspor, SIM, Kartu Keluarga, dan Ijazah Sertifikat." },
+    ],
+  }),
   component: VaultPage,
 });
 
 function VaultPage() {
   return (
-    <AppShell title="Vault" subtitle="Personal">
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-140px)]">
-        <h2 className="text-3xl font-bold text-foreground">Vault</h2>
+    <AppShell title="Vault & Identitas" subtitle="Brankas aman untuk KTP, Paspor, Kartu Keluarga, dan Ijazah resmi">
+      <div className="w-full">
+        <VaultAppView />
       </div>
     </AppShell>
   );

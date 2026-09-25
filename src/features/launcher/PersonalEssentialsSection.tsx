@@ -1,824 +1,480 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import {
-  Star,
-  Layers,
-  User,
-  Heart,
-  Home,
-  Target,
-  Activity,
   Briefcase,
   BookOpen,
+  Heart,
+  Smile,
   Wallet,
+  TrendingDown,
+  ShoppingBag,
+  ShieldCheck,
   Dumbbell,
   Droplet,
-  Pocket,
-  ShoppingBag,
+  FileHeart,
+  Activity,
+  Scale,
+  Moon,
+  Sparkles,
   Vault,
+  Shield,
+  Award,
+  Utensils,
+  Package,
+  AlertTriangle,
+  RefreshCw,
+  CalendarDays,
+  ShoppingCart,
+  Plane,
+  Pocket,
   Luggage,
   Key,
   CloudSun,
   Calculator,
-  Timer,
-  ShoppingCart,
-  Utensils,
-  Plane,
-  CalendarDays,
-  Users,
-  Sparkles,
-  NotebookText,
-  Lightbulb,
-  PenTool,
-  FileText,
-  Package,
-  Archive,
-  CreditCard,
-  Receipt,
-  HeartPulse,
-  Music,
-  Podcast,
-  Shield,
-  ShieldCheck,
-  RefreshCw,
-  Truck,
-  CheckSquare,
-  FolderKanban,
-  Compass,
-  Smile,
-  Award,
-  TrendingDown,
-  Stethoscope,
-  Moon,
-  AlertTriangle,
-  Wrench,
-  Car,
-  Fuel,
-  Trash2,
-  Zap,
-  Gauge,
+  Star,
+  Layers,
+  ChevronRight,
+  ArrowRight,
+  Search,
+  ExternalLink,
   type LucideIcon,
 } from "lucide-react";
-import { navKonsultan, type NavItem } from "@/config/nav";
+import { type NavItem } from "@/config/nav";
 
-type LauncherItem =
-  | { type: "app"; item: NavItem }
-  | { type: "folder"; id: string; title: string; items: NavItem[] };
+interface StandaloneFeature {
+  title: string;
+  to: string;
+  icon: LucideIcon;
+}
+
+export interface StandaloneAppDef {
+  id: string;
+  to: string;
+  title: string;
+  subtitle: string;
+  category: "personal" | "essentials" | "household";
+  icon: LucideIcon;
+  badge?: string;
+  features?: StandaloneFeature[];
+}
+
+export const STANDALONE_REORGANIZED_APPS: StandaloneAppDef[] = [
+  // 1. Personal Projects
+  {
+    id: "proyek-personal",
+    to: "/proyek-personal",
+    title: "Personal Projects",
+    subtitle: "Manajemen portofolio proyek pribadi, inisiatif mandiri, dan milestone capaian.",
+    category: "personal",
+    icon: Briefcase,
+    badge: "Standalone",
+  },
+  // 2. Journal Harian
+  {
+    id: "journal",
+    to: "/journal",
+    title: "Journal Harian",
+    subtitle: "Catatan refleksi harian, pembelajaran keputusan, rasa syukur, dan ritme energi.",
+    category: "personal",
+    icon: BookOpen,
+    badge: "Standalone",
+    features: [
+      { title: "Buku Syukur (Gratitude)", to: "/journal?tab=gratitude", icon: Heart },
+      { title: "Mood dan Energi Harian", to: "/journal?tab=mood", icon: Smile },
+    ],
+  },
+  // 3. Wallet dan Kas
+  {
+    id: "wallet",
+    to: "/wallet",
+    title: "Wallet dan Kas",
+    subtitle: "Kendali arus kas masuk/keluar, pembanding harga barang, wishlist belanja, dan garansi.",
+    category: "essentials",
+    icon: Wallet,
+    badge: "Standalone",
+    features: [
+      { title: "Pembanding Harga", to: "/wallet?tab=price-compare", icon: TrendingDown },
+      { title: "Rencana Belanja (Wishlist)", to: "/wallet?tab=wishlist", icon: ShoppingBag },
+      { title: "Garansi dan Bukti Nota", to: "/wallet?tab=warranty", icon: ShieldCheck },
+    ],
+  },
+  // 4. Health
+  {
+    id: "health",
+    to: "/health",
+    title: "Health",
+    subtitle: "Executive health vitality matrix, kebugaran fungsional, hidrasi, dan pemantauan biomarker.",
+    category: "personal",
+    icon: Heart,
+    badge: "Standalone",
+    features: [
+      { title: "Workouts", to: "/health?tab=workouts", icon: Dumbbell },
+      { title: "Water", to: "/health?tab=water", icon: Droplet },
+      { title: "Riwayat Rekam Medis", to: "/health?tab=medical-records", icon: FileHeart },
+      { title: "Tekanan dan Gula Darah", to: "/health?tab=vitals", icon: Activity },
+      { title: "Pengukuran Tubuh dan Berat", to: "/health?tab=body-metrics", icon: Scale },
+      { title: "Kualitas Tidur dan Istirahat", to: "/health?tab=sleep", icon: Moon },
+      { title: "Skincare dan Grooming", to: "/health?tab=skincare", icon: Sparkles },
+    ],
+  },
+  // 5. Vault
+  {
+    id: "vault",
+    to: "/vault",
+    title: "Vault",
+    subtitle: "Brankas enkripsi aman untuk KTP, Paspor, Kartu Keluarga, dan Ijazah Sertifikat.",
+    category: "personal",
+    icon: Vault,
+    badge: "Standalone",
+    features: [
+      { title: "KTP dan Identitas Resmi", to: "/vault?tab=ktp", icon: Shield },
+      { title: "Ijazah dan Sertifikat", to: "/vault?tab=certificates", icon: Award },
+    ],
+  },
+  // 6. Recipes
+  {
+    id: "recipes",
+    to: "/recipes",
+    title: "Recipes",
+    subtitle: "Kurasi nutrisi penunjang performa kognitif, inventaris bahan dapur, dan meal-prep.",
+    category: "household",
+    icon: Utensils,
+    badge: "Standalone",
+    features: [
+      { title: "Inventaris Bahan Dapur", to: "/recipes?tab=pantry", icon: Package },
+      { title: "Jurnal Memasak", to: "/recipes?tab=cook-log", icon: BookOpen },
+      { title: "Peringatan Kadaluarsa", to: "/recipes?tab=expiry", icon: AlertTriangle },
+      { title: "Manajemen Makanan Sisa", to: "/recipes?tab=leftovers", icon: RefreshCw },
+      { title: "Perencana Menu Mingguan", to: "/recipes?tab=meal-planner", icon: CalendarDays },
+    ],
+  },
+  // 7. Shopping
+  {
+    id: "shopping",
+    to: "/shopping",
+    title: "Shopping",
+    subtitle: "Daftar belanja cerdas, pengadaan perlengkapan kerja & groceries bernutrisi.",
+    category: "essentials",
+    icon: ShoppingCart,
+    badge: "Standalone",
+  },
+  // 8. Trips
+  {
+    id: "trips",
+    to: "/trips",
+    title: "Trips",
+    subtitle: "Manajemen perjalanan dinas, retret strategis, itinerary hari ke hari, dan logistik.",
+    category: "household",
+    icon: Plane,
+    badge: "Standalone",
+  },
+  // 9. Pocket
+  {
+    id: "pocket",
+    to: "/pocket",
+    title: "Pocket",
+    subtitle: "Saku digital untuk slip kartu akses, voucher diskon, tiket, dan catatan cepat.",
+    category: "essentials",
+    icon: Pocket,
+    badge: "Standalone",
+  },
+  // 10. Pouch
+  {
+    id: "pouch",
+    to: "/pouch",
+    title: "Pouch",
+    subtitle: "Organizer dokumen esensial, tiket bepergian, kit perjalanan, dan perlengkapan.",
+    category: "essentials",
+    icon: ShoppingBag,
+    badge: "Standalone",
+  },
+  // 11. Trunk
+  {
+    id: "trunk",
+    to: "/trunk",
+    title: "Trunk",
+    subtitle: "Gudang perkakas rumah tangga, inventaris alat musiman, dan penyimpanan bagasi.",
+    category: "household",
+    icon: Luggage,
+    badge: "Standalone",
+  },
+  // 12. Passwords
+  {
+    id: "passwords",
+    to: "/passwords",
+    title: "Passwords",
+    subtitle: "Penyimpanan kredensial aman, audit kekuatan sandi, dan generator akun acak.",
+    category: "personal",
+    icon: Key,
+    badge: "Standalone",
+  },
+  // 13. Weather
+  {
+    id: "weather",
+    to: "/weather",
+    title: "Weather",
+    subtitle: "Prakiraan cuaca real-time, indeks UV, kelembapan udara, dan kondisi lingkungan.",
+    category: "essentials",
+    icon: CloudSun,
+    badge: "Standalone",
+  },
+  // 14. Kalkulator
+  {
+    id: "kalkulator",
+    to: "/kalkulator",
+    title: "Kalkulator",
+    subtitle: "Alat hitung serbaguna ilmiah, konverter satuan, dan kalkulasi persentase kas.",
+    category: "personal",
+    icon: Calculator,
+    badge: "Standalone",
+  },
+];
 
 interface PersonalEssentialsSectionProps {
-  page: {
+  page?: {
     title: string;
     subCategories: { title: string; rawItems: NavItem[] }[];
   };
   favorites: string[];
   toggleFavorite: (to: string) => void;
-  setActiveFolder: (folder: { id: string; title: string; items: NavItem[] } | null) => void;
+  setActiveFolder?: (folder: any) => void;
   getGradient: (name: string) => string;
-  FolderTile: React.ComponentType<{
-    folder: { id: string; title: string; items: NavItem[] };
-    onClick: () => void;
-  }>;
+  FolderTile?: any;
 }
 
-export type MainPersonalTab =
-  | "all"
-  | "personal-management"
-  | "shopping-consumption"
-  | "health-wellness"
-  | "food-pantry"
-  | "home-management"
-  | "vehicle-mobility"
-  | "household-lifecycle";
-
-interface SpecificCategory {
-  id: string;
-  title: string;
-  group: Exclude<MainPersonalTab, "all">;
-  icon: LucideIcon;
-  getItems: () => LauncherItem[];
-}
+export type MainCategoryTab = "all" | "personal" | "essentials" | "household";
 
 export function PersonalEssentialsSection({
   favorites,
   toggleFavorite,
-  setActiveFolder,
   getGradient,
-  FolderTile,
 }: PersonalEssentialsSectionProps) {
-  const [mainTab, setMainTab] = useState<MainPersonalTab>("all");
-  const [activeSpecific, setActiveSpecific] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState<MainCategoryTab>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Quick lookup helper for NavItem from navKonsultan
-  const allNavMap = useMemo(() => {
-    const map = new Map<string, NavItem>();
-    navKonsultan.forEach((group) => {
-      group.items.forEach((item) => {
-        if (!map.has(item.to)) {
-          map.set(item.to, item);
-        }
-      });
+  const filteredApps = useMemo(() => {
+    return STANDALONE_REORGANIZED_APPS.filter((app) => {
+      const matchCategory = activeTab === "all" || app.category === activeTab;
+      const q = searchQuery.toLowerCase().trim();
+      const matchQuery =
+        !q ||
+        app.title.toLowerCase().includes(q) ||
+        app.subtitle.toLowerCase().includes(q) ||
+        app.features?.some((f) => f.title.toLowerCase().includes(q));
+      return matchCategory && matchQuery;
     });
-    return map;
-  }, []);
+  }, [activeTab, searchQuery]);
 
-  const resolveApp = (to: string, label: string, icon: LucideIcon): LauncherItem => {
-    const found = allNavMap.get(to);
-    return {
-      type: "app",
-      item: found || { to, label, icon },
-    };
-  };
-
-  // User requested category hierarchy:
-  // 1. Personal Management
-  //    - Personal Planning
-  //    - Journal and Reflection
-  //    - Personal Documents
-  // 2. Shopping and Consumption
-  //    - Shopping
-  //    - Products and Purchases
-  // 3. Health and Wellness
-  //    - Health Records
-  //    - Fitness and Nutrition
-  //    - Personal Care
-  // 4. Food and Pantry
-  //    - Food Management
-  //    - Food Lifecycle
-  // 5. Home Management
-  //    - Home Operations
-  //    - Home Maintenance
-  // 6. Vehicle and Mobility
-  //    - Vehicle Records
-  //    - Vehicle Maintenance
-  // 7. Household Lifecycle
-  //    - Expiry and Renewal
-  const specificCategories: SpecificCategory[] = useMemo(() => {
-    return [
-      // 1. Personal Management
-      {
-        id: "cat-personal-planning",
-        title: "Personal Planning",
-        group: "personal-management",
-        icon: Target,
-        getItems: () => [
-          resolveApp("/goal-manager", "Goals & Target", Target),
-          resolveApp("/habits", "Habit Tracker", Activity),
-          resolveApp("/lainnya?app=vision-board", "Vision Board & Impian", Compass),
-          resolveApp("/lainnya?app=bucket-list", "Bucket List & Cita-Cita", CheckSquare),
-          resolveApp("/kalender", "Kalender Personal", CalendarDays),
-          resolveApp("/countdown", "Countdown & Milestones", Timer),
-          resolveApp("/proyek-personal", "Personal Projects", FolderKanban),
-        ],
-      },
-      {
-        id: "cat-journal-reflection",
-        title: "Journal and Reflection",
-        group: "personal-management",
-        icon: BookOpen,
-        getItems: () => [
-          resolveApp("/journal", "Daily Journal", BookOpen),
-          resolveApp("/lainnya?app=gratitude", "Buku Syukur (Gratitude)", Heart),
-          resolveApp("/lainnya?app=mood-tracker", "Mood & Energi Harian", Smile),
-          resolveApp("/catatan", "Catatan & Ide", NotebookText),
-          resolveApp("/ideas", "Gagasan & Brainstorm", Lightbulb),
-          resolveApp("/writing", "Writing & Refleksi", PenTool),
-        ],
-      },
-      {
-        id: "cat-personal-documents",
-        title: "Personal Documents",
-        group: "personal-management",
-        icon: Pocket,
-        getItems: () => [
-          resolveApp("/lainnya?app=id-wallet", "KTP & Identitas Resmi", Shield),
-          resolveApp("/lainnya?app=certificates", "Ijazah & Sertifikat", Award),
-          resolveApp("/pocket", "Pocket Berkas", Pocket),
-          resolveApp("/pouch", "Pouch Dokumen", ShoppingBag),
-          resolveApp("/vault", "Vault Enkripsi", Vault),
-          resolveApp("/passwords", "Passwords & Akses", Key),
-          resolveApp("/portal.dokumen", "Arsip Dokumen", FileText),
-        ],
-      },
-
-      // 2. Shopping and Consumption
-      {
-        id: "cat-shopping",
-        title: "Shopping",
-        group: "shopping-consumption",
-        icon: ShoppingCart,
-        getItems: () => [
-          resolveApp("/shopping", "Shopping List", ShoppingCart),
-          resolveApp("/lainnya?app=price-tracker", "Pembanding Harga", TrendingDown),
-          resolveApp("/lainnya?app=wishlist-planner", "Rencana Belanja (Wishlist)", ShoppingBag),
-          resolveApp("/kalkulator", "Kalkulator Belanja", Calculator),
-          resolveApp("/katalog-produk", "Wishlist Belanja", Package),
-          resolveApp("/inventory", "Cek Stok Domestik", Archive),
-        ],
-      },
-      {
-        id: "cat-products-purchases",
-        title: "Products and Purchases",
-        group: "shopping-consumption",
-        icon: Package,
-        getItems: () => [
-          resolveApp("/lainnya?app=warranty", "Garansi & Bukti Nota", ShieldCheck),
-          resolveApp("/lainnya?app=subscription", "Langganan & Berlangganan", RefreshCw),
-        ],
-      },
-
-      // 3. Health and Wellness
-      {
-        id: "cat-health-records",
-        title: "Health Records",
-        group: "health-wellness",
-        icon: Heart,
-        getItems: () => [
-          resolveApp("/health", "Catatan Kesehatan", Heart),
-          resolveApp("/lainnya?app=medical-history", "Riwayat Rekam Medis", Stethoscope),
-          resolveApp("/lainnya?app=vitals", "Tekanan & Gula Darah", Activity),
-          resolveApp("/weather", "Cuaca & Lingkungan", CloudSun),
-        ],
-      },
-      {
-        id: "cat-fitness-nutrition",
-        title: "Fitness and Nutrition",
-        group: "health-wellness",
-        icon: Dumbbell,
-        getItems: () => [
-          resolveApp("/workouts", "Workouts & Latihan", Dumbbell),
-          resolveApp("/lainnya?app=meal-planner", "Perencana Menu Mingguan", Utensils),
-          resolveApp("/lainnya?app=body-metrics", "Pengukuran Tubuh & Berat", Gauge),
-          resolveApp("/water", "Water Tracker & Hidrasi", Droplet),
-          resolveApp("/recipes", "Nutrisi & Makanan Sehat", Utensils),
-        ],
-      },
-      {
-        id: "cat-personal-care",
-        title: "Personal Care",
-        group: "health-wellness",
-        icon: Sparkles,
-        getItems: () => [
-          resolveApp("/lainnya?app=sleep-tracker", "Kualitas Tidur & Istirahat", Moon),
-          resolveApp("/lainnya?app=skincare-routine", "Skincare & Grooming", Sparkles),
-          resolveApp("/trips", "Relaksasi & Liburan", Plane),
-          resolveApp("/music", "Audio Relaksasi", Music),
-          resolveApp("/podcasts", "Wellness Podcasts", Podcast),
-        ],
-      },
-
-      // 4. Food and Pantry
-      {
-        id: "cat-food-management",
-        title: "Food Management",
-        group: "food-pantry",
-        icon: Utensils,
-        getItems: () => [
-          resolveApp("/lainnya?app=kitchen-inventory", "Inventaris Bahan Dapur", Archive),
-          resolveApp("/lainnya?app=cook-log", "Jurnal Memasak", BookOpen),
-        ],
-      },
-      {
-        id: "cat-food-lifecycle",
-        title: "Food Lifecycle",
-        group: "food-pantry",
-        icon: Timer,
-        getItems: () => [
-          resolveApp("/lainnya?app=expiry-alert", "Peringatan Kadaluarsa", AlertTriangle),
-          resolveApp("/lainnya?app=leftover-ideas", "Manajemen Makanan Sisa", RefreshCw),
-        ],
-      },
-
-      // 5. Home Management
-      {
-        id: "cat-home-operations",
-        title: "Home Operations",
-        group: "home-management",
-        icon: Home,
-        getItems: () => [
-          resolveApp("/home", "Manajemen Hunian", Home),
-          resolveApp("/lainnya?app=home-chores", "Jadwal Piket & Kebersihan", CheckSquare),
-          resolveApp("/lainnya?app=utility-tracker", "Catatan Meteran Listrik & Air", Zap),
-          resolveApp("/contacts", "Kontak Keluarga & Darurat", Users),
-          resolveApp("/task-manager", "Tugas & Urusan Rumah", CheckSquare),
-        ],
-      },
-      {
-        id: "cat-home-maintenance",
-        title: "Home Maintenance",
-        group: "home-management",
-        icon: CheckSquare,
-        getItems: () => [
-          resolveApp("/lainnya?app=appliance-care", "Servis Elektronik & Alat", Wrench),
-          resolveApp("/lainnya?app=home-inventory", "Inventaris Perabot & Ruangan", Home),
-          resolveApp("/proyek", "Pemeliharaan & Renovasi", CheckSquare),
-          resolveApp("/trunk", "Gudang & Perkakas", Luggage),
-        ],
-      },
-
-      // 6. Vehicle and Mobility
-      {
-        id: "cat-vehicle-records",
-        title: "Vehicle Records",
-        group: "vehicle-mobility",
-        icon: FileText,
-        getItems: () => [
-          resolveApp("/lainnya?app=vehicle-identity", "BPKB, STNK & Data Kendaraan", Car),
-          resolveApp("/lainnya?app=mileage-fuel", "Catatan BBM & Odometer", Fuel),
-        ],
-      },
-      {
-        id: "cat-vehicle-maintenance",
-        title: "Vehicle Maintenance",
-        group: "vehicle-mobility",
-        icon: ShieldCheck,
-        getItems: () => [
-          resolveApp("/lainnya?app=vehicle-service", "Riwayat Servis & Bengkel", Wrench),
-          resolveApp("/lainnya?app=parts-lifecycle", "Siklus Ban, Aki & Komponen", RefreshCw),
-        ],
-      },
-
-      // 7. Household Lifecycle
-      {
-        id: "cat-expiry-renewal",
-        title: "Expiry and Renewal",
-        group: "household-lifecycle",
-        icon: RefreshCw,
-        getItems: () => [
-          resolveApp("/lainnya?app=household-renewals", "Jatuh Tempo Pajak, Asuransi & Iuran", CalendarDays),
-          resolveApp("/lainnya?app=item-disposal", "Barang Dihibahkan & Daur Ulang", Trash2),
-        ],
-      },
-    ];
-  }, [allNavMap]);
-
-  // Aggregate items per tab
-  const defaultItemsForTab = useMemo(() => {
-    const collectItems = (groupName?: Exclude<MainPersonalTab, "all">) => {
-      const cats = groupName
-        ? specificCategories.filter((c) => c.group === groupName)
-        : specificCategories;
-      const seen = new Set<string>();
-      const items: LauncherItem[] = [];
-
-      cats.forEach((cat) => {
-        cat.getItems().forEach((entry) => {
-          if (entry.type === "app") {
-            if (!seen.has(entry.item.to)) {
-              seen.add(entry.item.to);
-              items.push(entry);
-            }
-          } else {
-            if (!seen.has(entry.id)) {
-              seen.add(entry.id);
-              items.push(entry);
-            }
-          }
-        });
-      });
-
-      return items;
-    };
-
-    return {
-      all: collectItems(),
-      "personal-management": collectItems("personal-management"),
-      "shopping-consumption": collectItems("shopping-consumption"),
-      "health-wellness": collectItems("health-wellness"),
-      "food-pantry": collectItems("food-pantry"),
-      "home-management": collectItems("home-management"),
-      "vehicle-mobility": collectItems("vehicle-mobility"),
-      "household-lifecycle": collectItems("household-lifecycle"),
-    };
-  }, [specificCategories]);
-
-  // Items currently displayed
-  const displayedItems = useMemo(() => {
-    if (activeSpecific !== "all") {
-      const selected = specificCategories.find((c) => c.id === activeSpecific);
-      return selected ? selected.getItems() : [];
-    }
-    return defaultItemsForTab[mainTab];
-  }, [activeSpecific, mainTab, specificCategories, defaultItemsForTab]);
-
-  const activeCategoryTitle = useMemo(() => {
-    if (activeSpecific === "all") return null;
-    const cat = specificCategories.find((c) => c.id === activeSpecific);
-    return cat ? cat.title : null;
-  }, [activeSpecific, specificCategories]);
-
-  // Counts
-  const totalCountAll = defaultItemsForTab.all.length;
-  const totalCountPersonal = defaultItemsForTab["personal-management"].length;
-  const totalCountShopping = defaultItemsForTab["shopping-consumption"].length;
-  const totalCountHealth = defaultItemsForTab["health-wellness"].length;
-  const totalCountFood = defaultItemsForTab["food-pantry"].length;
-  const totalCountHome = defaultItemsForTab["home-management"].length;
-  const totalCountVehicle = defaultItemsForTab["vehicle-mobility"].length;
-  const totalCountLifecycle = defaultItemsForTab["household-lifecycle"].length;
+  const countAll = STANDALONE_REORGANIZED_APPS.length;
+  const countPersonal = STANDALONE_REORGANIZED_APPS.filter((a) => a.category === "personal").length;
+  const countEssentials = STANDALONE_REORGANIZED_APPS.filter((a) => a.category === "essentials").length;
+  const countHousehold = STANDALONE_REORGANIZED_APPS.filter((a) => a.category === "household").length;
 
   return (
     <div className="w-full flex flex-col items-center">
       {/* Title & Description */}
-      <div className="text-center mb-[calc(1.5rem+10pt)]">
+      <div className="text-center mb-6">
         <h3 className="text-2xl sm:text-3xl font-bold text-foreground/90 tracking-tight flex items-center justify-center gap-2">
           <span>Personal<span className="font-normal">,</span> Essentials<span className="font-normal">, and</span> Household</span>
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-[calc(0.25rem+10pt)] max-w-xl mx-auto">
-          A Unified Space Built to Empower Life and Living.
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 max-w-xl mx-auto">
+          14 Standalone Apps Terintegrasi — Ruang Hidup, Finansial, Kesehatan, Hunian, dan Esensial Mandiri.
         </p>
       </div>
 
-      {/* Main Level Pills di Atas */}
-      <div className="flex flex-wrap items-center justify-center gap-2.5 w-full mb-[calc(2rem+10pt)]">
-        {/* Semua */}
+      {/* Main Filter Tabs */}
+      <div className="flex flex-wrap items-center justify-center gap-2.5 w-full mb-6">
         <button
-          onClick={() => {
-            setMainTab("all");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("all")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "all"
+            activeTab === "all"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <Layers className="size-4 shrink-0" />
-          <span>Semua</span>
+          <span>Semua App</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "all"
+              activeTab === "all"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountAll}
+            {countAll}
           </span>
         </button>
 
-        {/* Personal Management */}
         <button
-          onClick={() => {
-            setMainTab("personal-management");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("personal")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "personal-management"
+            activeTab === "personal"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <User className="size-4 shrink-0" />
-          <span>Personal Management</span>
+          <Sparkles className="size-4 shrink-0" />
+          <span>Personal</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "personal-management"
+              activeTab === "personal"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountPersonal}
+            {countPersonal}
           </span>
         </button>
 
-        {/* Shopping and Consumption */}
         <button
-          onClick={() => {
-            setMainTab("shopping-consumption");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("essentials")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "shopping-consumption"
+            activeTab === "essentials"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <ShoppingCart className="size-4 shrink-0" />
-          <span>Shopping and Consumption</span>
+          <Wallet className="size-4 shrink-0" />
+          <span>Essentials</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "shopping-consumption"
+              activeTab === "essentials"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountShopping}
+            {countEssentials}
           </span>
         </button>
 
-        {/* Health and Wellness */}
         <button
-          onClick={() => {
-            setMainTab("health-wellness");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("household")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "health-wellness"
-              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
-          }`}
-        >
-          <Heart className="size-4 shrink-0" />
-          <span>Health and Wellness</span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "health-wellness"
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-background/80 text-muted-foreground"
-            }`}
-          >
-            {totalCountHealth}
-          </span>
-        </button>
-
-        {/* Food and Pantry */}
-        <button
-          onClick={() => {
-            setMainTab("food-pantry");
-            setActiveSpecific("all");
-          }}
-          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "food-pantry"
+            activeTab === "household"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <Utensils className="size-4 shrink-0" />
-          <span>Food and Pantry</span>
+          <span>Household</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "food-pantry"
+              activeTab === "household"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountFood}
-          </span>
-        </button>
-
-        {/* Home Management */}
-        <button
-          onClick={() => {
-            setMainTab("home-management");
-            setActiveSpecific("all");
-          }}
-          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "home-management"
-              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
-          }`}
-        >
-          <Home className="size-4 shrink-0" />
-          <span>Home Management</span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "home-management"
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-background/80 text-muted-foreground"
-            }`}
-          >
-            {totalCountHome}
-          </span>
-        </button>
-
-        {/* Vehicle and Mobility */}
-        <button
-          onClick={() => {
-            setMainTab("vehicle-mobility");
-            setActiveSpecific("all");
-          }}
-          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "vehicle-mobility"
-              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
-          }`}
-        >
-          <Truck className="size-4 shrink-0" />
-          <span>Vehicle and Mobility</span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "vehicle-mobility"
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-background/80 text-muted-foreground"
-            }`}
-          >
-            {totalCountVehicle}
-          </span>
-        </button>
-
-        {/* Household Lifecycle */}
-        <button
-          onClick={() => {
-            setMainTab("household-lifecycle");
-            setActiveSpecific("all");
-          }}
-          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "household-lifecycle"
-              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
-          }`}
-        >
-          <RefreshCw className="size-4 shrink-0" />
-          <span>Household Lifecycle</span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "household-lifecycle"
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-background/80 text-muted-foreground"
-            }`}
-          >
-            {totalCountLifecycle}
+            {countHousehold}
           </span>
         </button>
       </div>
 
-      {/* 12-Column Container */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 max-w-[1640px] mx-auto w-full mb-[10pt] items-start">
-        {/* LEFT: 3 Columns Space */}
-        <div className="xl:col-span-3 w-full flex flex-col items-center xl:items-start">
-          <div
-            className="w-full flex flex-col gap-1.5 max-h-[720px] overflow-y-auto px-1 py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {/* Option Semua untuk Tab yang Aktif */}
-            <button
-              onClick={() => setActiveSpecific("all")}
-              className={`w-full text-left px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
-                activeSpecific === "all"
-                  ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
-                  : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
-              }`}
+      {/* Standalone Apps Cards Grid */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {filteredApps.map((app) => {
+          const isFav = favorites.includes(app.to);
+          const gradient = getGradient(app.title);
+          const Icon = app.icon;
+
+          return (
+            <div
+              key={app.id}
+              className="rounded-2xl border border-border bg-card p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-4 group"
             >
-              <div className="flex items-center gap-2 min-w-0">
-                <Layers className="size-3.5 shrink-0" />
-                <span className="truncate">Semua</span>
-              </div>
-              <span
-                className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
-                  activeSpecific === "all"
-                    ? "bg-primary-foreground/20 text-primary-foreground"
-                    : "bg-background/80 text-muted-foreground"
-                }`}
-              >
-                {mainTab === "all"
-                  ? totalCountAll
-                  : mainTab === "personal-management"
-                  ? totalCountPersonal
-                  : mainTab === "shopping-consumption"
-                  ? totalCountShopping
-                  : mainTab === "health-wellness"
-                  ? totalCountHealth
-                  : mainTab === "food-pantry"
-                  ? totalCountFood
-                  : mainTab === "home-management"
-                  ? totalCountHome
-                  : mainTab === "vehicle-mobility"
-                  ? totalCountVehicle
-                  : totalCountLifecycle}
-              </span>
-            </button>
-
-            {/* Specific Categories filtered by mainTab */}
-            {specificCategories
-              .filter((cat) => {
-                if (mainTab === "all") return true;
-                return cat.group === mainTab;
-              })
-              .map((cat) => {
-                const Icon = cat.icon;
-                const count = cat.getItems().length;
-                const isActive = activeSpecific === cat.id;
-
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveSpecific(cat.id)}
-                    className={`w-full text-left px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
-                      isActive
-                        ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
-                        : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <Icon className="size-3.5 shrink-0" />
-                      <span className="truncate">{cat.title}</span>
-                    </div>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
-                        isActive
-                          ? "bg-primary-foreground/20 text-primary-foreground"
-                          : "bg-background/80 text-muted-foreground"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-          </div>
-        </div>
-
-        {/* RIGHT: 9 Columns Grid for Apps */}
-        <div className="xl:col-span-9 w-full flex flex-col gap-4">
-          {/* Breadcrumb / Active Category Path */}
-          <div className="flex items-center justify-between px-1 py-1 text-xs border-b border-border/40 pb-2.5">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="font-semibold text-foreground/90">
-                {mainTab === "all"
-                  ? "Semua"
-                  : mainTab === "personal-management"
-                  ? "Personal Management"
-                  : mainTab === "shopping-consumption"
-                  ? "Shopping and Consumption"
-                  : mainTab === "health-wellness"
-                  ? "Health and Wellness"
-                  : mainTab === "food-pantry"
-                  ? "Food and Pantry"
-                  : mainTab === "home-management"
-                  ? "Home Management"
-                  : mainTab === "vehicle-mobility"
-                  ? "Vehicle and Mobility"
-                  : "Household Lifecycle"}
-              </span>
-              {activeCategoryTitle && (
-                <>
-                  <span className="text-muted-foreground">/</span>
-                  <span className="font-medium text-primary">{activeCategoryTitle}</span>
-                </>
-              )}
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-muted-foreground font-medium">{displayedItems.length} modul</span>
-            </div>
-          </div>
-
-          {/* Launcher Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-x-3 gap-y-6 place-items-start w-full">
-            {displayedItems.length === 0 ? (
-              <div className="col-span-full py-16 text-center text-sm text-muted-foreground italic w-full">
-                Tidak ada modul yang ditemukan dalam filter ini.
-              </div>
-            ) : (
-              displayedItems.map((entry) => {
-                if (entry.type === "folder") {
-                  return (
-                    <FolderTile
-                      key={entry.id}
-                      folder={entry}
-                      onClick={() => setActiveFolder(entry)}
-                    />
-                  );
-                }
-
-                const item = entry.item;
-                const gradient = getGradient(item.label);
-                const isFav = favorites.includes(item.to);
-                const itemPath = item.to.split("?")[0];
-                const itemSearch = item.to.includes("?")
-                  ? Object.fromEntries(new URLSearchParams(item.to.split("?")[1]))
-                  : undefined;
-
-                return (
+              <div>
+                {/* Header: Icon, Title & Standalone Badge */}
+                <div className="flex items-start justify-between gap-3">
                   <Link
-                    key={item.to}
-                    to={itemPath}
-                    search={itemSearch as any}
-                    className="flex flex-col items-center gap-2 group w-full outline-none relative"
+                    to={app.to}
+                    className="flex items-center gap-3.5 group/header min-w-0 flex-1 outline-none"
                   >
                     <div
-                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
+                      className={`h-12 w-12 rounded-2xl flex items-center justify-center text-white shadow-xs shrink-0 ${gradient} group-hover/header:scale-105 transition-transform`}
                     >
-                      <item.icon
-                        className="size-7 sm:size-8 opacity-90 drop-shadow-sm"
-                        strokeWidth={1.5}
-                      />
-
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleFavorite(item.to);
-                        }}
-                        className={`absolute -top-2 -right-2 p-1.5 rounded-full bg-background border shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 scale-90 hover:scale-110 cursor-pointer ${
-                          isFav ? "opacity-100" : ""
-                        }`}
-                        aria-label="Favorit"
-                      >
-                        <Star
-                          className={`size-3 sm:size-3.5 transition-colors ${
-                            isFav ? "fill-amber-400 text-amber-400" : "text-muted-foreground"
-                          }`}
-                        />
-                      </button>
+                      <Icon className="h-6 w-6 opacity-90 drop-shadow-sm" strokeWidth={1.75} />
                     </div>
-                    <span className="text-[11px] text-foreground/90 font-medium text-center line-clamp-2 leading-tight px-0.5 group-hover:text-foreground">
-                      {item.label}
-                    </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-bold text-base text-foreground group-hover/header:text-primary transition-colors truncate">
+                          {app.title}
+                        </h4>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-primary/10 text-primary shrink-0 uppercase tracking-wide">
+                          Standalone
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-muted-foreground capitalize">
+                        Kategori: {app.category}
+                      </span>
+                    </div>
                   </Link>
-                );
-              })
-            )}
-          </div>
-        </div>
+
+                  {/* Favorite Button */}
+                  <button
+                    onClick={() => toggleFavorite(app.to)}
+                    className="p-1.5 rounded-xl border border-border/60 hover:bg-muted/60 text-muted-foreground hover:text-amber-400 transition-colors cursor-pointer"
+                    title={isFav ? "Hapus dari Favorit" : "Tambah ke Favorit"}
+                  >
+                    <Star
+                      className={`size-4 ${
+                        isFav ? "fill-amber-400 text-amber-400" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* Subtitle */}
+                <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
+                  {app.subtitle}
+                </p>
+
+                {/* Sub-Features Chips (If any) */}
+                {app.features && app.features.length > 0 && (
+                  <div className="mt-4 pt-3 border-t border-border/60">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Fitur di Dalamnya ({app.features.length}):
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {app.features.map((feat, idx) => {
+                        const FeatIcon = feat.icon;
+                        const featPath = feat.to.split("?")[0];
+                        const featSearch = feat.to.includes("?")
+                          ? Object.fromEntries(new URLSearchParams(feat.to.split("?")[1]))
+                          : undefined;
+
+                        return (
+                          <Link
+                            key={idx}
+                            to={featPath}
+                            search={featSearch as any}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30"
+                          >
+                            <FeatIcon size={12} className="text-primary shrink-0" />
+                            <span>{feat.title}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom Quick Open Link */}
+              <div className="border-t border-border/50 pt-3 flex items-center justify-between text-xs">
+                <span className="text-muted-foreground text-[11px]">
+                  {app.features ? `${app.features.length} sub-modul terpadu` : "Modul mandiri"}
+                </span>
+
+                <Link
+                  to={app.to}
+                  className="font-semibold text-primary flex items-center gap-1 hover:underline"
+                >
+                  <span>Buka App</span>
+                  <ArrowRight size={13} />
+                </Link>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

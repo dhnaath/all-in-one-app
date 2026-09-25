@@ -437,11 +437,17 @@ export function AppShell({
     setSidebarView("auto");
   }, [pathname]);
 
-  const showAppCustomPortal = isAppRoute && hasAppSidebar && sidebarView === "auto";
+  const showAppCustomPortal = hasAppSidebar && sidebarView === "auto";
   const showDynamicAppFeatures = isAppRoute && !hasAppSidebar && sidebarView === "auto";
-  const showDefaultNav = !isAppRoute || sidebarView === "browse";
+  const showDefaultNav = (!hasAppSidebar && !showDynamicAppFeatures) || sidebarView === "browse";
   const showAppSidebar = showAppCustomPortal;
   const shellSidebarCtx = useMemo(() => ({ setHasAppSidebar }), []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches) {
+      setOpenDrawer("left");
+    }
+  }, [pathname]);
 
   // Whether the currently-open app registered its own header via <ShellHeader>.
   const [hasAppHeader, setHasAppHeader] = useState(false);

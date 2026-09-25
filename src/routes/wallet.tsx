@@ -1,15 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/app/app-shell";
+import { WalletKasAppView } from "@/features/wira/components/views/WalletKasAppView";
 
 export const Route = createFileRoute("/wallet")({
+  head: () => ({
+    meta: [
+      { title: "Wallet & Kas — All in One" },
+      { name: "description", content: "Kendali arus kas, pembanding harga, rencana belanja wishlist, dan garansi resmi." },
+    ],
+  }),
   component: WalletPage,
 });
 
 function WalletPage() {
   return (
-    <AppShell title="Wallet" subtitle="Personal">
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-140px)]">
-        <h2 className="text-3xl font-bold text-foreground">Wallet</h2>
+    <AppShell title="Wallet & Kas" subtitle="Kendali arus kas, pembanding harga, wishlist belanja, dan garansi">
+      <div className="w-full">
+        <WalletKasAppView />
       </div>
     </AppShell>
   );

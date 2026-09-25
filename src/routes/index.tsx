@@ -447,6 +447,7 @@ export function Launcher() {
                     className={LAUNCHER_PAGE_PAD}
                   >
                     <FinancialWealthSection
+                      isActive={currentPage === pageIdx}
                       page={page}
                       favorites={favorites}
                       toggleFavorite={toggleFavorite}

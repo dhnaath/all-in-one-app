@@ -24,10 +24,35 @@ import {
   Info,
   Sliders,
   Scale,
+  Dumbbell,
+  Stethoscope,
+  Gauge,
+  FileHeart,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { useRouterState } from "@tanstack/react-router";
+import { WorkoutsView } from "./WorkoutsView";
+import {
+  HealthWorkoutsView,
+  HealthWaterView,
+  HealthMedicalRecordsView,
+  HealthVitalsView,
+  HealthBodyMetricsView,
+  HealthSleepView,
+  HealthSkincareView,
+} from "./HealthSubViews";
 
-export type HealthTab = "overview" | "supplements" | "logs" | "mcu";
+export type HealthTab =
+  | "overview"
+  | "workouts"
+  | "water"
+  | "medical-records"
+  | "vitals"
+  | "body-metrics"
+  | "sleep"
+  | "skincare"
+  | "supplements"
+  | "mcu";
 
 export interface DailyHealthLog {
   id: string;
@@ -265,7 +290,61 @@ const INITIAL_LAB_RECORDS: BiomarkerLabRecord[] = [
 ];
 
 export function HealthView() {
-  const [activeTab, setActiveTab] = useState<HealthTab>("overview");
+  const routerState = useRouterState();
+  const searchStr = routerState.location.searchStr;
+
+  const [activeTab, setActiveTab] = useState<HealthTab>(() => {
+    const param = new URLSearchParams(searchStr || "").get("tab");
+    if (
+      param &&
+      [
+        "overview",
+        "workouts",
+        "water",
+        "medical-records",
+        "vitals",
+        "body-metrics",
+        "sleep",
+        "skincare",
+        "supplements",
+        "mcu",
+      ].includes(param)
+    ) {
+      return param as HealthTab;
+    }
+    return "overview";
+  });
+
+  useEffect(() => {
+    const param = new URLSearchParams(searchStr || "").get("tab");
+    if (
+      param &&
+      [
+        "overview",
+        "workouts",
+        "water",
+        "medical-records",
+        "vitals",
+        "body-metrics",
+        "sleep",
+        "skincare",
+        "supplements",
+        "mcu",
+      ].includes(param) &&
+      param !== activeTab
+    ) {
+      setActiveTab(param as HealthTab);
+    }
+  }, [searchStr]);
+
+  const handleTabChange = (t: HealthTab) => {
+    setActiveTab(t);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", t);
+      window.history.replaceState(window.history.state, "", url.toString());
+    } catch {}
+  };
 
   // Daily Logs State
   const [logs, setLogs] = useState<DailyHealthLog[]>(() => {
@@ -620,42 +699,133 @@ export function HealthView() {
       <div className="flex items-center justify-between border-b border-border/80 pb-2">
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-none">
           <button
-            onClick={() => setActiveTab("overview")}
+            onClick={() => handleTabChange("overview")}
             className={cn(
-              "px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2",
+              "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
               activeTab === "overview"
                 ? "bg-foreground text-background shadow-sm"
                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
           >
             <Activity size={15} />
-            <span>Ringkasan Vital & Log Harian</span>
+            <span>Ringkasan Vital</span>
           </button>
 
           <button
-            onClick={() => setActiveTab("supplements")}
+            onClick={() => handleTabChange("workouts")}
             className={cn(
-              "px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2",
+              "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
+              activeTab === "workouts"
+                ? "bg-foreground text-background shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            )}
+          >
+            <Dumbbell size={15} />
+            <span>Workouts</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("water")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
+              activeTab === "water"
+                ? "bg-foreground text-background shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            )}
+          >
+            <Droplet size={15} />
+            <span>Water</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("medical-records")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
+              activeTab === "medical-records"
+                ? "bg-foreground text-background shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            )}
+          >
+            <FileHeart size={15} />
+            <span>Riwayat Rekam Medis</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("vitals")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
+              activeTab === "vitals"
+                ? "bg-foreground text-background shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            )}
+          >
+            <Activity size={15} />
+            <span>Tekanan & Gula Darah</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("body-metrics")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
+              activeTab === "body-metrics"
+                ? "bg-foreground text-background shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            )}
+          >
+            <Scale size={15} />
+            <span>Pengukuran Tubuh & Berat</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("sleep")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
+              activeTab === "sleep"
+                ? "bg-foreground text-background shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            )}
+          >
+            <Moon size={15} />
+            <span>Kualitas Tidur & Istirahat</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("skincare")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
+              activeTab === "skincare"
+                ? "bg-foreground text-background shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            )}
+          >
+            <Sparkles size={15} />
+            <span>Skincare & Grooming</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("supplements")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
               activeTab === "supplements"
                 ? "bg-foreground text-background shadow-sm"
                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
           >
             <Pill size={15} />
-            <span>Protokol Suplemen & Nootropik ({takenSupplementsCount}/{supplements.length})</span>
+            <span>Suplemen ({takenSupplementsCount}/{supplements.length})</span>
           </button>
 
           <button
-            onClick={() => setActiveTab("mcu")}
+            onClick={() => handleTabChange("mcu")}
             className={cn(
-              "px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2",
+              "px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
               activeTab === "mcu"
                 ? "bg-foreground text-background shadow-sm"
                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
           >
             <FileText size={15} />
-            <span>Biomarker Lab & MCU ({labRecords.length})</span>
+            <span>Biomarker MCU ({labRecords.length})</span>
           </button>
         </div>
       </div>
@@ -918,6 +1088,15 @@ export function HealthView() {
           </div>
         </div>
       )}
+
+      {/* INTEGRATED HEALTH SUB-FEATURES */}
+      {activeTab === "workouts" && <HealthWorkoutsView />}
+      {activeTab === "water" && <HealthWaterView />}
+      {activeTab === "medical-records" && <HealthMedicalRecordsView />}
+      {activeTab === "vitals" && <HealthVitalsView />}
+      {activeTab === "body-metrics" && <HealthBodyMetricsView />}
+      {activeTab === "sleep" && <HealthSleepView />}
+      {activeTab === "skincare" && <HealthSkincareView />}
 
       {/* MODAL: ADD DAILY LOG */}
       {isLogModalOpen && (

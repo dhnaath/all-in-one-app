@@ -144,6 +144,15 @@ export function JournalView() {
   const [onlyPinned, setOnlyPinned] = useState(false);
   const [activePromptIndex, setActivePromptIndex] = useState(0);
 
+  // Tabs for integrated sub-features: Jurnal Harian, Buku Syukur (Gratitude), Mood & Energi Harian
+  const [activeTab, setActiveTab] = useState<"journal" | "gratitude" | "mood">(() => {
+    if (typeof window !== "undefined") {
+      const p = new URLSearchParams(window.location.search).get("tab");
+      if (p === "gratitude" || p === "mood") return p;
+    }
+    return "journal";
+  });
+
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
@@ -247,51 +256,211 @@ export function JournalView() {
 
   return (
     <div className="max-w-4xl mx-auto w-full space-y-4 py-1">
-      {/* Calm Thoughtful Inspiration Bar */}
-      <div className="p-3.5 rounded-xl border border-border bg-card/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <Sparkles size={15} className="text-primary shrink-0" />
-          <p className="text-foreground truncate font-medium">
-            <span className="text-muted-foreground mr-1.5 font-normal">Pertanyaan Refleksi:</span>
-            "{REFLECTION_PROMPTS[activePromptIndex]}"
-          </p>
-        </div>
+      {/* Integrated Sub-App Tabs Switcher */}
+      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar border-b border-border pb-2">
+        <button
+          type="button"
+          onClick={() => setActiveTab("journal")}
+          className={cn(
+            "flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer",
+            activeTab === "journal"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <BookOpen size={14} />
+          <span>Jurnal Harian</span>
+          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-primary-foreground/20 font-mono">
+            {entries.length}
+          </span>
+        </button>
 
-        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-          <button
-            onClick={() =>
-              setActivePromptIndex((prev) => (prev + 1) % REFLECTION_PROMPTS.length)
-            }
-            className="text-muted-foreground hover:text-foreground text-[11px] font-medium"
-          >
-            Ganti Prompt
-          </button>
-          <span className="text-border">·</span>
-          <button
-            onClick={() => {
-              setEditingEntry({
-                id: "",
-                date: new Date().toISOString().slice(0, 10),
-                title: REFLECTION_PROMPTS[activePromptIndex],
-                mood: "Fokus & Produktif",
-                energyLevel: 4,
-                content: "",
-                gratitude: ["", "", ""],
-                wins: "",
-                lessons: "",
-                tags: ["Refleksi"],
-                isPinned: false,
-                createdAt: "",
-                updatedAt: "",
-              });
-              setIsModalOpen(true);
-            }}
-            className="text-primary hover:underline text-[11px] font-semibold"
-          >
-            Jawab Prompt
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setActiveTab("gratitude")}
+          className={cn(
+            "flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer",
+            activeTab === "gratitude"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <Heart size={14} className={activeTab === "gratitude" ? "fill-current" : ""} />
+          <span>Buku Syukur (Gratitude)</span>
+          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-primary-foreground/20 font-mono">
+            {entries.reduce((acc, c) => acc + c.gratitude.filter(Boolean).length, 0)}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("mood")}
+          className={cn(
+            "flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer",
+            activeTab === "mood"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <Smile size={14} />
+          <span>Mood dan Energi Harian</span>
+        </button>
       </div>
+
+      {/* TAB 2: BUKU SYUKUR (GRATITUDE) */}
+      {activeTab === "gratitude" && (
+        <div className="space-y-4">
+          <div className="p-4 rounded-xl border border-border bg-gradient-to-br from-card via-card to-rose-500/5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-rose-500/15 text-rose-500">
+                <Heart size={20} className="fill-current" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm text-foreground">Buku Syukur (Gratitude Journal)</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Menyadari dan mencatat hal-hal berharga setiap hari untuk kedamaian batin.
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-xl font-bold font-mono text-foreground">
+                {entries.reduce((acc, c) => acc + c.gratitude.filter(Boolean).length, 0)}
+              </span>
+              <span className="text-[11px] text-muted-foreground block">Hal Disyukuri</span>
+            </div>
+          </div>
+
+          {/* Dinding Rasa Syukur */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {entries
+              .filter((e) => e.gratitude.some(Boolean))
+              .map((e) => (
+                <div key={e.id} className="p-4 rounded-xl border border-border bg-card space-y-2.5 shadow-2xs">
+                  <div className="flex items-center justify-between text-xs border-b border-border/50 pb-2">
+                    <span className="font-semibold text-foreground flex items-center gap-1.5">
+                      <Calendar size={12} className="text-muted-foreground" />
+                      {e.date}
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-500 font-medium">
+                      {e.mood}
+                    </span>
+                  </div>
+                  <ul className="space-y-1.5 text-xs text-foreground/90">
+                    {e.gratitude.filter(Boolean).map((g, gIdx) => (
+                      <li key={gIdx} className="flex items-start gap-2">
+                        <Heart size={12} className="text-rose-500 shrink-0 mt-0.5 fill-rose-500/40" />
+                        <span>{g}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: MOOD DAN ENERGI HARIAN */}
+      {activeTab === "mood" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="p-4 rounded-xl border border-border bg-card">
+              <span className="text-xs text-muted-foreground">Rata-rata Tingkat Energi</span>
+              <p className="text-2xl font-bold text-foreground mt-1 flex items-center gap-2">
+                <Zap size={18} className="text-amber-500 fill-amber-500" />
+                {(entries.reduce((a, c) => a + c.energyLevel, 0) / (entries.length || 1)).toFixed(1)} / 5
+              </p>
+            </div>
+            <div className="p-4 rounded-xl border border-border bg-card">
+              <span className="text-xs text-muted-foreground">Mood Dominan</span>
+              <p className="text-base font-bold text-primary mt-1 flex items-center gap-2">
+                <Smile size={18} />
+                {entries[0]?.mood || "Fokus & Produktif"}
+              </p>
+            </div>
+            <div className="p-4 rounded-xl border border-border bg-card">
+              <span className="text-xs text-muted-foreground">Hari Tercatat</span>
+              <p className="text-2xl font-bold text-foreground mt-1">
+                {entries.length} Hari
+              </p>
+            </div>
+          </div>
+
+          {/* Histori Log Mood & Energi */}
+          <div className="rounded-xl border border-border bg-card divide-y divide-border/60 overflow-hidden">
+            <div className="px-4 py-3 bg-muted/40 font-semibold text-xs text-foreground">
+              Histori Harian Mood & Vitalitas
+            </div>
+            {entries.map((e) => (
+              <div key={e.id} className="p-3.5 flex items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                    <Smile size={16} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">{e.mood}</p>
+                    <p className="text-[11px] text-muted-foreground">{e.date} • {e.title}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 font-mono font-bold text-amber-500">
+                    <Zap size={13} className="fill-current" />
+                    <span>{e.energyLevel}/5</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 1: JURNAL HARIAN STANDAR */}
+      {activeTab === "journal" && (
+        <>
+          {/* Calm Thoughtful Inspiration Bar */}
+          <div className="p-3.5 rounded-xl border border-border bg-card/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Sparkles size={15} className="text-primary shrink-0" />
+              <p className="text-foreground truncate font-medium">
+                <span className="text-muted-foreground mr-1.5 font-normal">Pertanyaan Refleksi:</span>
+                "{REFLECTION_PROMPTS[activePromptIndex]}"
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+              <button
+                onClick={() =>
+                  setActivePromptIndex((prev) => (prev + 1) % REFLECTION_PROMPTS.length)
+                }
+                className="text-muted-foreground hover:text-foreground text-[11px] font-medium"
+              >
+                Ganti Prompt
+              </button>
+              <span className="text-border">·</span>
+              <button
+                onClick={() => {
+                  setEditingEntry({
+                    id: "",
+                    date: new Date().toISOString().slice(0, 10),
+                    title: REFLECTION_PROMPTS[activePromptIndex],
+                    mood: "Fokus & Produktif",
+                    energyLevel: 4,
+                    content: "",
+                    gratitude: ["", "", ""],
+                    wins: "",
+                    lessons: "",
+                    tags: ["Refleksi"],
+                    isPinned: false,
+                    createdAt: "",
+                    updatedAt: "",
+                  });
+                  setIsModalOpen(true);
+                }}
+                className="text-primary hover:underline text-[11px] font-semibold"
+              >
+                Jawab Prompt
+              </button>
+            </div>
+          </div>
 
       {/* Unified Toolbar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-2 border-b border-border/80">
@@ -519,6 +688,8 @@ export function JournalView() {
             </article>
           ))}
         </div>
+      )}
+      </>
       )}
 
       {/* Modal Add / Edit */}

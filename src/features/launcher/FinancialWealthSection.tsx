@@ -38,12 +38,14 @@ import {
 import { navKonsultan, type NavItem } from "@/config/nav";
 import { useLanguage } from "../finance/hooks/useLanguage";
 import { translations } from "../finance/translations";
+import { ShellSidebar } from "@/app/shell-sidebar";
 
 type LauncherItem =
   | { type: "app"; item: NavItem }
   | { type: "folder"; id: string; title: string; items: NavItem[] };
 
 interface FinancialWealthSectionProps {
+  isActive?: boolean;
   page?: {
     title: string;
     subCategories: { title: string; rawItems: NavItem[] }[];
@@ -77,6 +79,7 @@ interface UnifiedCategory {
 }
 
 export function FinancialWealthSection({
+  isActive = true,
   favorites,
   toggleFavorite,
   setActiveFolder,
@@ -872,174 +875,235 @@ export function FinancialWealthSection({
         })}
       </div>
 
-      {/* 12-Column Container: 3 columns on the left (Pills pendek), 9 columns on the right (matching mini MBA / 100 Tools style) */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 max-w-[1640px] mx-auto w-full mb-[10pt] items-start">
-        {/* LEFT: 3 Columns Space - Clean Pills list without rigid square box card */}
-        <div className="xl:col-span-3 w-full flex flex-col items-center xl:items-start">
-          <div
-            className="w-[95%] max-w-[95%] mx-auto flex flex-col gap-1.5 max-h-[720px] overflow-y-auto px-1.5 py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {/* Opsi Tampilkan Semua Item dari Tab Terpilih */}
-            <button
-              onClick={() => setActiveSpecific("all")}
-              className={`w-full text-left px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
-                activeSpecific === "all"
-                  ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
-                  : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
-              }`}
-            >
-              <div className="flex items-center gap-2 min-w-0">
-                <Layers className="size-3.5 shrink-0" />
-                <span className="truncate">Tampilkan Semua</span>
+      {/* Sidebar Content Portaled to Global Shell Sidebar */}
+      {isActive !== false && (
+        <ShellSidebar>
+          <div className="flex flex-col gap-3 text-sidebar-foreground">
+            {/* Header Profil Modul Keuangan */}
+            <div className="rounded-xl border border-sidebar-border bg-sidebar-accent/40 p-3 shadow-2xs">
+              <div className="flex items-center gap-2.5">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary border border-primary/20">
+                  <Coins className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-sm font-bold leading-tight truncate text-foreground">
+                    Financial & Wealth
+                  </h2>
+                  <p className="text-[11px] text-muted-foreground truncate mt-0.5">
+                    {mainPills.find((p) => p.id === mainTab)?.label || "Semua Modul"}
+                  </p>
+                </div>
               </div>
-              <span
-                className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
-                  activeSpecific === "all"
-                    ? "bg-primary-foreground/20 text-primary-foreground"
-                    : "bg-background/80 text-muted-foreground"
-                }`}
+            </div>
+
+            {/* Grup Utama Switcher di Sidebar */}
+            <div className="flex flex-col gap-1">
+              <p className="px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Grup Utama
+              </p>
+              <div className="flex flex-wrap gap-1">
+                {mainPills.map((pill) => {
+                  const Icon = pill.icon;
+                  const isActivePill = mainTab === pill.id;
+                  return (
+                    <button
+                      key={pill.id}
+                      type="button"
+                      onClick={() => {
+                        setMainTab(pill.id);
+                        setActiveSpecific("all");
+                      }}
+                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+                        isActivePill
+                          ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                          : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                      }`}
+                    >
+                      <Icon className="size-3.5 shrink-0" />
+                      <span className="truncate">{pill.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Kategori & Filter Pills (Dipindahkan dari main content ke sidebar) */}
+            <div className="flex flex-col gap-1 mt-1">
+              <p className="px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
+                <span>Kategori & Filter</span>
+                <span className="text-[10px] font-mono text-muted-foreground/60">
+                  {visibleCategories.length + 1}
+                </span>
+              </p>
+
+              <div
+                className="w-full flex flex-col gap-1 max-h-[calc(100vh-290px)] overflow-y-auto px-0.5 py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               >
-                {mainTab === "all"
-                  ? defaultItemsForTab.all.length
-                  : defaultItemsForTab[mainTab].length}
-              </span>
-            </button>
-
-            {visibleCategories.map((cat) => {
-              const Icon = cat.icon;
-              const isSelected = activeSpecific === cat.id;
-              const count = cat.getItems().length;
-
-              return (
+                {/* Opsi Tampilkan Semua Item dari Tab Terpilih */}
                 <button
-                  key={cat.id}
-                  onClick={() => setActiveSpecific(cat.id)}
-                  className={`w-full text-left px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
-                    isSelected
-                      ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
-                      : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
+                  type="button"
+                  onClick={() => setActiveSpecific("all")}
+                  className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 flex items-center justify-between gap-2 cursor-pointer ${
+                    activeSpecific === "all"
+                      ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                      : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
                   }`}
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <Icon className="size-3.5 shrink-0" />
-                    <span className="truncate">{cat.title}</span>
+                    <Layers className="size-3.5 shrink-0" />
+                    <span className="truncate">Tampilkan Semua</span>
                   </div>
                   <span
                     className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
-                      isSelected
+                      activeSpecific === "all"
                         ? "bg-primary-foreground/20 text-primary-foreground"
-                        : "bg-background/80 text-muted-foreground"
+                        : "bg-background/80 text-muted-foreground border border-sidebar-border"
                     }`}
                   >
-                    {count}
+                    {mainTab === "all"
+                      ? defaultItemsForTab.all.length
+                      : defaultItemsForTab[mainTab].length}
                   </span>
                 </button>
-              );
-            })}
+
+                {visibleCategories.map((cat) => {
+                  const Icon = cat.icon;
+                  const isSelected = activeSpecific === cat.id;
+                  const count = cat.getItems().length;
+
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setActiveSpecific(cat.id)}
+                      className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 flex items-center justify-between gap-2 cursor-pointer ${
+                        isSelected
+                          ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                          : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Icon className="size-3.5 shrink-0" />
+                        <span className="truncate">{cat.title}</span>
+                      </div>
+                      <span
+                        className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
+                          isSelected
+                            ? "bg-primary-foreground/20 text-primary-foreground"
+                            : "bg-background/80 text-muted-foreground border border-sidebar-border"
+                        }`}
+                      >
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </ShellSidebar>
+      )}
+
+      {/* Main Apps Content Area - Full Width without the cramped 3-column / 9-column split */}
+      <div className="w-full max-w-[1640px] mx-auto flex flex-col gap-4 mb-[10pt]">
+        {/* Breadcrumb Header */}
+        <div className="flex items-center justify-between px-1 py-1 text-xs border-b border-border/40 pb-2.5">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="font-semibold text-foreground/90">
+              {mainPills.find((p) => p.id === mainTab)?.label || "Semua"}
+            </span>
+            {activeCategoryTitle && (
+              <>
+                <span className="text-muted-foreground/60">/</span>
+                <span className="font-medium text-primary">{activeCategoryTitle}</span>
+              </>
+            )}
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-muted-foreground font-medium">
+              {displayedItems.length} modul
+            </span>
           </div>
         </div>
 
-        {/* RIGHT: 9 Columns Grid for Apps */}
-        <div className="xl:col-span-9 w-full flex flex-col gap-4">
-          {/* Breadcrumb Header */}
-          <div className="flex items-center justify-between px-1 py-1 text-xs border-b border-border/40 pb-2.5">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="font-semibold text-foreground/90">
-                {mainPills.find((p) => p.id === mainTab)?.label || "Semua"}
-              </span>
-              {activeCategoryTitle && (
-                <>
-                  <span className="text-muted-foreground/60">/</span>
-                  <span className="font-medium text-primary">{activeCategoryTitle}</span>
-                </>
-              )}
+        {/* Pillar Detailed Educational Info Box (for Wealth Spectrum) */}
+        {pillarInfo && (
+          <div className="p-4 sm:p-5 rounded-2xl bg-card border border-border shadow-xs flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-primary font-bold text-sm sm:text-base">
+              <pillarInfo.icon className="size-4 sm:size-5" />
+              <span>Pilar {pillarInfo.label}</span>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-muted-foreground font-medium">
-                {displayedItems.length} modul
-              </span>
-            </div>
+            <h4 className="text-base sm:text-lg font-semibold text-foreground">
+              {pillarInfo.title}
+            </h4>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              {pillarInfo.longDesc}
+            </p>
           </div>
+        )}
 
-          {/* Pillar Detailed Educational Info Box (for Wealth Spectrum) */}
-          {pillarInfo && (
-            <div className="p-4 sm:p-5 rounded-2xl bg-card border border-border shadow-xs flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-primary font-bold text-sm sm:text-base">
-                <pillarInfo.icon className="size-4 sm:size-5" />
-                <span>Pilar {pillarInfo.label}</span>
-              </div>
-              <h4 className="text-base sm:text-lg font-semibold text-foreground">
-                {pillarInfo.title}
-              </h4>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                {pillarInfo.longDesc}
-              </p>
+        {/* Interactive Tiles Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-x-3 gap-y-6 place-items-start w-full">
+          {displayedItems.length === 0 ? (
+            <div className="col-span-full py-16 text-center text-sm text-muted-foreground italic w-full">
+              Tidak ada aplikasi atau modul pada kategori ini.
             </div>
-          )}
-
-          {/* Interactive Tiles Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-x-3 gap-y-6 place-items-start w-full">
-            {displayedItems.length === 0 ? (
-              <div className="col-span-full py-16 text-center text-sm text-muted-foreground italic w-full">
-                Tidak ada aplikasi atau modul pada kategori ini.
-              </div>
-            ) : (
-              displayedItems.map((item, idx) => {
-                if (item.type === "folder") {
-                  return (
-                    <FolderTile
-                      key={item.id || idx}
-                      folder={item}
-                      onClick={() => setActiveFolder(item)}
-                    />
-                  );
-                }
-
-                const navItem = item.item;
-                const isFav = favorites.includes(navItem.to);
-                const gradient = getGradient(navItem.label);
-
+          ) : (
+            displayedItems.map((item, idx) => {
+              if (item.type === "folder") {
                 return (
-                  <Link
-                    key={navItem.to + idx}
-                    to={navItem.to}
-                    className="flex flex-col items-center gap-2 group w-full outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-[1.25rem] cursor-pointer"
-                  >
-                    <div
-                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
-                    >
-                      <navItem.icon
-                        className="size-7 sm:size-8 opacity-90 drop-shadow-sm"
-                        strokeWidth={1.5}
-                      />
-
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleFavorite(navItem.to);
-                        }}
-                        className={`absolute -top-2 -right-2 p-1.5 rounded-full bg-background border shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 scale-90 hover:scale-110 ${
-                          isFav ? "opacity-100" : ""
-                        }`}
-                        aria-label="Favorit"
-                      >
-                        <Star
-                          className={`size-3 sm:size-3.5 transition-colors ${
-                            isFav ? "fill-amber-400 text-amber-400" : "text-muted-foreground"
-                          }`}
-                        />
-                      </button>
-                    </div>
-                    <span className="text-xs sm:text-sm text-foreground/90 font-medium text-center line-clamp-2 leading-tight px-1 group-hover:text-foreground">
-                      {navItem.label}
-                    </span>
-                  </Link>
+                  <FolderTile
+                    key={item.id || idx}
+                    folder={item}
+                    onClick={() => setActiveFolder(item)}
+                  />
                 );
-              })
-            )}
-          </div>
+              }
+
+              const navItem = item.item;
+              const isFav = favorites.includes(navItem.to);
+              const gradient = getGradient(navItem.label);
+
+              return (
+                <Link
+                  key={navItem.to + idx}
+                  to={navItem.to}
+                  className="flex flex-col items-center gap-2 group w-full outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-[1.25rem] cursor-pointer"
+                >
+                  <div
+                    className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
+                  >
+                    <navItem.icon
+                      className="size-7 sm:size-8 opacity-90 drop-shadow-sm"
+                      strokeWidth={1.5}
+                    />
+
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleFavorite(navItem.to);
+                      }}
+                      className={`absolute -top-2 -right-2 p-1.5 rounded-full bg-background border shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 scale-90 hover:scale-110 ${
+                        isFav ? "opacity-100" : ""
+                      }`}
+                      aria-label="Favorit"
+                    >
+                      <Star
+                        className={`size-3 sm:size-3.5 transition-colors ${
+                          isFav ? "fill-amber-400 text-amber-400" : "text-muted-foreground"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <span className="text-xs sm:text-sm text-foreground/90 font-medium text-center line-clamp-2 leading-tight px-1 group-hover:text-foreground">
+                    {navItem.label}
+                  </span>
+                </Link>
+              );
+            })
+          )}
         </div>
       </div>
     </div>

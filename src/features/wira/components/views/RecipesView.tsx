@@ -22,8 +22,29 @@ import {
   Award,
   Heart,
   Coffee,
+  Package,
+  BookOpen,
+  AlertTriangle,
+  RefreshCw,
+  CalendarDays,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { useRouterState } from "@tanstack/react-router";
+import {
+  KitchenPantryView,
+  CookingLogView,
+  FoodExpiryView,
+  LeftoversManagerView,
+  WeeklyMealPlannerView,
+} from "./RecipesSubViews";
+
+export type RecipeMainTab =
+  | "recipes"
+  | "pantry"
+  | "cook-log"
+  | "expiry"
+  | "leftovers"
+  | "meal-planner";
 
 export interface Ingredient {
   name: string;
@@ -270,6 +291,37 @@ export function RecipesView() {
     return INITIAL_RECIPES;
   });
 
+  const routerState = useRouterState();
+  const searchStr = routerState.location.searchStr;
+
+  const [activeMainTab, setActiveMainTab] = useState<RecipeMainTab>(() => {
+    const param = new URLSearchParams(searchStr || "").get("tab");
+    if (param && ["recipes", "pantry", "cook-log", "expiry", "leftovers", "meal-planner"].includes(param)) {
+      return param as RecipeMainTab;
+    }
+    return "recipes";
+  });
+
+  useEffect(() => {
+    const param = new URLSearchParams(searchStr || "").get("tab");
+    if (
+      param &&
+      ["recipes", "pantry", "cook-log", "expiry", "leftovers", "meal-planner"].includes(param) &&
+      param !== activeMainTab
+    ) {
+      setActiveMainTab(param as RecipeMainTab);
+    }
+  }, [searchStr]);
+
+  const handleMainTabChange = (t: RecipeMainTab) => {
+    setActiveMainTab(t);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", t);
+      window.history.replaceState(window.history.state, "", url.toString());
+    } catch {}
+  };
+
   const [activeCategory, setActiveCategory] = useState<string>("Semua");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeItem | null>(null);
@@ -444,7 +496,99 @@ export function RecipesView() {
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-6">
-      {/* Top Banner Stats */}
+      {/* Top Level Sub-Feature Navigation Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 border-b border-border">
+        <button
+          onClick={() => handleMainTabChange("recipes")}
+          className={cn(
+            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
+            activeMainTab === "recipes"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <ChefHat size={15} />
+          <span>Koleksi Resep</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary-foreground/20 font-mono">
+            {recipes.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => handleMainTabChange("pantry")}
+          className={cn(
+            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
+            activeMainTab === "pantry"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <Package size={15} />
+          <span>Inventaris Bahan Dapur</span>
+        </button>
+
+        <button
+          onClick={() => handleMainTabChange("cook-log")}
+          className={cn(
+            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
+            activeMainTab === "cook-log"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <BookOpen size={15} />
+          <span>Jurnal Memasak</span>
+        </button>
+
+        <button
+          onClick={() => handleMainTabChange("expiry")}
+          className={cn(
+            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
+            activeMainTab === "expiry"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <AlertTriangle size={15} />
+          <span>Peringatan Kadaluarsa</span>
+        </button>
+
+        <button
+          onClick={() => handleMainTabChange("leftovers")}
+          className={cn(
+            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
+            activeMainTab === "leftovers"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <RefreshCw size={15} />
+          <span>Manajemen Makanan Sisa</span>
+        </button>
+
+        <button
+          onClick={() => handleMainTabChange("meal-planner")}
+          className={cn(
+            "flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0",
+            activeMainTab === "meal-planner"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
+        >
+          <CalendarDays size={15} />
+          <span>Perencana Menu Mingguan</span>
+        </button>
+      </div>
+
+      {activeMainTab === "pantry" && <KitchenPantryView />}
+      {activeMainTab === "cook-log" && <CookingLogView />}
+      {activeMainTab === "expiry" && <FoodExpiryView />}
+      {activeMainTab === "leftovers" && <LeftoversManagerView />}
+      {activeMainTab === "meal-planner" && <WeeklyMealPlannerView />}
+
+      {activeMainTab === "recipes" && (
+        <>
+          {/* Top Banner Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-card border border-border/80 rounded-2xl p-4 shadow-sm">
           <div className="flex items-center justify-between">
@@ -1051,6 +1195,8 @@ export function RecipesView() {
             </form>
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

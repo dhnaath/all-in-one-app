@@ -1,15 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/app/app-shell";
+import { TrunkAppView } from "@/features/standalone/UtilityStorageViews";
 
 export const Route = createFileRoute("/trunk")({
+  head: () => ({
+    meta: [
+      { title: "Trunk — All in One" },
+      { name: "description", content: "Gudang perkakas, penyimpanan peralatan musiman rumah, dan inventaris bagasi." },
+    ],
+  }),
   component: TrunkPage,
 });
 
 function TrunkPage() {
   return (
-    <AppShell title="Trunk" subtitle="Personal">
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-140px)]">
-        <h2 className="text-3xl font-bold text-foreground">Trunk</h2>
+    <AppShell title="Trunk" subtitle="Gudang perkakas, inventaris alat musiman, dan penyimpanan rumah">
+      <div className="w-full">
+        <TrunkAppView />
       </div>
     </AppShell>
   );
