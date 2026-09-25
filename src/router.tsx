@@ -80,6 +80,7 @@ import { MilestoneManagerApp } from "./features/milestone-manager/MilestoneManag
 import { TimeTrackerApp } from "./features/time-tracker/TimeTrackerApp";
 import { ResourceManagerApp } from "./features/resource-manager/ResourceManagerApp";
 import { PeopleManagerApp } from "./features/people-manager/PeopleManagerApp";
+import { KomunitasWargaApp } from "./features/komunitas/KomunitasWargaApp";
 import { InteractionManagerApp } from "./features/interaction-manager/InteractionManagerApp";
 import { ScheduleManagerApp } from "./features/schedule-manager/ScheduleManagerApp";
 import { SubscriptionManagerApp } from "./features/subscription-manager/SubscriptionManagerApp";
@@ -1125,6 +1126,22 @@ const peopleRoute = createRoute({
   component: PeopleManagerView,
 });
 
+function KomunitasWargaView() {
+  return (
+    <AppShell title="Komunitas Warga" subtitle="Manajemen Rukun Warga RT/RW, Transparansi Iuran, Pengumuman, dan Layanan Publik">
+      <div className="w-full">
+        <KomunitasWargaApp />
+      </div>
+    </AppShell>
+  );
+}
+
+const komunitasWargaRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/komunitas-warga",
+  component: KomunitasWargaView,
+});
+
 function InteractionManagerView() {
   return (
     <AppShell title="Interaction Manager" subtitle="Relationship Timeline • Histori Komunikasi & Follow-up Eksekutif">
@@ -1736,6 +1753,7 @@ const routeTree = rootRoute.addChildren([
   resourcesRoute,
   peopleManagerRoute,
   peopleRoute,
+  komunitasWargaRoute,
   interactionManagerRoute,
   interactionsRoute,
   scheduleManagerRoute,

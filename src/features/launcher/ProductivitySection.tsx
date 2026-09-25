@@ -1,748 +1,720 @@
 import { useState, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
-import { isNewlyRevisedApp } from "@/utils/revisedAppsMarker";
 import {
-  Star,
-  Layers,
-  FolderKanban,
   CheckSquare,
-  FileText,
-  Target,
-  Wallet,
-  CalendarDays,
-  Ticket,
-  Timer,
-  Grid2X2,
-  Bookmark,
-  NotebookText,
-  MessagesSquare,
-  Lightbulb,
-  Activity,
-  BookOpen,
-  Briefcase,
-  Users,
-  User,
-  Pocket,
-  ShoppingBag,
-  Vault,
-  Luggage,
-  Key,
-  Archive,
-  GraduationCap,
-  Globe,
-  Book,
-  Dumbbell,
-  Droplet,
-  PenTool,
-  Code,
-  Package,
-  Building,
   ShieldCheck,
-  Workflow,
-  LineChart,
-  RefreshCw,
-  Binary,
-  ShieldAlert,
-  Scale,
-  HeartHandshake,
-  Share2,
-  LayoutGrid,
-  TrendingUp,
-  FolderOpen,
-  ScrollText,
-  Shield,
-  HeartPulse,
-  CheckCircle2,
-  Gauge,
-  Calculator,
-  Navigation,
-  FileCheck,
-  Lock,
-  Zap,
+  PackageCheck,
+  CalendarDays,
   Clock,
+  CalendarRange,
+  GitCommit,
+  Hourglass,
+  FolderKanban,
+  Workflow,
+  Flag,
+  Users2,
+  Users,
   Compass,
-  Truck,
+  FileText,
+  Palette,
   Mail,
-  Database,
-  Scissors,
+  Network,
+  Truck,
+  DollarSign,
+  TrendingUp,
+  BarChart3,
+  Bookmark,
+  FileCheck,
+  ClipboardList,
+  FormInput,
+  Search,
+  Bell,
+  AlarmClock,
+  Timer,
+  Flame,
+  CheckCircle2,
+  Lock,
+  CreditCard,
+  Receipt,
+  Layers,
+  Star,
+  ArrowRight,
+  Briefcase,
   type LucideIcon,
 } from "lucide-react";
-import { navKonsultan, type NavItem } from "@/config/nav";
 
-type LauncherItem =
-  | { type: "app"; item: NavItem }
-  | { type: "folder"; id: string; title: string; items: NavItem[] };
+export interface StandaloneSubFeature {
+  title: string;
+  to: string;
+  icon: LucideIcon;
+}
+
+export type ProductivityCategoryGroup =
+  | "all"
+  | "task-workflow"
+  | "planning-timeline"
+  | "collaboration-ops"
+  | "analytics-standards"
+  | "utilities-finance";
+
+export interface StandaloneProductivityAppDef {
+  id: string;
+  to: string;
+  title: string;
+  subtitle: string;
+  category: "task-workflow" | "planning-timeline" | "collaboration-ops" | "analytics-standards" | "utilities-finance";
+  categoryLabel: string;
+  icon: LucideIcon;
+  badge?: string;
+  features?: StandaloneSubFeature[];
+}
+
+export const STANDALONE_PRODUCTIVITY_APPS: StandaloneProductivityAppDef[] = [
+  // 1. Task Manager (Standalone)
+  {
+    id: "task-manager",
+    to: "/task-manager",
+    title: "Task Manager",
+    subtitle: "Sistem eksekusi tugas, to-do harian, checklist prioritas, dan filter penugasan kerja.",
+    category: "task-workflow",
+    categoryLabel: "Task & Workflow",
+    icon: CheckSquare,
+    badge: "Standalone",
+  },
+  // 2. Approval Manager (Standalone)
+  {
+    id: "approval-manager",
+    to: "/approval-manager",
+    title: "Approval Manager",
+    subtitle: "Pusat persetujuan dokumen, review pengajuan klien, otorisasi anggaran, dan sign-off formal.",
+    category: "task-workflow",
+    categoryLabel: "Task & Workflow",
+    icon: ShieldCheck,
+    badge: "Standalone",
+  },
+  // 3. Deliverable Manager (Standalone)
+  {
+    id: "deliverable-manager",
+    to: "/deliverable-manager",
+    title: "Deliverable Manager",
+    subtitle: "Pelacakan output deliverable proyek, status serah terima, revisi klien, dan kendali kualitas.",
+    category: "task-workflow",
+    categoryLabel: "Task & Workflow",
+    icon: PackageCheck,
+    badge: "Standalone",
+  },
+  // 4. Calendar (Standalone)
+  {
+    id: "calendar",
+    to: "/kalender",
+    title: "Calendar",
+    subtitle: "Kalender eksekutif terpadu, integrasi jadwal acara, deadline deliverable, dan agenda kerja.",
+    category: "planning-timeline",
+    categoryLabel: "Planning & Timeline",
+    icon: CalendarDays,
+    badge: "Standalone",
+  },
+  // 5. Planner (Standalone)
+  {
+    id: "planner",
+    to: "/planner",
+    title: "Planner",
+    subtitle: "Perencanaan harian & mingguan, time-blocking terfokus, target prioritas, dan refleksi produktivitas.",
+    category: "planning-timeline",
+    categoryLabel: "Planning & Timeline",
+    icon: Clock,
+    badge: "Standalone",
+  },
+  // 6. Schedule Manager (Standalone)
+  {
+    id: "schedule-manager",
+    to: "/schedule-manager",
+    title: "Schedule Manager",
+    subtitle: "Sinkronisasi slot ketersediaan, alokasi jam kerja tim, dan perencanaan jadwal multi-agenda.",
+    category: "planning-timeline",
+    categoryLabel: "Planning & Timeline",
+    icon: CalendarRange,
+    badge: "Standalone",
+  },
+  // 7. Timeline Manager (Standalone)
+  {
+    id: "timeline-manager",
+    to: "/timeline",
+    title: "Timeline Manager",
+    subtitle: "Visualisasi timeline kronologis, ketergantungan fase kerja, dan lintasan waktu capaian proyek.",
+    category: "planning-timeline",
+    categoryLabel: "Planning & Timeline",
+    icon: GitCommit,
+    badge: "Standalone",
+  },
+  // 8. Countdown (Standalone)
+  {
+    id: "countdown",
+    to: "/countdown",
+    title: "Countdown",
+    subtitle: "Pelacak hitung mundur waktu peluncuran, tenggat rilis kritis, batas penawaran, dan hari H.",
+    category: "planning-timeline",
+    categoryLabel: "Planning & Timeline",
+    icon: Hourglass,
+    badge: "Standalone",
+  },
+  // 9. Project Manager (Standalone)
+  {
+    id: "project-manager",
+    to: "/proyek",
+    title: "Project Manager",
+    subtitle: "Manajemen portofolio proyek strategis, alokasi scope, monitoring milestone, dan dashboard progres.",
+    category: "task-workflow",
+    categoryLabel: "Task & Workflow",
+    icon: FolderKanban,
+    badge: "Standalone",
+  },
+  // 10. Workflow Manager (Standalone) + Review dan Retrospective
+  {
+    id: "workflow-manager",
+    to: "/workflow-manager",
+    title: "Workflow Manager",
+    subtitle: "Automasi alur kerja operasional, standardisasi tahapan pipeline, serta evaluasi retrospektif.",
+    category: "task-workflow",
+    categoryLabel: "Task & Workflow",
+    icon: Workflow,
+    badge: "Standalone",
+    features: [
+      { title: "Review dan Retrospective", to: "/lainnya?app=retro", icon: FileText },
+    ],
+  },
+  // 11. Milestone Manager (Standalone) + Milestone dan Roadmap
+  {
+    id: "milestone-manager",
+    to: "/milestone-manager",
+    title: "Milestone Manager",
+    subtitle: "Pelacakan titik pencapaian penting, fase keberhasilan proyek, dan peta jalan jangka panjang.",
+    category: "planning-timeline",
+    categoryLabel: "Planning & Timeline",
+    icon: Flag,
+    badge: "Standalone",
+    features: [
+      { title: "Milestone dan Roadmap", to: "/lainnya?app=roadmap", icon: Compass },
+    ],
+  },
+  // 12. Meeting Manager (Standalone) + Risalah Rapat (Minutes)
+  {
+    id: "meeting-manager",
+    to: "/meeting-manager",
+    title: "Meeting Manager",
+    subtitle: "Pengorganisasian agenda rapat, koordinasi peserta, serta penyimpanan notula & aksi tindak lanjut.",
+    category: "collaboration-ops",
+    categoryLabel: "Collaboration & Ops",
+    icon: Users2,
+    badge: "Standalone",
+    features: [
+      { title: "Risalah Rapat (Minutes)", to: "/lainnya?app=minutes", icon: FileText },
+    ],
+  },
+  // 13. Collaboration (Standalone) + Whiteboard/Canvas & Agenda Surat
+  {
+    id: "collaboration",
+    to: "/collaboration",
+    title: "Collaboration",
+    subtitle: "Ruang kolaborasi lintas fungsi, papan kanvas brainstorming, serta korespondensi surat masuk-keluar.",
+    category: "collaboration-ops",
+    categoryLabel: "Collaboration & Ops",
+    icon: Users,
+    badge: "Standalone",
+    features: [
+      { title: "Whiteboard dan Canvas", to: "/lainnya?app=canvas", icon: Palette },
+      { title: "Agenda Surat dan Ekspedisi", to: "/lainnya?app=mailroom", icon: Mail },
+    ],
+  },
+  // 14. Interaction Manager (Standalone)
+  {
+    id: "interaction-manager",
+    to: "/interaction-manager",
+    title: "Interaction Manager",
+    subtitle: "Rekam jejak riwayat komunikasi, pertemuan konsultasi, poin pembicaraan penting, dan tindak lanjut.",
+    category: "collaboration-ops",
+    categoryLabel: "Collaboration & Ops",
+    icon: Network,
+    badge: "Standalone",
+  },
+  // 15. Resource Manager (Standalone) + Vendor & Daftar Tarif
+  {
+    id: "resource-manager",
+    to: "/resource-manager",
+    title: "Resource Manager",
+    subtitle: "Manajemen aset sumber daya manusia, alat kerja spesialis, direktori vendor rekanan, dan rate card jasa.",
+    category: "collaboration-ops",
+    categoryLabel: "Collaboration & Ops",
+    icon: Briefcase,
+    badge: "Standalone",
+    features: [
+      { title: "Vendor dan Pemasok", to: "/lainnya?app=vendors", icon: Truck },
+      { title: "Daftar Tarif dan Jasa", to: "/lainnya?app=services-ratecard", icon: DollarSign },
+    ],
+  },
+  // 16. People Manager (Standalone) + Workload dan Capacity
+  {
+    id: "people-manager-prod",
+    to: "/people-manager",
+    title: "People Manager",
+    subtitle: "Pengelolaan direktori tim profesional, struktur peran organisasi, beban kerja, dan analisis kapasitas.",
+    category: "collaboration-ops",
+    categoryLabel: "Collaboration & Ops",
+    icon: Users,
+    badge: "Standalone",
+    features: [
+      { title: "Workload dan Capacity", to: "/lainnya?app=workload", icon: BarChart3 },
+    ],
+  },
+  // 17. Goal Manager (Standalone)
+  {
+    id: "goal-manager",
+    to: "/goal-manager",
+    title: "Goal Manager",
+    subtitle: "Penetapan sasaran kinerja strategis, framework OKR/KPI, dan monitoring progres pencapaian kuartal.",
+    category: "analytics-standards",
+    categoryLabel: "Analytics & Standards",
+    icon: TrendingUp,
+    badge: "Standalone",
+  },
+  // 18. Statistics (Standalone)
+  {
+    id: "statistics",
+    to: "/statistics",
+    title: "Statistics",
+    subtitle: "Analitik metrik produktivitas kerja, rasio penyelesaian tugas, velocity tim, dan visualisasi kinerja.",
+    category: "analytics-standards",
+    categoryLabel: "Analytics & Standards",
+    icon: BarChart3,
+    badge: "Standalone",
+  },
+  // 19. Template Manager (Standalone) + SOP Baku & Template Dokumen
+  {
+    id: "template-manager",
+    to: "/template-manager",
+    title: "Template Manager",
+    subtitle: "Penyimpanan standard operating procedures (SOP), format dokumen kerja resmi, dan standar mutu.",
+    category: "analytics-standards",
+    categoryLabel: "Analytics & Standards",
+    icon: Bookmark,
+    badge: "Standalone",
+    features: [
+      { title: "SOP dan Prosedur Baku", to: "/lainnya?app=sop", icon: FileCheck },
+      { title: "Template Dokumen Kerja", to: "/lainnya?app=templates", icon: ClipboardList },
+    ],
+  },
+  // 20. Forms (Standalone)
+  {
+    id: "forms",
+    to: "/forms",
+    title: "Forms",
+    subtitle: "Pembuat formulir survei digital, intake brief proyek, formulir feedback klien, dan kuesioner data.",
+    category: "analytics-standards",
+    categoryLabel: "Analytics & Standards",
+    icon: FormInput,
+    badge: "Standalone",
+  },
+  // 21. Search Manager (Standalone)
+  {
+    id: "search-manager",
+    to: "/search-manager",
+    title: "Search Manager",
+    subtitle: "Pencarian universal instan lintas tugas, deliverable, berkas, dokumen klien, dan riwayat arsip.",
+    category: "utilities-finance",
+    categoryLabel: "Utilities & Finance",
+    icon: Search,
+    badge: "Standalone",
+  },
+  // 22. Notification Center (Standalone)
+  {
+    id: "notification-center",
+    to: "/notification-center",
+    title: "Notification Center",
+    subtitle: "Pusat notifikasi peringatan deadline, update perubahan dokumen, reminder sistem, dan log aktivitas.",
+    category: "utilities-finance",
+    categoryLabel: "Utilities & Finance",
+    icon: Bell,
+    badge: "Standalone",
+  },
+  // 23. Reminder Manager (Standalone)
+  {
+    id: "reminder-manager",
+    to: "/reminder-manager",
+    title: "Reminder Manager",
+    subtitle: "Manajemen pengingat kustom berulang, alert tenggat penting, dan sinkronisasi follow-up berkala.",
+    category: "planning-timeline",
+    categoryLabel: "Planning & Timeline",
+    icon: AlarmClock,
+    badge: "Standalone",
+  },
+  // 24. Time Tracker (Standalone)
+  {
+    id: "time-tracker",
+    to: "/time-tracker",
+    title: "Time Tracker",
+    subtitle: "Pelacakan durasi jam kerja, timesheet penagihan klien, dan audit efisiensi waktu tugas.",
+    category: "utilities-finance",
+    categoryLabel: "Utilities & Finance",
+    icon: Timer,
+    badge: "Standalone",
+  },
+  // 25. Focus Timer (Standalone)
+  {
+    id: "focus-timer",
+    to: "/focus-timer",
+    title: "Focus Timer",
+    subtitle: "Sesi konsentrasi Pomodoro, interval deep work terstruktur, dan pemulihan fokus mental eksekutif.",
+    category: "utilities-finance",
+    categoryLabel: "Utilities & Finance",
+    icon: Flame,
+    badge: "Standalone",
+  },
+  // 26. Habit Tracker (Standalone)
+  {
+    id: "habit-tracker",
+    to: "/habit-tracker",
+    title: "Habit Tracker",
+    subtitle: "Pembangunan disiplin rutinitas harian, rekor streak kebiasaan positif, dan konsistensi jangka panjang.",
+    category: "utilities-finance",
+    categoryLabel: "Utilities & Finance",
+    icon: CheckCircle2,
+    badge: "Standalone",
+  },
+  // 27. Asset Manager (Standalone) + Access dan Key Directory
+  {
+    id: "asset-manager",
+    to: "/asset-manager",
+    title: "Asset Manager",
+    subtitle: "Inventarisasi aset fisik & perangkat digital kerja, lisensi perangkat lunak, dan repositori hak akses.",
+    category: "utilities-finance",
+    categoryLabel: "Utilities & Finance",
+    icon: Lock,
+    badge: "Standalone",
+    features: [
+      { title: "Access dan Key Directory", to: "/lainnya?app=access-matrix", icon: Lock },
+    ],
+  },
+  // 28. Subscription Manager (Standalone)
+  {
+    id: "subscription-manager",
+    to: "/subscription-manager",
+    title: "Subscription Manager",
+    subtitle: "Monitoring langganan software/SaaS perusahaan, jadwal siklus perpanjangan, dan audit biaya recurring.",
+    category: "utilities-finance",
+    categoryLabel: "Utilities & Finance",
+    icon: CreditCard,
+    badge: "Standalone",
+  },
+  // 29. Expense Tracker (Standalone)
+  {
+    id: "expense-tracker",
+    to: "/expense-tracker",
+    title: "Expense Tracker",
+    subtitle: "Pencatatan pengeluaran operasional kerja, klaim reimburse proyek, bukti transfer, dan audit pos beban.",
+    category: "utilities-finance",
+    categoryLabel: "Utilities & Finance",
+    icon: Receipt,
+    badge: "Standalone",
+  },
+];
 
 interface ProductivitySectionProps {
-  page: {
+  page?: {
     title: string;
-    subCategories: { title: string; rawItems: NavItem[] }[];
+    subCategories: any[];
   };
   favorites: string[];
   toggleFavorite: (to: string) => void;
-  setActiveFolder: (folder: { id: string; title: string; items: NavItem[] } | null) => void;
+  setActiveFolder?: (folder: any) => void;
   getGradient: (name: string) => string;
-  FolderTile: React.ComponentType<{
-    folder: { id: string; title: string; items: NavItem[] };
-    onClick: () => void;
-  }>;
-}
-
-export type MainCategoryTab =
-  | "all"
-  | "personal-productivity"
-  | "knowledge-information"
-  | "work-operations"
-  | "business-operations"
-  | "ownership-security";
-
-export interface ProductivityCategory {
-  id: string;
-  title: string;
-  group: Exclude<MainCategoryTab, "all">;
-  icon: LucideIcon;
-  getItems: () => LauncherItem[];
+  FolderTile?: any;
 }
 
 export function ProductivitySection({
   favorites,
   toggleFavorite,
-  setActiveFolder,
   getGradient,
-  FolderTile,
 }: ProductivitySectionProps) {
-  const [mainTab, setMainTab] = useState<MainCategoryTab>("all");
-  const [activeSpecific, setActiveSpecific] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState<ProductivityCategoryGroup>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Flattened nav items lookup map
-  const allNavMap = useMemo(() => {
-    const map = new Map<string, NavItem>();
-    navKonsultan.forEach((g) => {
-      g.items.forEach((item) => {
-        if (!map.has(item.to)) {
-          map.set(item.to, item);
-        }
-      });
+  const filteredApps = useMemo(() => {
+    return STANDALONE_PRODUCTIVITY_APPS.filter((app) => {
+      const matchCategory = activeTab === "all" || app.category === activeTab;
+      const q = searchQuery.toLowerCase().trim();
+      const matchQuery =
+        !q ||
+        app.title.toLowerCase().includes(q) ||
+        app.subtitle.toLowerCase().includes(q) ||
+        app.features?.some((f) => f.title.toLowerCase().includes(q));
+      return matchCategory && matchQuery;
     });
-    return map;
-  }, []);
+  }, [activeTab, searchQuery]);
 
-  const resolveApp = (to: string, label: string, icon: LucideIcon): LauncherItem => {
-    const found = allNavMap.get(to);
-    return {
-      type: "app",
-      item: found || { to, label, icon },
-    };
-  };
-
-  // Categories list matching user's requested structure:
-  // Personal Productivity, Knowledge and Information, Work Operations, Business Operations, Ownership and Security
-  const PRODUCTIVITY_CATEGORIES: ProductivityCategory[] = useMemo(() => {
-    return [
-      // 1. Personal Productivity
-      {
-        id: "cat-planning-scheduling",
-        title: "Planning and Scheduling",
-        group: "personal-productivity",
-        icon: CalendarDays,
-        getItems: () => [
-          resolveApp("/kalender", "Calendar", CalendarDays),
-          resolveApp("/planner", "Planner", Clock),
-          resolveApp("/reminder-manager", "Reminder Manager", Clock),
-          resolveApp("/pomodoro", "Focus Timer", Timer),
-          resolveApp("/eisenhower", "Eisenhower Matrix", Grid2X2),
-          resolveApp("/countdown", "Countdown", Timer),
-        ],
-      },
-      {
-        id: "cat-tasks-projects",
-        title: "Tasks and Projects",
-        group: "personal-productivity",
-        icon: CheckSquare,
-        getItems: () => [
-          resolveApp("/task-manager", "Task Manager", CheckSquare),
-          resolveApp("/kanban", "Kanban Board", LayoutGrid),
-          resolveApp("/timeline", "Timeline Manager", Compass),
-          resolveApp("/proyek", "Project Manager", CheckCircle2),
-          resolveApp("/proyek-personal", "Personal Projects", FolderKanban),
-          resolveApp("/lainnya?app=roadmap", "Milestone & Roadmap", Compass),
-        ],
-      },
-      {
-        id: "cat-goals-habits",
-        title: "Goals and Habits",
-        group: "personal-productivity",
-        icon: Target,
-        getItems: () => [
-          resolveApp("/goal-manager", "Goals & Target", Target),
-          resolveApp("/habits", "Habit Tracker", Activity),
-          resolveApp("/lainnya?app=retro", "Review & Retrospective", RefreshCw),
-          resolveApp("/journal", "Journal Harian", BookOpen),
-          resolveApp("/health", "Health & Vitalitas", HeartPulse),
-          resolveApp("/workouts", "Workouts", Dumbbell),
-          resolveApp("/water", "Water Tracker", Droplet),
-        ],
-      },
-
-      // 2. Knowledge and Information
-      {
-        id: "cat-notes-ideas",
-        title: "Notes and Ideas",
-        group: "knowledge-information",
-        icon: NotebookText,
-        getItems: () => [
-          resolveApp("/notes", "Notes", FileText),
-          resolveApp("/documents", "Documents", FileCheck),
-          resolveApp("/database", "Database", Database),
-          resolveApp("/catatan", "Catatan Cepat", NotebookText),
-          resolveApp("/ideas", "Ideas & Gagasan", Lightbulb),
-          resolveApp("/lainnya?app=canvas", "Whiteboard & Canvas", LayoutGrid),
-          resolveApp("/writing", "Writing & Drafts", PenTool),
-        ],
-      },
-      {
-        id: "cat-research-reference",
-        title: "Research and Reference",
-        group: "knowledge-information",
-        icon: BookOpen,
-        getItems: () => [
-          resolveApp("/wiki", "Wiki Engine", BookOpen),
-          resolveApp("/knowledge-base", "Knowledge Base", BookOpen),
-          resolveApp("/research-manager", "Research Manager", Compass),
-          resolveApp("/web-clipper", "Web Clipper", Scissors),
-          resolveApp("/reading", "Reading List", Book),
-          resolveApp("/bookmarks", "Bookmarks & Tautan", Bookmark),
-          resolveApp("/incoterms", "Panduan Incoterms", Navigation),
-          resolveApp("/courses", "Courses & Pelatihan", GraduationCap),
-          resolveApp("/flashcards", "Flashcards Belajar", Layers),
-          resolveApp("/languages", "Languages", Globe),
-        ],
-      },
-
-      // 3. Work Operations
-      {
-        id: "cat-work-planning",
-        title: "Work Planning",
-        group: "work-operations",
-        icon: FolderKanban,
-        getItems: () => [
-          resolveApp("/lainnya?app=workload", "Workload & Capacity", Gauge),
-          resolveApp("/tugas", "Manajemen Tugas", CheckCircle2),
-        ],
-      },
-      {
-        id: "cat-workflow-management",
-        title: "Workflow Management",
-        group: "work-operations",
-        icon: Workflow,
-        getItems: () => [
-          resolveApp("/workflow-manager", "Workflow Manager", Workflow),
-          resolveApp("/deliverable-manager", "Deliverable Manager", FileCheck),
-          resolveApp("/forms", "Forms", FileText),
-          resolveApp("/statistics", "Statistics", LineChart),
-          resolveApp("/lainnya?app=sop", "SOP & Prosedur Baku", ShieldCheck),
-          resolveApp("/portal.progres", "Progres & Tahapan", Workflow),
-          resolveApp("/reports", "Laporan Kerja", NotebookText),
-          resolveApp("/terminal", "Terminal Eksekusi", Binary),
-          resolveApp("/shortcut", "Pintasan Kerja", Zap),
-        ],
-      },
-      {
-        id: "cat-professional-resources",
-        title: "Professional Resources",
-        group: "work-operations",
-        icon: Briefcase,
-        getItems: () => [
-          resolveApp("/lainnya?app=templates", "Template Dokumen Kerja", FileText),
-          resolveApp("/code", "Code & Dev Tools", Code),
-          resolveApp("/design", "Design & Sketsa", PenTool),
-          resolveApp("/exams", "Uji Kompetensi", FileText),
-        ],
-      },
-
-      // 4. Business Operations
-      {
-        id: "cat-clients-vendors",
-        title: "Clients and Vendors",
-        group: "business-operations",
-        icon: Users,
-        getItems: () => [
-          resolveApp("/contacts", "Kontak & CRM", Users),
-          resolveApp("/lainnya?app=vendors", "Vendor & Pemasok", Truck),
-          resolveApp("/portal.pesan", "Pesan Klien", MessagesSquare),
-          resolveApp("/klien", "Klien & Partner", HeartHandshake),
-          resolveApp("/portal", "Portal Kolaborasi", Share2),
-          resolveApp("/portal.jadwal", "Jadwal Pertemuan Mitra", CalendarDays),
-        ],
-      },
-      {
-        id: "cat-products-services",
-        title: "Products and Services",
-        group: "business-operations",
-        icon: Package,
-        getItems: () => [
-          resolveApp("/katalog-produk", "Katalog Produk", Package),
-          resolveApp("/lainnya?app=services-ratecard", "Daftar Tarif & Jasa", ScrollText),
-          resolveApp("/inventory", "Inventory & Stok", Archive),
-          resolveApp("/portal.dokumen", "Spesifikasi Produk", FileText),
-        ],
-      },
-      {
-        id: "cat-administration-governance",
-        title: "Administration and Governance",
-        group: "business-operations",
-        icon: Building,
-        getItems: () => [
-          resolveApp("/meeting-manager", "Meeting Manager", Users),
-          resolveApp("/collaboration", "Collaboration", ShieldCheck),
-          resolveApp("/search-manager", "Search Manager", Compass),
-          resolveApp("/lainnya?app=mailroom", "Agenda Surat & Ekspedisi", Mail),
-          resolveApp("/lainnya?app=minutes", "Risalah Rapat (Minutes)", ScrollText),
-          resolveApp("/kalkulator", "Kalkulator Bisnis", Calculator),
-          resolveApp("/profil", "Profil Bisnis & Identitas", Building),
-        ],
-      },
-
-      // 5. Ownership and Security
-      {
-        id: "cat-digital-assets",
-        title: "Digital Assets",
-        group: "ownership-security",
-        icon: Wallet,
-        getItems: () => [
-          resolveApp("/digital-assets", "Aset Digital & Lisensi", Globe),
-          resolveApp("/wallet", "Dompet Digital", Wallet),
-          resolveApp("/trunk", "Trunk Penyimpanan", Luggage),
-          resolveApp("/pouch", "Pouch Dokumen Digital", ShoppingBag),
-          resolveApp("/pocket", "Pocket Berkas", Pocket),
-        ],
-      },
-      {
-        id: "cat-access-storage",
-        title: "Access and Storage",
-        group: "ownership-security",
-        icon: ShieldCheck,
-        getItems: () => [
-          resolveApp("/lainnya?app=access-matrix", "Access & Key Directory", Shield),
-          resolveApp("/passwords", "Passwords & Kredensial", Key),
-          resolveApp("/vault", "Vault Enkripsi", Vault),
-        ],
-      },
-    ];
-  }, [allNavMap]);
-
-  // Aggregate items per tab
-  const defaultItemsForTab = useMemo(() => {
-    const collectItems = (group?: Exclude<MainCategoryTab, "all">) => {
-      const cats = group
-        ? PRODUCTIVITY_CATEGORIES.filter((c) => c.group === group)
-        : PRODUCTIVITY_CATEGORIES;
-      const seen = new Set<string>();
-      const list: LauncherItem[] = [];
-
-      cats.forEach((cat) => {
-        cat.getItems().forEach((entry) => {
-          if (entry.type === "app" && !seen.has(entry.item.to)) {
-            seen.add(entry.item.to);
-            list.push(entry);
-          }
-        });
-      });
-      return list;
-    };
-
-    return {
-      all: collectItems(),
-      "personal-productivity": collectItems("personal-productivity"),
-      "knowledge-information": collectItems("knowledge-information"),
-      "work-operations": collectItems("work-operations"),
-      "business-operations": collectItems("business-operations"),
-      "ownership-security": collectItems("ownership-security"),
-    };
-  }, [PRODUCTIVITY_CATEGORIES]);
-
-  // Displayed items in right grid
-  const displayedItems: LauncherItem[] = useMemo(() => {
-    if (activeSpecific !== "all") {
-      const cat = PRODUCTIVITY_CATEGORIES.find((c) => c.id === activeSpecific);
-      return cat ? cat.getItems() : [];
-    }
-    return defaultItemsForTab[mainTab];
-  }, [activeSpecific, mainTab, PRODUCTIVITY_CATEGORIES, defaultItemsForTab]);
-
-  const activeCategoryTitle = useMemo(() => {
-    if (activeSpecific === "all") return null;
-    return PRODUCTIVITY_CATEGORIES.find((c) => c.id === activeSpecific)?.title || null;
-  }, [activeSpecific, PRODUCTIVITY_CATEGORIES]);
-
-  // Counts for main top pills
-  const totalCountAll = defaultItemsForTab.all.length;
-  const totalCountPersonal = defaultItemsForTab["personal-productivity"].length;
-  const totalCountKnowledge = defaultItemsForTab["knowledge-information"].length;
-  const totalCountWork = defaultItemsForTab["work-operations"].length;
-  const totalCountBusiness = defaultItemsForTab["business-operations"].length;
-  const totalCountOwnership = defaultItemsForTab["ownership-security"].length;
+  const countAll = STANDALONE_PRODUCTIVITY_APPS.length;
+  const countTaskWorkflow = STANDALONE_PRODUCTIVITY_APPS.filter(
+    (a) => a.category === "task-workflow"
+  ).length;
+  const countPlanningTimeline = STANDALONE_PRODUCTIVITY_APPS.filter(
+    (a) => a.category === "planning-timeline"
+  ).length;
+  const countCollabOps = STANDALONE_PRODUCTIVITY_APPS.filter(
+    (a) => a.category === "collaboration-ops"
+  ).length;
+  const countAnalytics = STANDALONE_PRODUCTIVITY_APPS.filter(
+    (a) => a.category === "analytics-standards"
+  ).length;
+  const countUtilities = STANDALONE_PRODUCTIVITY_APPS.filter(
+    (a) => a.category === "utilities-finance"
+  ).length;
 
   return (
     <div className="w-full flex flex-col items-center">
       {/* Title & Description */}
-      <div className="text-center mb-[calc(1.5rem+10pt)]">
+      <div className="text-center mb-6">
         <h3 className="text-2xl sm:text-3xl font-bold text-foreground/90 tracking-tight flex items-center justify-center gap-2">
-          <span>Productivity<span className="font-normal">,</span> Operations<span className="font-normal">, and</span> Ownership</span>
+          <span>Productivity and Operations</span>
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-[calc(0.25rem+10pt)] max-w-xl mx-auto">
-          A Unified Workspace Built to Empower You and Yours.
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 max-w-xl mx-auto">
+          29 Standalone Apps Terintegrasi — Eksekusi Tugas, Jadwal, Kolaborasi, Analitik, dan Utilitas Kerja.
         </p>
       </div>
 
-      {/* Main Level Pills di Atas */}
-      <div className="flex flex-wrap items-center justify-center gap-2.5 w-full mb-[calc(2rem+10pt)]">
-        {/* Semua */}
+      {/* Main Filter Tabs */}
+      <div className="flex flex-wrap items-center justify-center gap-2.5 w-full mb-6">
         <button
-          onClick={() => {
-            setMainTab("all");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("all")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "all"
+            activeTab === "all"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <Layers className="size-4 shrink-0" />
-          <span>Semua</span>
+          <span>Semua App</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "all"
+              activeTab === "all"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountAll}
+            {countAll}
           </span>
         </button>
 
-        {/* Personal Productivity */}
         <button
-          onClick={() => {
-            setMainTab("personal-productivity");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("task-workflow")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "personal-productivity"
+            activeTab === "task-workflow"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <User className="size-4 shrink-0" />
-          <span>Personal Productivity</span>
+          <CheckSquare className="size-4 shrink-0" />
+          <span>Task & Workflow</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "personal-productivity"
+              activeTab === "task-workflow"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountPersonal}
+            {countTaskWorkflow}
           </span>
         </button>
 
-        {/* Knowledge and Information */}
         <button
-          onClick={() => {
-            setMainTab("knowledge-information");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("planning-timeline")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "knowledge-information"
+            activeTab === "planning-timeline"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <BookOpen className="size-4 shrink-0" />
-          <span>Knowledge and Information</span>
+          <CalendarDays className="size-4 shrink-0" />
+          <span>Planning & Timeline</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "knowledge-information"
+              activeTab === "planning-timeline"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountKnowledge}
+            {countPlanningTimeline}
           </span>
         </button>
 
-        {/* Work Operations */}
         <button
-          onClick={() => {
-            setMainTab("work-operations");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("collaboration-ops")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "work-operations"
+            activeTab === "collaboration-ops"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <Briefcase className="size-4 shrink-0" />
-          <span>Work Operations</span>
+          <Users className="size-4 shrink-0" />
+          <span>Collaboration & Ops</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "work-operations"
+              activeTab === "collaboration-ops"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountWork}
+            {countCollabOps}
           </span>
         </button>
 
-        {/* Business Operations */}
         <button
-          onClick={() => {
-            setMainTab("business-operations");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("analytics-standards")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "business-operations"
+            activeTab === "analytics-standards"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <Building className="size-4 shrink-0" />
-          <span>Business Operations</span>
+          <BarChart3 className="size-4 shrink-0" />
+          <span>Analytics & Standards</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "business-operations"
+              activeTab === "analytics-standards"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountBusiness}
+            {countAnalytics}
           </span>
         </button>
 
-        {/* Ownership and Security */}
         <button
-          onClick={() => {
-            setMainTab("ownership-security");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("utilities-finance")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "ownership-security"
+            activeTab === "utilities-finance"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <ShieldCheck className="size-4 shrink-0" />
-          <span>Ownership and Security</span>
+          <Timer className="size-4 shrink-0" />
+          <span>Utilities & Tracker</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "ownership-security"
+              activeTab === "utilities-finance"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountOwnership}
+            {countUtilities}
           </span>
         </button>
       </div>
 
-      {/* 12-Column Container */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 max-w-[1640px] mx-auto w-full mb-[10pt] items-start">
-        {/* LEFT: 3 Columns Space */}
-        <div className="xl:col-span-3 w-full flex flex-col items-center xl:items-start">
-          <div
-            className="w-full flex flex-col gap-1.5 max-h-[720px] overflow-y-auto px-1 py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {/* Option Semua untuk Tab yang Aktif */}
-            <button
-              onClick={() => setActiveSpecific("all")}
-              className={`w-full text-left px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
-                activeSpecific === "all"
-                  ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
-                  : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
-              }`}
+      {/* Standalone Apps Cards Grid */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {filteredApps.map((app) => {
+          const isFav = favorites.includes(app.to);
+          const gradient = getGradient(app.title);
+          const Icon = app.icon;
+
+          return (
+            <div
+              key={app.id}
+              className="rounded-2xl border border-border bg-card p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-4 group"
             >
-              <div className="flex items-center gap-2 min-w-0">
-                <Layers className="size-3.5 shrink-0" />
-                <span className="truncate">Semua</span>
-              </div>
-              <span
-                className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
-                  activeSpecific === "all"
-                    ? "bg-primary-foreground/20 text-primary-foreground"
-                    : "bg-background/80 text-muted-foreground"
-                }`}
-              >
-                {mainTab === "all"
-                  ? totalCountAll
-                  : mainTab === "personal-productivity"
-                  ? totalCountPersonal
-                  : mainTab === "knowledge-information"
-                  ? totalCountKnowledge
-                  : mainTab === "work-operations"
-                  ? totalCountWork
-                  : mainTab === "business-operations"
-                  ? totalCountBusiness
-                  : totalCountOwnership}
-              </span>
-            </button>
-
-            {/* Specific Categories filtered by mainTab */}
-            {PRODUCTIVITY_CATEGORIES.filter((cat) => {
-              if (mainTab === "all") return true;
-              return cat.group === mainTab;
-            }).map((cat) => {
-              const Icon = cat.icon;
-              const isActive = activeSpecific === cat.id;
-              const count = cat.getItems().length;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveSpecific(cat.id)}
-                  className={`w-full text-left px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
-                      : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
-                  }`}
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <Icon className="size-3.5 shrink-0" />
-                    <span className="truncate">{cat.title}</span>
-                  </div>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
-                      isActive
-                        ? "bg-primary-foreground/20 text-primary-foreground"
-                        : "bg-background/80 text-muted-foreground"
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* RIGHT: 9 Columns Grid for Apps (Tepat 9 apps mendatar per baris on xl!) */}
-        <div className="xl:col-span-9 w-full flex flex-col gap-4">
-          {/* Breadcrumb / Active Category Path */}
-          <div className="flex items-center justify-between px-1 py-1 text-xs border-b border-border/40 pb-2.5">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="font-semibold text-foreground/90">
-                {mainTab === "all"
-                  ? "Semua"
-                  : mainTab === "personal-productivity"
-                  ? "Personal Productivity"
-                  : mainTab === "knowledge-information"
-                  ? "Knowledge and Information"
-                  : mainTab === "work-operations"
-                  ? "Work Operations"
-                  : mainTab === "business-operations"
-                  ? "Business Operations"
-                  : "Ownership and Security"}
-              </span>
-              {activeCategoryTitle && (
-                <>
-                  <span className="text-muted-foreground">/</span>
-                  <span className="font-medium text-primary">{activeCategoryTitle}</span>
-                </>
-              )}
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-muted-foreground font-medium">{displayedItems.length} modul</span>
-            </div>
-          </div>
-
-          {/* Launcher Grid - Exactly 9 apps horizontal on xl! */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-x-3 gap-y-6 place-items-start w-full">
-            {displayedItems.length === 0 ? (
-              <div className="col-span-full py-16 text-center text-sm text-muted-foreground italic w-full">
-                Tidak ada modul yang ditemukan dalam filter ini.
-              </div>
-            ) : (
-              displayedItems.map((entry) => {
-                if (entry.type === "folder") {
-                  return (
-                    <FolderTile
-                      key={entry.id}
-                      folder={entry}
-                      onClick={() => setActiveFolder(entry)}
-                    />
-                  );
-                }
-
-                const item = entry.item;
-                const isRevised = isNewlyRevisedApp(item.to, item.label);
-                const gradient = isRevised ? "" : getGradient(item.label);
-                const isFav = favorites.includes(item.to);
-                const itemPath = item.to.split("?")[0];
-                const itemSearch = item.to.includes("?")
-                  ? Object.fromEntries(new URLSearchParams(item.to.split("?")[1]))
-                  : undefined;
-
-                return (
+              <div>
+                {/* Header: Icon, Title & Standalone Badge */}
+                <div className="flex items-start justify-between gap-3">
                   <Link
-                    key={item.to}
-                    to={itemPath}
-                    search={itemSearch as any}
-                    className="flex flex-col items-center gap-2 group w-full outline-none relative"
-                    title={isRevised ? `${item.label} (Tanda Sementara: Modul Baru Direvisi)` : item.label}
+                    to={app.to}
+                    className="flex items-center gap-3.5 group/header min-w-0 flex-1 outline-none"
                   >
                     <div
-                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 relative ${
-                        isRevised
-                          ? "bg-card text-foreground border-2 border-border dark:border-border shadow-md ring-2 ring-white/60"
-                          : `${gradient} text-white`
-                      }`}
+                      className={`h-12 w-12 rounded-2xl flex items-center justify-center text-white shadow-xs shrink-0 ${gradient} group-hover/header:scale-105 transition-transform`}
                     >
-                      <item.icon
-                        className={`size-7 sm:size-8 ${
-                          isRevised
-                            ? "text-foreground drop-shadow-none"
-                            : "opacity-90 drop-shadow-sm text-white"
-                        }`}
-                        strokeWidth={isRevised ? 2 : 1.5}
-                      />
-
-                      {/* Tanda Sementara badge */}
-                      {isRevised && (
-                        <span
-                          className="absolute -top-1 -left-1 size-2.5 rounded-full bg-card border border-border shadow-xs"
-                          title="Tanda Sementara"
-                        />
-                      )}
-
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleFavorite(item.to);
-                        }}
-                        className={`absolute -top-2 -right-2 p-1.5 rounded-full bg-background border shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 scale-90 hover:scale-110 cursor-pointer ${
-                          isFav ? "opacity-100" : ""
-                        }`}
-                        aria-label="Favorit"
-                      >
-                        <Star
-                          className={`size-3 sm:size-3.5 transition-colors ${
-                            isFav ? "fill-amber-400 text-amber-400" : "text-muted-foreground"
-                          }`}
-                        />
-                      </button>
+                      <Icon className="h-6 w-6 opacity-90 drop-shadow-sm" strokeWidth={1.75} />
                     </div>
-                    <span className="text-[11px] text-foreground/90 font-medium text-center line-clamp-2 leading-tight px-0.5 group-hover:text-foreground">
-                      {item.label}
-                    </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-bold text-base text-foreground group-hover/header:text-primary transition-colors truncate">
+                          {app.title}
+                        </h4>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-primary/10 text-primary shrink-0 uppercase tracking-wide">
+                          Standalone
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-muted-foreground capitalize">
+                        Kategori: {app.categoryLabel}
+                      </span>
+                    </div>
                   </Link>
-                );
-              })
-            )}
-          </div>
-        </div>
+
+                  {/* Favorite Button */}
+                  <button
+                    onClick={() => toggleFavorite(app.to)}
+                    className="p-1.5 rounded-xl border border-border/60 hover:bg-muted/60 text-muted-foreground hover:text-amber-400 transition-colors cursor-pointer"
+                    title={isFav ? "Hapus dari Favorit" : "Tambah ke Favorit"}
+                  >
+                    <Star
+                      className={`size-4 ${
+                        isFav ? "fill-amber-400 text-amber-400" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* Subtitle */}
+                <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
+                  {app.subtitle}
+                </p>
+
+                {/* Sub-Features Chips (If any) */}
+                {app.features && app.features.length > 0 && (
+                  <div className="mt-4 pt-3 border-t border-border/60">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Fitur di Dalamnya ({app.features.length}):
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {app.features.map((feat, idx) => {
+                        const FeatIcon = feat.icon;
+                        const featPath = feat.to.split("?")[0];
+                        const featSearch = feat.to.includes("?")
+                          ? Object.fromEntries(new URLSearchParams(feat.to.split("?")[1]))
+                          : undefined;
+
+                        return (
+                          <Link
+                            key={idx}
+                            to={featPath}
+                            search={featSearch as any}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30"
+                          >
+                            <FeatIcon size={12} className="text-primary shrink-0" />
+                            <span>{feat.title}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom Quick Open Link */}
+              <div className="border-t border-border/50 pt-3 flex items-center justify-between text-xs">
+                <span className="text-muted-foreground text-[11px]">
+                  {app.features ? `${app.features.length} sub-modul terpadu` : "Modul mandiri"}
+                </span>
+
+                <Link
+                  to={app.to}
+                  className="font-semibold text-primary flex items-center gap-1 hover:underline"
+                >
+                  <span>Buka App</span>
+                  <ArrowRight size={13} />
+                </Link>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

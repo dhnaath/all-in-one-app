@@ -63,7 +63,7 @@ export function TimelineApp() {
       {/* LEFT SIDEBAR: Timeline Controls & Critical Path */}
       <ShellSidebar>
         {/* Header */}
-        <div className="p-4 border-b border-border flex items-center gap-2.5">
+        <div className="p-4 border-b border-border flex items-center gap-2.5 mt-1.5">
           <div className="w-8 h-8 rounded-xl bg-card border-2 border-border shadow-xs flex items-center justify-center text-foreground shrink-0">
             <CalendarDays className="w-4 h-4 text-foreground" />
           </div>

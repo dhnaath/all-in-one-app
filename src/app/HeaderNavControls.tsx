@@ -1,14 +1,23 @@
-import React from "react";
-import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Home } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowLeft, ArrowRight, RotateCw } from "lucide-react";
 
-export function HeaderNavControls({
-  href = "/home",
-  isHomeActive = false,
-}: {
-  href?: string;
-  isHomeActive?: boolean;
-}) {
+export function HeaderNavControls() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsRefreshing(true);
+
+    // Kirim event refresh ke aplikasi jika ada modul yang mendengarkan
+    window.dispatchEvent(new CustomEvent("app-refresh"));
+
+    // Trigger router/window refresh halus
+    setTimeout(() => {
+      window.location.reload();
+    }, 150);
+  };
+
   const handleUndo = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -74,23 +83,19 @@ export function HeaderNavControls({
         <ArrowLeft size={19} className="shrink-0" />
       </button>
 
-      {/* Ikon Home: Beranda */}
-      {isHomeActive ? (
-        <span
-          className="p-1.5 sm:p-2 rounded-lg shrink-0 transition-colors bg-accent text-foreground flex items-center justify-center cursor-default"
-          title="Beranda"
-        >
-          <Home size={19} className="shrink-0" />
-        </span>
-      ) : (
-        <Link
-          to={href}
-          className="p-1.5 sm:p-2 rounded-lg shrink-0 transition-colors text-muted-foreground hover:text-foreground hover:bg-accent flex items-center justify-center cursor-pointer"
-          title="Beranda"
-        >
-          <Home size={19} className="shrink-0" />
-        </Link>
-      )}
+      {/* Ikon Refresh: Menggantikan Home di antara panah kiri dan kanan */}
+      <button
+        type="button"
+        onClick={handleRefresh}
+        className="p-1.5 sm:p-2 rounded-lg shrink-0 transition-colors text-muted-foreground hover:text-foreground hover:bg-accent flex items-center justify-center cursor-pointer"
+        title="Muat Ulang / Refresh Halaman"
+        aria-label="Refresh"
+      >
+        <RotateCw
+          size={18}
+          className={`shrink-0 transition-transform duration-500 ${isRefreshing ? "animate-spin text-primary" : ""}`}
+        />
+      </button>
 
       {/* Panah Kanan: Redo */}
       <button

@@ -1,671 +1,412 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import {
-  Star,
-  Layers,
+  Briefcase,
   Users,
   Home,
-  Globe,
-  Briefcase,
-  Ticket,
-  CalendarDays,
-  Wallet,
-  Plane,
-  Utensils,
-  ShoppingCart,
   Coins,
-  HeartHandshake,
-  ShieldCheck,
-  Shield,
-  Network,
-  MessagesSquare,
   Building2,
-  Share2,
-  BookOpen,
-  NotebookText,
-  FileText,
-  Pocket,
-  Vault,
-  Heart,
-  Timer,
-  Lightbulb,
-  CloudSun,
-  Scale,
-  FolderKanban,
-  CheckSquare,
-  Key,
-  FileCheck,
-  PhoneCall,
-  Gift,
-  History,
-  ArrowRightLeft,
   GitFork,
+  Scale,
   Archive,
+  HeartHandshake,
+  Network,
+  PhoneCall,
+  ArrowRightLeft,
+  Gift,
   PartyPopper,
+  CalendarDays,
   Megaphone,
   CreditCard,
   ScrollText,
   Compass,
-  ShieldAlert,
+  FileCheck,
   Receipt,
+  Heart,
+  Star,
+  Layers,
+  ArrowRight,
+  Search,
   type LucideIcon,
 } from "lucide-react";
-import { navKonsultan, type NavItem } from "@/config/nav";
+import { type NavItem } from "@/config/nav";
 
-type LauncherItem =
-  | { type: "app"; item: NavItem }
-  | { type: "folder"; id: string; title: string; items: NavItem[] };
+interface StandaloneFeature {
+  title: string;
+  to: string;
+  icon: LucideIcon;
+}
+
+export type PeopleCategoryTab =
+  | "all"
+  | "kemitraan"
+  | "keluarga"
+  | "komunitas"
+  | "sosial";
+
+export interface StandalonePeopleAppDef {
+  id: string;
+  to: string;
+  title: string;
+  subtitle: string;
+  category: "kemitraan" | "keluarga" | "komunitas" | "sosial";
+  categoryLabel: string;
+  icon: LucideIcon;
+  badge?: string;
+  features?: StandaloneFeature[];
+}
+
+export const STANDALONE_PEOPLE_APPS: StandalonePeopleAppDef[] = [
+  // 1. Klien dan Partner (Standalone)
+  {
+    id: "klien",
+    to: "/klien",
+    title: "Klien dan Partner",
+    subtitle:
+      "Sistem manajemen hubungan klien profesional, profil PIC, portofolio engagement proyek, dan portal kolaborasi terintegrasi.",
+    category: "kemitraan",
+    categoryLabel: "Kemitraan & Bisnis",
+    icon: Briefcase,
+    badge: "Standalone",
+    features: [
+      { title: "Portal Kolaborasi", to: "/portal", icon: Building2 },
+    ],
+  },
+
+  // 2. People Manager (Standalone)
+  {
+    id: "people-manager",
+    to: "/people-manager",
+    title: "People Manager",
+    subtitle:
+      "Pusat kendali ekosistem keluarga besar, lingkaran relasi sosial, aturan rumah tangga, dokumen KK, dan momen penting kerabat.",
+    category: "keluarga",
+    categoryLabel: "Keluarga & Relasi",
+    icon: Users,
+    badge: "Standalone",
+    features: [
+      { title: "Silsilah Keluarga", to: "/lainnya?app=family-tree", icon: GitFork },
+      { title: "Aturan dan Kesepakatan Rumah", to: "/lainnya?app=family-rules", icon: Scale },
+      { title: "Arsip Akta dan Dokumen KK", to: "/lainnya?app=family-archive", icon: Archive },
+      { title: "Golongan Darah dan Alergi", to: "/lainnya?app=medical-family", icon: HeartHandshake },
+      { title: "Lingkaran Relasi (Circles)", to: "/lainnya?app=circle-groups", icon: Network },
+      { title: "Pengingat Silaturahmi", to: "/lainnya?app=catchup-cadence", icon: PhoneCall },
+      { title: "Pinjam Meminjam Barang", to: "/lainnya?app=borrowed-items", icon: ArrowRightLeft },
+      { title: "Pencatat Kado dan Hadiah", to: "/lainnya?app=gift-tracker", icon: Gift },
+      { title: "Perencana Reuni dan Arisan", to: "/lainnya?app=reunion-planner", icon: PartyPopper },
+      { title: "Ulang Tahun dan Hari Jadi", to: "/lainnya?app=family-anniversary", icon: CalendarDays },
+    ],
+  },
+
+  // 3. Komunitas Warga (Standalone)
+  {
+    id: "komunitas-warga",
+    to: "/komunitas-warga",
+    title: "Komunitas Warga",
+    subtitle:
+      "Platform rukun tetangga & warga pemukiman: buku warga RT/RW, transparansi iuran, pengumuman, kepatuhan sipil, dan layanan publik.",
+    category: "komunitas",
+    categoryLabel: "Komunitas & Publik",
+    icon: Home,
+    badge: "Standalone",
+    features: [
+      { title: "Buku Warga RT RW", to: "/lainnya?app=rt-rw-directory", icon: Users },
+      { title: "Papan Pengumuman Warga", to: "/lainnya?app=community-announcements", icon: Megaphone },
+      { title: "KTA dan Kartu Anggota", to: "/lainnya?app=membership-card", icon: CreditCard },
+      { title: "Hasil Keputusan Rapat", to: "/lainnya?app=meeting-resolutions", icon: ScrollText },
+      { title: "Panduan Layanan Publik", to: "/lainnya?app=public-services-guide", icon: Compass },
+      { title: "Kalender Pemilu dan Libur", to: "/lainnya?app=civic-calendar", icon: CalendarDays },
+      { title: "Administrasi Kependudukan", to: "/lainnya?app=civil-registry", icon: FileCheck },
+      { title: "PBB dan Iuran Warga", to: "/lainnya?app=tax-civic", icon: Receipt },
+    ],
+  },
+
+  // 4. Zakat dan Sedekah (Standalone)
+  {
+    id: "zakat",
+    to: "/zakat",
+    title: "Zakat dan Sedekah",
+    subtitle:
+      "Kalkulator kepatuhan syariah zakat maal, penghasilan, dan fitrah dengan transparansi catatan donasi infaq dan relawan kemanusiaan.",
+    category: "sosial",
+    categoryLabel: "Zakat & Filantropi",
+    icon: Coins,
+    badge: "Standalone",
+    features: [
+      { title: "Catatan Infaq dan Donasi", to: "/lainnya?app=donation-tracker", icon: Coins },
+      { title: "Relawan dan Bakti Sosial", to: "/lainnya?app=volunteer-log", icon: Heart },
+    ],
+  },
+];
 
 interface PeopleFamilySocietySectionProps {
-  page: {
+  page?: {
     title: string;
     subCategories: { title: string; rawItems: NavItem[] }[];
   };
   favorites: string[];
   toggleFavorite: (to: string) => void;
-  setActiveFolder: (folder: { id: string; title: string; items: NavItem[] } | null) => void;
+  setActiveFolder?: (folder: any) => void;
   getGradient: (name: string) => string;
-  FolderTile: React.ComponentType<{
-    folder: { id: string; title: string; items: NavItem[] };
-    onClick: () => void;
-  }>;
-}
-
-export type MainPeopleTab =
-  | "all"
-  | "people-relationships"
-  | "family-management"
-  | "community-membership"
-  | "society-public";
-
-interface SpecificCategory {
-  id: string;
-  title: string;
-  group: Exclude<MainPeopleTab, "all">;
-  icon: LucideIcon;
-  getItems: () => LauncherItem[];
+  FolderTile?: any;
 }
 
 export function PeopleFamilySocietySection({
   favorites,
   toggleFavorite,
-  setActiveFolder,
   getGradient,
-  FolderTile,
 }: PeopleFamilySocietySectionProps) {
-  const [mainTab, setMainTab] = useState<MainPeopleTab>("all");
-  const [activeSpecific, setActiveSpecific] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState<PeopleCategoryTab>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Quick lookup helper for NavItem from navKonsultan
-  const allNavMap = useMemo(() => {
-    const map = new Map<string, NavItem>();
-    navKonsultan.forEach((group) => {
-      group.items.forEach((item) => {
-        if (!map.has(item.to)) {
-          map.set(item.to, item);
-        }
-      });
+  const filteredApps = useMemo(() => {
+    return STANDALONE_PEOPLE_APPS.filter((app) => {
+      const matchCategory = activeTab === "all" || app.category === activeTab;
+      const q = searchQuery.toLowerCase().trim();
+      const matchQuery =
+        !q ||
+        app.title.toLowerCase().includes(q) ||
+        app.subtitle.toLowerCase().includes(q) ||
+        app.features?.some((f) => f.title.toLowerCase().includes(q));
+      return matchCategory && matchQuery;
     });
-    return map;
-  }, []);
+  }, [activeTab, searchQuery]);
 
-  const resolveApp = (to: string, label: string, icon: LucideIcon): LauncherItem => {
-    const found = allNavMap.get(to);
-    return {
-      type: "app",
-      item: found || { to, label, icon },
-    };
-  };
-
-  // Specific Categories Definitions based on user request:
-  // 1. People and Relationships
-  //    - Contacts
-  //    - Communication
-  //    - Relationship History
-  // 2. Family Management
-  //    - Family Organization
-  //    - Family Records
-  //    - Family Events
-  // 3. Community and Membership
-  //    - Community
-  //    - Organizations
-  //    - Social Contributions
-  // 4. Society and Public
-  //    - Public Information
-  //    - Public Safety
-  //    - Compliance
-  const specificCategories: SpecificCategory[] = useMemo(() => {
-    return [
-      // 1. People and Relationships
-      {
-        id: "cat-contacts",
-        title: "Contacts",
-        group: "people-relationships",
-        icon: Users,
-        getItems: () => [
-          resolveApp("/contacts", "Kontak & CRM", Users),
-          resolveApp("/lainnya?app=circle-groups", "Lingkaran Relasi (Circles)", Network),
-          resolveApp("/klien", "Klien & Partner", Briefcase),
-          resolveApp("/contacts?tab=vip", "Direktori Kontak Penting", Users),
-          resolveApp("/profil", "Kartu Nama & Identitas", Users),
-        ],
-      },
-      {
-        id: "cat-communication",
-        title: "Communication",
-        group: "people-relationships",
-        icon: MessagesSquare,
-        getItems: () => [
-          resolveApp("/lainnya?app=catchup-cadence", "Pengingat Silaturahmi", PhoneCall),
-          resolveApp("/lainnya?app=gift-tracker", "Pencatat Kado & Hadiah", Gift),
-          resolveApp("/portal.pesan", "Pesan & Korespondensi", MessagesSquare),
-          resolveApp("/portal", "Portal Kolaborasi", Building2),
-          resolveApp("/notes", "Catatan Komunikasi Bersama", NotebookText),
-          resolveApp("/portal.jadwal", "Jadwal Pertemuan Mitra", CalendarDays),
-        ],
-      },
-      {
-        id: "cat-relationship-history",
-        title: "Relationship History",
-        group: "people-relationships",
-        icon: CalendarDays,
-        getItems: () => [
-          resolveApp("/lainnya?app=interaction-timeline", "Timeline Pertemuan", History),
-          resolveApp("/lainnya?app=borrowed-items", "Pinjam Meminjam Barang", ArrowRightLeft),
-          resolveApp("/kalender", "Riwayat Pertemuan & Acara", Ticket),
-          resolveApp("/journal", "Jurnal Interaksi & Relasi", BookOpen),
-          resolveApp("/catatan", "Catatan Relasi & Notula", NotebookText),
-        ],
-      },
-
-      // 2. Family Management
-      {
-        id: "cat-family-organization",
-        title: "Family Organization",
-        group: "family-management",
-        icon: Home,
-        getItems: () => [
-          resolveApp("/lainnya?app=family-tree", "Silsilah Keluarga (Tree)", GitFork),
-          resolveApp("/lainnya?app=family-rules", "Aturan & Kesepakatan Rumah", Scale),
-          resolveApp("/shopping", "Belanja Kebutuhan Domestik", ShoppingCart),
-          resolveApp("/proyek", "Proyek & Urusan Keluarga", FolderKanban),
-          resolveApp("/task-manager", "Daftar Tugas Domestik", CheckSquare),
-        ],
-      },
-      {
-        id: "cat-family-records",
-        title: "Family Records",
-        group: "family-management",
-        icon: FileText,
-        getItems: () => [
-          resolveApp("/lainnya?app=family-archive", "Arsip Akta & Dokumen KK", Archive),
-          resolveApp("/lainnya?app=medical-family", "Golongan Darah & Alergi", HeartHandshake),
-          resolveApp("/pocket", "Dokumen & Arsip Keluarga", Pocket),
-          resolveApp("/vault", "Berkas Keluarga Terenkripsi", Vault),
-          resolveApp("/health", "Catatan Kesehatan Keluarga", Heart),
-          resolveApp("/recipes", "Resep Warisan Keluarga", Utensils),
-        ],
-      },
-      {
-        id: "cat-family-events",
-        title: "Family Events",
-        group: "family-management",
-        icon: Plane,
-        getItems: () => [
-          resolveApp("/lainnya?app=reunion-planner", "Perencana Reuni & Arisan", PartyPopper),
-          resolveApp("/lainnya?app=family-anniversary", "Ulang Tahun & Hari Jadi", CalendarDays),
-          resolveApp("/trips", "Liburan & Perjalanan Bersama", Plane),
-          resolveApp("/countdown", "Ulang Tahun & Milestones", Timer),
-        ],
-      },
-
-      // 3. Community and Membership
-      {
-        id: "cat-community",
-        title: "Community",
-        group: "community-membership",
-        icon: Globe,
-        getItems: () => [
-          resolveApp("/lainnya?app=rt-rw-directory", "Buku Warga RT/RW", Users),
-          resolveApp("/lainnya?app=community-announcements", "Papan Pengumuman Warga", Megaphone),
-        ],
-      },
-      {
-        id: "cat-organizations",
-        title: "Organizations",
-        group: "community-membership",
-        icon: Building2,
-        getItems: () => [
-          resolveApp("/lainnya?app=membership-card", "KTA & Kartu Anggota", CreditCard),
-          resolveApp("/lainnya?app=meeting-resolutions", "Hasil Keputusan Rapat", ScrollText),
-        ],
-      },
-      {
-        id: "cat-social-contributions",
-        title: "Social Contributions",
-        group: "community-membership",
-        icon: HeartHandshake,
-        getItems: () => [
-          resolveApp("/lainnya?app=volunteer-log", "Jam Relawan & Bakti Sosial", Heart),
-          resolveApp("/lainnya?app=donation-tracker", "Catatan Infaq & Donasi", Coins),
-          resolveApp("/portal.dokumen", "Arsip Laporan Kontribusi", FileText),
-          resolveApp("/reports", "Laporan Partisipasi Warga", FileCheck),
-        ],
-      },
-
-      // 4. Society and Public
-      {
-        id: "cat-public-information",
-        title: "Public Information",
-        group: "society-public",
-        icon: Globe,
-        getItems: () => [
-          resolveApp("/lainnya?app=public-services-guide", "Panduan Layanan Publik", Compass),
-          resolveApp("/lainnya?app=civic-calendar", "Kalender Pemilu & Libur", CalendarDays),
-          resolveApp("/bookmarks", "Portal Informasi Publik & Berita", Globe),
-          resolveApp("/weather", "Informasi Cuaca & Lingkungan", CloudSun),
-          resolveApp("/reading", "Katalog & Referensi Warga", BookOpen),
-        ],
-      },
-      {
-        id: "cat-public-safety",
-        title: "Public Safety",
-        group: "society-public",
-        icon: ShieldCheck,
-        getItems: () => [
-          resolveApp("/lainnya?app=disaster-prep", "Tas Siaga & Jalur Evakuasi", ShieldAlert),
-          resolveApp("/lainnya?app=emergency-broadcast", "Nomor Darurat 112 & Damkar", PhoneCall),
-          resolveApp("/passwords", "Keamanan Identitas & Akses", Key),
-        ],
-      },
-      {
-        id: "cat-compliance",
-        title: "Compliance",
-        group: "society-public",
-        icon: Scale,
-        getItems: () => [
-          resolveApp("/lainnya?app=civil-registry", "Administrasi Kependudukan", FileCheck),
-          resolveApp("/lainnya?app=tax-civic", "PBB, Retribusi & Iuran Warga", Receipt),
-        ],
-      },
-    ];
-  }, [allNavMap]);
-
-  // Aggregate items per tab
-  const defaultItemsForTab = useMemo(() => {
-    const collectItems = (groupName?: Exclude<MainPeopleTab, "all">) => {
-      const cats = groupName
-        ? specificCategories.filter((c) => c.group === groupName)
-        : specificCategories;
-      const seen = new Set<string>();
-      const items: LauncherItem[] = [];
-
-      cats.forEach((cat) => {
-        cat.getItems().forEach((entry) => {
-          if (entry.type === "app") {
-            if (!seen.has(entry.item.to)) {
-              seen.add(entry.item.to);
-              items.push(entry);
-            }
-          } else {
-            if (!seen.has(entry.id)) {
-              seen.add(entry.id);
-              items.push(entry);
-            }
-          }
-        });
-      });
-
-      return items;
-    };
-
-    return {
-      all: collectItems(),
-      "people-relationships": collectItems("people-relationships"),
-      "family-management": collectItems("family-management"),
-      "community-membership": collectItems("community-membership"),
-      "society-public": collectItems("society-public"),
-    };
-  }, [specificCategories]);
-
-  // Items currently displayed
-  const displayedItems = useMemo(() => {
-    if (activeSpecific !== "all") {
-      const selected = specificCategories.find((c) => c.id === activeSpecific);
-      return selected ? selected.getItems() : [];
-    }
-    return defaultItemsForTab[mainTab];
-  }, [activeSpecific, mainTab, specificCategories, defaultItemsForTab]);
-
-  const activeCategoryTitle = useMemo(() => {
-    if (activeSpecific === "all") return null;
-    const cat = specificCategories.find((c) => c.id === activeSpecific);
-    return cat ? cat.title : null;
-  }, [activeSpecific, specificCategories]);
-
-  // Counts
-  const totalCountAll = defaultItemsForTab.all.length;
-  const totalCountPeople = defaultItemsForTab["people-relationships"].length;
-  const totalCountFamily = defaultItemsForTab["family-management"].length;
-  const totalCountCommunity = defaultItemsForTab["community-membership"].length;
-  const totalCountSociety = defaultItemsForTab["society-public"].length;
+  const countAll = STANDALONE_PEOPLE_APPS.length;
+  const countKemitraan = STANDALONE_PEOPLE_APPS.filter((a) => a.category === "kemitraan").length;
+  const countKeluarga = STANDALONE_PEOPLE_APPS.filter((a) => a.category === "keluarga").length;
+  const countKomunitas = STANDALONE_PEOPLE_APPS.filter((a) => a.category === "komunitas").length;
+  const countSosial = STANDALONE_PEOPLE_APPS.filter((a) => a.category === "sosial").length;
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* Title & Description with non-bold comma and "and" */}
-      <div className="text-center mb-[calc(1.5rem+10pt)]">
+      {/* Title & Description */}
+      <div className="text-center mb-6">
         <h3 className="text-2xl sm:text-3xl font-bold text-foreground/90 tracking-tight flex items-center justify-center gap-2">
-          <span>People<span className="font-normal">,</span> Family<span className="font-normal">, and</span> Society</span>
+          <span>
+            People<span className="font-normal">,</span> Family
+            <span className="font-normal">, and</span> Society
+          </span>
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-[calc(0.25rem+10pt)] max-w-xl mx-auto">
-          A Unified Approach Built to Strengthen Connections and Relationships.
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 max-w-xl mx-auto">
+          4 Standalone Apps Terintegrasi — Klien & Partner, People Manager, Komunitas Warga, serta Zakat & Sedekah.
         </p>
       </div>
 
-      {/* Main Level Pills di Atas */}
-      <div className="flex flex-wrap items-center justify-center gap-2.5 w-full mb-[calc(2rem+10pt)]">
-        {/* Semua */}
+      {/* Main Filter Tabs */}
+      <div className="flex flex-wrap items-center justify-center gap-2.5 w-full mb-6">
         <button
-          onClick={() => {
-            setMainTab("all");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("all")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "all"
+            activeTab === "all"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <Layers className="size-4 shrink-0" />
-          <span>Semua</span>
+          <span>Semua App</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "all"
+              activeTab === "all"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountAll}
+            {countAll}
           </span>
         </button>
 
-        {/* People and Relationships */}
         <button
-          onClick={() => {
-            setMainTab("people-relationships");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("kemitraan")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "people-relationships"
+            activeTab === "kemitraan"
+              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
+              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
+          }`}
+        >
+          <Briefcase className="size-4 shrink-0" />
+          <span>Kemitraan</span>
+          <span
+            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+              activeTab === "kemitraan"
+                ? "bg-primary-foreground/20 text-primary-foreground"
+                : "bg-background/80 text-muted-foreground"
+            }`}
+          >
+            {countKemitraan}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("keluarga")}
+          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+            activeTab === "keluarga"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <Users className="size-4 shrink-0" />
-          <span>People and Relationships</span>
+          <span>Keluarga & Relasi</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "people-relationships"
+              activeTab === "keluarga"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountPeople}
+            {countKeluarga}
           </span>
         </button>
 
-        {/* Family Management */}
         <button
-          onClick={() => {
-            setMainTab("family-management");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("komunitas")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "family-management"
+            activeTab === "komunitas"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
           <Home className="size-4 shrink-0" />
-          <span>Family Management</span>
+          <span>Komunitas Warga</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "family-management"
+              activeTab === "komunitas"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountFamily}
+            {countKomunitas}
           </span>
         </button>
 
-        {/* Community and Membership */}
         <button
-          onClick={() => {
-            setMainTab("community-membership");
-            setActiveSpecific("all");
-          }}
+          onClick={() => setActiveTab("sosial")}
           className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "community-membership"
+            activeTab === "sosial"
               ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
               : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
           }`}
         >
-          <Globe className="size-4 shrink-0" />
-          <span>Community and Membership</span>
+          <Coins className="size-4 shrink-0" />
+          <span>Zakat & Sosial</span>
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "community-membership"
+              activeTab === "sosial"
                 ? "bg-primary-foreground/20 text-primary-foreground"
                 : "bg-background/80 text-muted-foreground"
             }`}
           >
-            {totalCountCommunity}
-          </span>
-        </button>
-
-        {/* Society and Public */}
-        <button
-          onClick={() => {
-            setMainTab("society-public");
-            setActiveSpecific("all");
-          }}
-          className={`shrink-0 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-            mainTab === "society-public"
-              ? "bg-primary text-primary-foreground shadow-md scale-105 font-bold"
-              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-105"
-          }`}
-        >
-          <ShieldCheck className="size-4 shrink-0" />
-          <span>Society and Public</span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              mainTab === "society-public"
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-background/80 text-muted-foreground"
-            }`}
-          >
-            {totalCountSociety}
+            {countSosial}
           </span>
         </button>
       </div>
 
-      {/* 12-Column Container */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 max-w-[1640px] mx-auto w-full mb-[10pt] items-start">
-        {/* LEFT: 3 Columns Space */}
-        <div className="xl:col-span-3 w-full flex flex-col items-center xl:items-start">
-          <div
-            className="w-full flex flex-col gap-1.5 max-h-[720px] overflow-y-auto px-1 py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {/* Option Semua untuk Tab yang Aktif */}
-            <button
-              onClick={() => setActiveSpecific("all")}
-              className={`w-full text-left px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
-                activeSpecific === "all"
-                  ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
-                  : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
-              }`}
+      {/* Standalone Apps Cards Grid */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
+        {filteredApps.map((app) => {
+          const isFav = favorites.includes(app.to);
+          const gradient = getGradient(app.title);
+          const Icon = app.icon;
+
+          return (
+            <div
+              key={app.id}
+              className="rounded-2xl border border-border bg-card p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-4 group"
             >
-              <div className="flex items-center gap-2 min-w-0">
-                <Layers className="size-3.5 shrink-0" />
-                <span className="truncate">Semua</span>
-              </div>
-              <span
-                className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
-                  activeSpecific === "all"
-                    ? "bg-primary-foreground/20 text-primary-foreground"
-                    : "bg-background/80 text-muted-foreground"
-                }`}
-              >
-                {mainTab === "all"
-                  ? totalCountAll
-                  : mainTab === "people-relationships"
-                  ? totalCountPeople
-                  : mainTab === "family-management"
-                  ? totalCountFamily
-                  : mainTab === "community-membership"
-                  ? totalCountCommunity
-                  : totalCountSociety}
-              </span>
-            </button>
-
-            {/* Specific Categories filtered by mainTab */}
-            {specificCategories
-              .filter((cat) => {
-                if (mainTab === "all") return true;
-                return cat.group === mainTab;
-              })
-              .map((cat) => {
-                const Icon = cat.icon;
-                const count = cat.getItems().length;
-                const isActive = activeSpecific === cat.id;
-
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveSpecific(cat.id)}
-                    className={`w-full text-left px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer ${
-                      isActive
-                        ? "bg-primary text-primary-foreground shadow-sm font-semibold scale-[1.01]"
-                        : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <Icon className="size-3.5 shrink-0" />
-                      <span className="truncate">{cat.title}</span>
-                    </div>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
-                        isActive
-                          ? "bg-primary-foreground/20 text-primary-foreground"
-                          : "bg-background/80 text-muted-foreground"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-          </div>
-        </div>
-
-        {/* RIGHT: 9 Columns Grid for Apps */}
-        <div className="xl:col-span-9 w-full flex flex-col gap-4">
-          {/* Breadcrumb / Active Category Path */}
-          <div className="flex items-center justify-between px-1 py-1 text-xs border-b border-border/40 pb-2.5">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="font-semibold text-foreground/90">
-                {mainTab === "all"
-                  ? "Semua"
-                  : mainTab === "people-relationships"
-                  ? "People and Relationships"
-                  : mainTab === "family-management"
-                  ? "Family Management"
-                  : mainTab === "community-membership"
-                  ? "Community and Membership"
-                  : "Society and Public"}
-              </span>
-              {activeCategoryTitle && (
-                <>
-                  <span className="text-muted-foreground">/</span>
-                  <span className="font-medium text-primary">{activeCategoryTitle}</span>
-                </>
-              )}
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-muted-foreground font-medium">{displayedItems.length} modul</span>
-            </div>
-          </div>
-
-          {/* Launcher Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-x-3 gap-y-6 place-items-start w-full">
-            {displayedItems.length === 0 ? (
-              <div className="col-span-full py-16 text-center text-sm text-muted-foreground italic w-full">
-                Tidak ada modul yang ditemukan dalam filter ini.
-              </div>
-            ) : (
-              displayedItems.map((entry) => {
-                if (entry.type === "folder") {
-                  return (
-                    <FolderTile
-                      key={entry.id}
-                      folder={entry}
-                      onClick={() => setActiveFolder(entry)}
-                    />
-                  );
-                }
-
-                const item = entry.item;
-                const gradient = getGradient(item.label);
-                const isFav = favorites.includes(item.to);
-                const itemPath = item.to.split("?")[0];
-                const itemSearch = item.to.includes("?")
-                  ? Object.fromEntries(new URLSearchParams(item.to.split("?")[1]))
-                  : undefined;
-
-                return (
+              <div>
+                {/* Header: Icon, Title & Standalone Badge */}
+                <div className="flex items-start justify-between gap-3">
                   <Link
-                    key={item.to}
-                    to={itemPath}
-                    search={itemSearch as any}
-                    className="flex flex-col items-center gap-2 group w-full outline-none relative"
+                    to={app.to}
+                    className="flex items-center gap-3.5 group/header min-w-0 flex-1 outline-none"
                   >
                     <div
-                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
+                      className={`h-12 w-12 rounded-2xl flex items-center justify-center text-white shadow-xs shrink-0 ${gradient} group-hover/header:scale-105 transition-transform`}
                     >
-                      <item.icon
-                        className="size-7 sm:size-8 opacity-90 drop-shadow-sm"
-                        strokeWidth={1.5}
-                      />
-
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleFavorite(item.to);
-                        }}
-                        className={`absolute -top-2 -right-2 p-1.5 rounded-full bg-background border shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 scale-90 hover:scale-110 cursor-pointer ${
-                          isFav ? "opacity-100" : ""
-                        }`}
-                        aria-label="Favorit"
-                      >
-                        <Star
-                          className={`size-3 sm:size-3.5 transition-colors ${
-                            isFav ? "fill-amber-400 text-amber-400" : "text-muted-foreground"
-                          }`}
-                        />
-                      </button>
+                      <Icon className="h-6 w-6 opacity-90 drop-shadow-sm" strokeWidth={1.75} />
                     </div>
-                    <span className="text-[11px] text-foreground/90 font-medium text-center line-clamp-2 leading-tight px-0.5 group-hover:text-foreground">
-                      {item.label}
-                    </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-bold text-base text-foreground group-hover/header:text-primary transition-colors truncate">
+                          {app.title}
+                        </h4>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-primary/10 text-primary shrink-0 uppercase tracking-wide">
+                          Standalone
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-muted-foreground capitalize">
+                        Kategori: {app.categoryLabel}
+                      </span>
+                    </div>
                   </Link>
-                );
-              })
-            )}
-          </div>
-        </div>
+
+                  {/* Favorite Button */}
+                  <button
+                    onClick={() => toggleFavorite(app.to)}
+                    className="p-1.5 rounded-xl border border-border/60 hover:bg-muted/60 text-muted-foreground hover:text-amber-400 transition-colors cursor-pointer"
+                    title={isFav ? "Hapus dari Favorit" : "Tambah ke Favorit"}
+                  >
+                    <Star
+                      className={`size-4 ${
+                        isFav ? "fill-amber-400 text-amber-400" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* Subtitle */}
+                <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
+                  {app.subtitle}
+                </p>
+
+                {/* Sub-Features Chips (If any) */}
+                {app.features && app.features.length > 0 && (
+                  <div className="mt-4 pt-3 border-t border-border/60">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Fitur di Dalamnya ({app.features.length}):
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {app.features.map((feat, idx) => {
+                        const FeatIcon = feat.icon;
+                        const featPath = feat.to.split("?")[0];
+                        const featSearch = feat.to.includes("?")
+                          ? Object.fromEntries(new URLSearchParams(feat.to.split("?")[1]))
+                          : undefined;
+
+                        return (
+                          <Link
+                            key={idx}
+                            to={featPath}
+                            search={featSearch as any}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted/60 hover:bg-primary/10 hover:text-primary text-[11px] font-medium text-foreground transition-all cursor-pointer border border-border/40 hover:border-primary/30"
+                          >
+                            <FeatIcon size={12} className="text-primary shrink-0" />
+                            <span>{feat.title}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom Quick Open Link */}
+              <div className="border-t border-border/50 pt-3 flex items-center justify-between text-xs">
+                <span className="text-muted-foreground text-[11px]">
+                  {app.features ? `${app.features.length} sub-modul terpadu` : "Modul mandiri"}
+                </span>
+
+                <Link
+                  to={app.to}
+                  className="font-semibold text-primary flex items-center gap-1 hover:underline"
+                >
+                  <span>Buka App</span>
+                  <ArrowRight size={13} />
+                </Link>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

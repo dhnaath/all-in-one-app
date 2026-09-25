@@ -1,5 +1,6 @@
 import { ShellHeader } from "@/app/shell-header";
 import React, { useState, useMemo } from "react";
+import { Link } from "@tanstack/react-router";
 import {
   Users,
   UserPlus,
@@ -28,6 +29,15 @@ import {
   Globe,
   Plus,
   MessageSquare,
+  GitFork,
+  Scale,
+  HeartHandshake,
+  PhoneCall,
+  ArrowRightLeft,
+  Gift,
+  PartyPopper,
+  CalendarDays,
+  Sparkles,
 } from "lucide-react";
 import { usePeopleStore } from "./store";
 import {
@@ -328,6 +338,46 @@ export function PeopleManagerApp() {
           </button>
         </div>
       </ShellHeader>
+
+      {/* 10 Integrated Sub-features Navigation Banner */}
+      <div className="rounded-xl border border-border/80 bg-muted/30 p-3.5 mb-2">
+        <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2.5 flex items-center gap-1.5">
+          <Sparkles className="size-3.5 text-indigo-500" />
+          <span>10 Fitur Terintegrasi People Manager:</span>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {[
+            { label: "Silsilah Keluarga", to: "/lainnya?app=family-tree", icon: GitFork },
+            { label: "Aturan & Kesepakatan Rumah", to: "/lainnya?app=family-rules", icon: Scale },
+            { label: "Arsip Akta & Dokumen KK", to: "/lainnya?app=family-archive", icon: Archive },
+            { label: "Golongan Darah & Alergi", to: "/lainnya?app=medical-family", icon: HeartHandshake },
+            { label: "Lingkaran Relasi (Circles)", to: "/lainnya?app=circle-groups", icon: Network },
+            { label: "Pengingat Silaturahmi", to: "/lainnya?app=catchup-cadence", icon: PhoneCall },
+            { label: "Pinjam Meminjam Barang", to: "/lainnya?app=borrowed-items", icon: ArrowRightLeft },
+            { label: "Pencatat Kado & Hadiah", to: "/lainnya?app=gift-tracker", icon: Gift },
+            { label: "Perencana Reuni & Arisan", to: "/lainnya?app=reunion-planner", icon: PartyPopper },
+            { label: "Ulang Tahun & Hari Jadi", to: "/lainnya?app=family-anniversary", icon: CalendarDays },
+          ].map((feat, i) => {
+            const Icon = feat.icon;
+            const featPath = feat.to.split("?")[0];
+            const featSearch = feat.to.includes("?")
+              ? Object.fromEntries(new URLSearchParams(feat.to.split("?")[1]))
+              : undefined;
+
+            return (
+              <Link
+                key={i}
+                to={featPath}
+                search={featSearch as any}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-background border border-border hover:border-indigo-500/50 hover:text-indigo-400 text-xs font-medium text-muted-foreground transition cursor-pointer shadow-2xs"
+              >
+                <Icon size={12} className="text-indigo-500 shrink-0" />
+                <span>{feat.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto py-3 border-b border-border/80 scrollbar-none">

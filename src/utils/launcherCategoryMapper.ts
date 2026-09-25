@@ -122,6 +122,9 @@ export function getPageIndexForApp(appPath: string): number {
 
   // Page 4: People, Family & Society
   if (
+    path.startsWith("/people-manager") ||
+    path.startsWith("/komunitas-warga") ||
+    path.startsWith("/zakat") ||
     path.startsWith("/contacts") ||
     path.startsWith("/klien") ||
     path.startsWith("/profil") ||

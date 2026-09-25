@@ -13,6 +13,7 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   PanelLeft,
   PanelRight,
+  PanelTop,
   LayoutDashboard,
   Terminal,
   Users,
@@ -336,7 +337,7 @@ const CATEGORY_META: Record<string, { icon: LucideIcon; accent: string }> = {
   "Academy & Tools": { icon: GraduationCap, accent: "text-sky-600 dark:text-sky-400" },
 };
 
-const SUPER_CATEGORIES = [
+export const SUPER_CATEGORIES = [
   { id: "All", label: "Semua", icon: LayoutDashboard },
   { id: "21 Kategori", label: "21 Kategori", icon: LayoutGrid },
   { id: "100 Framework", label: "100 Framework", icon: Grid2X2 },
@@ -432,14 +433,15 @@ export function AppShell({
 
   const isAppRoute = pathname !== "/";
   const [hasAppSidebar, setHasAppSidebar] = useState(false);
-  const [sidebarView, setSidebarView] = useState<"auto" | "browse">("auto");
+  const [sidebarView, setSidebarView] = useState<"auto" | "browse" | "favorites">("auto");
   useEffect(() => {
     setSidebarView("auto");
   }, [pathname]);
 
   const showAppCustomPortal = hasAppSidebar && sidebarView === "auto";
   const showDynamicAppFeatures = isAppRoute && !hasAppSidebar && sidebarView === "auto";
-  const showDefaultNav = (!hasAppSidebar && !showDynamicAppFeatures) || sidebarView === "browse";
+  const showFavorites = sidebarView === "favorites";
+  const showDefaultNav = sidebarView === "browse" || (sidebarView === "auto" && !hasAppSidebar && !showDynamicAppFeatures);
   const showAppSidebar = showAppCustomPortal;
   const shellSidebarCtx = useMemo(() => ({ setHasAppSidebar }), []);
 
@@ -638,6 +640,7 @@ export function AppShell({
   const [isExpandOpen, setIsExpandOpen] = useState(false);
   const [isRecentOpen, setIsRecentOpen] = useState(false);
   const [isTaskbarOpen, setIsTaskbarOpen] = useState(false);
+  const [isTopPanelOpen, setIsTopPanelOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Auto-record visited navigation into Recent
@@ -781,10 +784,10 @@ export function AppShell({
 
       <aside
         id="sidenavLeft"
-        className={`fixed inset-y-0 left-0 z-50 flex w-[300px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-300 ease-in-out ${openDrawer === "left" ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-[350px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-300 ease-in-out ${openDrawer === "left" ? "translate-x-0" : "-translate-x-full"}`}
       >
-        {/* Brand header (gaya remake) */}
-        <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border px-4 shrink-0">
+        {/* Brand header (gaya remake dengan aksen warna ribbon tanpa garis pemisah) */}
+        <div className="flex h-14 items-center gap-2.5 bg-sidebar-accent/30 px-4 shrink-0">
           <div className="grid h-8 w-8 place-items-center rounded-xl gradient-primary text-white shadow-md shadow-indigo-500/25 shrink-0">
             <Grid2X2 className="h-4 w-4" />
           </div>
@@ -794,50 +797,83 @@ export function AppShell({
               {contextCategory ? contextCategory : "Workspace Konsultan"}
             </p>
           </div>
-          <button
-            type="button"
-            className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors shrink-0"
-            onClick={() => setOpenDrawer(null)}
-            aria-label="Sembunyikan navigasi"
-            title="Sembunyikan sidebar"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <div className="flex items-center gap-1 shrink-0">
+            <Link
+              to="/"
+              className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${
+                pathname === "/"
+                  ? "bg-sidebar-accent text-primary font-bold"
+                  : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+              }`}
+              title="Ke Beranda (Home)"
+              aria-label="Ke Beranda"
+            >
+              <Home className="h-4 w-4" />
+            </Link>
+            <button
+              type="button"
+              className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors shrink-0"
+              onClick={() => setOpenDrawer(null)}
+              aria-label="Sembunyikan navigasi"
+              title="Sembunyikan sidebar"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
-        {/* View switcher: app-provided sidebar vs browse/navigation */}
-        <div className="flex items-center gap-1 px-3 py-2 border-b border-sidebar-border shrink-0">
+        {/* View switcher: Full-width Curved Ribbon/Folder Tab style (3 Tabs) */}
+        <div className="flex items-end w-full border-b border-sidebar-border bg-sidebar-accent/30 pt-2 shrink-0">
           <button
             type="button"
             onClick={() => setSidebarView("auto")}
-            className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] font-semibold transition-colors cursor-pointer ${
+            className={`relative flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 text-[11px] font-semibold transition-all cursor-pointer rounded-tl-none rounded-tr-xl -mb-px ${
               sidebarView === "auto"
-                ? "bg-primary/15 text-primary shadow-2xs font-bold"
-                : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                ? "bg-sidebar text-foreground font-bold border-t border-r border-l-0 border-b-0 border-sidebar-border shadow-[0_-2px_8px_rgba(0,0,0,0.03)] z-10"
+                : "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/50 border-t border-transparent border-b border-b-sidebar-border"
             }`}
           >
-            <Sparkles className="h-3.5 w-3.5 shrink-0" />
-            <span>{pathname === "/" ? "Launcher" : "Fitur App"}</span>
+            <Sparkles className={`h-3.5 w-3.5 shrink-0 ${sidebarView === "auto" ? "text-foreground" : "text-muted-foreground"}`} />
+            <span className="truncate">{pathname === "/" ? "Launcher" : "Fitur"}</span>
           </button>
           <button
             type="button"
             onClick={() => setSidebarView("browse")}
-            className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] font-semibold transition-colors cursor-pointer ${
+            className={`relative flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 text-[11px] font-semibold transition-all cursor-pointer rounded-t-xl -mb-px ${
               sidebarView === "browse"
-                ? "bg-primary/15 text-primary shadow-2xs font-bold"
-                : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                ? "bg-sidebar text-foreground font-bold border-t border-x border-b-0 border-sidebar-border shadow-[0_-2px_8px_rgba(0,0,0,0.03)] z-10"
+                : "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/50 border-t border-transparent border-b border-b-sidebar-border"
             }`}
           >
-            <LayoutGrid className="h-3.5 w-3.5 shrink-0" />
-            <span>Navigasi</span>
+            <LayoutGrid className={`h-3.5 w-3.5 shrink-0 ${sidebarView === "browse" ? "text-foreground" : "text-muted-foreground"}`} />
+            <span className="truncate">Navigasi</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSidebarView("favorites")}
+            className={`relative flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 text-[11px] font-semibold transition-all cursor-pointer rounded-tr-none rounded-tl-xl -mb-px ${
+              sidebarView === "favorites"
+                ? "bg-sidebar text-foreground font-bold border-t border-l border-r-0 border-b-0 border-sidebar-border shadow-[0_-2px_8px_rgba(0,0,0,0.03)] z-10"
+                : "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/50 border-t border-transparent border-b border-b-sidebar-border"
+            }`}
+          >
+            <Star className={`h-3.5 w-3.5 shrink-0 ${sidebarView === "favorites" ? "text-amber-500 fill-amber-500" : "text-muted-foreground"}`} />
+            <span className="truncate">Favorit</span>
+            {favorites.length > 0 && (
+              <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-bold leading-none shrink-0 ${
+                sidebarView === "favorites" ? "bg-amber-500/20 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"
+              }`}>
+                {favorites.length}
+              </span>
+            )}
           </button>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar px-3 py-4">
+        <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar px-3 pt-5 pb-4">
           {/* Slot untuk konten sidebar milik app (target portal ShellSidebar) */}
           <div
             id="shellSidebarSlot"
-            className={showAppCustomPortal ? "flex flex-col gap-1" : "hidden"}
+            className={showAppCustomPortal ? "flex flex-col gap-1 pt-1.5" : "hidden"}
           />
 
           {/* Dynamic App Feature Sidebar for apps without custom ShellSidebar */}
@@ -930,45 +966,6 @@ export function AppShell({
               </div>
             </div>
           )}
-
-          {/* Category switcher — follows the open app's context, user can override */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between px-2.5 pb-1.5">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                Kategori
-              </p>
-              {activeCategory !== "All" && (
-                <button
-                  type="button"
-                  onClick={() => setActiveCategory("All")}
-                  className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
-                >
-                  Lihat Semua
-                </button>
-              )}
-            </div>
-            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar px-1 pb-1">
-              {SUPER_CATEGORIES.map((cat) => {
-                const Icon = cat.icon;
-                const isActive = activeCategory === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={`shrink-0 flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[12px] font-medium border transition-colors ${
-                      isActive
-                        ? "border-primary/40 bg-primary/15 text-primary"
-                        : "border-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
-                    }`}
-                  >
-                    <Icon className="h-3.5 w-3.5 shrink-0" />
-                    <span>{cat.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
 
           {/* Rail Favorit (gaya remake) */}
           {favItems.length > 0 && (
@@ -1115,6 +1112,115 @@ export function AppShell({
           </nav>
             </>
           )}
+
+          {/* Favorit Tab Content */}
+          {showFavorites && (
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between px-1">
+                <div>
+                  <h3 className="text-xs font-bold text-foreground">Favorit & Akses Cepat</h3>
+                  <p className="text-[11px] text-muted-foreground">Aplikasi yang Anda sematkan</p>
+                </div>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                  {favorites.length} item
+                </span>
+              </div>
+
+              {favItems.length > 0 ? (
+                <div className="flex flex-col gap-1">
+                  {favItems.map((item) => {
+                    const FavIcon = item.icon || Star;
+                    const isActive = pathname === item.to || fullPath === item.to;
+                    return (
+                      <div
+                        key={item.to}
+                        className={`group flex items-center justify-between rounded-xl px-2.5 py-2 text-xs transition-colors ${
+                          isActive
+                            ? "bg-primary/15 text-primary font-semibold"
+                            : "text-foreground hover:bg-sidebar-accent"
+                        }`}
+                      >
+                        <Link
+                          to={item.to as any}
+                          onClick={() => setOpenDrawer(null)}
+                          className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer"
+                        >
+                          <div
+                            className={`grid h-7 w-7 place-items-center rounded-lg shrink-0 ${
+                              isActive
+                                ? "bg-primary/20 text-primary"
+                                : "bg-muted text-muted-foreground group-hover:text-foreground"
+                            }`}
+                          >
+                            <FavIcon className="h-4 w-4" />
+                          </div>
+                          <span className="truncate">{item.label}</span>
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => toggleFavorite(item.to)}
+                          className="p-1 rounded-lg text-amber-500 hover:bg-amber-500/15 transition-colors cursor-pointer shrink-0"
+                          title="Hapus dari Favorit"
+                        >
+                          <Star className="h-3.5 w-3.5 fill-amber-500" />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="rounded-xl border border-dashed border-border p-4 text-center">
+                  <Star className="h-6 w-6 text-muted-foreground mx-auto mb-2 opacity-50" />
+                  <p className="text-xs font-medium text-foreground">Belum ada item favorit</p>
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    Klik tanda bintang pada aplikasi atau daftar navigasi untuk menyematkannya di sini.
+                  </p>
+                </div>
+              )}
+
+              {/* Pintasan Utama */}
+              <div className="mt-2 pt-3 border-t border-border/60 flex flex-col gap-1">
+                <p className="px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Pintasan Cepat
+                </p>
+                <Link
+                  to="/"
+                  onClick={() => setOpenDrawer(null)}
+                  className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors cursor-pointer"
+                >
+                  <LayoutDashboard className="h-3.5 w-3.5 text-primary shrink-0" />
+                  <span>Launcher / Beranda Utama</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsTerminalOpen(true);
+                    setOpenDrawer(null);
+                  }}
+                  className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors cursor-pointer text-left w-full"
+                >
+                  <Terminal className="h-3.5 w-3.5 text-indigo-500 shrink-0" />
+                  <span>Command Center & Terminal</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Slot Area Kosong (Cadangan Kustomisasi) */}
+        <div id="leftSidebarCustomSlot" className="border-t border-sidebar-border bg-sidebar-accent/20 px-3 py-3 shrink-0">
+          <div className="rounded-xl border border-dashed border-sidebar-border/80 bg-sidebar/50 p-2.5 flex items-center justify-between gap-2 min-h-[50px] transition-colors">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="h-6 w-6 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                <Sparkles className="size-3.5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[11px] font-medium text-sidebar-foreground truncate">Slot Tambahan</p>
+                <p className="text-[10px] text-muted-foreground truncate">Area kosong siap diisi widget / modul</p>
+              </div>
+            </div>
+            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-muted/60 text-muted-foreground shrink-0 border border-border/40">+50px</span>
+          </div>
         </div>
       </aside>
 
@@ -1333,13 +1439,54 @@ export function AppShell({
           </div>
         </div>
       </aside>
-      <main id="mainContent" className={`relative flex flex-1 flex-col overflow-hidden transition-[margin] duration-300 ease-in-out ${openDrawer === "left" ? "lg:ml-[300px]" : "ml-0"} ${openDrawer === "right" ? "lg:mr-[300px]" : "mr-0"}`}>
+      <main id="mainContent" className={`relative flex flex-1 flex-col overflow-hidden transition-[margin] duration-300 ease-in-out ${openDrawer === "left" ? "lg:ml-[350px]" : "ml-0"} ${openDrawer === "right" ? "lg:mr-[300px]" : "mr-0"}`}>
         {openDrawer && (
           <div className="absolute inset-0 z-40 bg-black/40 transition-opacity duration-500 lg:hidden" onClick={() => setOpenDrawer(null)} />
         )}
         <header ref={headerRef as any} className="absolute top-0 inset-x-0 z-20 border-b border-border bg-background/80 backdrop-blur-xl shadow-xs">
+          {/* Top Panel Bar: Diposisikan di atas header utama dengan lebar sama persis dengan sidebar kiri (350px) */}
+          {isTopPanelOpen && (
+            <div className="w-full sm:w-[350px] border-b sm:border-r border-border/80 bg-sidebar/95 backdrop-blur-xl px-3.5 py-2.5 shadow-sm animate-in slide-in-from-top-2 duration-200">
+              <div className="flex items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="h-7 w-7 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                    <PanelTop size={15} />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[12px] font-bold text-foreground truncate">Top Panel</span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-primary/15 text-primary font-semibold shrink-0">350px</span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground truncate">
+                      Area panel atas selebar sidebar kiri
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setIsCommandPaletteOpen(true)}
+                    className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                    title="Pencarian Cepat (⌘K)"
+                  >
+                    <Search size={14} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsTopPanelOpen(false)}
+                    className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                    title="Tutup Panel Atas"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center justify-between gap-2 px-3 py-2 sm:px-5 sm:py-2 min-h-[50px]">
-            {/* Bagian Kiri Header: Nav Toggle (semua ukuran) + Nav Controls (Undo, Home, Redo) */}
+            {/* Bagian Kiri Header: Nav Toggle (semua ukuran) + Home button + Nav Controls (Undo, Refresh, Redo) */}
             <div className="flex items-center gap-1 sm:gap-1.5 min-w-0 shrink-0 justify-start">
               <button
                 type="button"
@@ -1351,10 +1498,21 @@ export function AppShell({
                 <PanelLeft size={19} />
               </button>
 
-              <HeaderNavControls
-                href="/home"
-                isHomeActive={pathname === "/home" || pathname === "/"}
-              />
+              {/* Icon Home ditaruh di samping sidebar toggle */}
+              <Link
+                to="/"
+                className={`p-1.5 sm:p-2 rounded-lg shrink-0 transition-colors flex items-center justify-center cursor-pointer ${
+                  pathname === "/"
+                    ? "bg-accent text-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
+                title="Beranda (Home)"
+                aria-label="Beranda"
+              >
+                <Home size={19} className="shrink-0" />
+              </Link>
+
+              <HeaderNavControls />
             </div>
 
             {/* Bagian Kanan Header: Aksi Khusus Menu (jika ada) + Portal Target + Toggle Control Center */}
@@ -1368,6 +1526,17 @@ export function AppShell({
                 id="app-header-actions-portal"
                 className="flex items-center gap-1 sm:gap-1.5 min-w-0 empty:hidden overflow-x-auto no-scrollbar py-0.5"
               />
+              {/* Toggle Panel Top ditaruh di samping sidebar kanan */}
+              <button
+                type="button"
+                className={`p-1.5 sm:p-2 rounded-lg shrink-0 transition-colors ${isTopPanelOpen ? "bg-accent text-primary font-bold shadow-2xs" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`}
+                onClick={() => setIsTopPanelOpen((prev) => !prev)}
+                title={isTopPanelOpen ? "Sembunyikan Panel Top" : "Tampilkan Panel Top"}
+                aria-label="Toggle panel top"
+              >
+                <PanelTop size={19} />
+              </button>
+
               <button
                 type="button"
                 className={`p-1.5 sm:p-2 -mr-1 sm:-mr-1.5 rounded-lg shrink-0 transition-colors ${openDrawer === "right" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`}
