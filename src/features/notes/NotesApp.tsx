@@ -268,7 +268,7 @@ export function NotesApp() {
   }, [currentNote, getBacklinks]);
 
   return (
-    <div className="w-full min-h-[calc(100vh-4rem)] bg-muted/40/60 dark:bg-background flex flex-col font-sans">
+    <div className="w-full flex-1 flex flex-col font-sans bg-background">
       {/* 1. TOP HEADER Portaled to Main Header */}
       <ShellHeader>
         <div className="flex items-center gap-1.5 flex-wrap">
@@ -318,7 +318,7 @@ export function NotesApp() {
       </ShellHeader>
 
       {/* 2. MAIN SPLIT INTERFACE */}
-      <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col md:flex-row gap-5">
+      <div className="flex-1 w-full flex flex-col md:flex-row">
         {/* LEFT COLUMN: Navigation Sidebar & Note List */}
         <ShellSidebar>
           {/* Navigation Views Accordion / Tabs */}
@@ -505,7 +505,7 @@ export function NotesApp() {
         </ShellSidebar>
 
         {/* RIGHT COLUMN: Rich Block-Based Note Editor */}
-        <main className="flex-1 bg-card border border-border rounded-3xl p-5 sm:p-7 flex flex-col shadow-xs overflow-hidden">
+        <main className="flex-1 bg-background p-6 sm:p-8 flex flex-col overflow-y-auto">
           {currentNote ? (
             <div className="space-y-6 flex-1 flex flex-col">
               {/* Note Header & Metadata Bar */}

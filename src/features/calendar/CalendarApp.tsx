@@ -376,58 +376,35 @@ export function CalendarApp() {
       </ShellSidebar>
 
       {/* MAIN CALENDAR DISPLAY */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
-        {/* Top Control Bar */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
+        {/* Top Control Bar (Portaled to ShellHeader) */}
         <ShellHeader>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={handleToday}
-              className="px-2.5 py-1 text-xs font-medium border border-border text-foreground rounded hover:bg-muted/40 transition-colors"
+              className="px-2.5 py-1 text-xs font-medium border border-border text-foreground rounded-lg hover:bg-accent transition-colors cursor-pointer"
             >
               Hari Ini
             </button>
-            <div className="flex items-center border border-border rounded">
+            <div className="flex items-center border border-border rounded-lg overflow-hidden">
               <button
                 onClick={handlePrev}
-                className="p-1 hover:bg-muted/40 text-muted-foreground rounded-l"
+                className="p-1 hover:bg-accent text-muted-foreground transition-colors cursor-pointer"
                 title="Sebelumnya"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={handleNext}
-                className="p-1 hover:bg-muted/40 text-muted-foreground rounded-r"
+                className="p-1 hover:bg-accent text-muted-foreground transition-colors cursor-pointer"
                 title="Berikutnya"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
-            <h1 className="text-base font-bold text-foreground tracking-tight ml-2">
-              {viewMode === "day" && currentDate.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
-              {viewMode === "week" && `Minggu ${weekDays[0].getDate()} ${monthNames[weekDays[0].getMonth()]} - ${weekDays[6].getDate()} ${monthNames[weekDays[6].getMonth()]} ${year}`}
-              {viewMode === "month" && `${monthNames[month]} ${year}`}
-              {viewMode === "year" && `Tahun ${year}`}
-              {viewMode === "agenda" && `Agenda Mendatang (${year})`}
-              {viewMode === "person" && `Jadwal Berdasarkan Anggota Tim`}
-            </h1>
-          </div>
-
-          {/* Right Tools & View Switcher */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {/* Search Input */}
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Cari event/peserta..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-40 md:w-52 pl-8 pr-3 py-1.5 text-xs bg-muted/40 border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:bg-card"
-              />
-            </div>
 
             {/* View Mode Segmented Controls (§9) */}
-            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
+            <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs overflow-x-auto no-scrollbar">
               {[
                 { id: "month", label: "Bulan" },
                 { id: "week", label: "Minggu" },
@@ -439,9 +416,9 @@ export function CalendarApp() {
                 <button
                   key={v.id}
                   onClick={() => setViewMode(v.id as CalendarViewMode)}
-                  className={`px-2.5 py-1 rounded transition-colors ${
+                  className={`px-2 py-1 rounded-md text-xs transition-colors cursor-pointer whitespace-nowrap ${
                     viewMode === v.id
-                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      ? "bg-background text-foreground font-semibold shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -456,16 +433,40 @@ export function CalendarApp() {
                 setNewEventDefaultDate(new Date().toISOString().slice(0, 10));
                 setShowNewEventModal(true);
               }}
-              className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-md hover:bg-indigo-700 transition-colors shadow-sm flex items-center gap-1.5"
+              className="px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
-              Tambah Jadwal
+              <span className="hidden sm:inline">Tambah Jadwal</span>
             </button>
           </div>
         </ShellHeader>
 
+        {/* Calendar Title & Search Subheader */}
+        <div className="px-6 py-3 border-b border-border bg-background flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <h1 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
+            {viewMode === "day" && currentDate.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+            {viewMode === "week" && `Minggu ${weekDays[0].getDate()} ${monthNames[weekDays[0].getMonth()]} - ${weekDays[6].getDate()} ${monthNames[weekDays[6].getMonth()]} ${year}`}
+            {viewMode === "month" && `${monthNames[month]} ${year}`}
+            {viewMode === "year" && `Tahun ${year}`}
+            {viewMode === "agenda" && `Agenda Mendatang (${year})`}
+            {viewMode === "person" && `Jadwal Berdasarkan Anggota Tim`}
+          </h1>
+
+          {/* Search Input */}
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Cari event/peserta..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full sm:w-48 md:w-56 pl-8 pr-3 py-1 text-xs bg-muted/40 border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:bg-card"
+            />
+          </div>
+        </div>
+
         {/* Quick Filter Bar (§10.2) */}
-        <div className="px-4 py-2 border-b border-border bg-muted/40/70 flex items-center gap-2 overflow-x-auto text-[11px] text-muted-foreground">
+        <div className="px-6 py-2 border-b border-border bg-background/60 flex items-center gap-2 overflow-x-auto text-[11px] text-muted-foreground">
           <span className="font-semibold text-foreground text-xs mr-1">Filter:</span>
           {[
             { id: "all", label: "Semua" },
@@ -500,7 +501,7 @@ export function CalendarApp() {
             </div>
 
             {/* Month Days Grid */}
-            <div className="flex-1 grid grid-cols-7 grid-rows-5 md:grid-rows-6 divide-x divide-y divide-border overflow-y-auto bg-muted/40/20">
+            <div className="flex-1 grid grid-cols-7 grid-rows-5 md:grid-rows-6 divide-x divide-y divide-border overflow-y-auto bg-background">
               {monthGridDays.map((cell, idx) => {
                 const dayEvents = filteredEvents.filter((ev) => {
                   const evDateStr = ev.startAt.slice(0, 10);
@@ -514,8 +515,8 @@ export function CalendarApp() {
                       setNewEventDefaultDate(cell.dateKey);
                     }}
                     className={`min-h-[90px] p-1.5 transition-colors flex flex-col ${
-                      cell.isCurrentMonth ? "bg-card" : "bg-muted/40/50 text-muted-foreground"
-                    } hover:bg-indigo-50/30`}
+                      cell.isCurrentMonth ? "bg-background" : "bg-muted/20 text-muted-foreground"
+                    } hover:bg-accent/40`}
                   >
                     {/* Day number header */}
                     <div className="flex items-center justify-between mb-1">

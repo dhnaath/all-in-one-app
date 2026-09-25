@@ -178,31 +178,24 @@ export function ReminderManagerApp() {
       </ShellSidebar>
 
       {/* MAIN VIEW CONTENT */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
         {/* Top Header */}
         <ShellHeader>
-          <div>
-            <h1 className="text-base font-bold text-foreground tracking-tight">Antrian Pengingat & Notifikasi</h1>
-            <p className="text-xs text-muted-foreground">
-              Layanan scheduler & delivery terpusat untuk seluruh aplikasi ekosistem.
-            </p>
-          </div>
-
-          {/* View Mode Switcher */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* View Mode Switcher */}
+            <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs overflow-x-auto no-scrollbar">
               {[
                 { id: "upcoming", label: "Mendatang" },
-                { id: "snoozed", label: "Ditunda (Snoozed)" },
-                { id: "location", label: "Lokasi (Map)" },
+                { id: "snoozed", label: "Ditunda" },
+                { id: "location", label: "Lokasi" },
                 { id: "logs", label: "Audit Log" },
               ].map((v) => (
                 <button
                   key={v.id}
                   onClick={() => setViewMode(v.id as ReminderViewMode)}
-                  className={`px-3 py-1 rounded transition-colors ${
+                  className={`px-2.5 py-1 rounded-md text-xs transition-colors cursor-pointer whitespace-nowrap ${
                     viewMode === v.id
-                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      ? "bg-background text-foreground font-semibold shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -213,13 +206,21 @@ export function ReminderManagerApp() {
 
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded hover:bg-indigo-700 transition-colors shadow-xs flex items-center gap-1.5"
+              className="px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
-              Buat Pengingat
+              <span className="hidden sm:inline">Buat Pengingat</span>
             </button>
           </div>
         </ShellHeader>
+
+        {/* Reminder Title Subheader */}
+        <div className="px-6 py-4 border-b border-border bg-background">
+          <h1 className="text-base sm:text-lg font-bold text-foreground tracking-tight">Antrian Pengingat & Notifikasi</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Layanan scheduler & delivery terpusat untuk seluruh aplikasi ekosistem.
+          </p>
+        </div>
 
         {/* VIEW 1: UPCOMING REMINDERS */}
         {viewMode === "upcoming" && (

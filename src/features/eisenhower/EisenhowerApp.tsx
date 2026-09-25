@@ -154,7 +154,7 @@ export function EisenhowerApp() {
       </ShellSidebar>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
         {/* Top Header View Switcher Portaled to Main Header */}
         <ShellHeader>
           <div className="flex items-center border border-border rounded-lg p-0.5 bg-muted/60 text-xs">

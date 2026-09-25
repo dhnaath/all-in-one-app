@@ -313,9 +313,53 @@ export function ProjectManagerApp() {
 
       {/* MAIN PROJECT WORKSPACE */}
       {activeProject ? (
-        <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
-          {/* Top Project Header Bar */}
+        <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
+          {/* Top Project Header Bar (Portaled to ShellHeader) */}
           <ShellHeader>
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* Navigation Tabs (7 Views per §10) - Compact Header Segmented Pills */}
+              <div className="flex items-center gap-0.5 bg-muted/70 p-0.5 rounded-lg border border-border/60 overflow-x-auto text-xs font-medium no-scrollbar">
+                {[
+                  { id: "overview", label: "Ringkasan", icon: TrendingUp },
+                  { id: "board", label: "Board", icon: FolderKanban },
+                  { id: "timeline", label: "Timeline", icon: Layers },
+                  { id: "list", label: "Daftar", icon: Clock },
+                  { id: "calendar", label: "Kalender", icon: Calendar },
+                  { id: "team", label: "Tim", icon: Users },
+                  { id: "risks", label: "Risiko", icon: AlertTriangle },
+                ].map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = viewMode === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setViewMode(tab.id as ProjectViewMode)}
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs transition-colors cursor-pointer whitespace-nowrap ${
+                        isActive
+                          ? "bg-background text-foreground font-semibold shadow-xs"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                      <span className="hidden lg:inline">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Primary Add Task to Project */}
+              <button
+                onClick={() => setShowNewTaskModal(true)}
+                className="px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Tugas Baru</span>
+              </button>
+            </div>
+          </ShellHeader>
+
+          {/* Project Details Banner (In Workspace) */}
+          <div className="px-6 py-4 border-b border-border bg-background">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1 min-w-0">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -331,11 +375,11 @@ export function ProjectManagerApp() {
                     </React.Fragment>
                   ))}
                 </div>
-                <h1 className="text-xl font-bold text-foreground tracking-tight truncate">
+                <h1 className="text-lg sm:text-xl font-bold text-foreground tracking-tight truncate">
                   {activeProject.name}
                 </h1>
                 {activeProject.description && (
-                  <p className="text-xs text-muted-foreground line-clamp-1 max-w-3xl">
+                  <p className="text-xs text-muted-foreground line-clamp-2 max-w-3xl">
                     {activeProject.description}
                   </p>
                 )}
@@ -426,51 +470,12 @@ export function ProjectManagerApp() {
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
-
-                {/* Primary Add Task to Project */}
-                <button
-                  onClick={() => setShowNewTaskModal(true)}
-                  className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-md hover:bg-indigo-700 transition-colors shadow-sm flex items-center gap-1.5"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  Tambah Tugas
-                </button>
               </div>
             </div>
-
-            {/* Navigation Tabs (7 Views per §10) */}
-            <div className="mt-6 flex items-center gap-1 border-b border-border -mb-5 pb-0 overflow-x-auto text-xs font-medium">
-              {[
-                { id: "overview", label: "Ringkasan", icon: TrendingUp },
-                { id: "board", label: "Board (Kanban)", icon: FolderKanban },
-                { id: "timeline", label: "Timeline (Gantt)", icon: Layers },
-                { id: "list", label: "Daftar Tugas", icon: Clock },
-                { id: "calendar", label: "Kalender", icon: Calendar },
-                { id: "team", label: "Tim & Beban Kerja", icon: Users },
-                { id: "risks", label: "Register Risiko", icon: AlertTriangle },
-              ].map((tab) => {
-                const Icon = tab.icon;
-                const isActive = viewMode === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setViewMode(tab.id as ProjectViewMode)}
-                    className={`flex items-center gap-1.5 px-3.5 py-2.5 border-b-2 transition-all whitespace-nowrap ${
-                      isActive
-                        ? "border-indigo-600 text-indigo-600 font-semibold"
-                        : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-          </ShellHeader>
+          </div>
 
           {/* VIEW CONTAINER */}
-          <div className="flex-1 overflow-y-auto p-6 bg-muted/40/50">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-background">
             {/* VIEW 1: OVERVIEW */}
             {viewMode === "overview" && (
               <div className="space-y-6 max-w-6xl mx-auto">

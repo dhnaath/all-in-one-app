@@ -30,7 +30,7 @@ import {
   useDismiss,
   useInteractions,
 } from "@floating-ui/react";
-import { dummyCreditData } from "../data";
+import { dummyCreditData, DEFAULT_CREDIT_PRESETS, getInitialCreditData } from "../data";
 import { DateInlineInput } from "./DateInlineInput";
 import {
   CreditData,
@@ -292,7 +292,7 @@ export default function Dashboard() {
       }
     }
     return {
-      history: [dummyCreditData],
+      history: [getInitialCreditData()],
       index: 0,
     };
   });

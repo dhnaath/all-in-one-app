@@ -98,6 +98,10 @@ import {
   Info,
   Workflow,
   X,
+  Car,
+  ShieldAlert,
+  FileCode2,
+  LayoutGrid,
   type LucideIcon,
 } from "lucide-react";
 import { useLanguage } from "@/features/finance/hooks/useLanguage";
@@ -114,7 +118,8 @@ import { useRecentApps } from "@/hooks/useRecentApps";
 import { ProfileMenu, SettingsModal } from "./wira-settings";
 import { useMenuSettings } from "@/hooks/useMenuSettings";
 import { useFavorites } from "@/hooks/useFavorites";
-import { HeaderBreadcrumb } from "@/app/HeaderBreadcrumb";
+import { HeaderNavControls } from "./HeaderNavControls";
+import { DynamicAppSidebar } from "./DynamicAppSidebar";
 import { useCustomNav } from "@/hooks/useCustomNav";
 import {
   DropdownMenu,
@@ -129,7 +134,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import { navKonsultan, type NavItem, type NavGroup as NavGroupType } from "@/config/nav";
+import { navKonsultan, navSidebar21, navAllSidebar, type NavItem, type NavGroup as NavGroupType } from "@/config/nav";
 
 function NavGroup({ title, items }: { title: string; items: any[] }) {
   const [isOpen, setIsOpen] = useState(true);
@@ -289,6 +294,38 @@ export const APP_MODES: ModeItem[] = [
 ];
 
 const CATEGORY_META: Record<string, { icon: LucideIcon; accent: string }> = {
+  // Super Categories
+  "21 Kategori": { icon: LayoutGrid, accent: "text-primary" },
+  "100 Framework": { icon: Grid2X2, accent: "text-purple-600 dark:text-purple-400" },
+  "Keuangan & Pasar": { icon: Wallet, accent: "text-emerald-600 dark:text-emerald-400" },
+  "Kesehatan & Personal": { icon: Heart, accent: "text-rose-600 dark:text-rose-400" },
+  "Kreatif & Akademi": { icon: PenTool, accent: "text-pink-600 dark:text-pink-400" },
+  "Knowledge & Bisnis": { icon: BookOpen, accent: "text-sky-600 dark:text-sky-400" },
+
+  // The 21 Categories
+  "Dapur dan Bahan Makanan": { icon: Utensils, accent: "text-orange-500 dark:text-orange-400" },
+  "Pemeliharaan Rumah dan Utilitas": { icon: Home, accent: "text-amber-600 dark:text-amber-400" },
+  "Kendaraan dan Otomotif": { icon: Car, accent: "text-blue-600 dark:text-blue-400" },
+  "Perjalanan": { icon: Plane, accent: "text-teal-600 dark:text-teal-400" },
+  "Keluarga dan Internal Rumah": { icon: Heart, accent: "text-pink-600 dark:text-pink-400" },
+  "Relasi Jejaring dan Profesional": { icon: Users, accent: "text-indigo-600 dark:text-indigo-400" },
+  "Lingkungan Komunitas Warga": { icon: Building2, accent: "text-emerald-600 dark:text-emerald-400" },
+  "Sosial dan Keagamaan": { icon: HeartHandshake, accent: "text-green-600 dark:text-green-400" },
+  "Keselamatan dan Darurat": { icon: ShieldAlert, accent: "text-rose-600 dark:text-rose-400" },
+  "Perencanaan Alur Kerja Proyek": { icon: FolderKanban, accent: "text-purple-600 dark:text-purple-400" },
+  "Pelaksanaan Tugas dan Karya": { icon: CheckSquare, accent: "text-sky-600 dark:text-sky-400" },
+  "Jadwal dan Kalender": { icon: CalendarDays, accent: "text-blue-500 dark:text-blue-400" },
+  "Fokus dan Kebiasaan": { icon: Timer, accent: "text-yellow-600 dark:text-yellow-400" },
+  "Rapat dan Kolaborasi Tim": { icon: MessagesSquare, accent: "text-violet-600 dark:text-violet-400" },
+  "Manajemen Sumber Daya Manusia": { icon: Users, accent: "text-cyan-600 dark:text-cyan-400" },
+  "Dokumentasi dan Wiki": { icon: BookOpen, accent: "text-emerald-500 dark:text-emerald-400" },
+  "Pengelolaan Form dan Template": { icon: FileCode2, accent: "text-indigo-500 dark:text-indigo-400" },
+  "Keuangan dan Aset": { icon: Wallet, accent: "text-emerald-600 dark:text-emerald-400" },
+  "Vendor dan Logistik Kantor": { icon: Truck, accent: "text-amber-500 dark:text-amber-400" },
+  "Target dan Performa": { icon: Target, accent: "text-rose-500 dark:text-rose-400" },
+  "Utilitas Sistem": { icon: Settings, accent: "text-slate-500 dark:text-slate-400" },
+
+  // Legacy Domain Categories
   Finance: { icon: Wallet, accent: "text-emerald-600 dark:text-emerald-400" },
   "Phase Side": { icon: Compass, accent: "text-indigo-600 dark:text-indigo-400" },
   "100 Tools": { icon: Grid2X2, accent: "text-purple-600 dark:text-purple-400" },
@@ -297,6 +334,25 @@ const CATEGORY_META: Record<string, { icon: LucideIcon; accent: string }> = {
   Society: { icon: Users, accent: "text-amber-600 dark:text-amber-400" },
   "Creative & Media": { icon: PenTool, accent: "text-pink-600 dark:text-pink-400" },
   "Academy & Tools": { icon: GraduationCap, accent: "text-sky-600 dark:text-sky-400" },
+};
+
+const SUPER_CATEGORIES = [
+  { id: "All", label: "Semua", icon: LayoutDashboard },
+  { id: "21 Kategori", label: "21 Kategori", icon: LayoutGrid },
+  { id: "100 Framework", label: "100 Framework", icon: Grid2X2 },
+  { id: "Keuangan & Pasar", label: "Keuangan & Pasar", icon: Wallet },
+  { id: "Kesehatan & Personal", label: "Kesehatan & Personal", icon: Heart },
+  { id: "Kreatif & Akademi", label: "Kreatif & Akademi", icon: PenTool },
+  { id: "Knowledge & Bisnis", label: "Knowledge & Bisnis", icon: BookOpen },
+];
+
+const SECTION_TITLES: Record<string, string> = {
+  "21 Kategori": "21 Kategori Ruang Kerja & Kehidupan",
+  "100 Framework": "Framework Strategis (100 Tools)",
+  "Keuangan & Pasar": "Perencanaan Keuangan, Pasar & Muamalah",
+  "Kesehatan & Personal": "Kesehatan & Gaya Hidup Pribadi",
+  "Kreatif & Akademi": "Media Kreatif & Akademi Pembelajaran",
+  "Knowledge & Bisnis": "Knowledge & Bisnis Lanjutan",
 };
 
 export function AppShell({
@@ -330,6 +386,20 @@ export function AppShell({
   // and the header's context pill so the shell adapts to the active app.
   // ---------------------------------------------------------------------------
   const contextMatch: { item: NavItem; group: NavGroupType } | null = (() => {
+    const sidebarAll: { item: NavItem; group: NavGroupType }[] = [];
+    navAllSidebar.forEach((g) => g.items.forEach((item) => sidebarAll.push({ item, group: g })));
+    const sMatch = (
+      sidebarAll.find((x) => x.item.to === fullPath) ||
+      sidebarAll.find((x) => x.item.to === pathname) ||
+      sidebarAll.find((x) => x.item.to !== "/" && x.item.to.split("?")[0] === pathname) ||
+      sidebarAll.find((x) => {
+        const base = x.item.to.split("?")[0];
+        return base !== "/" && pathname.startsWith(base);
+      }) ||
+      null
+    );
+    if (sMatch) return sMatch;
+
     const all: { item: NavItem; group: NavGroupType }[] = [];
     rawNav.forEach((g) => g.items.forEach((item) => all.push({ item, group: g })));
     return (
@@ -345,7 +415,7 @@ export function AppShell({
   })();
 
   const contextCategory =
-    pathname === "/" ? null : contextMatch?.group.parentCategory || null;
+    pathname === "/" ? null : contextMatch?.group.title || contextMatch?.group.sectionCategory || contextMatch?.group.parentCategory || null;
   const ContextCategoryIcon = contextCategory
     ? CATEGORY_META[contextCategory]?.icon
     : null;
@@ -357,33 +427,20 @@ export function AppShell({
   const standaloneConfig =
     STANDALONE_APPS[appQueryParam || ""] || STANDALONE_APPS[pathSlug] || null;
 
-  // Parent-categories present in the nav, in declaration order (sidebar switcher)
-  const categoryList = Array.from(
-    new Set(
-      rawNav
-        .map((g) => g.parentCategory)
-        .filter((c): c is string => !!c),
-    ),
-  );
+  // Category currently browsed in the left sidebar. Default to "All".
+  const [activeCategory, setActiveCategory] = useState<string>("All");
 
-  // The category currently browsed in the left sidebar. Follows the open app's
-  // context, but the user can override it via the switcher chips.
-  const [activeCategory, setActiveCategory] = useState<string>(
-    contextCategory || "All",
-  );
-  useEffect(() => {
-    setActiveCategory(contextCategory || "All");
-  }, [contextCategory, pathname]);
-
-  // Whether the currently-open app registered its own sidebar content via
-  // <ShellSidebar>. When it did, the left sidebar shows the app's own panel;
-  // the user can still flip to the browse/navigation view.
+  const isAppRoute = pathname !== "/";
   const [hasAppSidebar, setHasAppSidebar] = useState(false);
   const [sidebarView, setSidebarView] = useState<"auto" | "browse">("auto");
   useEffect(() => {
     setSidebarView("auto");
   }, [pathname]);
-  const showAppSidebar = hasAppSidebar && sidebarView === "auto";
+
+  const showAppCustomPortal = isAppRoute && hasAppSidebar && sidebarView === "auto";
+  const showDynamicAppFeatures = isAppRoute && !hasAppSidebar && sidebarView === "auto";
+  const showDefaultNav = !isAppRoute || sidebarView === "browse";
+  const showAppSidebar = showAppCustomPortal;
   const shellSidebarCtx = useMemo(() => ({ setHasAppSidebar }), []);
 
   // Whether the currently-open app registered its own header via <ShellHeader>.
@@ -445,11 +502,15 @@ export function AppShell({
     { to: "/terminal", label: "Terminal", icon: Terminal },
   ].filter((it) => enabledMenus[it.to] !== false);
 
-  // Groups rendered in the left sidebar, scoped to the active category.
-  const sidebarGroups: NavGroupType[] = rawNav
-    .filter(
-      (g) => activeCategory === "All" || g.parentCategory === activeCategory,
-    )
+  // Groups rendered in the left sidebar, covering 21 categories AND all other categories.
+  const sidebarGroups: NavGroupType[] = navAllSidebar
+    .filter((g) => {
+      if (activeCategory === "All") return true;
+      if (g.sectionCategory === activeCategory) return true;
+      if (g.parentCategory === activeCategory) return true;
+      if (g.title === activeCategory) return true;
+      return false;
+    })
     .map((g) => ({
       ...g,
       items: g.items.filter((it) => enabledMenus[it.to] !== false),
@@ -457,11 +518,14 @@ export function AppShell({
     .filter((g) => g.items.length > 0);
 
   let categoryName = "Umum";
-  let categoryGroup: { title?: string; items?: readonly any[] | any[] } | undefined = rawNav[0];
+  let categoryGroup: { title?: string; items?: readonly any[] | any[] } | undefined = navSidebar21[0];
 
   if (pathname === "/") {
     categoryName = "Umum";
     categoryGroup = undefined;
+  } else if (contextMatch) {
+    categoryName = contextMatch.group.title || "Umum";
+    categoryGroup = contextMatch.group;
   } else if (customMatch && (pathname === "/lainnya" || customMatch.item.path === fullPath)) {
     categoryName = customMatch.category.title;
     categoryGroup = {
@@ -492,13 +556,6 @@ export function AppShell({
       }
     }
   }
-
-  const categorySiblings = categoryGroup?.items
-    ?.filter((item) => item.to !== fullPath && item.to !== pathname)
-    ?.map((item) => ({ label: item.label, href: item.to })) || [];
-
-  const displayTitle =
-    customMatch && pathname === "/lainnya" ? customMatch.item.label : title;
 
   // Both sidebars are now symmetric off-canvas drawers. On desktop the left
   // (contextual navigation) drawer starts open; on small screens both start
@@ -743,41 +800,58 @@ export function AppShell({
         </div>
 
         {/* View switcher: app-provided sidebar vs browse/navigation */}
-        {hasAppSidebar && (
-          <div className="flex items-center gap-1 px-3 py-2 border-b border-sidebar-border shrink-0">
-            <button
-              type="button"
-              onClick={() => setSidebarView("auto")}
-              className={`flex-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold transition-colors ${
-                sidebarView === "auto"
-                  ? "bg-primary/15 text-primary"
-                  : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
-              }`}
-            >
-              Konten App
-            </button>
-            <button
-              type="button"
-              onClick={() => setSidebarView("browse")}
-              className={`flex-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold transition-colors ${
-                sidebarView === "browse"
-                  ? "bg-primary/15 text-primary"
-                  : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
-              }`}
-            >
-              Navigasi
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-1 px-3 py-2 border-b border-sidebar-border shrink-0">
+          <button
+            type="button"
+            onClick={() => setSidebarView("auto")}
+            className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] font-semibold transition-colors cursor-pointer ${
+              sidebarView === "auto"
+                ? "bg-primary/15 text-primary shadow-2xs font-bold"
+                : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+            }`}
+          >
+            <Sparkles className="h-3.5 w-3.5 shrink-0" />
+            <span>{pathname === "/" ? "Launcher" : "Fitur App"}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSidebarView("browse")}
+            className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] font-semibold transition-colors cursor-pointer ${
+              sidebarView === "browse"
+                ? "bg-primary/15 text-primary shadow-2xs font-bold"
+                : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+            }`}
+          >
+            <LayoutGrid className="h-3.5 w-3.5 shrink-0" />
+            <span>Navigasi</span>
+          </button>
+        </div>
 
         <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar px-3 py-4">
           {/* Slot untuk konten sidebar milik app (target portal ShellSidebar) */}
           <div
             id="shellSidebarSlot"
-            className={showAppSidebar ? "flex flex-col gap-1" : "hidden"}
+            className={showAppCustomPortal ? "flex flex-col gap-1" : "hidden"}
           />
 
-          {!showAppSidebar && (
+          {/* Dynamic App Feature Sidebar for apps without custom ShellSidebar */}
+          {showDynamicAppFeatures && (
+            <DynamicAppSidebar
+              currentTitle={title}
+              pathname={pathname}
+              fullPath={fullPath}
+              contextMatch={contextMatch}
+              contextCategory={contextCategory}
+              effectiveSections={effectiveSections}
+              standaloneConfig={standaloneConfig}
+              isFavorite={favorites.includes(fullPath) || favorites.includes(pathname)}
+              onToggleFavorite={() => toggleFavorite(fullPath)}
+              onCloseDrawer={() => setOpenDrawer(null)}
+              onSwitchToBrowse={() => setSidebarView("browse")}
+            />
+          )}
+
+          {showDefaultNav && (
             <>
           {/* Per-app contextual block: the open app's OWN sections/tabs when it
               registered them (or a standalone app's tabs); otherwise the family
@@ -853,39 +927,37 @@ export function AppShell({
 
           {/* Category switcher — follows the open app's context, user can override */}
           <div className="mb-4">
-            <p className="px-2.5 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-              Kategori
-            </p>
-            <div className="flex flex-wrap gap-1.5 px-1">
-              <button
-                type="button"
-                onClick={() => setActiveCategory("All")}
-                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium border transition-colors ${
-                  activeCategory === "All"
-                    ? "border-primary/40 bg-primary/15 text-primary"
-                    : "border-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
-                }`}
-              >
-                <LayoutDashboard className="h-3.5 w-3.5 shrink-0" />
-                <span>Semua</span>
-              </button>
-              {categoryList.map((cat) => {
-                const Meta = CATEGORY_META[cat];
-                const Icon = Meta?.icon || Grid2X2;
-                const isActive = activeCategory === cat;
+            <div className="flex items-center justify-between px-2.5 pb-1.5">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Kategori
+              </p>
+              {activeCategory !== "All" && (
+                <button
+                  type="button"
+                  onClick={() => setActiveCategory("All")}
+                  className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
+                >
+                  Lihat Semua
+                </button>
+              )}
+            </div>
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar px-1 pb-1">
+              {SUPER_CATEGORIES.map((cat) => {
+                const Icon = cat.icon;
+                const isActive = activeCategory === cat.id;
                 return (
                   <button
-                    key={cat}
+                    key={cat.id}
                     type="button"
-                    onClick={() => setActiveCategory(cat)}
-                    className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium border transition-colors ${
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`shrink-0 flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[12px] font-medium border transition-colors ${
                       isActive
                         ? "border-primary/40 bg-primary/15 text-primary"
                         : "border-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
                     }`}
                   >
-                    <Icon className={`h-3.5 w-3.5 shrink-0 ${isActive ? "" : Meta?.accent || ""}`} />
-                    <span className="truncate">{cat}</span>
+                    <Icon className="h-3.5 w-3.5 shrink-0" />
+                    <span>{cat.label}</span>
                   </button>
                 );
               })}
@@ -944,28 +1016,53 @@ export function AppShell({
 
           {/* Grup nav — scoped to the active category / context */}
           <nav className="flex flex-col gap-1">
-            {sidebarGroups.map((group) => {
-              const isGroupCollapsed = group.title ? !!collapsedNavGroups[group.title] : false;
+            {sidebarGroups.map((group, groupIdx) => {
+              const origIdx = navSidebar21.findIndex((g) => g.title === group.title);
+              const is21 = origIdx >= 0;
+              const displayNum = is21 ? origIdx + 1 : null;
+              const isGroupCollapsed = group.title ? (collapsedNavGroups[group.title] !== undefined ? collapsedNavGroups[group.title] : false) : false;
               const isActiveGroup = group.items.some((item) => {
                 const base = item.to.split("?")[0];
                 if (base === "/" || base === "/portal") return pathname === base;
-                return pathname.startsWith(base);
+                return pathname.startsWith(base) || (item.to.includes("?") && fullPath.includes(item.to));
               });
+
+              const prevGroup = groupIdx > 0 ? sidebarGroups[groupIdx - 1] : null;
+              const currentSection = group.sectionCategory || "";
+              const prevSection = prevGroup?.sectionCategory || "";
+              const showSectionHeader = activeCategory === "All" && currentSection && currentSection !== prevSection;
+              const sectionTitle = SECTION_TITLES[currentSection] || currentSection;
+
               return (
-                <div key={group.title || "_primary"} className="mb-1">
+                <div key={group.title || `_grp_${groupIdx}`} className="mb-1">
+                  {showSectionHeader && (
+                    <div className="pt-3 pb-1 px-2">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary/70 shrink-0" />
+                        <span>{sectionTitle}</span>
+                      </p>
+                    </div>
+                  )}
                   {group.title && (
                     <button
                       type="button"
                       onClick={() => setCollapsedNavGroups(prev => ({ ...prev, [group.title!]: !prev[group.title!] }))}
-                      className={`flex w-full items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-semibold transition-colors ${isActiveGroup ? "text-foreground" : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"}`}
+                      className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-semibold transition-colors ${isActiveGroup ? "text-foreground bg-sidebar-accent/50" : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"}`}
                     >
+                      {displayNum ? (
+                        <span className="text-[11px] font-mono font-medium text-muted-foreground/60 w-5 shrink-0 text-left">
+                          {displayNum}.
+                        </span>
+                      ) : (
+                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 shrink-0 ml-1 mr-1" />
+                      )}
                       <ChevronRight className={`h-3.5 w-3.5 shrink-0 transition-transform ${!isGroupCollapsed ? "rotate-90" : ""}`} />
-                      <span className="truncate flex-1 text-left capitalize">{group.title}</span>
-                      <span className="text-[10px] text-muted-foreground/60 shrink-0">{group.items.length}</span>
+                      <span className="truncate flex-1 text-left font-medium">{group.title}</span>
+                      <span className="text-[10px] text-muted-foreground/60 shrink-0 font-normal">{group.items.length}</span>
                     </button>
                   )}
                   {!isGroupCollapsed && (
-                    <div className={`flex flex-col gap-0.5 ${group.title ? "ml-3 mt-0.5 border-l border-sidebar-border pl-2" : ""}`}>
+                    <div className={`flex flex-col gap-0.5 ${group.title ? (displayNum ? "ml-5" : "ml-4") + " mt-0.5 border-l border-sidebar-border pl-2" : ""}`}>
                       {group.items.length === 0 ? (
                         <span className="text-xs text-muted-foreground/60 italic py-1 px-2 select-none">
                           (Kosong)
@@ -1236,8 +1333,8 @@ export function AppShell({
         )}
         <header ref={headerRef as any} className="absolute top-0 inset-x-0 z-20 border-b border-border bg-background/80 backdrop-blur-xl shadow-xs">
           <div className="flex items-center justify-between gap-2 px-3 py-2 sm:px-5 sm:py-2 min-h-[50px]">
-            {/* Bagian Kiri Header: Nav Toggle (semua ukuran) + Breadcrumb kontekstual */}
-            <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 shrink-0 max-w-[45%] md:max-w-[38%] justify-start">
+            {/* Bagian Kiri Header: Nav Toggle (semua ukuran) + Nav Controls (Undo, Home, Redo) */}
+            <div className="flex items-center gap-1 sm:gap-1.5 min-w-0 shrink-0 justify-start">
               <button
                 type="button"
                 className={`p-1.5 sm:p-2 -ml-1 sm:-ml-1.5 rounded-lg shrink-0 transition-colors ${openDrawer === "left" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`}
@@ -1248,33 +1345,14 @@ export function AppShell({
                 <PanelLeft size={19} />
               </button>
 
-              <div className="min-w-0 truncate">
-                <HeaderBreadcrumb
-                  className="text-xs"
-                  segments={
-                    pathname === "/home"
-                      ? [
-                          { label: "Home", href: "/home" }
-                        ]
-                      : [
-                          { label: "Home", href: "/home" },
-                          ...(categoryName && categoryName !== "Umum"
-                            ? [
-                                {
-                                  label: categoryName,
-                                  siblings: categorySiblings,
-                                },
-                              ]
-                            : []),
-                          { label: displayTitle },
-                        ]
-                  }
-                />
-              </div>
+              <HeaderNavControls
+                href="/home"
+                isHomeActive={pathname === "/home" || pathname === "/"}
+              />
             </div>
 
             {/* Bagian Kanan Header: Aksi Khusus Menu (jika ada) + Portal Target + Toggle Control Center */}
-            <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0">
+            <div className="flex items-center justify-end gap-1.5 sm:gap-2 min-w-0">
               {actions && (
                 <div className="flex items-center gap-1.5 shrink-0">
                   {actions}
@@ -1282,7 +1360,7 @@ export function AppShell({
               )}
               <div
                 id="app-header-actions-portal"
-                className="flex items-center gap-1 sm:gap-1.5 shrink-0 empty:hidden max-w-[50vw] sm:max-w-[65vw] overflow-x-auto no-scrollbar py-0.5"
+                className="flex items-center gap-1 sm:gap-1.5 min-w-0 empty:hidden overflow-x-auto no-scrollbar py-0.5"
               />
               <button
                 type="button"
@@ -1296,7 +1374,14 @@ export function AppShell({
             </div>
           </div>
         </header>
-        <div className="flex-1 overflow-y-auto no-scrollbar px-4 pb-[90px] sm:px-6 sm:pb-[90px] relative z-10" style={{ paddingTop: headerHeight }}>{children}</div>
+        <div
+          className={`flex-1 flex flex-col min-h-0 overflow-y-auto no-scrollbar relative z-10 ${
+            pathname === "/" ? "px-4 pb-[90px] sm:px-6 sm:pb-[90px]" : "pb-[80px]"
+          }`}
+          style={{ paddingTop: headerHeight }}
+        >
+          {children}
+        </div>
         {/* iOS-Style Floating Search Pill above Dock (Active when not in Launcher) */}
         {pathname !== "/" && (
           <div className="fixed bottom-[calc(5rem+10pt)] left-0 right-0 flex justify-center pb-1 pointer-events-none z-30 animate-in fade-in duration-200">

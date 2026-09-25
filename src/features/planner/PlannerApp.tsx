@@ -203,61 +203,45 @@ export function PlannerApp() {
       </ShellSidebar>
 
       {/* MAIN PLANNER CONTENT */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
-        {/* Top Header */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
+        {/* Top Header (Portaled to ShellHeader) */}
         <ShellHeader>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => setCurrentDate(new Date())}
-              className="px-2.5 py-1 text-xs font-medium border border-border text-foreground rounded hover:bg-muted/40 transition-colors"
+              className="px-2.5 py-1 text-xs font-medium border border-border text-foreground rounded-lg hover:bg-accent transition-colors cursor-pointer"
             >
               Hari Ini
             </button>
-            <div className="flex items-center border border-border rounded">
+            <div className="flex items-center border border-border rounded-lg overflow-hidden">
               <button
                 onClick={handlePrevDay}
-                className="p-1 hover:bg-muted/40 text-muted-foreground rounded-l"
+                className="p-1 hover:bg-accent text-muted-foreground transition-colors cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={handleNextDay}
-                className="p-1 hover:bg-muted/40 text-muted-foreground rounded-r"
+                className="p-1 hover:bg-accent text-muted-foreground transition-colors cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
-            <h1 className="text-base font-bold text-foreground tracking-tight ml-2">
-              {currentDate.toLocaleDateString("id-ID", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </h1>
-            {isCommitted && (
-              <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded flex items-center gap-1">
-                <Lock className="w-3 h-3" />
-                Rencana Dikunci (Committed)
-              </span>
-            )}
-          </div>
 
-          {/* Right Controls */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
+            {/* View Tabs */}
+            <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs overflow-x-auto no-scrollbar">
               {[
-                { id: "daily", label: "Daily Plan" },
-                { id: "weekly", label: "Weekly Plan" },
-                { id: "rituals", label: "Rituals (§6)" },
-                { id: "carryover", label: "Carryover (§8)" },
+                { id: "daily", label: "Daily" },
+                { id: "weekly", label: "Weekly" },
+                { id: "rituals", label: "Rituals" },
+                { id: "carryover", label: "Carryover" },
               ].map((v) => (
                 <button
                   key={v.id}
                   onClick={() => setViewMode(v.id as PlannerViewMode)}
-                  className={`px-3 py-1 rounded transition-colors ${
+                  className={`px-2.5 py-1 rounded-md text-xs transition-colors cursor-pointer whitespace-nowrap ${
                     viewMode === v.id
-                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      ? "bg-background text-foreground font-semibold shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -267,25 +251,45 @@ export function PlannerApp() {
             </div>
 
             <button
-              onClick={() => commitDailyPlan(dateStr)}
-              className="px-3 py-1.5 text-xs font-medium border border-border rounded hover:bg-muted/40 text-foreground flex items-center gap-1.5"
-            >
-              <Lock className="w-3.5 h-3.5" />
-              Kunci Rencana
-            </button>
-
-            <button
               onClick={() => setShowAddBlockModal(true)}
-              className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded hover:bg-indigo-700 transition-colors shadow-xs flex items-center gap-1.5"
+              className="px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
-              Tambah Blok Waktu
+              <span className="hidden sm:inline">Tambah Blok</span>
             </button>
           </div>
         </ShellHeader>
 
+        {/* Planner Date Banner Subheader */}
+        <div className="px-6 py-3.5 border-b border-border bg-background flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <h1 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
+              {currentDate.toLocaleDateString("id-ID", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </h1>
+            {isCommitted ? (
+              <span className="text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                <Lock className="w-3 h-3" />
+                Terkunci
+              </span>
+            ) : (
+              <button
+                onClick={() => commitDailyPlan(dateStr)}
+                className="px-2 py-0.5 text-[11px] font-medium border border-border rounded-md hover:bg-muted/50 text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors cursor-pointer"
+              >
+                <Lock className="w-3 h-3" />
+                Kunci Rencana
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* CAPACITY BAR & OVERALLOCATION WARNING (§4) */}
-        <div className="p-4 border-b border-border bg-muted/40/70">
+        <div className="px-6 py-3 border-b border-border bg-background/60">
           <div className="flex items-center justify-between text-xs font-semibold text-foreground mb-1.5">
             <span>Kapasitas Kerja Hari Ini (§4)</span>
             <span>

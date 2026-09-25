@@ -142,8 +142,245 @@ export type NavGroup = {
   title: string;
   isStandalone?: boolean;
   parentCategory?: string;
+  sectionCategory?: string;
   items: NavItem[];
 };
+
+export const navSidebar21: NavGroup[] = [
+  // 1. Dapur dan Bahan Makanan
+  {
+    title: "Dapur dan Bahan Makanan",
+    parentCategory: "Dapur dan Bahan Makanan",
+    items: [
+      { to: "/shopping", label: "Shopping", icon: ShoppingCart },
+      { to: "/recipes", label: "Recipes", icon: Utensils },
+      { to: "/lainnya?app=kitchen-inventory", label: "Inventaris Bahan Dapur", icon: Archive },
+      { to: "/lainnya?app=cook-log", label: "Jurnal Memasak", icon: BookOpen },
+      { to: "/lainnya?app=expiry-alert", label: "Peringatan Kadaluarsa", icon: AlertTriangle },
+      { to: "/lainnya?app=leftover-ideas", label: "Manajemen Makanan Sisa", icon: RefreshCw },
+    ],
+  },
+  // 2. Pemeliharaan Rumah dan Utilitas
+  {
+    title: "Pemeliharaan Rumah dan Utilitas",
+    parentCategory: "Pemeliharaan Rumah dan Utilitas",
+    items: [
+      { to: "/lainnya?app=home-chores", label: "Jadwal Piket dan Kebersihan", icon: CheckSquare },
+      { to: "/lainnya?app=utility-tracker", label: "Meteran Listrik dan Air", icon: Zap },
+      { to: "/lainnya?app=appliance-care", label: "Servis Elektronik dan Alat", icon: Wrench },
+      { to: "/lainnya?app=home-inventory", label: "Inventaris Perabot dan Ruangan", icon: Home },
+      { to: "/lainnya?app=item-disposal", label: "Hibah dan Daur Ulang", icon: Trash2 },
+    ],
+  },
+  // 3. Kendaraan dan Otomotif
+  {
+    title: "Kendaraan dan Otomotif",
+    parentCategory: "Kendaraan dan Otomotif",
+    items: [
+      { to: "/lainnya?app=vehicle-identity", label: "BPKB STNK Data Kendaraan", icon: Car },
+      { to: "/lainnya?app=mileage-fuel", label: "Catatan BBM dan Odometer", icon: Fuel },
+      { to: "/lainnya?app=vehicle-service", label: "Riwayat Servis dan Bengkel", icon: Wrench },
+      { to: "/lainnya?app=parts-lifecycle", label: "Siklus Ban Aki Komponen", icon: RefreshCw },
+      { to: "/lainnya?app=household-renewals", label: "Pajak Asuransi dan Kir", icon: CalendarDays },
+    ],
+  },
+  // 4. Perjalanan
+  {
+    title: "Perjalanan",
+    parentCategory: "Perjalanan",
+    items: [
+      { to: "/trips", label: "Trips", icon: Plane },
+    ],
+  },
+  // 5. Keluarga dan Internal Rumah
+  {
+    title: "Keluarga dan Internal Rumah",
+    parentCategory: "Keluarga dan Internal Rumah",
+    items: [
+      { to: "/lainnya?app=family-tree", label: "Silsilah Keluarga (Tree)", icon: GitFork },
+      { to: "/lainnya?app=family-rules", label: "Aturan dan Kesepakatan Rumah", icon: Scale },
+      { to: "/lainnya?app=family-archive", label: "Arsip Akta Dokumen KK", icon: Archive },
+      { to: "/lainnya?app=medical-family", label: "Golongan Darah dan Alergi", icon: HeartHandshake },
+    ],
+  },
+  // 6. Relasi Jejaring dan Profesional
+  {
+    title: "Relasi Jejaring dan Profesional",
+    parentCategory: "Relasi Jejaring dan Profesional",
+    items: [
+      { to: "/klien", label: "Klien dan Partner", icon: Briefcase },
+      { to: "/portal", label: "Portal Kolaborasi", icon: Building2 },
+      { to: "/lainnya?app=circle-groups", label: "Lingkaran Relasi (Circles)", icon: Network },
+      { to: "/lainnya?app=catchup-cadence", label: "Pengingat Silaturahmi", icon: PhoneCall },
+      { to: "/lainnya?app=interaction-timeline", label: "Timeline Pertemuan", icon: History },
+      { to: "/lainnya?app=borrowed-items", label: "Pinjam Meminjam Barang", icon: ArrowRightLeft },
+      { to: "/lainnya?app=gift-tracker", label: "Pencatat Kado dan Hadiah", icon: Gift },
+      { to: "/lainnya?app=reunion-planner", label: "Perencana Reuni dan Arisan", icon: PartyPopper },
+      { to: "/lainnya?app=family-anniversary", label: "Ulang Tahun Hari Jadi", icon: CalendarDays },
+    ],
+  },
+  // 7. Lingkungan Komunitas Warga
+  {
+    title: "Lingkungan Komunitas Warga",
+    parentCategory: "Lingkungan Komunitas Warga",
+    items: [
+      { to: "/lainnya?app=rt-rw-directory", label: "Buku Warga RT RW", icon: Users },
+      { to: "/lainnya?app=community-announcements", label: "Papan Pengumuman Warga", icon: Megaphone },
+      { to: "/lainnya?app=membership-card", label: "KTA dan Kartu Anggota", icon: CreditCard },
+      { to: "/lainnya?app=meeting-resolutions", label: "Hasil Keputusan Rapat", icon: ScrollText },
+      { to: "/lainnya?app=public-services-guide", label: "Panduan Layanan Publik", icon: Compass },
+      { to: "/lainnya?app=civic-calendar", label: "Kalender Pemilu dan Libur", icon: CalendarDays },
+      { to: "/lainnya?app=civil-registry", label: "Administrasi Kependudukan", icon: FileCheck },
+      { to: "/lainnya?app=tax-civic", label: "PBB dan Iuran Warga", icon: Receipt },
+    ],
+  },
+  // 8. Sosial dan Keagamaan
+  {
+    title: "Sosial dan Keagamaan",
+    parentCategory: "Sosial dan Keagamaan",
+    items: [
+      { to: "/zakat", label: "Zakat dan Sedekah", icon: Coins },
+      { to: "/lainnya?app=donation-tracker", label: "Catatan Infaq dan Donasi", icon: Coins },
+      { to: "/lainnya?app=volunteer-log", label: "Relawan dan Bakti Sosial", icon: Heart },
+    ],
+  },
+  // 9. Keselamatan dan Darurat
+  {
+    title: "Keselamatan dan Darurat",
+    parentCategory: "Keselamatan dan Darurat",
+    items: [
+      { to: "/lainnya?app=disaster-prep", label: "Tas Siaga Jalur Evakuasi", icon: ShieldAlert },
+      { to: "/lainnya?app=emergency-broadcast", label: "Nomor Darurat dan Damkar", icon: PhoneCall },
+    ],
+  },
+  // 10. Perencanaan Alur Kerja Proyek
+  {
+    title: "Perencanaan Alur Kerja Proyek",
+    parentCategory: "Perencanaan Alur Kerja Proyek",
+    items: [
+      { to: "/proyek", label: "Project Manager", icon: FolderKanban },
+      { to: "/workflow-manager", label: "Workflow Manager", icon: Workflow },
+      { to: "/lainnya?app=roadmap", label: "Milestone dan Roadmap", icon: Compass },
+      { to: "/milestone-manager", label: "Milestone Manager", icon: Flag },
+      { to: "/lainnya?app=retro", label: "Review dan Retrospective", icon: RefreshCw },
+    ],
+  },
+  // 11. Pelaksanaan Tugas dan Karya
+  {
+    title: "Pelaksanaan Tugas dan Karya",
+    parentCategory: "Pelaksanaan Tugas dan Karya",
+    items: [
+      { to: "/task-manager", label: "Task Manager", icon: CheckSquare },
+      { to: "/kanban", label: "Kanban Board", icon: LayoutGrid },
+      { to: "/eisenhower", label: "Eisenhower Matrix", icon: Grid2X2 },
+      { to: "/deliverable-manager", label: "Deliverable Manager", icon: PackageCheck },
+      { to: "/approval-manager", label: "Approval Manager", icon: FileCheck2 },
+    ],
+  },
+  // 12. Jadwal dan Kalender
+  {
+    title: "Jadwal dan Kalender",
+    parentCategory: "Jadwal dan Kalender",
+    items: [
+      { to: "/kalender", label: "Calendar", icon: CalendarDays },
+      { to: "/planner", label: "Planner", icon: Clock },
+      { to: "/schedule-manager", label: "Schedule Manager", icon: CalendarDays },
+      { to: "/timeline", label: "Timeline Manager", icon: Compass },
+      { to: "/countdown", label: "Countdown", icon: Timer },
+      { to: "/reminder-manager", label: "Reminder Manager", icon: Bell },
+    ],
+  },
+  // 13. Fokus dan Kebiasaan
+  {
+    title: "Fokus dan Kebiasaan",
+    parentCategory: "Fokus dan Kebiasaan",
+    items: [
+      { to: "/time-tracker", label: "Time Tracker", icon: Timer },
+      { to: "/pomodoro", label: "Focus Timer", icon: Timer },
+      { to: "/habits", label: "Habit Tracker", icon: Activity },
+    ],
+  },
+  // 14. Rapat dan Kolaborasi Tim
+  {
+    title: "Rapat dan Kolaborasi Tim",
+    parentCategory: "Rapat dan Kolaborasi Tim",
+    items: [
+      { to: "/collaboration", label: "Collaboration", icon: ShieldCheck },
+      { to: "/meeting-manager", label: "Meeting Manager", icon: Users },
+      { to: "/lainnya?app=minutes", label: "Risalah Rapat (Minutes)", icon: ScrollText },
+      { to: "/interaction-manager", label: "Interaction Manager", icon: MessageSquare },
+      { to: "/lainnya?app=canvas", label: "Whiteboard dan Canvas", icon: LayoutGrid },
+    ],
+  },
+  // 15. Manajemen Sumber Daya Manusia
+  {
+    title: "Manajemen Sumber Daya Manusia",
+    parentCategory: "Manajemen Sumber Daya Manusia",
+    items: [
+      { to: "/people-manager", label: "People Manager", icon: Users },
+      { to: "/lainnya?app=workload", label: "Workload dan Capacity", icon: Scale },
+      { to: "/notification-center", label: "Notification Center", icon: BellRing },
+    ],
+  },
+  // 16. Dokumentasi dan Wiki
+  {
+    title: "Dokumentasi dan Wiki",
+    parentCategory: "Dokumentasi dan Wiki",
+    items: [
+      { to: "/lainnya?app=wiki", label: "Knowledge Base (Wiki)", icon: BookOpen },
+      { to: "/lainnya?app=sop", label: "SOP dan Prosedur Baku", icon: ShieldCheck },
+    ],
+  },
+  // 17. Pengelolaan Form dan Template
+  {
+    title: "Pengelolaan Form dan Template",
+    parentCategory: "Pengelolaan Form dan Template",
+    items: [
+      { to: "/template-manager", label: "Template Manager", icon: FileCode2 },
+      { to: "/lainnya?app=templates", label: "Template Dokumen Kerja", icon: FileText },
+      { to: "/forms", label: "Forms", icon: FileText },
+    ],
+  },
+  // 18. Keuangan dan Aset
+  {
+    title: "Keuangan dan Aset",
+    parentCategory: "Keuangan dan Aset",
+    items: [
+      { to: "/expense-tracker", label: "Expense Tracker", icon: Receipt },
+      { to: "/subscription-manager", label: "Subscription Manager", icon: CreditCard },
+      { to: "/asset-manager", label: "Asset Manager", icon: HardDrive },
+    ],
+  },
+  // 19. Vendor dan Logistik Kantor
+  {
+    title: "Vendor dan Logistik Kantor",
+    parentCategory: "Vendor dan Logistik Kantor",
+    items: [
+      { to: "/lainnya?app=vendors", label: "Vendor dan Pemasok", icon: Truck },
+      { to: "/lainnya?app=services-ratecard", label: "Daftar Tarif dan Jasa", icon: ScrollText },
+      { to: "/lainnya?app=mailroom", label: "Agenda Surat dan Ekspedisi", icon: Mail },
+    ],
+  },
+  // 20. Target dan Performa
+  {
+    title: "Target dan Performa",
+    parentCategory: "Target dan Performa",
+    items: [
+      { to: "/goal-manager", label: "Goal Manager", icon: Target },
+      { to: "/resource-manager", label: "Resource Manager", icon: Layers },
+      { to: "/statistics", label: "Statistics", icon: LineChart },
+    ],
+  },
+  // 21. Utilitas Sistem
+  {
+    title: "Utilitas Sistem",
+    parentCategory: "Utilitas Sistem",
+    items: [
+      { to: "/search-manager", label: "Search Manager", icon: Search },
+      { to: "/lainnya?app=access-matrix", label: "Access dan Key Directory", icon: Shield },
+    ],
+  },
+];
 
 export const navKonsultan: NavGroup[] = [
   // ============================================================================
@@ -761,3 +998,41 @@ export const navKonsultan: NavGroup[] = [
     ],
   },
 ];
+
+export const otherNavGroups: NavGroup[] = [
+  // 100 Strategic Management Frameworks (17 Groups)
+  ...navKonsultan
+    .filter((g) => g.parentCategory === "100 Tools")
+    .map((g) => ({ ...g, sectionCategory: "100 Framework" })),
+
+  // Financial Planning & Wealth Management (10 Groups)
+  ...navKonsultan
+    .filter((g) => g.parentCategory === "Finance" || g.parentCategory === "Phase Side")
+    .map((g) => ({ ...g, sectionCategory: "Keuangan & Pasar" })),
+
+  // Kesehatan & Gaya Hidup Pribadi (2 Groups)
+  ...navKonsultan
+    .filter((g) => g.title === "Essentials" || g.title === "Personal")
+    .map((g) => ({ ...g, sectionCategory: "Kesehatan & Personal" })),
+
+  // Media Kreatif & Akademi Pembelajaran (3 Groups)
+  ...navKonsultan
+    .filter((g) => g.parentCategory === "Creative & Media" || g.parentCategory === "Academy & Tools")
+    .map((g) => ({ ...g, sectionCategory: "Kreatif & Akademi" })),
+
+  // Knowledge & Bisnis Lanjutan (2 Groups)
+  ...navKonsultan
+    .filter((g) => g.title === "Knowledge" || g.title === "Business")
+    .map((g) => ({ ...g, sectionCategory: "Knowledge & Bisnis" })),
+];
+
+export const navSidebar21WithSection: NavGroup[] = navSidebar21.map((g) => ({
+  ...g,
+  sectionCategory: "21 Kategori",
+}));
+
+export const navAllSidebar: NavGroup[] = [
+  ...navSidebar21WithSection,
+  ...otherNavGroups,
+];
+

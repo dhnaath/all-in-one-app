@@ -199,7 +199,7 @@ export function HabitTrackerApp() {
       </ShellSidebar>
 
       {/* MAIN VIEW CONTENT */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
         {/* Top Header Controls Portaled to Main Header */}
         <ShellHeader>
           <div className="flex items-center gap-1.5 flex-wrap">

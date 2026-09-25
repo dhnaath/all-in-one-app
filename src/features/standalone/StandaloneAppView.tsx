@@ -25,6 +25,7 @@ import {
   StandaloneRecord,
 } from "./standaloneAppsData";
 import { useRouterState } from "@tanstack/react-router";
+import { ShellHeader } from "@/app/shell-header";
 
 interface StandaloneAppViewProps {
   appId: string;
@@ -177,112 +178,139 @@ export function StandaloneAppView({ appId }: StandaloneAppViewProps) {
   const Icon = config.icon;
 
   return (
-    <div className="w-full flex flex-col gap-6">
-      {/* Header Banner */}
-      <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card to-muted/40 border shadow-sm relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div className="flex items-start gap-4">
+    <div className="w-full flex flex-col bg-background">
+      {/* Top ShellHeader Portaled Controls */}
+      <ShellHeader>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="flex items-center gap-0.5 bg-muted/70 p-0.5 rounded-lg border border-border/60 overflow-x-auto text-xs font-medium no-scrollbar">
+            {config.tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => changeTab(tab.id)}
+                className={`px-2.5 py-1 rounded-md text-xs transition-colors cursor-pointer whitespace-nowrap ${
+                  activeTab === tab.id
+                    ? "bg-background text-foreground font-semibold shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Tambah Data</span>
+          </button>
+        </div>
+      </ShellHeader>
+
+      {/* Header Banner - Built-in & Edge-to-Edge */}
+      <div className="px-6 py-4 border-b border-border bg-background">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 max-w-7xl">
+          <div className="flex items-center gap-3.5 min-w-0">
             <div
-              className={`size-14 sm:size-16 rounded-2xl bg-gradient-to-tr ${config.colorScheme} flex items-center justify-center text-white shadow-md shrink-0`}
+              className={`size-10 sm:size-11 rounded-xl bg-gradient-to-tr ${config.colorScheme} flex items-center justify-center text-white shadow-xs shrink-0`}
             >
-              <Icon className="size-7 sm:size-8" />
+              <Icon className="size-5 sm:size-5.5" />
             </div>
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-2 flex-wrap text-xs">
-                <span className="font-semibold text-primary/90 uppercase tracking-wider">
+            <div className="space-y-0.5 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap text-xs text-muted-foreground">
+                <span className="font-semibold text-primary/90 uppercase tracking-wider text-[10px]">
                   {config.categoryGroup}
                 </span>
-                <ChevronRight className="size-3.5 text-muted-foreground" />
-                <span className="text-muted-foreground">{config.subCategoryTitle}</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-semibold text-[11px]">
+                <span aria-hidden="true">·</span>
+                <span>{config.subCategoryTitle}</span>
+                <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold text-[10px]">
                   {config.badge}
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+              <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground truncate">
                 {config.title}
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
+              <p className="text-xs text-muted-foreground line-clamp-1 max-w-2xl">
                 {config.subtitle}
               </p>
             </div>
           </div>
 
+          {/* Quick Counter Badges & Action Button */}
           <div className="flex items-center gap-3 shrink-0">
+            <div className="hidden sm:flex items-center gap-4 text-xs border-r border-border/60 pr-4">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-muted-foreground text-[11px]">Total:</span>
+                <span className="font-bold text-foreground">{totalCount}</span>
+              </div>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-muted-foreground text-[11px]">Aktif:</span>
+                <span className="font-bold text-blue-600 dark:text-blue-400">{activeCount}</span>
+              </div>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-muted-foreground text-[11px]">Selesai:</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">{completedCount}</span>
+              </div>
+            </div>
+
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-all shadow flex items-center gap-2 cursor-pointer active:scale-95"
+              className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
             >
-              <Plus className="size-4" />
+              <Plus className="size-3.5" />
               <span>Tambah Data Baru</span>
             </button>
           </div>
         </div>
-
-        {/* Counter Pills */}
-        <div className="grid grid-cols-3 gap-3 mt-6 pt-6 border-t border-border/60">
-          <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground font-medium">Total Item</span>
-            <span className="text-xl sm:text-2xl font-bold text-foreground">{totalCount}</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground font-medium">Dalam Proses / Aktif</span>
-            <span className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
-              {activeCount}
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground font-medium">Selesai / Tuntas</span>
-            <span className="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-              {completedCount}
-            </span>
-          </div>
-        </div>
       </div>
 
-      {/* Controls Bar: Tabs & Search Filter */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        {/* Tabs */}
-        <div className="flex items-center gap-1.5 p-1 bg-muted/60 rounded-xl border overflow-x-auto">
-          {config.tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => changeTab(tab.id)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                activeTab === tab.id
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+      {/* Main Content Area */}
+      <div className="p-4 sm:p-6 space-y-4 max-w-7xl w-full">
+        {/* Controls Bar: Tabs & Search Filter */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          {/* Tabs */}
+          <div className="flex items-center gap-1 p-0.5 bg-muted/60 rounded-lg border border-border/60 overflow-x-auto text-xs">
+            {config.tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => changeTab(tab.id)}
+                className={`px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
+                  activeTab === tab.id
+                    ? "bg-background text-foreground font-semibold shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Search & Priority Selector */}
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="size-3.5 text-muted-foreground absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Cari data..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-8 pr-3 py-1 text-xs rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <select
+              value={selectedPriority}
+              onChange={(e) => setSelectedPriority(e.target.value)}
+              className="px-2.5 py-1 text-xs rounded-lg bg-background border border-border text-foreground focus:outline-none cursor-pointer"
             >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Search & Priority Selector */}
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1 sm:w-64">
-            <Search className="size-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Cari data..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl bg-card border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
+              <option value="all">Semua Prioritas</option>
+              <option value="high">Prioritas Tinggi</option>
+              <option value="medium">Prioritas Sedang</option>
+              <option value="low">Prioritas Rendah</option>
+            </select>
           </div>
-
-          <select
-            value={selectedPriority}
-            onChange={(e) => setSelectedPriority(e.target.value)}
-            className="px-3 py-1.5 text-xs rounded-xl bg-card border text-foreground focus:outline-none cursor-pointer"
-          >
-            <option value="all">Semua Prioritas</option>
-            <option value="high">Prioritas Tinggi</option>
-            <option value="medium">Prioritas Sedang</option>
-            <option value="low">Prioritas Rendah</option>
-          </select>
         </div>
-      </div>
 
       {/* Main Records List / Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -399,6 +427,7 @@ export function StandaloneAppView({ appId }: StandaloneAppViewProps) {
             );
           })
         )}
+      </div>
       </div>
 
       {/* Add New Record Modal */}

@@ -165,18 +165,11 @@ export function TimelineApp() {
       </ShellSidebar>
 
       {/* MAIN GANTT CHART VIEW */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-card">
-        {/* Top Header */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
+        {/* Top Header (Portaled to ShellHeader) */}
         <ShellHeader>
-          <div>
-            <h1 className="text-base font-bold text-foreground tracking-tight">{activeView.name}</h1>
-            <p className="text-xs text-muted-foreground">
-              Rentang waktu horizontal terhubung oleh jalur relasi antar-fase dan milestone.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="flex items-center border border-border rounded-md p-0.5 bg-muted/40 text-xs">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-0.5 border border-border/60 rounded-lg p-0.5 bg-muted/70 text-xs">
               {[
                 { id: "gantt", label: "Gantt Chart" },
                 { id: "critical_path", label: "Jalur Kritis (CPM)" },
@@ -184,9 +177,9 @@ export function TimelineApp() {
                 <button
                   key={v.id}
                   onClick={() => setViewMode(v.id as TimelineViewMode)}
-                  className={`px-3 py-1 rounded transition-colors ${
+                  className={`px-2.5 py-1 rounded-md text-xs transition-colors cursor-pointer ${
                     viewMode === v.id
-                      ? "bg-card text-foreground font-semibold shadow-xs"
+                      ? "bg-background text-foreground font-semibold shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -197,9 +190,17 @@ export function TimelineApp() {
           </div>
         </ShellHeader>
 
+        {/* Timeline Title Subheader */}
+        <div className="px-6 py-4 border-b border-border bg-background">
+          <h1 className="text-base sm:text-lg font-bold text-foreground tracking-tight">{activeView.name}</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Rentang waktu horizontal terhubung oleh jalur relasi antar-fase dan milestone.
+          </p>
+        </div>
+
         {/* TIMELINE GANTT CANVAS */}
-        <div className="flex-1 overflow-auto p-4 bg-muted/40/50">
-          <div className="min-w-[800px] bg-card border border-border rounded-xl shadow-xs overflow-hidden">
+        <div className="flex-1 overflow-auto bg-background">
+          <div className="min-w-[800px] border-b border-border overflow-hidden">
             {/* Days Header */}
             <div className="flex border-b border-border bg-muted/40">
               <div className="w-56 flex-shrink-0 p-3 text-xs font-bold text-foreground border-r border-border">

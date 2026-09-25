@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Home } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, Home } from "lucide-react";
 
 export interface BreadcrumbSegment {
   label: string;
@@ -31,6 +31,116 @@ export interface DynamicBreadcrumbProps {
   path?: string;
   segments?: BreadcrumbSegment[];
   className?: string;
+}
+
+/**
+ * Komponen kontrol terpadu untuk ikon Home di header yang diapit tombol panah kiri (Undo)
+ * dan panah kanan (Redo) dengan navigasi browser history dan penanganan input form.
+ */
+function HeaderHomeControls({
+  href = "/home",
+  isPage = false,
+}: {
+  href?: string;
+  isPage?: boolean;
+}) {
+  const handleUndo = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // 1. Coba undo teks aktif jika input/textarea/contenteditable sedang fokus
+    try {
+      const active = document.activeElement;
+      if (
+        active &&
+        (active.tagName === "INPUT" ||
+          active.tagName === "TEXTAREA" ||
+          (active as HTMLElement).isContentEditable)
+      ) {
+        if (document.execCommand("undo")) return;
+      }
+    } catch {}
+
+    // 2. Dispatch custom event jika ada modul aplikasi yang mendengarkan event undo
+    window.dispatchEvent(new CustomEvent("app-undo"));
+
+    // 3. Fallback riwayat browser / navigasi kembali
+    if (typeof window !== "undefined" && window.history) {
+      window.history.back();
+    }
+  };
+
+  const handleRedo = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // 1. Coba redo teks aktif jika input/textarea/contenteditable sedang fokus
+    try {
+      const active = document.activeElement;
+      if (
+        active &&
+        (active.tagName === "INPUT" ||
+          active.tagName === "TEXTAREA" ||
+          (active as HTMLElement).isContentEditable)
+      ) {
+        if (document.execCommand("redo")) return;
+      }
+    } catch {}
+
+    // 2. Dispatch custom event jika ada modul aplikasi yang mendengarkan event redo
+    window.dispatchEvent(new CustomEvent("app-redo"));
+
+    // 3. Fallback riwayat browser / navigasi maju
+    if (typeof window !== "undefined" && window.history) {
+      window.history.forward();
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-1 sm:gap-1.5">
+      {/* Panah Kiri: Undo */}
+      <button
+        type="button"
+        onClick={handleUndo}
+        className="p-1.5 sm:p-2 rounded-lg shrink-0 transition-colors text-muted-foreground hover:text-foreground hover:bg-accent cursor-pointer flex items-center justify-center"
+        title="Undo / Riwayat Sebelumnya (Ctrl+Z)"
+        aria-label="Undo"
+      >
+        <ArrowLeft size={19} className="shrink-0" />
+      </button>
+
+      {/* Ikon Home: Beranda */}
+      {isPage ? (
+        <span
+          className="p-1.5 sm:p-2 rounded-lg shrink-0 transition-colors bg-accent text-foreground flex items-center justify-center"
+          title="Beranda"
+        >
+          <Home size={19} className="shrink-0" />
+        </span>
+      ) : (
+        <BreadcrumbLink asChild>
+          <Link
+            to={href}
+            className="p-1.5 sm:p-2 rounded-lg shrink-0 transition-colors text-muted-foreground hover:text-foreground hover:bg-accent flex items-center justify-center"
+            title="Beranda"
+          >
+            <Home size={19} className="shrink-0" />
+          </Link>
+        </BreadcrumbLink>
+      )}
+
+      {/* Panah Kanan: Redo */}
+      <button
+        type="button"
+        onClick={handleRedo}
+        className="p-1.5 sm:p-2 rounded-lg shrink-0 transition-colors text-muted-foreground hover:text-foreground hover:bg-accent cursor-pointer flex items-center justify-center"
+        title="Redo / Riwayat Berikutnya (Ctrl+Y)"
+        aria-label="Redo"
+      >
+        <ArrowRight size={19} className="shrink-0" />
+      </button>
+    </div>
+  );
 }
 
 export function parsePathToSegments(
@@ -116,19 +226,20 @@ export function HeaderBreadcrumb({
 
   // Single page or root
   if (total <= 1) {
+    const isHome = segments[0]?.label === "Home" || segments[0]?.label === "Rumah";
     return (
       <Breadcrumb className={className}>
         <BreadcrumbList className="flex-nowrap whitespace-nowrap text-xs">
           <BreadcrumbItem>
-            <BreadcrumbPage className="flex items-center p-2 rounded-lg text-muted-foreground">
-              {segments[0]?.label === "Home" || segments[0]?.label === "Rumah" ? (
-                <Home className="size-5 shrink-0" />
-              ) : (
+            {isHome ? (
+              <HeaderHomeControls href={segments[0]?.href || "/home"} isPage={true} />
+            ) : (
+              <BreadcrumbPage className="flex items-center p-2 rounded-lg text-muted-foreground">
                 <span className="truncate max-w-[120px] sm:max-w-[180px]">
                   {segments[0]?.label || "Home"}
                 </span>
-              )}
-            </BreadcrumbPage>
+              </BreadcrumbPage>
+            )}
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -141,11 +252,7 @@ export function HeaderBreadcrumb({
       <Breadcrumb className={className}>
         <BreadcrumbList className="flex-nowrap whitespace-nowrap text-xs">
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link to={segments[0].href || "/"} className="flex items-center p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors" title="Beranda">
-                <Home className="size-5 shrink-0" />
-              </Link>
-            </BreadcrumbLink>
+            <HeaderHomeControls href={segments[0].href || "/home"} />
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -166,13 +273,9 @@ export function HeaderBreadcrumb({
     return (
       <Breadcrumb className={className}>
         <BreadcrumbList className="flex-nowrap whitespace-nowrap text-xs">
-          {/* 1. Item Pertama: Home */}
+          {/* 1. Item Pertama: Home beserta panah kiri (Undo) dan kanan (Redo) */}
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link to={segments[0].href || "/"} className="flex items-center p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors" title="Beranda">
-                <Home className="size-5 shrink-0" />
-              </Link>
-            </BreadcrumbLink>
+            <HeaderHomeControls href={segments[0].href || "/home"} />
           </BreadcrumbItem>
           <BreadcrumbSeparator />
 
@@ -223,10 +326,6 @@ export function HeaderBreadcrumb({
   }
 
   // Rule Output: Total > 3 items -> Max 4 Display Parts (Collapsed/Ellipsis pattern)
-  // 1. Item Pertama: Home (Link ke "/")
-  // 2. Item Kedua: BreadcrumbEllipsis (...)
-  // 3. Item Ketiga: DropdownMenu yang berisi pilihan menu selevel / sub-menu relevan
-  // 4. Item Keempat: BreadcrumbPage (Halaman aktif / non-clickable)
   const firstItem = segments[0];
   const lastItem = segments[segments.length - 1];
   const subLevelItem = segments[segments.length - 2];
@@ -245,13 +344,9 @@ export function HeaderBreadcrumb({
   return (
     <Breadcrumb className={className}>
       <BreadcrumbList className="flex-nowrap whitespace-nowrap text-xs">
-        {/* 1. Item Pertama: Home */}
+        {/* 1. Item Pertama: Home beserta panah kiri (Undo) dan kanan (Redo) */}
         <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to={firstItem.href || "/"} className="flex items-center p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors" title="Beranda">
-              <Home className="size-5 shrink-0" />
-            </Link>
-          </BreadcrumbLink>
+          <HeaderHomeControls href={firstItem.href || "/home"} />
         </BreadcrumbItem>
         <BreadcrumbSeparator />
 
