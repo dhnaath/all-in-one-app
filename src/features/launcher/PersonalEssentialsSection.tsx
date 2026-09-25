@@ -785,10 +785,10 @@ export function PersonalEssentialsSection({
                     className="flex flex-col items-center gap-2 group w-full outline-none relative"
                   >
                     <div
-                      className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
+                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 ${gradient} relative`}
                     >
                       <item.icon
-                        className="size-5 sm:size-6 opacity-90 drop-shadow-sm"
+                        className="size-7 sm:size-8 opacity-90 drop-shadow-sm"
                         strokeWidth={1.5}
                       />
 

@@ -693,14 +693,14 @@ export function ProductivitySection({
                     title={isRevised ? `${item.label} (Tanda Sementara: Modul Baru Direvisi)` : item.label}
                   >
                     <div
-                      className={`w-12 h-12 sm:w-13 sm:h-13 xl:w-14 xl:h-14 rounded-[1.25rem] flex items-center justify-center shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 relative ${
+                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] flex items-center justify-center shadow-sm transition-transform duration-200 group-hover:scale-110 group-active:scale-95 relative ${
                         isRevised
                           ? "bg-card text-foreground border-2 border-border dark:border-border shadow-md ring-2 ring-white/60"
                           : `${gradient} text-white`
                       }`}
                     >
                       <item.icon
-                        className={`size-5 sm:size-6 ${
+                        className={`size-7 sm:size-8 ${
                           isRevised
                             ? "text-foreground drop-shadow-none"
                             : "opacity-90 drop-shadow-sm text-white"

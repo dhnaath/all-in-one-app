@@ -48,6 +48,12 @@ function getGradient(name: string) {
   return gradients[Math.abs(hash) % gradients.length];
 }
 
+// Single source of truth for launcher category-page gutters so every page
+// (specialized sections + default grid) keeps identical left/right/top/bottom
+// spacing when swiping between pages.
+const LAUNCHER_PAGE_PAD =
+  "w-full shrink-0 snap-center flex-none px-4 sm:px-6 md:px-8 lg:px-12 pt-6 pb-6 flex flex-col items-center";
+
 const SUPER_CATEGORIES = [
   {
     title: "Financial Planning & Wealth Management",
@@ -438,7 +444,7 @@ export function Launcher() {
                 return (
                   <div
                     key={pageIdx}
-                    className="w-full shrink-0 snap-center flex-none px-2 sm:px-3 md:px-5 lg:px-6 pt-[0px] pb-[0px] flex flex-col items-center"
+                    className={LAUNCHER_PAGE_PAD}
                   >
                     <FinancialWealthSection
                       page={page}
@@ -456,7 +462,7 @@ export function Launcher() {
                 return (
                   <div
                     key={pageIdx}
-                    className="w-full shrink-0 snap-center flex-none px-2 sm:px-3 md:px-5 lg:px-6 pt-[0px] pb-[0px] flex flex-col items-center"
+                    className={LAUNCHER_PAGE_PAD}
                   >
                     <Tools100Section
                       page={page}
@@ -478,7 +484,7 @@ export function Launcher() {
                 return (
                   <div
                     key={pageIdx}
-                    className="w-full shrink-0 snap-center flex-none px-2 sm:px-3 md:px-5 lg:px-6 pt-[0px] pb-[0px] flex flex-col items-center"
+                    className={LAUNCHER_PAGE_PAD}
                   >
                     <ProductivitySection
                       page={page}
@@ -499,7 +505,7 @@ export function Launcher() {
                 return (
                   <div
                     key={pageIdx}
-                    className="w-full shrink-0 snap-center flex-none px-2 sm:px-3 md:px-5 lg:px-6 pt-[0px] pb-[0px] flex flex-col items-center"
+                    className={LAUNCHER_PAGE_PAD}
                   >
                     <PersonalEssentialsSection
                       page={page}
@@ -520,7 +526,7 @@ export function Launcher() {
                 return (
                   <div
                     key={pageIdx}
-                    className="w-full shrink-0 snap-center flex-none px-2 sm:px-3 md:px-5 lg:px-6 pt-[0px] pb-[0px] flex flex-col items-center"
+                    className={LAUNCHER_PAGE_PAD}
                   >
                     <PeopleFamilySocietySection
                       page={page}
@@ -744,7 +750,7 @@ export function Launcher() {
               return (
                 <div 
                   key={pageIdx} 
-                  className="w-full shrink-0 snap-center flex-none px-4 sm:px-6 md:px-8 lg:px-12 pt-[0px] pb-[0px] flex flex-col items-center"
+                  className={LAUNCHER_PAGE_PAD}
                 >
                   <h3 className="text-2xl sm:text-3xl font-bold text-foreground/80 mb-8 tracking-tight">
                     {page.title}

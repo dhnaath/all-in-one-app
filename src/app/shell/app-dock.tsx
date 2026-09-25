@@ -337,16 +337,18 @@ export function AppDock({
 
     const currentModeItems = modeAdaptivePresets[activeMode] || modeAdaptivePresets.personal;
     
-    // Combine: static + mode items + favorites (without duplicate IDs)
+    // Combine: static + favorites + mode items (without duplicate IDs).
+    // Favorites (starred via hover) take the slots right after the static
+    // items, so the user's favorites replace the curated suggestion slot.
     const combined = [...staticItems];
-    for (const item of currentModeItems) {
-      if (!combined.some(c => c.id === item.id)) {
-        combined.push(item);
-      }
-    }
     for (const fav of dynamicItems) {
       if (!combined.some(c => c.id === fav.id)) {
         combined.push(fav);
+      }
+    }
+    for (const item of currentModeItems) {
+      if (!combined.some(c => c.id === item.id)) {
+        combined.push(item);
       }
     }
 
